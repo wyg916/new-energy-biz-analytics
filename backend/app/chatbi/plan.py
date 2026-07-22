@@ -26,12 +26,14 @@ class Clarification(BaseModel):
 class QueryPlan(BaseModel):
     version: Literal["0.1.0"] = "0.1.0"
     status: Literal["ready", "needs_clarification", "rejected"]
-    intent: Literal["metric_lookup", "trend", "comparison", "ranking", "diagnosis", "anomaly_lookup", "metric_definition", "unsupported"]
+    intent: Literal["metric_lookup", "trend", "comparison", "ranking", "diagnosis", "diagnose_revenue_change", "diagnose_gross_profit_change", "anomaly_lookup", "metric_definition", "unsupported"]
     metrics: list[str] = Field(default_factory=list, max_length=5)
     time_range: TimeRange | None = None
     filters: list[Filter] = Field(default_factory=list, max_length=10)
     dimensions: list[str] = Field(default_factory=list, max_length=3)
     analysis: list[str] = Field(default_factory=list)
+    comparison: dict | None = None
+    context_resolution: dict | None = None
     sort: list[dict] = Field(default_factory=list)
     limit: int = Field(default=100, ge=1, le=5000)
     clarification: Clarification | None = None

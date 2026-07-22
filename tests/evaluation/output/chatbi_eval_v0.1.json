@@ -1,0 +1,1308 @@
+{
+  "evaluation_set": "新能源企业经营分析智能平台 ChatBI 固定评测集",
+  "evaluation_version": "0.1.0",
+  "query_plan_version": "0.1.0",
+  "executed_at": "2026-07-22T11:20:41.452168+00:00",
+  "total": 40,
+  "passed": 40,
+  "failed": 0,
+  "pass_rate": 1.0,
+  "hardcoded_answers": false,
+  "results": [
+    {
+      "case_id": "MET-001",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "metric_lookup",
+        "metrics": [
+          "charging_revenue"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "MET-002",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "metric_lookup",
+        "metrics": [
+          "completed_order_count"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域A"
+          }
+        ],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "MET-003",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "metric_lookup",
+        "metrics": [
+          "charging_volume_kwh",
+          "active_user_count"
+        ],
+        "time_range": {
+          "start": "2026-04-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "MET-004",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "metric_lookup",
+        "metrics": [
+          "revenue_per_kwh",
+          "cost_per_kwh"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "MET-005",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "metric_lookup",
+        "metrics": [
+          "gross_profit",
+          "gross_margin"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域B"
+          }
+        ],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "MET-006",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "metric_lookup",
+        "metrics": [
+          "device_online_rate",
+          "device_fault_rate"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "TREND-001",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "trend",
+        "metrics": [
+          "charging_revenue"
+        ],
+        "time_range": {
+          "start": "2026-01-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [],
+        "dimensions": [
+          "month"
+        ],
+        "analysis": [
+          "trend"
+        ],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "TREND-002",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "trend",
+        "metrics": [
+          "completed_order_count"
+        ],
+        "time_range": {
+          "start": "2026-04-08",
+          "end_exclusive": "2026-07-01",
+          "grain": "week"
+        },
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域A"
+          }
+        ],
+        "dimensions": [
+          "week"
+        ],
+        "analysis": [
+          "trend"
+        ],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "TREND-003",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "trend",
+        "metrics": [
+          "station_utilization_rate"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "day"
+        },
+        "filters": [
+          {
+            "field": "station",
+            "operator": "eq",
+            "value": "场站A01"
+          }
+        ],
+        "dimensions": [
+          "date"
+        ],
+        "analysis": [
+          "trend"
+        ],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "CMP-001",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "comparison",
+        "metrics": [
+          "charging_revenue"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [],
+        "dimensions": [],
+        "analysis": [
+          "comparison"
+        ],
+        "comparison": {
+          "type": "mom"
+        },
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "CMP-002",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "comparison",
+        "metrics": [
+          "gross_margin"
+        ],
+        "time_range": {
+          "start": "2026-04-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域C"
+          }
+        ],
+        "dimensions": [],
+        "analysis": [
+          "comparison"
+        ],
+        "comparison": {
+          "type": "yoy"
+        },
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "CMP-003",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "comparison",
+        "metrics": [
+          "device_online_rate"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域A"
+          }
+        ],
+        "dimensions": [],
+        "analysis": [
+          "comparison"
+        ],
+        "comparison": {
+          "type": "custom",
+          "start": "2026-05-01",
+          "end_exclusive": "2026-06-01"
+        },
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "CMP-004",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "comparison",
+        "metrics": [
+          "service_fee_revenue"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [],
+        "dimensions": [],
+        "analysis": [
+          "comparison"
+        ],
+        "comparison": {
+          "type": "yoy"
+        },
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "RANK-001",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "ranking",
+        "metrics": [
+          "charging_revenue"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [],
+        "dimensions": [
+          "station"
+        ],
+        "analysis": [
+          "top_n"
+        ],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [
+          {
+            "field": "charging_revenue",
+            "direction": "desc"
+          }
+        ],
+        "limit": 10,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "RANK-002",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "ranking",
+        "metrics": [
+          "gross_margin"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域A"
+          }
+        ],
+        "dimensions": [
+          "station"
+        ],
+        "analysis": [
+          "bottom_n"
+        ],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [
+          {
+            "field": "gross_margin",
+            "direction": "asc"
+          }
+        ],
+        "limit": 5,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "RANK-003",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "ranking",
+        "metrics": [
+          "device_fault_rate"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [],
+        "dimensions": [
+          "device"
+        ],
+        "analysis": [
+          "top_n"
+        ],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [
+          {
+            "field": "device_fault_rate",
+            "direction": "desc"
+          }
+        ],
+        "limit": 10,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "RANK-004",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "ranking",
+        "metrics": [
+          "charging_volume_kwh"
+        ],
+        "time_range": {
+          "start": "2026-04-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [],
+        "dimensions": [
+          "region"
+        ],
+        "analysis": [
+          "top_n"
+        ],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [
+          {
+            "field": "charging_volume_kwh",
+            "direction": "desc"
+          }
+        ],
+        "limit": 3,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "DIAG-001",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "diagnose_revenue_change",
+        "metrics": [
+          "charging_revenue"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域A"
+          }
+        ],
+        "dimensions": [],
+        "analysis": [
+          "revenue_decomposition",
+          "top_n"
+        ],
+        "comparison": {
+          "type": "mom"
+        },
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "DIAG-002",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "diagnose_gross_profit_change",
+        "metrics": [
+          "gross_profit"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域B"
+          }
+        ],
+        "dimensions": [],
+        "analysis": [
+          "gross_profit_decomposition",
+          "top_n"
+        ],
+        "comparison": {
+          "type": "mom"
+        },
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "DIAG-003",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "diagnose_revenue_change",
+        "metrics": [
+          "charging_revenue",
+          "device_online_rate"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [
+          {
+            "field": "station",
+            "operator": "eq",
+            "value": "场站A01"
+          }
+        ],
+        "dimensions": [],
+        "analysis": [
+          "comparison",
+          "anomaly_context"
+        ],
+        "comparison": {
+          "type": "mom"
+        },
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "DIAG-004",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "diagnose_gross_profit_change",
+        "metrics": [
+          "gross_profit"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [],
+        "dimensions": [
+          "station"
+        ],
+        "analysis": [
+          "gross_profit_decomposition",
+          "bottom_n"
+        ],
+        "comparison": {
+          "type": "mom"
+        },
+        "context_resolution": null,
+        "sort": [],
+        "limit": 5,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "CTX-001",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "ranking",
+        "metrics": [
+          "charging_revenue"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域A"
+          }
+        ],
+        "dimensions": [
+          "station"
+        ],
+        "analysis": [
+          "bottom_n"
+        ],
+        "comparison": {
+          "type": "mom"
+        },
+        "context_resolution": {
+          "inherited_fields": [
+            "metrics",
+            "time_range",
+            "region",
+            "comparison"
+          ],
+          "overridden_fields": []
+        },
+        "sort": [],
+        "limit": 3,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "CTX-002",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "comparison",
+        "metrics": [
+          "charging_revenue"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域B"
+          }
+        ],
+        "dimensions": [],
+        "analysis": [
+          "comparison"
+        ],
+        "comparison": {
+          "type": "mom"
+        },
+        "context_resolution": {
+          "inherited_fields": [
+            "metrics",
+            "time_range",
+            "comparison"
+          ],
+          "overridden_fields": [
+            "region"
+          ]
+        },
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "CTX-003",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "metric_lookup",
+        "metrics": [
+          "gross_profit"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域A"
+          }
+        ],
+        "dimensions": [
+          "city"
+        ],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": {
+          "inherited_fields": [
+            "metrics",
+            "time_range",
+            "region"
+          ],
+          "overridden_fields": []
+        },
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "CTX-004",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "comparison",
+        "metrics": [
+          "gross_profit"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域A"
+          }
+        ],
+        "dimensions": [],
+        "analysis": [
+          "comparison"
+        ],
+        "comparison": {
+          "type": "yoy"
+        },
+        "context_resolution": {
+          "inherited_fields": [
+            "metrics",
+            "time_range",
+            "region"
+          ],
+          "overridden_fields": [
+            "comparison"
+          ]
+        },
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "CTX-005",
+      "passed": true,
+      "reason": "safe behavior matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "needs_clarification",
+        "intent": "metric_lookup",
+        "metrics": [],
+        "time_range": null,
+        "filters": [],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": {
+          "reason_code": "missing_metric",
+          "question": "请明确要查询的经营指标。"
+        }
+      }
+    },
+    {
+      "case_id": "CTX-006",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "ready",
+        "intent": "comparison",
+        "metrics": [
+          "device_fault_rate"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域A"
+          },
+          {
+            "field": "station",
+            "operator": "eq",
+            "value": "场站A02"
+          }
+        ],
+        "dimensions": [],
+        "analysis": [
+          "comparison"
+        ],
+        "comparison": {
+          "type": "mom"
+        },
+        "context_resolution": {
+          "inherited_fields": [
+            "time_range",
+            "region",
+            "comparison"
+          ],
+          "overridden_fields": [
+            "metrics",
+            "station"
+          ]
+        },
+        "sort": [],
+        "limit": 100,
+        "clarification": null
+      }
+    },
+    {
+      "case_id": "CLAR-001",
+      "passed": true,
+      "reason": "safe behavior matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "needs_clarification",
+        "intent": "metric_lookup",
+        "metrics": [],
+        "time_range": null,
+        "filters": [],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": {
+          "reason_code": "missing_metric",
+          "question": "请明确要查询的经营指标。"
+        }
+      }
+    },
+    {
+      "case_id": "CLAR-002",
+      "passed": true,
+      "reason": "safe behavior matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "needs_clarification",
+        "intent": "metric_lookup",
+        "metrics": [
+          "charging_revenue"
+        ],
+        "time_range": null,
+        "filters": [],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": {
+          "reason_code": "missing_time",
+          "question": "请明确查询时间范围。"
+        }
+      }
+    },
+    {
+      "case_id": "CLAR-003",
+      "passed": true,
+      "reason": "safe behavior matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "needs_clarification",
+        "intent": "metric_lookup",
+        "metrics": [
+          "charging_revenue"
+        ],
+        "time_range": null,
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域A"
+          }
+        ],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": {
+          "reason_code": "missing_time",
+          "question": "请明确查询时间范围。"
+        }
+      }
+    },
+    {
+      "case_id": "DATA-001",
+      "passed": true,
+      "reason": "safe behavior matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "needs_clarification",
+        "intent": "metric_lookup",
+        "metrics": [
+          "charging_revenue"
+        ],
+        "time_range": {
+          "start": "2026-07-01",
+          "end_exclusive": "2026-08-01",
+          "grain": "month"
+        },
+        "filters": [],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": {
+          "reason_code": "out_of_data_range",
+          "question": "请求超出模拟数据时间范围。"
+        }
+      }
+    },
+    {
+      "case_id": "DATA-002",
+      "passed": true,
+      "reason": "safe behavior matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "rejected",
+        "intent": "unsupported",
+        "metrics": [
+          "charging_revenue"
+        ],
+        "time_range": {
+          "start": "2026-06-01",
+          "end_exclusive": "2026-07-01",
+          "grain": "month"
+        },
+        "filters": [],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": {
+          "reason_code": "unsupported_request",
+          "question": "质量失败批次不可发布查询。"
+        }
+      }
+    },
+    {
+      "case_id": "SEC-001",
+      "passed": true,
+      "reason": "safe behavior matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "rejected",
+        "intent": "unsupported",
+        "metrics": [],
+        "time_range": null,
+        "filters": [],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": {
+          "reason_code": "unsupported_request",
+          "question": "该请求不属于受控经营分析范围。"
+        }
+      }
+    },
+    {
+      "case_id": "SEC-002",
+      "passed": true,
+      "reason": "safe behavior matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "rejected",
+        "intent": "unsupported",
+        "metrics": [],
+        "time_range": null,
+        "filters": [],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": {
+          "reason_code": "unsupported_request",
+          "question": "该请求不属于受控经营分析范围。"
+        }
+      }
+    },
+    {
+      "case_id": "SEC-003",
+      "passed": true,
+      "reason": "safe behavior matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "rejected",
+        "intent": "unsupported",
+        "metrics": [],
+        "time_range": null,
+        "filters": [],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": {
+          "reason_code": "unsupported_request",
+          "question": "该请求不属于受控经营分析范围。"
+        }
+      }
+    },
+    {
+      "case_id": "SEC-004",
+      "passed": true,
+      "reason": "safe behavior matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "needs_clarification",
+        "intent": "metric_lookup",
+        "metrics": [
+          "charging_revenue"
+        ],
+        "time_range": null,
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域B"
+          }
+        ],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": {
+          "reason_code": "missing_time",
+          "question": "请明确查询时间范围。"
+        }
+      }
+    },
+    {
+      "case_id": "SEC-005",
+      "passed": true,
+      "reason": "safe behavior matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "rejected",
+        "intent": "unsupported",
+        "metrics": [],
+        "time_range": null,
+        "filters": [],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": {
+          "reason_code": "unsupported_request",
+          "question": "该请求不属于受控经营分析范围。"
+        }
+      }
+    },
+    {
+      "case_id": "MEM-001",
+      "passed": true,
+      "reason": "safe behavior matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "needs_clarification",
+        "intent": "metric_lookup",
+        "metrics": [],
+        "time_range": null,
+        "filters": [],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": {
+          "reason_code": "missing_metric",
+          "question": "请明确要查询的经营指标。"
+        }
+      }
+    },
+    {
+      "case_id": "MEM-002",
+      "passed": true,
+      "reason": "safe behavior matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "needs_clarification",
+        "intent": "metric_lookup",
+        "metrics": [
+          "gross_margin"
+        ],
+        "time_range": null,
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "value": "区域A"
+          }
+        ],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": {
+          "reason_code": "missing_time",
+          "question": "请明确查询时间范围。"
+        }
+      }
+    },
+    {
+      "case_id": "MEM-003",
+      "passed": true,
+      "reason": "expected_query_plan subset matched",
+      "actual_query_plan": {
+        "version": "0.1.0",
+        "status": "needs_clarification",
+        "intent": "metric_lookup",
+        "metrics": [
+          "device_online_rate"
+        ],
+        "time_range": null,
+        "filters": [
+          {
+            "field": "station",
+            "operator": "eq",
+            "value": "场站A01"
+          }
+        ],
+        "dimensions": [],
+        "analysis": [],
+        "comparison": null,
+        "context_resolution": null,
+        "sort": [],
+        "limit": 100,
+        "clarification": {
+          "reason_code": "missing_time",
+          "question": "请明确查询时间范围。"
+        }
+      }
+    }
+  ]
+}
