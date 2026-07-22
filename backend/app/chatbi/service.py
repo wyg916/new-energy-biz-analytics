@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.chatbi.compiler import ScopeDenied, compile_query
 from app.chatbi.executor import execute_readonly
+from app.chatbi.guard import guard_compiled_query
 from app.chatbi.parser import parse_question
 from app.chatbi.plan import QueryPlan
 from app.chatbi.memory import SessionMemory, WORK_MEMORY
@@ -15,6 +16,7 @@ from app.models.auth import AuditLog, User
 from app.models.business import AnalysisRun, DataGenerationRun
 from app.services.dashboard import DashboardService, allowed_station_ids
 from app.services.metric_catalog import METRICS
+from app.services.diagnostics import DiagnosticService
 
 
 def _hash(value: str) -> str:
@@ -82,7 +84,14 @@ class ChatBIService:
         sql_hash = _hash(compiled.sql)
         WORK_MEMORY.update(work_state.task_id, "executing")
         chart = None
-        if plan.intent == "trend":
+        if plan.intent in {"diagnose_revenue_change", "diagnose_gross_profit_change", "diagnosis"}:
+            guard_compiled_query(compiled)
+            diagnostic_metric = "gross_profit" if plan.intent == "diagnose_gross_profit_change" else "charging_revenue"
+            payload = DiagnosticService(self.db, self.user).decompose(diagnostic_metric, plan.time_range.start, plan.time_range.end_exclusive, (plan.comparison or {}).get("type", "mom"), plan.limit)
+            result = {"diagnosis": payload}
+            chart = {"type": "waterfall", "metric_id": diagnostic_metric, "data": payload["bridge"]}
+            flat_values = {metric_id: payload["current"][metric_id] for metric_id in plan.metrics}
+        elif plan.intent == "trend":
             payload = DashboardService(self.db, self.user).monthly_trend(plan.metrics[0], plan.time_range.start, plan.time_range.end_exclusive)
             result = {"series": payload["points"]}
             chart = {"type": "line", "x_field": "period", "y_field": "value", "metric_id": plan.metrics[0], "data": payload["points"]}
@@ -117,6 +126,8 @@ class ChatBIService:
             raise RuntimeError("answer guard rejected structured result")
         lines = [f"{METRICS[metric_id][0]}：{_format(metric_id, value)}" for metric_id, value in flat_values.items()]
         answer = "；".join(lines) + "。结果来自已验证结构化查询，数据为模拟数据。"
+        if plan.intent in {"diagnose_revenue_change", "diagnose_gross_profit_change", "diagnosis"}:
+            answer += " 设备状态等因素仅作为同期关联线索，不构成因果结论。"
         WORK_MEMORY.update(work_state.task_id, "answering")
         self.state_version = self.memory.save(plan, run_id)
         self.db.add(AuditLog(actor_user_id=self.user.id, action="chat.execute", resource="chat_query", outcome="success", detail_json=json.dumps({"analysis_run_id": run_id, "sql_hash": sql_hash, "row_count": 1, "answer_guard": guard})))

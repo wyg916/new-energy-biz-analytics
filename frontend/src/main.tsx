@@ -8,7 +8,7 @@ type Summary = {metrics:Record<string,number|null>;metadata:Metadata}
 type StationRow = {station_id:string;station_name:string;region_id:string;city_id:string;station_type:string;metrics:Record<string,number|null>}
 type TrendPoint = {period:string;value:number|null}
 
-const nav = ['经营总览','收入分析','毛利分析','场站分析','设备分析','可信问数']
+const nav = ['经营总览','收入分析','毛利分析','场站分析','设备分析','异常诊断','可信问数']
 const navMetrics: Record<string,string[]> = {
   '经营总览':['charging_revenue','gross_profit','gross_margin','charging_volume_kwh','completed_order_count','active_user_count'],
   '收入分析':['charging_revenue','service_fee_revenue','revenue_per_kwh','completed_order_count'],
@@ -36,12 +36,20 @@ function ChatPanel({token}:{token:string}){
   return <section className="chat-layout"><article className="panel chat-main"><div className="panel-title"><div><h2>可信 ChatBI</h2><p>自然语言 → Query Plan → 安全编译 → 只读执行 → Answer Guard</p></div><div><span className="safe-chip">受控查询</span> <button className="new-session" onClick={()=>{setConversationId(null);setResponse(null);setQuestion('')}}>新会话</button></div></div><form className="question-box" onSubmit={ask}><textarea value={question} onChange={e=>setQuestion(e.target.value)} maxLength={500}/><button disabled={loading}>{loading?'正在验证并计算…':'开始分析'}</button></form>{error&&<div className="notice error">{error}</div>}{response&&<div className="answer"><span className={`status ${response.status}`}>{response.status}</span><h3>回答</h3><p>{response.answer}</p><small>会话 {response.conversation_id} · 状态版本 {response.state_version}</small>{response.chart&&<div className="chart-data">图表：{response.chart.type} · {response.chart.metric_id} · {response.chart.data.length} 个数据点</div>}<details><summary>查看 Query Plan</summary><pre>{JSON.stringify(response.query_plan,null,2)}</pre></details></div>}</article>{response&&<aside className="panel evidence-panel"><h2>证据面板</h2><dl><div><dt>数据分类</dt><dd>{response.evidence.data_classification}</dd></div><div><dt>来源</dt><dd>{response.evidence.source}</dd></div><div><dt>批次</dt><dd>{response.evidence.batch_id||'未执行'}</dd></div><div><dt>分析运行</dt><dd>{response.evidence.analysis_run_id}</dd></div><div><dt>会话版本</dt><dd>{response.evidence.state_version}</dd></div><div><dt>Query Guard</dt><dd>{response.evidence.query_guard}</dd></div><div><dt>Answer Guard</dt><dd>{response.evidence.answer_guard?.status||'未执行'}</dd></div><div><dt>SQL hash</dt><dd>{response.evidence.sql_hash?.slice(0,16)||'未生成'}</dd></div><div><dt>解释方式</dt><dd>{response.evidence.explanation_mode}</dd></div></dl><details><summary>分析师 SQL 证据</summary><pre>{response.evidence.sql||'当前角色不显示 SQL 或本次未执行'}</pre></details></aside>}</section>
 }
 
+function DiagnosticsPanel({token,start,end}:{token:string;start:string;end:string}){
+  const[data,setData]=useState<any>(null);const[anomaly,setAnomaly]=useState<any>(null);const[error,setError]=useState('')
+  useEffect(()=>{const q=`start=${start}&end_exclusive=${end}`;Promise.all([api<any>(`/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=5&${q}`,token),api<any>(`/api/v1/diagnostics/anomalies?metric=charging_revenue&${q}`,token)]).then(([d,a])=>{setData(d);setAnomaly(a);setError('')}).catch(e=>setError(e.message))},[start,end])
+  if(error)return <div className="notice error">{error}</div>;if(!data)return <div className="notice">正在计算异常与贡献拆解…</div>
+  const max=Math.max(...data.bridge.map((x:any)=>Math.abs(x.contribution)),1)
+  return <section className="diagnostics-grid"><article className="panel"><div className="panel-title"><div><h2>毛利变化桥接</h2><p>收入 − 电费成本 − 可变运营成本</p></div><span className="safe-chip">残差 {data.reconciliation.residual}</span></div><div className="bridge">{data.bridge.map((item:any)=><div key={item.driver}><span>{item.driver}</span><i className={item.contribution<0?'negative':''} style={{width:`${Math.abs(item.contribution)/max*100}%`}}/><b>{formatMetric('gross_profit',item.contribution)}</b></div>)}</div></article><article className="panel"><h2>规则异常</h2><dl><div><dt>指标</dt><dd>充电收入</dd></div><div><dt>环比变化</dt><dd>{anomaly?.change_rate==null?'数据不足':formatMetric('gross_margin',anomaly.change_rate)}</dd></div><div><dt>阈值</dt><dd>{formatMetric('gross_margin',anomaly?.rule.threshold)}</dd></div><div><dt>状态</dt><dd>{anomaly?.triggered?'已触发':'未触发'}</dd></div></dl></article><article className="panel wide"><div className="panel-title"><div><h2>场站贡献定位</h2><p>按绝对贡献排序，不把同期关系解释为因果</p></div></div><table><thead><tr><th>场站</th><th>区域</th><th>当前</th><th>基期</th><th>贡献</th></tr></thead><tbody>{data.station_contributions.map((row:any)=><tr key={row.station_id}><td>{row.station_name}</td><td>{row.region_id}</td><td>{formatMetric('gross_profit',row.current)}</td><td>{formatMetric('gross_profit',row.previous)}</td><td className={row.contribution<0?'down':'up'}>{formatMetric('gross_profit',row.contribution)}</td></tr>)}</tbody></table><section className="evidence"><b>模拟数据</b><span>来源：{data.metadata.source}</span><span>run：{data.metadata.analysis_run_id}</span><span>{data.metadata.causality_boundary}</span></section></article></section>
+}
+
 function Dashboard({token,onLogout}:{token:string;onLogout:()=>void}){
   const [active,setActive]=useState(nav[0]); const [summary,setSummary]=useState<Summary|null>(null)
   const [stations,setStations]=useState<StationRow[]>([]); const [trend,setTrend]=useState<TrendPoint[]>([])
   const [loading,setLoading]=useState(true); const [error,setError]=useState('')
   const [start,setStart]=useState('2025-01-01'); const [end,setEnd]=useState('2026-07-01')
-  const primary=active==='可信问数'?'charging_revenue':navMetrics[active][0]
+  const isSpecial=active==='可信问数'||active==='异常诊断';const primary=isSpecial?'charging_revenue':navMetrics[active][0]
   async function load(){setLoading(true);setError('');try{
     const q=`start=${start}&end_exclusive=${end}`
     const [s,st,t]=await Promise.all([
@@ -50,12 +58,12 @@ function Dashboard({token,onLogout}:{token:string;onLogout:()=>void}){
       api<{points:TrendPoint[]}>(`/api/v1/dashboard/trend?metric=${primary}&${q}`,token),
     ]);setSummary(s);setStations(st.rows);setTrend(t.points)
   }catch(e){setError(e instanceof Error?e.message:'加载失败')}finally{setLoading(false)}}
-  useEffect(()=>{if(active!=='可信问数')void load()},[active])
+  useEffect(()=>{if(!isSpecial)void load()},[active])
   const maxStation=useMemo(()=>Math.max(...stations.map(s=>s.metrics[primary]??0),1),[stations,primary])
   return <div className="app-shell">
     <aside><div className="brand"><span>新能源</span><strong>经营分析平台</strong><small>AI 增强 BI · Alpha</small></div><nav>{nav.map(item=><button className={item===active?'active':''} onClick={()=>setActive(item)} key={item}>{item}</button>)}</nav><div className="truth-badge">仅限模拟数据<br/>不可用于生产决策</div></aside>
     <main><header><div><h1>{active}</h1><p>统一口径 · 权限过滤 · 可审计证据</p></div><div className="toolbar"><input type="date" value={start} onChange={e=>setStart(e.target.value)}/><span>至</span><input type="date" value={end} onChange={e=>setEnd(e.target.value)}/><button onClick={()=>void load()}>刷新</button><button className="ghost" onClick={onLogout}>退出</button></div></header>
-      {active==='可信问数'?<ChatPanel token={token}/>:<>{error&&<div className="notice error">{error}</div>}{loading&&<div className="notice">正在从平台数据库计算指标…</div>}
+      {active==='可信问数'?<ChatPanel token={token}/>:active==='异常诊断'?<DiagnosticsPanel token={token} start={start} end={end}/>:<>{error&&<div className="notice error">{error}</div>}{loading&&<div className="notice">正在从平台数据库计算指标…</div>}
       {summary&&<><section className="evidence"><b>模拟数据</b><span>数据时间：{summary.metadata.data_time_range.start} — {summary.metadata.data_time_range.end_exclusive}（右开）</span><span>来源：平台数据库</span><span>批次：{summary.metadata.batch_id}</span><span>analysis_run_id：{summary.metadata.analysis_run_id}</span></section>
       <section className="kpi-grid">{navMetrics[active].map((id,index)=><article className="kpi" key={id}><div><span>{metricNames[id]}</span><em>{index===0?'核心':'已验证口径'}</em></div><strong>{formatMetric(id,summary.metrics[id])}</strong><small>来自指标语义层 v0.1.0</small></article>)}</section>
       <section className="content-grid"><article className="panel wide"><div className="panel-title"><div><h2>{metricNames[primary]}月度趋势</h2><p>按 Asia/Shanghai 自然月聚合</p></div></div><Sparkline points={trend}/></article>
