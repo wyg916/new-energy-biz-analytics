@@ -1,0 +1,21 @@
+{
+  "executed_at": "2026-07-22",
+  "environment": "new Docker Compose project volumes",
+  "checks": {
+    "images_built": true,
+    "services_started": true,
+    "empty_database_upgrade": true,
+    "downgrade_to_base": true,
+    "reupgrade_to_head": true,
+    "fixed_seed_300000": true,
+    "data_quality_20_of_20": true,
+    "docker_smoke_6_of_6": true,
+    "playwright_core_journey_1_of_1": true
+  },
+  "ports": {
+    "web": 8080,
+    "api_host": 18000,
+    "api_container": 8000
+  },
+  "passed": true
+}

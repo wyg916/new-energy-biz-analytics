@@ -8,7 +8,7 @@ type Summary = {metrics:Record<string,number|null>;metadata:Metadata}
 type StationRow = {station_id:string;station_name:string;region_id:string;city_id:string;station_type:string;metrics:Record<string,number|null>}
 type TrendPoint = {period:string;value:number|null}
 
-const nav = ['经营总览','收入分析','毛利分析','场站分析','设备分析','异常诊断','可信问数']
+const nav = ['经营总览','收入分析','毛利分析','场站分析','设备分析','异常诊断','可信问数','报告草稿']
 const navMetrics: Record<string,string[]> = {
   '经营总览':['charging_revenue','gross_profit','gross_margin','charging_volume_kwh','completed_order_count','active_user_count'],
   '收入分析':['charging_revenue','service_fee_revenue','revenue_per_kwh','completed_order_count'],
@@ -44,12 +44,19 @@ function DiagnosticsPanel({token,start,end}:{token:string;start:string;end:strin
   return <section className="diagnostics-grid"><article className="panel"><div className="panel-title"><div><h2>毛利变化桥接</h2><p>收入 − 电费成本 − 可变运营成本</p></div><span className="safe-chip">残差 {data.reconciliation.residual}</span></div><div className="bridge">{data.bridge.map((item:any)=><div key={item.driver}><span>{item.driver}</span><i className={item.contribution<0?'negative':''} style={{width:`${Math.abs(item.contribution)/max*100}%`}}/><b>{formatMetric('gross_profit',item.contribution)}</b></div>)}</div></article><article className="panel"><h2>规则异常</h2><dl><div><dt>指标</dt><dd>充电收入</dd></div><div><dt>环比变化</dt><dd>{anomaly?.change_rate==null?'数据不足':formatMetric('gross_margin',anomaly.change_rate)}</dd></div><div><dt>阈值</dt><dd>{formatMetric('gross_margin',anomaly?.rule.threshold)}</dd></div><div><dt>状态</dt><dd>{anomaly?.triggered?'已触发':'未触发'}</dd></div></dl></article><article className="panel wide"><div className="panel-title"><div><h2>场站贡献定位</h2><p>按绝对贡献排序，不把同期关系解释为因果</p></div></div><table><thead><tr><th>场站</th><th>区域</th><th>当前</th><th>基期</th><th>贡献</th></tr></thead><tbody>{data.station_contributions.map((row:any)=><tr key={row.station_id}><td>{row.station_name}</td><td>{row.region_id}</td><td>{formatMetric('gross_profit',row.current)}</td><td>{formatMetric('gross_profit',row.previous)}</td><td className={row.contribution<0?'down':'up'}>{formatMetric('gross_profit',row.contribution)}</td></tr>)}</tbody></table><section className="evidence"><b>模拟数据</b><span>来源：{data.metadata.source}</span><span>run：{data.metadata.analysis_run_id}</span><span>{data.metadata.causality_boundary}</span></section></article></section>
 }
 
+function ReportPanel({token,start,end}:{token:string;start:string;end:string}){
+  const[report,setReport]=useState<any>(null);const[error,setError]=useState('');const[loading,setLoading]=useState(false)
+  async function generate(){setLoading(true);try{setReport(await api<any>(`/api/v1/reports/draft?report_type=monthly&start=${start}&end_exclusive=${end}`,token));setError('')}catch(e){setError(e instanceof Error?e.message:'生成失败')}finally{setLoading(false)}}
+  async function download(format:'markdown'|'csv'){const r=await fetch(`/api/v1/reports/export?report_type=monthly&format=${format}&start=${start}&end_exclusive=${end}`,{headers:{Authorization:`Bearer ${token}`}});if(!r.ok){setError('导出失败');return}const blob=await r.blob();const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`新能源经营分析月报草稿.${format==='csv'?'csv':'md'}`;a.click();URL.revokeObjectURL(url)}
+  return <section className="report-layout"><article className="panel"><div className="panel-title"><div><h2>周报 / 月报草稿</h2><p>仅引用验证后的结构化结果，导出时重新鉴权</p></div><div><button className="new-session" onClick={()=>void generate()}>{loading?'生成中…':'生成月报草稿'}</button></div></div>{error&&<div className="notice error">{error}</div>}{!report&&!loading&&<div className="empty-report">选择数据期后生成可审核草稿；不会自动发送或发布。</div>}{report&&<><section className="evidence"><b>模拟数据</b><span>来源：{report.metadata.source}</span><span>批次：{report.metadata.batch_id}</span><span>run：{report.metadata.analysis_run_id}</span><span>状态：草稿</span></section><div className="report-actions"><button onClick={()=>void download('markdown')}>导出 Markdown</button><button onClick={()=>void download('csv')}>导出 CSV</button></div><pre className="report-preview">{report.markdown}</pre></>}</article></section>
+}
+
 function Dashboard({token,onLogout}:{token:string;onLogout:()=>void}){
   const [active,setActive]=useState(nav[0]); const [summary,setSummary]=useState<Summary|null>(null)
   const [stations,setStations]=useState<StationRow[]>([]); const [trend,setTrend]=useState<TrendPoint[]>([])
   const [loading,setLoading]=useState(true); const [error,setError]=useState('')
-  const [start,setStart]=useState('2025-01-01'); const [end,setEnd]=useState('2026-07-01')
-  const isSpecial=active==='可信问数'||active==='异常诊断';const primary=isSpecial?'charging_revenue':navMetrics[active][0]
+  const [start,setStart]=useState('2026-01-01'); const [end,setEnd]=useState('2026-07-01')
+  const isSpecial=['可信问数','异常诊断','报告草稿'].includes(active);const primary=isSpecial?'charging_revenue':navMetrics[active][0]
   async function load(){setLoading(true);setError('');try{
     const q=`start=${start}&end_exclusive=${end}`
     const [s,st,t]=await Promise.all([
@@ -63,7 +70,7 @@ function Dashboard({token,onLogout}:{token:string;onLogout:()=>void}){
   return <div className="app-shell">
     <aside><div className="brand"><span>新能源</span><strong>经营分析平台</strong><small>AI 增强 BI · Alpha</small></div><nav>{nav.map(item=><button className={item===active?'active':''} onClick={()=>setActive(item)} key={item}>{item}</button>)}</nav><div className="truth-badge">仅限模拟数据<br/>不可用于生产决策</div></aside>
     <main><header><div><h1>{active}</h1><p>统一口径 · 权限过滤 · 可审计证据</p></div><div className="toolbar"><input type="date" value={start} onChange={e=>setStart(e.target.value)}/><span>至</span><input type="date" value={end} onChange={e=>setEnd(e.target.value)}/><button onClick={()=>void load()}>刷新</button><button className="ghost" onClick={onLogout}>退出</button></div></header>
-      {active==='可信问数'?<ChatPanel token={token}/>:active==='异常诊断'?<DiagnosticsPanel token={token} start={start} end={end}/>:<>{error&&<div className="notice error">{error}</div>}{loading&&<div className="notice">正在从平台数据库计算指标…</div>}
+      {active==='可信问数'?<ChatPanel token={token}/>:active==='异常诊断'?<DiagnosticsPanel token={token} start={start} end={end}/>:active==='报告草稿'?<ReportPanel token={token} start={start} end={end}/>:<>{error&&<div className="notice error">{error}</div>}{loading&&<div className="notice">正在从平台数据库计算指标…</div>}
       {summary&&<><section className="evidence"><b>模拟数据</b><span>数据时间：{summary.metadata.data_time_range.start} — {summary.metadata.data_time_range.end_exclusive}（右开）</span><span>来源：平台数据库</span><span>批次：{summary.metadata.batch_id}</span><span>analysis_run_id：{summary.metadata.analysis_run_id}</span></section>
       <section className="kpi-grid">{navMetrics[active].map((id,index)=><article className="kpi" key={id}><div><span>{metricNames[id]}</span><em>{index===0?'核心':'已验证口径'}</em></div><strong>{formatMetric(id,summary.metrics[id])}</strong><small>来自指标语义层 v0.1.0</small></article>)}</section>
       <section className="content-grid"><article className="panel wide"><div className="panel-title"><div><h2>{metricNames[primary]}月度趋势</h2><p>按 Asia/Shanghai 自然月聚合</p></div></div><Sparkline points={trend}/></article>

@@ -16,7 +16,8 @@ from app.services.metrics import MetricService
 def comparison_period(start: date, end_exclusive: date, comparison: str) -> tuple[date, date]:
     if comparison == "yoy":
         return start.replace(year=start.year - 1), end_exclusive.replace(year=end_exclusive.year - 1)
-    if start.day == 1 and end_exclusive.day == 1:
+    next_month = date(start.year + (start.month == 12), 1 if start.month == 12 else start.month + 1, 1)
+    if start.day == 1 and end_exclusive == next_month:
         previous_start = date(start.year - (start.month == 1), 12 if start.month == 1 else start.month - 1, 1)
         return previous_start, start
     duration = end_exclusive - start

@@ -1,0 +1,13 @@
+{
+  "executed_at": "2026-07-22T12:39:26.806364+00:00",
+  "base_url": "http://127.0.0.1:18000/api/v1",
+  "checks": {
+    "health": true,
+    "dashboard_15_metrics": true,
+    "chatbi_guarded": true,
+    "diagnostic_reconciled": true,
+    "report_traceable": true,
+    "regional_scope_403": true
+  },
+  "passed": true
+}

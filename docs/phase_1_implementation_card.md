@@ -5,9 +5,9 @@
 ## 冻结运行环境
 
 - Python 3.11.9；后端 FastAPI 0.115.12、SQLAlchemy 2.0.41、Alembic 1.16.1。
-- Node.js 24.x；npm 11.x；React 19.1、Vite 6.3。
+- Node.js 24.x；npm 11.x；React 19.1、Vite 6.4。
 - PostgreSQL 16.9、Redis 7.4.5、Docker Compose 2.26+。
-- 端口：Web 8080、API 8000、PostgreSQL/Redis 仅 Compose 内网暴露。
+- 端口：Web 8080、宿主 API 18000（容器内 8000）、PostgreSQL/Redis 仅 Compose 内网暴露。原宿主 8000 在 Phase 8 验收时发现被仓库外进程占用，因此采用可回滚端口调整。
 
 ## 验收范围
 

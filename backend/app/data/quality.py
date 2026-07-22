@@ -1,6 +1,8 @@
 import json
-from datetime import date
+from collections import defaultdict
+from datetime import date, datetime
 from decimal import Decimal
+from zoneinfo import ZoneInfo
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -39,7 +41,10 @@ def validate_published_batch(db: Session) -> dict:
     device_mismatch = db.scalar(select(func.count()).select_from(Device).join(Station, Device.station_id == Station.station_id).where(Device.station_id != Station.station_id))
     rules["DQ-004"] = hierarchy_mismatch == 0 and device_mismatch == 0
 
-    invalid_time = db.scalar(select(func.count()).select_from(ChargingSession).where((ChargingSession.end_time < ChargingSession.start_time) | (func.date(ChargingSession.start_time) < "2025-01-01") | (func.date(ChargingSession.start_time) > "2026-06-30")))
+    business_tz = ZoneInfo("Asia/Shanghai")
+    period_start = datetime(2025, 1, 1, tzinfo=business_tz)
+    period_end_exclusive = datetime(2026, 7, 1, tzinfo=business_tz)
+    invalid_time = db.scalar(select(func.count()).select_from(ChargingSession).where((ChargingSession.end_time < ChargingSession.start_time) | (ChargingSession.start_time < period_start) | (ChargingSession.start_time >= period_end_exclusive)))
     rules["DQ-005"] = invalid_time == 0
     invalid_range = db.scalar(select(func.count()).select_from(ChargingSession).where((ChargingSession.energy_kwh < 0) | (ChargingSession.electricity_fee_net_amount < 0) | (ChargingSession.service_fee_net_amount < 0) | (ChargingSession.charging_duration_seconds < 0)))
     invalid_cost_range = db.scalar(select(func.count()).select_from(EnergyCost).where((EnergyCost.purchase_price_per_kwh < 0) | (EnergyCost.settled_energy_kwh < 0) | (EnergyCost.energy_cost < 0)))
@@ -72,7 +77,12 @@ def validate_published_batch(db: Session) -> dict:
     connector_mismatch = db.execute(select(Station.station_id, Station.connector_count, func.sum(Device.connector_count)).join(Device).group_by(Station.station_id, Station.connector_count).having(Station.connector_count != func.sum(Device.connector_count))).all()
     rules["DQ-013"] = not connector_mismatch
 
-    session_energy = {(station_id, str(day)): Decimal(str(value or 0)) for station_id, day, value in db.execute(select(ChargingSession.station_id, func.date(ChargingSession.settlement_time), func.sum(ChargingSession.energy_kwh)).where(ChargingSession.session_status == "completed").group_by(ChargingSession.station_id, func.date(ChargingSession.settlement_time)))}
+    session_energy: dict[tuple[str, str], Decimal] = defaultdict(Decimal)
+    for station_id, settlement_time, energy in db.execute(select(ChargingSession.station_id, ChargingSession.settlement_time, ChargingSession.energy_kwh).where(ChargingSession.session_status == "completed")):
+        if settlement_time.tzinfo is None:
+            settlement_time = settlement_time.replace(tzinfo=business_tz)
+        business_day = settlement_time.astimezone(business_tz).date().isoformat()
+        session_energy[(station_id, business_day)] += Decimal(str(energy or 0))
     cost_energy = {(station_id, str(day)): Decimal(str(value or 0)) for station_id, day, value in db.execute(select(EnergyCost.station_id, EnergyCost.cost_date, func.sum(EnergyCost.settled_energy_kwh)).group_by(EnergyCost.station_id, EnergyCost.cost_date))}
     bad_energy_reconciliation = 0
     for key, source_energy in session_energy.items():
