@@ -1,0 +1,37 @@
+name: renewable-operations-alpha
+
+services:
+  db:
+    image: postgres:16.9-alpine
+    environment:
+      POSTGRES_DB: renewable_alpha
+      POSTGRES_USER: alpha
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-alpha-local-only}
+    volumes: [alpha_pgdata:/var/lib/postgresql/data]
+    healthcheck: {test: ["CMD-SHELL", "pg_isready -U alpha -d renewable_alpha"], interval: 5s, timeout: 3s, retries: 20}
+  redis:
+    image: redis:7.4.5-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes: [alpha_redisdata:/data]
+    healthcheck: {test: ["CMD", "redis-cli", "ping"], interval: 5s, timeout: 3s, retries: 20}
+  api:
+    build: ./backend
+    environment:
+      APP_ENV: development
+      DATABASE_URL: postgresql+psycopg://alpha:${POSTGRES_PASSWORD:-alpha-local-only}@db:5432/renewable_alpha
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: ${SECRET_KEY:-local-alpha-change-me}
+      AUTO_BOOTSTRAP_DEMO_USERS: "true"
+    depends_on:
+      db: {condition: service_healthy}
+      redis: {condition: service_healthy}
+    ports: ["8000:8000"]
+    healthcheck: {test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')"], interval: 10s, timeout: 3s, retries: 20}
+  web:
+    build: ./frontend
+    depends_on:
+      api: {condition: service_healthy}
+    ports: ["8080:80"]
+volumes:
+  alpha_pgdata:
+  alpha_redisdata:

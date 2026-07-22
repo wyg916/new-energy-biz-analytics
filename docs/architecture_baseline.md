@@ -41,7 +41,7 @@ LLM 不得绕过 Query Plan 和 Query Guard 直接执行核心 SQL；不得生�
 | 测试 | pytest + Playwright + 前端单测 | 方向已设计 | 测试命令、隔离数据库、fixture、覆盖门槛和 CI |
 | 模型网关 | 统一 Model Gateway | 概念设计 | 供应商接口、离线替身、超时/重试/熔断、脱敏和成本字段 |
 
-具体运行时版本、包管理器和端口必须写入 Phase 1 实施卡并由项目负责人确认，不得由实现者静默决定。
+具体运行时版本、包管理器和端口已在 `phase_1_implementation_card.md` 冻结；后续补丁升级不得改变合同或安全边界。
 
 ## 3. 推荐仓库结构
 

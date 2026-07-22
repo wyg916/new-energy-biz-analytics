@@ -10,6 +10,7 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+.cache/
 .mypy_cache/
 .ruff_cache/
 .venv/
@@ -21,6 +22,7 @@ htmlcov/
 node_modules/
 dist/
 build/
+*.tsbuildinfo
 coverage/
 playwright-report/
 test-results/
