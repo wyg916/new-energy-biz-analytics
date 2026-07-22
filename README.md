@@ -19,6 +19,10 @@
 
 前置：Docker Desktop / Docker Engine 与 Compose v2。
 
+Windows 用户可直接双击根目录的 [`一键启动.bat`](一键启动.bat)。脚本会检查 Docker、创建本地 `.env`、构建并启动四个服务、幂等生成完整模拟数据，成功后打开产品页面。成功或失败时窗口都会停留，不会闪退；首次生成 30 万条会话可能需要数分钟。
+
+也可以手动执行：
+
 ```powershell
 Copy-Item .env.example .env
 docker compose up -d --build
