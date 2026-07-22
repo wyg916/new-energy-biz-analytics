@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>新能源企业经营分析智能平台 - Phase 0.1 低保真原型</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="prototype-banner">
+    <strong>开发前低保真原型</strong>
+    <span>非正式系统 · 不连接后端 · 所有数值均为模拟示例</span>
+  </div>
+
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="原型页面导航">
+      <div class="brand">
+        <span class="brand-mark">E</span>
+        <div><strong>新能源经营分析</strong><small>AI 增强 BI</small></div>
+      </div>
+      <nav id="page-nav">
+        <button data-page="login"><span>01</span> 登录</button>
+        <button class="active" data-page="dashboard"><span>02</span> 经营驾驶舱</button>
+        <button data-page="chat"><span>03</span> 智能问数</button>
+        <button data-page="evidence"><span>04</span> 证据面板</button>
+        <button data-page="anomalies"><span>05</span> 异常中心</button>
+        <button data-page="metrics"><span>06</span> 指标中心</button>
+        <button data-page="runs"><span>07</span> 分析记录</button>
+      </nav>
+      <div class="sidebar-note">
+        <strong>模拟数据</strong>
+        <span>2025-01-01—2026-06-30</span>
+        <span>规则生成 · seed 20260722</span>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" id="page-eyebrow">经营监控</p>
+          <h1 id="page-title">经营驾驶舱</h1>
+        </div>
+        <div class="topbar-actions">
+          <label>评审状态
+            <select id="state-select">
+              <option value="normal">正常状态</option>
+              <option value="empty">空态</option>
+              <option value="error">错误态</option>
+              <option value="delayed">数据延迟</option>
+              <option value="unauthorized">无权限</option>
+            </select>
+          </label>
+          <button class="secondary" id="open-evidence">查看证据</button>
+        </div>
+      </header>
+
+      <section class="source-strip" aria-label="数据来源信息">
+        <span class="badge warning">模拟数据</span>
+        <span><b>数据时间</b> 2026-06-30 23:59</span>
+        <span><b>来源</b> 规则生成模拟数据 v0.1</span>
+        <span><b>run_id</b> run_demo_20260630_001</span>
+      </section>
+
+      <section id="state-message" class="state-message hidden" role="status"></section>
+
+      <section id="page-content">
+        <article class="page-view" data-view="login">
+          <div class="login-layout">
+            <div class="login-copy">
+              <span class="badge warning">模拟数据环境</span>
+              <h2>可信经营分析，从明确身份和数据范围开始</h2>
+              <p>登录后只能查看已授权区域。系统不会开放自由 SQL，也不会展示其他区域对象的存在性。</p>
+              <ul>
+                <li>经营负责人：授权范围经营总览</li>
+                <li>区域运营经理：所属区域和场站</li>
+                <li>数据分析师：口径、证据和评测</li>
+              </ul>
+            </div>
+            <form class="login-card" onsubmit="return false">
+              <h3>登录</h3>
+              <label>账号<input value="review.user" aria-label="账号"></label>
+              <label>密码<input type="password" value="prototype" aria-label="密码"></label>
+              <label>角色<select><option>区域运营经理（区域 A）</option><option>经营负责人</option><option>数据分析师</option></select></label>
+              <button class="primary">进入模拟环境</button>
+              <small>此原型不提交或保存任何凭据。</small>
+            </form>
+          </div>
+        </article>
+
+        <article class="page-view active" data-view="dashboard">
+          <div class="filter-row">
+            <button>2026 年 6 月⌄</button><button>全部授权区域⌄</button><button>全部场站⌄</button><span>对比：环比</span>
+          </div>
+          <div class="kpi-grid">
+            <div class="card kpi"><small>充电收入</small><strong>¥ 18.42M</strong><span class="down">环比 -6.8%</span><em>已发布口径 v0.1.0</em></div>
+            <div class="card kpi"><small>经营毛利</small><strong>¥ 4.36M</strong><span class="down">环比 -11.2%</span><em>毛利率 23.7%</em></div>
+            <div class="card kpi"><small>充电量</small><strong>9.18M kWh</strong><span class="up">环比 +1.9%</span><em>完成会话</em></div>
+            <div class="card kpi"><small>设备在线率</small><strong>96.4%</strong><span class="down">环比 -1.3pp</span><em>可观测时长口径</em></div>
+          </div>
+          <div class="two-column">
+            <section class="card chart-card">
+              <div class="card-head"><div><h3>充电收入趋势</h3><p>2026 年 1—6 月，人民币百万元</p></div><span>月</span></div>
+              <div class="bar-chart" aria-label="静态趋势示意">
+                <div style="--h:64%"><span>1月</span></div><div style="--h:72%"><span>2月</span></div><div style="--h:78%"><span>3月</span></div><div style="--h:86%"><span>4月</span></div><div style="--h:91%"><span>5月</span></div><div class="alert" style="--h:84%"><span>6月</span></div>
+              </div>
+            </section>
+            <section class="card">
+              <div class="card-head"><div><h3>需要关注</h3><p>按模拟影响金额排序</p></div><span class="badge danger">4 项</span></div>
+              <ul class="issue-list">
+                <li><span class="severity high">高</span><div><b>区域 A 收入环比下降</b><small>场站 A01、A03 贡献 61%</small></div><strong>-¥0.82M</strong></li>
+                <li><span class="severity med">中</span><div><b>采购电价上升</b><small>区域 B 峰时成本增加</small></div><strong>+8.6%</strong></li>
+                <li><span class="severity med">中</span><div><b>设备在线率下降</b><small>场站 C04 故障时长增加</small></div><strong>-4.1pp</strong></li>
+              </ul>
+            </section>
+          </div>
+          <section class="card table-card">
+            <div class="card-head"><div><h3>区域经营表现</h3><p>授权范围内，2026 年 6 月</p></div><button>查看全部</button></div>
+            <table><thead><tr><th>区域</th><th>充电收入</th><th>环比</th><th>经营毛利</th><th>在线率</th><th>状态</th></tr></thead><tbody><tr><td>区域 A</td><td>¥6.12M</td><td class="down">-10.8%</td><td>¥1.31M</td><td>94.8%</td><td><span class="badge danger">关注</span></td></tr><tr><td>区域 B</td><td>¥6.48M</td><td class="down">-2.1%</td><td>¥1.42M</td><td>97.2%</td><td><span class="badge">正常</span></td></tr><tr><td>区域 C</td><td>¥5.82M</td><td class="up">+1.4%</td><td>¥1.63M</td><td>97.3%</td><td><span class="badge">正常</span></td></tr></tbody></table>
+          </section>
+        </article>
+
+        <article class="page-view" data-view="chat">
+          <div class="chat-layout">
+            <section class="card conversation">
+              <div class="message user">2026 年 6 月区域 A 充电收入为什么环比下降？</div>
+              <div class="message assistant">
+                <span class="badge warning">模拟数据</span>
+                <h3>区域 A 充电收入环比下降 10.8%</h3>
+                <p>结构化拆解显示，完成订单数下降是最大负贡献因素；场站 A01 和 A03 合计贡献约 61% 的收入降幅。设备在线率同步下降，但这里只能视为相关信号。</p>
+                <div class="answer-grid"><div><small>订单量贡献</small><b>-¥0.46M</b></div><div><small>单均电量贡献</small><b>-¥0.18M</b></div><div><small>度电收入贡献</small><b>-¥0.12M</b></div><div><small>残差</small><b>-¥0.06M</b></div></div>
+                <button class="secondary evidence-link">查看 Query Plan、SQL 与口径</button>
+              </div>
+              <div class="suggestions"><button>哪些场站影响最大？</button><button>改看区域 B</button><button>切换为同比</button></div>
+              <div class="composer"><input aria-label="输入经营问题" placeholder="输入经营问题；歧义时系统会先澄清"><button class="primary">发送</button></div>
+            </section>
+            <aside class="card context-card"><h3>当前会话状态</h3><dl><dt>指标</dt><dd>充电收入</dd><dt>时间</dt><dd>2026 年 6 月</dd><dt>区域</dt><dd>区域 A</dd><dt>比较</dt><dd>环比</dd><dt>步骤</dt><dd>场站贡献定位</dd><dt>state_version</dt><dd>2</dd></dl><small>新会话不会继承这些临时条件。</small></aside>
+          </div>
+        </article>
+
+        <article class="page-view" data-view="evidence">
+          <div class="evidence-grid">
+            <section class="card"><h3>运行摘要</h3><dl class="detail-list"><dt>run_id</dt><dd>run_demo_20260630_001</dd><dt>状态</dt><dd><span class="badge">succeeded</span></dd><dt>数据来源</dt><dd>模拟数据 / batch_sim_0_1</dd><dt>数据时间</dt><dd>2026-06-30 23:59 CST</dd><dt>耗时</dt><dd>1.84 秒</dd></dl></section>
+            <section class="card"><h3>指标口径</h3><dl class="detail-list"><dt>指标</dt><dd>charging_revenue</dd><dt>版本</dt><dd>0.1.0</dd><dt>公式</dt><dd>电费实收净额 + 服务费实收净额</dd><dt>除零</dt><dd>不适用</dd></dl></section>
+            <section class="card full"><h3>Validated Query Plan</h3><pre>{
+  "intent": "diagnose_revenue_change",
+  "metrics": ["charging_revenue"],
+  "filters": [{"region": "region_a"}],
+  "time_range": "2026-06",
+  "comparison": "mom",
+  "analysis": ["revenue_decomposition", "top_n"]
+}</pre></section>
+            <section class="card full"><h3>SQL 与安全</h3><div class="security-row"><span class="badge">SELECT only</span><span class="badge">单语句</span><span class="badge">参数化</span><span class="badge">AST 已校验</span><span class="badge">区域范围已注入</span></div><pre>SQL hash: sha256:demo-41a6…
+参数: start_ts=[已绑定], end_ts=[已绑定], allowed_station_ids=[已脱敏]
+计划成本: 18,420 · 计划行数: 9,200 · 返回: 10 行</pre></section>
+          </div>
+        </article>
+
+        <article class="page-view" data-view="anomalies">
+          <div class="filter-row"><button>全部等级⌄</button><button>2026 年 6 月⌄</button><button>全部授权区域⌄</button><span>规则版本 0.1</span></div>
+          <section class="card table-card"><table><thead><tr><th>等级</th><th>异常</th><th>对象</th><th>实际/基准</th><th>模拟影响</th><th>状态</th></tr></thead><tbody><tr><td><span class="badge danger">高</span></td><td>充电收入环比下降</td><td>区域 A</td><td>-10.8% / -3.0%</td><td>-¥0.82M</td><td>待确认</td></tr><tr><td><span class="badge warning">中</span></td><td>设备在线率偏低</td><td>场站 C04</td><td>89.1% / 96.0%</td><td>相关信号</td><td>分析中</td></tr><tr><td><span class="badge warning">中</span></td><td>电费成本上升</td><td>区域 B</td><td>+8.6% / +2.0%</td><td>-¥0.23M 毛利</td><td>待确认</td></tr></tbody></table></section>
+          <div class="card note"><b>因果边界：</b>设备、用户和经营变化默认只展示相关或疑似影响；没有因果设计时不输出“导致”。</div>
+        </article>
+
+        <article class="page-view" data-view="metrics">
+          <div class="filter-row"><input placeholder="搜索指标ID、中文名或同义词"><button>状态：已批准实施⌄</button><span>固定 15 项 P0 指标</span></div>
+          <section class="card table-card"><table><thead><tr><th>指标 ID</th><th>中文名</th><th>单位</th><th>版本</th><th>关键规则</th><th>状态</th></tr></thead><tbody><tr><td>charging_revenue</td><td>充电收入</td><td>元</td><td>0.1.0</td><td>两项实收净额之和</td><td><span class="badge">已批准实施</span></td></tr><tr><td>gross_margin</td><td>毛利率</td><td>%</td><td>0.1.0</td><td>收入为 0 返回 NULL</td><td><span class="badge">已批准实施</span></td></tr><tr><td>station_utilization_rate</td><td>场站利用率</td><td>%</td><td>0.1.0</td><td>充电时长 / 可用枪口时长</td><td><span class="badge">已批准实施</span></td></tr><tr><td>active_user_count</td><td>活跃用户数</td><td>人</td><td>0.1.0</td><td>周期内完成会话用户去重</td><td><span class="badge">已批准实施</span></td></tr></tbody></table></section>
+          <div class="card note"><b>P1：</b>用户复购率不属于 P0，不得在 P0 页面或评测中作为已发布指标。</div>
+        </article>
+
+        <article class="page-view" data-view="runs">
+          <div class="filter-row"><button>状态：全部⌄</button><button>2026 年 6 月⌄</button><input placeholder="搜索 run_id 或问题"></div>
+          <section class="card table-card"><table><thead><tr><th>时间</th><th>问题/任务</th><th>run_id</th><th>状态</th><th>来源</th><th>耗时</th></tr></thead><tbody><tr><td>06-30 10:24</td><td>区域 A 收入下降诊断</td><td>run_demo_...001</td><td><span class="badge">succeeded</span></td><td>模拟数据</td><td>1.84s</td></tr><tr><td>06-30 10:18</td><td>区域 B 毛利环比</td><td>run_demo_...998</td><td><span class="badge warning">partial</span></td><td>模拟数据 / AI降级</td><td>2.31s</td></tr><tr><td>06-30 09:55</td><td>区域 C 数据刷新</td><td>run_demo_...973</td><td><span class="badge danger">failed</span></td><td>质量异常批次</td><td>0.92s</td></tr></tbody></table></section>
+          <div class="card note"><b>状态真实性：</b>失败运行不会覆盖最近成功结果；历史运行按当前权限重新鉴权后才能查看。</div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <aside id="evidence-drawer" class="drawer" aria-hidden="true">
+    <div class="drawer-head"><div><small>证据面板</small><h2>run_demo_20260630_001</h2></div><button id="close-evidence" aria-label="关闭证据面板">×</button></div>
+    <div class="drawer-body"><span class="badge warning">模拟数据</span><dl class="detail-list"><dt>数据时间</dt><dd>2026-06-30 23:59</dd><dt>来源</dt><dd>规则生成模拟数据 v0.1</dd><dt>指标版本</dt><dd>charging_revenue@0.1.0</dd><dt>Query Plan</dt><dd>0.1.0 · validated</dd><dt>Query Guard</dt><dd>allow · policy 0.1.0</dd><dt>SQL hash</dt><dd>sha256:demo-41a6…</dd></dl><p class="drawer-note">正式系统中，证据必须来自真实运行记录；此处仅展示位置和信息层级。</p></div>
+  </aside>
+  <div id="drawer-backdrop" class="backdrop hidden"></div>
+  <script src="prototype.js"></script>
+</body>
+</html>

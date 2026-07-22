@@ -1,0 +1,56 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+htmlcov/
+.coverage*
+
+# Node and frontend build output
+node_modules/
+dist/
+build/
+coverage/
+playwright-report/
+test-results/
+
+# IDE and OS files
+.idea/
+.vscode/
+*.swp
+*.swo
+Thumbs.db
+.DS_Store
+
+# Runtime and generated artifacts
+logs/
+tmp/
+temp/
+artifacts/*
+!artifacts/.gitkeep
+*.log
+*.pid
+
+# Local databases, dumps and generated data
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+*.backup
+data/generated/
+data/exports/
+
+# Office temporary files
+~$*.docx
+~$*.xlsx
