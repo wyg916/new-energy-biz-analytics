@@ -1,12 +1,12 @@
 from app.models.auth import AuditLog, User
 from app.models.business import (
-    ChargingSession, City, DataGenerationRun, DateDimension, Device,
+    AnalysisRun, ChargingSession, City, DataGenerationRun, DateDimension, Device,
     DeviceStatusEvent, EnergyCost, MetricDefinition, OperationExpense,
-    Region, SimulatedUser, Station,
+    Region, SessionState, SimulatedUser, Station,
 )
 
 __all__ = [
-    "AuditLog", "User", "ChargingSession", "City", "DataGenerationRun",
+    "AuditLog", "User", "AnalysisRun", "ChargingSession", "City", "DataGenerationRun",
     "DateDimension", "Device", "DeviceStatusEvent", "EnergyCost",
-    "MetricDefinition", "OperationExpense", "Region", "SimulatedUser", "Station",
+    "MetricDefinition", "OperationExpense", "Region", "SessionState", "SimulatedUser", "Station",
 ]

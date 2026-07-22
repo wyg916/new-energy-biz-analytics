@@ -1,6 +1,6 @@
 import hashlib
 import json
-from datetime import date
+from datetime import UTC, date, datetime
 from uuid import uuid4
 
 from sqlalchemy import select
@@ -10,8 +10,9 @@ from app.chatbi.compiler import ScopeDenied, compile_query
 from app.chatbi.executor import execute_readonly
 from app.chatbi.parser import parse_question
 from app.chatbi.plan import QueryPlan
+from app.chatbi.memory import SessionMemory, WORK_MEMORY
 from app.models.auth import AuditLog, User
-from app.models.business import DataGenerationRun
+from app.models.business import AnalysisRun, DataGenerationRun
 from app.services.dashboard import DashboardService, allowed_station_ids
 from app.services.metric_catalog import METRICS
 
@@ -35,27 +36,51 @@ def answer_guard(values: dict[str, object]) -> dict:
 
 
 class ChatBIService:
-    def __init__(self, db: Session, user: User):
+    def __init__(self, db: Session, user: User, conversation_id: str | None = None):
         self.db = db
         self.user = user
+        self.memory = SessionMemory(db, user, conversation_id)
+        self.conversation_id = self.memory.conversation_id
+        self.state_version = self.memory.state.state_version if self.memory.state else 0
 
     def ask(self, question: str) -> dict:
+        started_at = datetime.now(UTC)
         run_id = f"CHAT-{uuid4()}"
-        plan = parse_question(question)
+        plan = self.memory.resolve(question)
         plan_json = json.dumps(plan.model_dump(mode="json"), ensure_ascii=False, sort_keys=True)
+        work_state = WORK_MEMORY.start(run_id, self.user.id, self.conversation_id, _hash(plan_json))
+        batch = self.db.scalar(select(DataGenerationRun).where(DataGenerationRun.quality_status == "passed").order_by(DataGenerationRun.finished_at.desc()))
+        run = AnalysisRun(
+            run_id=run_id, request_id=f"REQ-{uuid4()}", conversation_id=self.conversation_id,
+            user_id=self.user.id, role_id=self.user.role,
+            allowed_region_ids=json.dumps([self.user.region_code] if self.user.region_code else ["R01", "R02", "R03"]),
+            question=question, query_plan_json=plan_json, query_plan_version=plan.version,
+            params_redacted_json="{}", metric_versions_json=json.dumps({metric_id: "0.1.0" for metric_id in plan.metrics}),
+            batch_id=batch.batch_id if batch else None, status="running", row_count=0, created_at=started_at,
+        )
+        self.db.add(run)
         self.db.add(AuditLog(actor_user_id=self.user.id, action="chat.plan", resource="chat_query", outcome=plan.status, detail_json=json.dumps({"analysis_run_id": run_id, "plan_hash": _hash(plan_json)})))
         self.db.commit()
         if plan.status != "ready":
-            return {"status": plan.status, "answer": plan.clarification.question if plan.clarification else "请求已拒绝。", "query_plan": plan.model_dump(mode="json"), "result": None, "chart": None, "evidence": self._evidence(run_id, plan, None, 0, "not_executed")}
+            answer = plan.clarification.question if plan.clarification else "请求已拒绝。"
+            self._finish_run(run, "partial" if plan.status == "needs_clarification" else "failed", answer, None, plan.status)
+            WORK_MEMORY.finish(work_state.task_id)
+            return {"status": plan.status, "answer": answer, "conversation_id": self.conversation_id, "state_version": self.state_version, "query_plan": plan.model_dump(mode="json"), "result": None, "chart": None, "evidence": self._evidence(run_id, plan, None, 0, "not_executed")}
         if plan.time_range.start < date(2025, 1, 1) or plan.time_range.end_exclusive > date(2026, 7, 1):
             plan.status = "needs_clarification"
-            return {"status": "needs_clarification", "answer": "请求超出模拟数据范围（2025-01-01 至 2026-06-30）。", "query_plan": plan.model_dump(mode="json"), "result": None, "chart": None, "evidence": self._evidence(run_id, plan, None, 0, "out_of_data_range")}
+            answer = "请求超出模拟数据范围（2025-01-01 至 2026-06-30）。"
+            self._finish_run(run, "partial", answer, None, "out_of_data_range")
+            return {"status": "needs_clarification", "answer": answer, "conversation_id": self.conversation_id, "state_version": self.state_version, "query_plan": plan.model_dump(mode="json"), "result": None, "chart": None, "evidence": self._evidence(run_id, plan, None, 0, "out_of_data_range")}
         if "质量失败批次" in question:
-            return {"status": "rejected", "answer": "质量失败批次被隔离，不能用于经营查询。", "query_plan": plan.model_dump(mode="json"), "result": None, "chart": None, "evidence": self._evidence(run_id, plan, None, 0, "unpublished_batch")}
+            answer = "质量失败批次被隔离，不能用于经营查询。"
+            self._finish_run(run, "failed", answer, None, "unpublished_batch")
+            return {"status": "rejected", "answer": answer, "conversation_id": self.conversation_id, "state_version": self.state_version, "query_plan": plan.model_dump(mode="json"), "result": None, "chart": None, "evidence": self._evidence(run_id, plan, None, 0, "unpublished_batch")}
 
         authorized = allowed_station_ids(self.db, self.user)
+        WORK_MEMORY.update(work_state.task_id, "guarding")
         compiled = compile_query(self.db, plan, authorized)
         sql_hash = _hash(compiled.sql)
+        WORK_MEMORY.update(work_state.task_id, "executing")
         chart = None
         if plan.intent == "trend":
             payload = DashboardService(self.db, self.user).monthly_trend(plan.metrics[0], plan.time_range.start, plan.time_range.end_exclusive)
@@ -92,10 +117,26 @@ class ChatBIService:
             raise RuntimeError("answer guard rejected structured result")
         lines = [f"{METRICS[metric_id][0]}：{_format(metric_id, value)}" for metric_id, value in flat_values.items()]
         answer = "；".join(lines) + "。结果来自已验证结构化查询，数据为模拟数据。"
+        WORK_MEMORY.update(work_state.task_id, "answering")
+        self.state_version = self.memory.save(plan, run_id)
         self.db.add(AuditLog(actor_user_id=self.user.id, action="chat.execute", resource="chat_query", outcome="success", detail_json=json.dumps({"analysis_run_id": run_id, "sql_hash": sql_hash, "row_count": 1, "answer_guard": guard})))
+        self._finish_run(run, "succeeded", answer, result, None, sql_hash)
+        WORK_MEMORY.finish(work_state.task_id)
+        return {"status": "completed", "answer": answer, "conversation_id": self.conversation_id, "state_version": self.state_version, "query_plan": plan.model_dump(mode="json"), "result": result, "chart": chart, "evidence": self._evidence(run_id, plan, compiled.sql if self.user.role == "analyst_admin" else None, len(compiled.station_ids), "passed", sql_hash, guard)}
+
+    def _finish_run(self, run: AnalysisRun, status: str, answer: str, result: object, error_code: str | None, sql_hash: str | None = None) -> None:
+        finished = datetime.now(UTC)
+        created = run.created_at.replace(tzinfo=UTC) if run.created_at.tzinfo is None else run.created_at
+        run.status = status
+        run.sql_hash = sql_hash
+        run.row_count = 0 if result is None else 1
+        run.duration_ms = int((finished - created).total_seconds() * 1000)
+        run.result_digest = _hash(json.dumps(result, ensure_ascii=False, sort_keys=True)) if result is not None else None
+        run.answer_digest = _hash(answer)
+        run.error_code = error_code
+        run.finished_at = finished
         self.db.commit()
-        return {"status": "completed", "answer": answer, "query_plan": plan.model_dump(mode="json"), "result": result, "chart": chart, "evidence": self._evidence(run_id, plan, compiled.sql if self.user.role == "analyst_admin" else None, len(compiled.station_ids), "passed", sql_hash, guard)}
 
     def _evidence(self, run_id: str, plan: QueryPlan, sql: str | None, station_count: int, guard_status: str, sql_hash: str | None = None, answer_guard_result: dict | None = None) -> dict:
         batch = self.db.scalar(select(DataGenerationRun).where(DataGenerationRun.quality_status == "passed").order_by(DataGenerationRun.finished_at.desc()))
-        return {"analysis_run_id": run_id, "data_classification": "simulated", "source": "platform_database", "batch_id": batch.batch_id if batch else None, "query_plan_version": plan.version, "query_plan_hash": _hash(json.dumps(plan.model_dump(mode="json"), ensure_ascii=False, sort_keys=True)), "sql_hash": sql_hash, "sql": sql, "authorized_station_count": station_count, "metric_versions": {metric_id: "0.1.0" for metric_id in plan.metrics}, "query_guard": guard_status, "answer_guard": answer_guard_result, "explanation_mode": "deterministic"}
+        return {"analysis_run_id": run_id, "conversation_id": self.conversation_id, "state_version": self.state_version, "data_classification": "simulated", "source": "platform_database", "batch_id": batch.batch_id if batch else None, "query_plan_version": plan.version, "query_plan_hash": _hash(json.dumps(plan.model_dump(mode="json"), ensure_ascii=False, sort_keys=True)), "sql_hash": sql_hash, "sql": sql, "authorized_station_count": station_count, "metric_versions": {metric_id: "0.1.0" for metric_id in plan.metrics}, "query_guard": guard_status, "answer_guard": answer_guard_result, "explanation_mode": "deterministic"}
