@@ -10,3 +10,4 @@ httpx==0.28.1
 pytest==8.4.0
 pytest-cov==6.1.1
 jsonschema==4.24.0
+sqlglot==26.24.0
