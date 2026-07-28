@@ -61,14 +61,14 @@ const endInclusive = (end: string) => {
   return result.toISOString().slice(0, 10)
 }
 
-function MiniLine({ points, large = false }: { points: TrendPoint[]; large?: boolean }) {
+function MiniLine({ points, large = false, stroke }: { points: TrendPoint[]; large?: boolean; stroke?: string }) {
   const values = points.map(item => item.value ?? 0)
   const max = Math.max(...values, 1)
   const min = Math.min(...values, 0)
   const width = large ? 760 : 190
   const height = large ? 170 : 56
   const coords = values.map((value, index) => `${index / Math.max(values.length - 1, 1) * width},${height - 7 - (value - min) / (max - min || 1) * (height - 18)}`).join(' ')
-  return <svg className={large ? 'detail-line' : 'mini-line'} viewBox={`0 0 ${width} ${height}`} role="img" aria-label="指标月度趋势"><polyline points={coords} /></svg>
+  return <svg className={large ? 'detail-line' : 'mini-line'} viewBox={`0 0 ${width} ${height}`} role="img" aria-label="指标月度趋势"><polyline points={coords} style={stroke ? { stroke } : undefined} /></svg>
 }
 
 function MiniBars({ points }: { points: TrendPoint[] }) {
@@ -131,6 +131,202 @@ function Overview({ summary, trend, loading, error, navigate }: { summary: Summa
       <article className="bottom-card system"><header><h3>近期动态 / 系统状态</h3></header><ul><li><i>◷</i><span>数据最后刷新</span><b>{summary?.metadata.generated_at ? new Date(summary.metadata.generated_at).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false }) : '加载中'}</b></li><li><i>♧</i><span>预警告警</span><b className="attention">进入预警查看</b></li><li><i>▱</i><span>报告生成</span><b>草稿按需生成</b></li><li><i>◎</i><span>数据同步状态</span><b>平台数据库已连接</b></li><li><i>✓</i><span>系统运行状态</span><b className="healthy">正常</b></li></ul></article>
       <article className="bottom-card guide"><header><h3>视图说明</h3></header><div><i>业</i><span><b>业务视图</b><small>面向运营与分析人员，聚焦经营分析与监控</small></span></div><div><i>管</i><span><b>管理视图</b><small>面向管理员，负责配置与系统管理</small></span></div><button>了解更多视图差异　→</button></article>
     </section>
+  </div>
+}
+
+function compareRange(start: string, end: string, comparison: 'mom' | 'yoy') {
+  const from = new Date(`${start}T00:00:00Z`)
+  const to = new Date(`${end}T00:00:00Z`)
+  if (comparison === 'yoy') {
+    from.setUTCFullYear(from.getUTCFullYear() - 1)
+    to.setUTCFullYear(to.getUTCFullYear() - 1)
+  } else {
+    const duration = to.getTime() - from.getTime()
+    to.setTime(from.getTime())
+    from.setTime(from.getTime() - duration)
+  }
+  return { start: from.toISOString().slice(0, 10), end: to.toISOString().slice(0, 10) }
+}
+
+function rate(current: number | null | undefined, previous: number | null | undefined) {
+  if (current == null || previous == null || previous === 0) return null
+  return (current - previous) / Math.abs(previous)
+}
+
+function deltaText(metric: string, current: number | null | undefined, previous: number | null | undefined) {
+  if (current == null || previous == null) return '数据不足'
+  if (['gross_margin', 'station_utilization_rate', 'device_online_rate', 'device_fault_rate'].includes(metric)) {
+    const value = (current - previous) * 100
+    return `${value >= 0 ? '↑' : '↓'} ${Math.abs(value).toFixed(2)}pp`
+  }
+  const value = rate(current, previous)
+  return value == null ? '数据不足' : `${value >= 0 ? '↑' : '↓'} ${(Math.abs(value) * 100).toFixed(2)}%`
+}
+
+function workbenchValue(metric: string, value: number | null | undefined) {
+  if (value == null) return { value: '数据不足', unit: '' }
+  if (metric === 'charging_revenue' || metric === 'gross_profit') return { value: (value / 10000).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), unit: '万元' }
+  if (metric === 'charging_volume_kwh') return { value: Math.round(value).toLocaleString('zh-CN'), unit: 'kWh' }
+  if (metric === 'completed_order_count') return { value: Math.round(value).toLocaleString('zh-CN'), unit: '单' }
+  return { value: formatMetric(metric, value), unit: '' }
+}
+
+function ComboTrend({ revenue, profit }: { revenue: TrendPoint[]; profit: TrendPoint[] }) {
+  const revenueValues = revenue.map(item => item.value ?? 0)
+  const profitValues = profit.map(item => item.value ?? 0)
+  const revenueMax = Math.max(...revenueValues, 1)
+  const profitMax = Math.max(...profitValues, 1)
+  const revenueLine = revenueValues.map((value, index) => `${index / Math.max(revenueValues.length - 1, 1) * 100},${90 - value / revenueMax * 72}`).join(' ')
+  const profitLine = profitValues.map((value, index) => `${index / Math.max(profitValues.length - 1, 1) * 100},${90 - value / profitMax * 72}`).join(' ')
+  return <div className="combo-chart"><div className="chart-legend"><span className="green">收入</span><span className="blue-dot">毛利</span><small>按自然月聚合</small></div><div className="combo-plot"><div className="combo-bars">{revenueValues.map((value, index) => <i key={index} style={{ height: `${Math.max(value / revenueMax * 100, 12)}px` }} />)}</div><svg viewBox="0 0 100 100" preserveAspectRatio="none"><polyline className="revenue-line" points={revenueLine} /><polyline className="profit-line" points={profitLine} /></svg></div><div className="combo-axis">{revenue.map(item => <span key={item.period}>{item.period.slice(5)}</span>)}</div></div>
+}
+
+function Waterfall({ title, diagnostic, metric }: { title: string; diagnostic: any; metric: string }) {
+  if (!diagnostic) return <div className="workbench-chart loading">正在计算贡献拆解…</div>
+  const driverNames: Record<string, string> = {
+    station_revenue: '场站收入',
+    service_revenue: '服务收入',
+    energy_revenue: '电费收入',
+    energy_cost: '度电成本',
+    service_cost: '服务成本',
+    other_cost: '其他成本',
+    volume: '充电量',
+    price: '单价',
+    mix: '结构',
+    residual: '其他',
+    charging_volume_effect: '充电量影响',
+    revenue_per_kwh_effect: '度电收入影响',
+    rounding_residual: '舍入差额',
+    charging_revenue_change: '收入变化',
+    energy_cost_change: '电费成本变化',
+    variable_operating_cost_change: '运营成本变化',
+  }
+  const items = [
+    { label: '对比期', value: diagnostic.previous[metric], total: true },
+    ...diagnostic.bridge.map((item: any) => ({ label: driverNames[item.driver] ?? item.driver.replaceAll('_', ' '), value: item.contribution, total: false })),
+    { label: '本期', value: diagnostic.current[metric], total: true },
+  ]
+  const max = Math.max(...items.map(item => Math.abs(item.value ?? 0)), 1)
+  const change = diagnostic.changes[metric]
+  return <article className="workbench-chart"><header><div><h3>{title}</h3><p>环比 <b className={change >= 0 ? 'up' : 'down'}>{change >= 0 ? '+' : ''}{money(change)}</b></p></div></header><div className="waterfall">{items.map((item: any, index: number) => <div key={`${item.label}-${index}`}><b>{item.value == null ? '--' : (item.value / 10000).toFixed(2)}</b><i className={item.total ? 'total' : item.value >= 0 ? 'positive' : 'negative'} style={{ height: `${Math.max(Math.abs(item.value ?? 0) / max * 78, 7)}%` }} /><span>{item.label}</span></div>)}</div></article>
+}
+
+function WorkbenchPage({
+  token,
+  summary,
+  stations,
+  revenueTrend,
+  start,
+  end,
+  setStart,
+  setEnd,
+  navigate,
+  refreshKey,
+  refresh,
+}: {
+  token: string
+  summary: Summary | null
+  stations: StationRow[]
+  revenueTrend: TrendPoint[]
+  start: string
+  end: string
+  setStart: (value: string) => void
+  setEnd: (value: string) => void
+  navigate: (id: ViewId) => void
+  refreshKey: number
+  refresh: () => void
+}) {
+  const [comparison, setComparison] = useState<'mom' | 'yoy'>('mom')
+  const [previous, setPrevious] = useState<Summary | null>(null)
+  const [yearAgo, setYearAgo] = useState<Summary | null>(null)
+  const [trends, setTrends] = useState<Record<string, TrendPoint[]>>({ charging_revenue: revenueTrend })
+  const [revenueDiagnostic, setRevenueDiagnostic] = useState<any>(null)
+  const [profitDiagnostic, setProfitDiagnostic] = useState<any>(null)
+  const [previousStations, setPreviousStations] = useState<StationRow[]>([])
+  const [error, setError] = useState('')
+  useEffect(() => {
+    const previousRange = compareRange(start, end, comparison)
+    const yoyRange = compareRange(start, end, 'yoy')
+    const stationMetrics = 'charging_revenue,gross_profit,gross_margin,station_utilization_rate,device_online_rate,device_fault_rate'
+    Promise.all([
+      api<Summary>(`/api/v1/dashboard/summary?start=${previousRange.start}&end_exclusive=${previousRange.end}`, token),
+      api<Summary>(`/api/v1/dashboard/summary?start=${yoyRange.start}&end_exclusive=${yoyRange.end}`, token),
+      ...['gross_profit', 'gross_margin', 'charging_volume_kwh', 'completed_order_count', 'station_utilization_rate'].map(metric => api<{ points: TrendPoint[] }>(`/api/v1/dashboard/trend?metric=${metric}&start=${start}&end_exclusive=${end}`, token)),
+      api<any>(`/api/v1/diagnostics/decomposition?metric=charging_revenue&comparison=${comparison}&limit=5&start=${start}&end_exclusive=${end}`, token),
+      api<any>(`/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=${comparison}&limit=5&start=${start}&end_exclusive=${end}`, token),
+      api<{ rows: StationRow[] }>(`/api/v1/dashboard/stations?start=${previousRange.start}&end_exclusive=${previousRange.end}&limit=10&metrics=${stationMetrics}`, token),
+    ]).then(([previousResult, yoyResult, profitTrend, marginTrend, volumeTrend, orderTrend, utilizationTrend, revenueDiag, profitDiag, stationResult]) => {
+      setPrevious(previousResult as Summary)
+      setYearAgo(yoyResult as Summary)
+      setTrends({
+        charging_revenue: revenueTrend,
+        gross_profit: (profitTrend as { points: TrendPoint[] }).points,
+        gross_margin: (marginTrend as { points: TrendPoint[] }).points,
+        charging_volume_kwh: (volumeTrend as { points: TrendPoint[] }).points,
+        completed_order_count: (orderTrend as { points: TrendPoint[] }).points,
+        station_utilization_rate: (utilizationTrend as { points: TrendPoint[] }).points,
+      })
+      setRevenueDiagnostic(revenueDiag)
+      setProfitDiagnostic(profitDiag)
+      setPreviousStations((stationResult as { rows: StationRow[] }).rows)
+      setError('')
+    }).catch(reason => setError(reason instanceof Error ? reason.message : '工作台分析加载失败'))
+  }, [token, start, end, comparison, refreshKey, revenueTrend])
+
+  const metrics = summary?.metrics ?? {}
+  const previousMetrics = previous?.metrics ?? {}
+  const yearAgoMetrics = yearAgo?.metrics ?? {}
+  const cards = [
+    { id: 'charging_revenue', label: '充电收入', icon: '收', color: 'green', stroke: '#11a879' },
+    { id: 'gross_profit', label: '经营毛利', icon: '利', color: 'green', stroke: '#11a879' },
+    { id: 'gross_margin', label: '毛利率', icon: '率', color: 'orange', stroke: '#f59e0b' },
+    { id: 'charging_volume_kwh', label: '充电量', icon: '量', color: 'blue', stroke: '#1677ff' },
+    { id: 'completed_order_count', label: '完成订单', icon: '单', color: 'violet', stroke: '#7c5cff' },
+    { id: 'station_utilization_rate', label: '场站利用率', icon: '站', color: 'teal', stroke: '#0ca89f' },
+  ]
+  const previousStationMap = new Map(previousStations.map(row => [row.station_id, row]))
+  const issueRows = (revenueDiagnostic?.station_contributions ?? []).slice(0, 5)
+  const revenueRate = rate(metrics.charging_revenue, previousMetrics.charging_revenue)
+  const marginDelta = metrics.gross_margin != null && previousMetrics.gross_margin != null ? (metrics.gross_margin - previousMetrics.gross_margin) * 100 : null
+
+  return <div className="workbench-page">
+    <section className="workbench-filters">
+      <label>时间范围<div><input type="date" value={start} onChange={event => setStart(event.target.value)} /><span>~</span><input type="date" value={endInclusive(end)} onChange={event => { const next = new Date(`${event.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></label>
+      <label>对比方式<select value={comparison} onChange={event => setComparison(event.target.value as 'mom' | 'yoy')}><option value="mom">环比</option><option value="yoy">同比</option></select></label>
+      <label>区域<select><option>全部区域</option></select></label>
+      <label>城市<select><option>全部城市</option></select></label>
+      <label>场站<select><option>全部场站</option></select></label>
+      <button onClick={refresh}>⌕　查询</button>
+    </section>
+
+    <section className="ai-summary">
+      <div className="summary-copy"><i>✦</i><div><h2>AI经营摘要</h2>{summary ? <ul><li>本期充电收入 {money(metrics.charging_revenue)} 元，{comparison === 'mom' ? '环比' : '同比'} {revenueRate == null ? '数据不足' : `${revenueRate >= 0 ? '↑' : '↓'} ${(Math.abs(revenueRate) * 100).toFixed(2)}%`}；毛利率 {formatMetric('gross_margin', metrics.gross_margin)}，变化 {marginDelta == null ? '数据不足' : `${marginDelta >= 0 ? '↑' : '↓'} ${Math.abs(marginDelta).toFixed(2)}pp`}。</li><li>收入、毛利、利用率及设备指标均来自已发布指标语义层。</li><li>设备在线率 {formatMetric('device_online_rate', metrics.device_online_rate)}，故障率 {formatMetric('device_fault_rate', metrics.device_fault_rate)}；关联因素不构成因果结论。</li></ul> : <p>正在生成结构化经营摘要…</p>}</div></div>
+      <div className="summary-actions"><small>数据截止：{endInclusive(end)}　来源：平台数据库</small><div><button onClick={() => navigate('alerts')}>◉　查看分析依据</button><button onClick={() => navigate('chat')}>◎　继续追问</button><button className="primary" onClick={() => navigate('reports')}>▱　生成报告</button></div></div>
+    </section>
+
+    <section className="workbench-kpis">
+      {cards.map(card => {
+        const display = workbenchValue(card.id, metrics[card.id])
+        return <article key={card.id}><header><i className={card.color}>{card.icon}</i><h3>{card.label}</h3><span>ⓘ</span></header><div className="kpi-number"><strong>{display.value}</strong><small>{display.unit}</small></div><p><span>环比 <b className={rate(metrics[card.id], previousMetrics[card.id]) != null && rate(metrics[card.id], previousMetrics[card.id])! < 0 ? 'down' : 'up'}>{deltaText(card.id, metrics[card.id], previousMetrics[card.id])}</b></span><span>同比 <b className={rate(metrics[card.id], yearAgoMetrics[card.id]) != null && rate(metrics[card.id], yearAgoMetrics[card.id])! < 0 ? 'down' : 'up'}>{deltaText(card.id, metrics[card.id], yearAgoMetrics[card.id])}</b></span></p><MiniLine points={trends[card.id] ?? revenueTrend} stroke={card.stroke} /><footer><span>指标状态　已验证</span><i className={card.color} /></footer></article>
+      })}
+    </section>
+
+    <section className="workbench-analysis">
+      <article className="trend-panel"><header><h3>收入与毛利趋势（万元）</h3><div><button className="active">月</button></div></header><ComboTrend revenue={trends.charging_revenue ?? revenueTrend} profit={trends.gross_profit ?? []} /></article>
+      <Waterfall title="收入变化贡献（万元）" diagnostic={revenueDiagnostic} metric="charging_revenue" />
+      <Waterfall title="毛利变化贡献（万元）" diagnostic={profitDiagnostic} metric="gross_profit" />
+    </section>
+
+    <section className="workbench-tables">
+      <article><header><h3>重点问题</h3><span>ⓘ</span></header><table><thead><tr><th>优先级</th><th>问题描述</th><th>影响金额</th><th>涉及对象</th><th>状态</th></tr></thead><tbody>{issueRows.map((row: any) => <tr key={row.station_id}><td><b className={row.contribution < 0 ? 'risk-high' : 'risk-low'}>{row.contribution < 0 ? '关注' : '正向'}</b></td><td>{row.contribution < 0 ? '收入贡献下降需关注' : '收入增长贡献'}</td><td className={row.contribution < 0 ? 'down' : 'up'}>{money(row.contribution)}</td><td>{row.station_name}</td><td><em>{row.contribution < 0 ? '待分析' : '观察中'}</em></td></tr>)}</tbody></table><button className="table-more" onClick={() => navigate('alerts')}>查看更多问题　→</button></article>
+      <article><header><h3>重点场站</h3></header><table><thead><tr><th>场站名称</th><th>充电收入</th><th>环比</th><th>毛利率</th><th>利用率</th><th>在线率</th><th>风险提示</th></tr></thead><tbody>{stations.slice(0, 5).map(row => {
+        const previousRow = previousStationMap.get(row.station_id)
+        const stationRate = rate(row.metrics.charging_revenue, previousRow?.metrics.charging_revenue)
+        const needsAttention = (row.metrics.device_fault_rate ?? 0) > (metrics.device_fault_rate ?? 0)
+        return <tr key={row.station_id}><td>{row.station_name}</td><td>{money(row.metrics.charging_revenue)}</td><td className={stationRate != null && stationRate < 0 ? 'down' : 'up'}>{stationRate == null ? '--' : `${stationRate >= 0 ? '↑' : '↓'} ${(Math.abs(stationRate) * 100).toFixed(1)}%`}</td><td>{formatMetric('gross_margin', row.metrics.gross_margin)}</td><td>{formatMetric('station_utilization_rate', row.metrics.station_utilization_rate)}</td><td>{formatMetric('device_online_rate', row.metrics.device_online_rate)}</td><td><b className={needsAttention ? 'risk-high' : 'risk-low'}>{needsAttention ? '需关注' : '正常'}</b></td></tr>
+      })}</tbody></table><button className="table-more" onClick={() => navigate('stations')}>查看更多场站　→</button></article>
+    </section>
+    {error && <div className="workbench-error">{error}</div>}
   </div>
 }
 
@@ -238,7 +434,7 @@ function Sidebar({ active, navigate }: { active: ViewId; navigate: (id: ViewId) 
 }
 
 function ProductHeader({ active, start, end, setStart, setEnd, logout }: { active: ViewId; start: string; end: string; setStart: (v: string) => void; setEnd: (v: string) => void; logout: () => void }) {
-  return <header className="product-header"><div className="page-title"><h1>{titles[active]}</h1>{active === 'overview' && <span>当前场景：<b>charging_ops</b>｜充电运营</span>}</div><label className="search"><i>⌕</i><input aria-label="全局搜索" placeholder="搜索场站、指标、报告、问题…" /><kbd>⌘ K</kbd></label><button className="organization">国际新能源集团　⌄</button><div className="date-range"><input aria-label="开始日期" type="date" value={start} onChange={e => setStart(e.target.value)} /><span>→</span><input aria-label="结束日期" type="date" value={endInclusive(end)} onChange={e => { const next = new Date(`${e.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div><button className="bell" aria-label="通知">♧<b>!</b></button><button className="profile" onClick={logout}><span>张</span><div><b>张伟</b><small>运营分析师</small></div><i>⌄</i></button></header>
+  return <header className="product-header"><div className="page-title"><h1>{titles[active]}</h1>{active === 'overview' && <span>当前场景：<b>charging_ops</b>｜充电运营</span>}{active === 'dashboard' && <small>数据范围：{start} 至 {endInclusive(end)}　｜　模拟数据　｜　来源：平台数据库</small>}</div>{active === 'overview' && <><label className="search"><i>⌕</i><input aria-label="全局搜索" placeholder="搜索场站、指标、报告、问题…" /><kbd>⌘ K</kbd></label><div className="date-range"><input aria-label="开始日期" type="date" value={start} onChange={e => setStart(e.target.value)} /><span>→</span><input aria-label="结束日期" type="date" value={endInclusive(end)} onChange={e => { const next = new Date(`${e.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></>}<button className="organization">国际新能源集团　⌄</button><button className="bell" aria-label="通知">♧<b>!</b></button><button className="profile" onClick={logout}><span>张</span><div><b>张伟</b><small>运营分析师</small></div><i>⌄</i></button></header>
 }
 
 function ProductShell({ token, logout }: { token: string; logout: () => void }) {
@@ -250,6 +446,7 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
   const [error, setError] = useState('')
   const [start, setStart] = useState('2026-01-01')
   const [end, setEnd] = useState('2026-07-01')
+  const [refreshKey, setRefreshKey] = useState(0)
   const primary = useMemo(() => pageMetrics[active]?.[0] || 'charging_revenue', [active])
   useEffect(() => {
     let cancelled = false
@@ -258,15 +455,16 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
     const query = `start=${start}&end_exclusive=${end}`
     Promise.all([
       api<Summary>(`/api/v1/dashboard/summary?${query}`, token),
-      api<{ rows: StationRow[] }>(`/api/v1/dashboard/stations?${query}&limit=10`, token),
+      api<{ rows: StationRow[] }>(`/api/v1/dashboard/stations?${query}&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,station_utilization_rate,device_online_rate,device_fault_rate`, token),
       api<{ points: TrendPoint[] }>(`/api/v1/dashboard/trend?metric=${primary}&${query}`, token),
     ]).then(([summaryResult, stationResult, trendResult]) => {
       if (!cancelled) { setSummary(summaryResult); setStations(stationResult.rows); setTrend(trendResult.points) }
     }).catch(reason => { if (!cancelled) setError(reason instanceof Error ? reason.message : '加载失败') }).finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
-  }, [token, start, end, primary])
+  }, [token, start, end, primary, refreshKey])
   let content: React.ReactNode
   if (active === 'overview') content = <Overview summary={summary} trend={trend} loading={loading} error={error} navigate={setActive} />
+  else if (active === 'dashboard') content = <WorkbenchPage token={token} summary={summary} stations={stations} revenueTrend={trend} start={start} end={end} setStart={setStart} setEnd={setEnd} navigate={setActive} refreshKey={refreshKey} refresh={() => setRefreshKey(value => value + 1)} />
   else if (active === 'chat') content = <ChatPage token={token} />
   else if (active === 'alerts') content = <DiagnosticsPage token={token} start={start} end={end} />
   else if (active === 'reports') content = <ReportPage token={token} start={start} end={end} />
