@@ -26,6 +26,7 @@ build/
 coverage/
 playwright-report/
 test-results/
+.playwright-browsers/
 
 # IDE and OS files
 .idea/

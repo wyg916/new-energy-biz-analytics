@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { formatMetric, metricNames } from './format'
 import './styles.css'
+import { ProductApp } from './overview'
 
 type Metadata = {data_classification:string;data_time_range:{start:string;end_exclusive:string};source:string;batch_id:string|null;analysis_run_id:string}
 type Summary = {metrics:Record<string,number|null>;metadata:Metadata}
@@ -85,4 +86,4 @@ function App(){const[token,setToken]=useState(localStorage.getItem('alpha_token'
   if(token)return <Dashboard token={token} onLogout={()=>{localStorage.removeItem('alpha_token');setToken('')}}/>
   return <main className="login"><form className="login-card" onSubmit={login}><div className="logo">⚡</div><h1>新能源经营分析平台</h1><p>统一指标、可信问数与经营洞察</p><div className="demo-note">产品级 Alpha · 固定种子模拟数据环境</div><label>账号<input name="username" defaultValue="analyst" autoComplete="username"/></label><label>密码<input name="password" type="password" defaultValue="AlphaAnalyst!2026" autoComplete="current-password"/></label><button>安全登录</button>{error&&<p className="login-error">{error}</p>}<small>演示账号仅用于本地 Alpha，不代表真实企业身份</small></form></main>}
 
-createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>)
+createRoot(document.getElementById('root')!).render(<React.StrictMode><ProductApp/></React.StrictMode>)
