@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { formatMetric, metricNames } from './format'
 import './overview.css'
 
@@ -342,27 +342,152 @@ function DetailPage({ active, summary, stations, trend }: { active: ViewId; summ
   </div>
 }
 
+const CHAT_INITIAL_QUESTION = '2026年6月充电收入环比变化的原因？'
+const chatDriverNames: Record<string, string> = {
+  charging_volume_effect: '充电量变化',
+  revenue_per_kwh_effect: '度电收入变化',
+  rounding_residual: '舍入差额',
+  charging_revenue_change: '收入变化',
+  energy_cost_change: '电费成本变化',
+  variable_operating_cost_change: '运营成本变化',
+}
+
+function ChatTrend({ points }: { points: TrendPoint[] }) {
+  const values = points.map(item => item.value ?? 0)
+  const max = Math.max(...values, 1)
+  const min = Math.min(...values, 0)
+  const coords = values.map((value, index) => `${index / Math.max(values.length - 1, 1) * 100},${86 - (value - min) / (max - min || 1) * 64}`).join(' ')
+  return <div className="chat-trend"><svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="充电收入月度趋势"><polygon points={`0,92 ${coords} 100,92`} /><polyline points={coords} />{values.map((value, index) => <circle key={index} cx={index / Math.max(values.length - 1, 1) * 100} cy={86 - (value - min) / (max - min || 1) * 64} r="1.2" />)}</svg><div>{points.map(item => <span key={item.period}>{item.period.slice(5)}</span>)}</div></div>
+}
+
 function ChatPage({ token }: { token: string }) {
-  const [question, setQuestion] = useState('区域A在所选周期的充电收入和毛利率是多少？')
+  const [question, setQuestion] = useState(CHAT_INITIAL_QUESTION)
   const [result, setResult] = useState<any>(null)
+  const [summary, setSummary] = useState<Summary | null>(null)
+  const [previous, setPrevious] = useState<Summary | null>(null)
+  const [yearAgo, setYearAgo] = useState<Summary | null>(null)
+  const [trend, setTrend] = useState<TrendPoint[]>([])
+  const [conversationId, setConversationId] = useState<string | null>(null)
+  const [history, setHistory] = useState<Array<{ question: string; time: string }>>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const ask = async (event: React.FormEvent) => {
-    event.preventDefault()
+  const initialized = useRef(false)
+
+  const runQuestion = async (nextQuestion: string, currentConversation = conversationId) => {
+    const normalized = nextQuestion.trim()
+    if (!normalized) return
     setLoading(true)
     setError('')
     try {
-      const response = await fetch('/api/v1/chat/query', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }, body: JSON.stringify({ question }) })
+      const response = await fetch('/api/v1/chat/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ question: normalized, conversation_id: currentConversation }),
+      })
       const body = await response.json()
       if (!response.ok) throw new Error(body.detail?.message || '问数失败')
       setResult(body)
+      setConversationId(body.conversation_id)
+      setHistory(items => [{ question: normalized, time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }) }, ...items.filter(item => item.question !== normalized)].slice(0, 5))
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : '问数失败')
     } finally {
       setLoading(false)
     }
   }
-  return <div className="chat-page"><article><h2>可信 ChatBI</h2><p>自然语言 → Query Plan → 安全编译 → 只读执行 → Answer Guard</p><form onSubmit={ask}><textarea value={question} onChange={e => setQuestion(e.target.value)} /><button disabled={loading}>{loading ? '正在验证并计算…' : '开始分析'}</button></form>{error && <div className="notice error">{error}</div>}{result && <section><span>{result.status}</span><h3>回答</h3><p>{result.answer}</p><small>会话 {result.conversation_id} · 状态版本 {result.state_version}</small><details><summary>查看 Query Plan</summary><pre>{JSON.stringify(result.query_plan, null, 2)}</pre></details></section>}</article>{result && <aside><h2>证据面板</h2><dl><div><dt>数据分类</dt><dd>{result.evidence.data_classification}</dd></div><div><dt>来源</dt><dd>{result.evidence.source}</dd></div><div><dt>分析运行</dt><dd>{result.evidence.analysis_run_id}</dd></div><div><dt>Query Guard</dt><dd>{result.evidence.query_guard}</dd></div><div><dt>Answer Guard</dt><dd>{result.evidence.answer_guard?.status}</dd></div></dl></aside>}</div>
+
+  useEffect(() => {
+    if (initialized.current) return
+    initialized.current = true
+    Promise.all([
+      api<Summary>('/api/v1/dashboard/summary?start=2026-06-01&end_exclusive=2026-07-01', token),
+      api<Summary>('/api/v1/dashboard/summary?start=2026-05-01&end_exclusive=2026-06-01', token),
+      api<Summary>('/api/v1/dashboard/summary?start=2025-06-01&end_exclusive=2025-07-01', token),
+      api<{ points: TrendPoint[] }>('/api/v1/dashboard/trend?metric=charging_revenue&start=2026-01-01&end_exclusive=2026-07-01', token),
+    ]).then(([currentResult, previousResult, yearAgoResult, trendResult]) => {
+      setSummary(currentResult)
+      setPrevious(previousResult)
+      setYearAgo(yearAgoResult)
+      setTrend(trendResult.points)
+    }).catch(reason => setError(reason instanceof Error ? reason.message : '经营上下文加载失败'))
+    void runQuestion(CHAT_INITIAL_QUESTION, null)
+  }, [token])
+
+  const ask = (event: React.FormEvent) => {
+    event.preventDefault()
+    void runQuestion(question)
+  }
+  const newSession = () => {
+    setConversationId(null)
+    setResult(null)
+    setHistory([])
+    setQuestion('')
+    setError('')
+  }
+
+  const diagnosis = result?.result?.diagnosis
+  const metrics = summary?.metrics ?? diagnosis?.current ?? {}
+  const previousMetrics = previous?.metrics ?? diagnosis?.previous ?? {}
+  const yearAgoMetrics = yearAgo?.metrics ?? {}
+  const revenueChange = rate(metrics.charging_revenue, previousMetrics.charging_revenue)
+  const bridge = diagnosis?.bridge ?? []
+  const stationImpacts = diagnosis?.station_contributions ?? []
+  const maxBridge = Math.max(...bridge.map((item: any) => Math.abs(item.contribution ?? 0)), 1)
+  const strongestDriver = [...bridge].sort((a: any, b: any) => Math.abs(b.contribution) - Math.abs(a.contribution))[0]
+  const conclusion = diagnosis
+    ? `结论：全部授权区域 2026年6月充电收入为 ${money(metrics.charging_revenue)} 元，环比${revenueChange != null && revenueChange < 0 ? '下降' : '上升'} ${revenueChange == null ? '数据不足' : `${(Math.abs(revenueChange) * 100).toFixed(2)}%`}。变化拆解中贡献最大项为${chatDriverNames[strongestDriver?.driver] ?? '其他因素'}；关联线索不构成因果结论。`
+    : result?.answer
+  const cards = [
+    { id: 'charging_revenue', label: '充电收入', icon: '¥', color: 'teal' },
+    { id: 'charging_volume_kwh', label: '充电量', icon: '↯', color: 'teal' },
+    { id: 'revenue_per_kwh', label: '度电收入', icon: '价', color: 'orange' },
+    { id: 'gross_margin', label: '毛利率', icon: '率', color: 'red' },
+  ]
+  const suggestions = ['毛利率低于行业均值的原因？', '场站利用率下降原因', '度电成本上升原因']
+
+  return <div className="ai-analysis-page">
+    <h2 className="chat-trust-title">可信 ChatBI</h2>
+    <aside className="chat-history-panel">
+      <header><h2>会话历史</h2><button onClick={newSession}>＋ 新会话</button></header>
+      <div className="chat-history-list">{history.length ? history.map((item, index) => <button key={`${item.time}-${item.question}`} className={index === 0 ? 'active' : ''} onClick={() => setQuestion(item.question)}><span>{item.question}</span><small>{item.time}</small></button>) : <p>新会话尚未产生分析记录</p>}</div>
+      <section><header><h3>本次会话</h3><span>{history.length} 条</span></header><dl><div><dt>会话状态</dt><dd>{result?.status ?? '准备中'}</dd></div><div><dt>状态版本</dt><dd>v{result?.state_version ?? 0}</dd></div><div><dt>隔离范围</dt><dd>当前用户</dd></div></dl></section>
+      <section className="chat-example-list"><header><h3>分析示例</h3></header>{['全平台收入与毛利分析', '场站贡献下降定位', '设备指标关联排查'].map(item => <button key={item} onClick={() => setQuestion(item)}><span>▧</span>{item}<b>★</b></button>)}</section>
+      <section className="chat-chain-card"><header><h3>可信分析链路</h3><span>已启用</span></header><ol><li>自然语言结构化解析</li><li>Query Plan 合同校验</li><li>确定性参数化编译</li><li>只读执行与权限过滤</li><li>Answer Guard 证据检查</li></ol></section>
+    </aside>
+
+    <main className="chat-analysis-center">
+      <form className="chat-question-box" onSubmit={ask}><div><textarea aria-label="经营分析问题" maxLength={1000} value={question} onChange={event => setQuestion(event.target.value)} /><span>{question.length}/1000</span><button aria-label="发送分析问题" disabled={loading}>{loading ? '…' : '➤'}</button></div><footer><span>试试这样问：</span>{suggestions.map(item => <button type="button" key={item} onClick={() => setQuestion(item)}>{item}</button>)}</footer></form>
+      <section className="chat-recommended"><h3>推荐追问</h3><div>{['夜间电量下降的主要原因？', '低功率时段占比为何上升？', '快充占比下降的原因？', '与周边区域对比表现如何？'].map(item => <button key={item} onClick={() => setQuestion(item)}>{item}</button>)}</div><span>⟳ 换一批</span></section>
+      <section className="chat-conditions"><h3>当前条件</h3><div><span>时间范围　2026-06-01 ~ 2026-06-30</span><span>区域筛选　全部区域⌄</span><span>业务类型　充电⌄</span><span>站点类型　全部⌄</span><span>设备类型　全部⌄</span><button onClick={() => setQuestion(CHAT_INITIAL_QUESTION)}>重置条件</button></div></section>
+
+      <article className="chat-answer-card">
+        <header><div><i>✦</i><h2>AI结论</h2><small>{loading ? '正在执行受控分析…' : result ? '已完成可信分析' : '等待分析'}</small></div><nav><button>☆ 收藏</button><button>⇧ 导出</button><button>↗ 分享</button><button>•••</button></nav></header>
+        {error && <div className="notice error">{error}</div>}
+        <p className="chat-conclusion">{conclusion || '正在通过 Query Plan、确定性 SQL Compiler 与安全守卫计算结果…'}</p>
+        <section className="chat-metric-grid">{cards.map(card => <article key={card.id}><header><i className={card.color}>{card.icon}</i><span>{card.label}<small>{card.id === 'charging_volume_kwh' ? '(kWh)' : card.id.includes('revenue') ? '(元)' : ''}</small></span></header><strong>{card.id === 'charging_revenue' ? money(metrics[card.id]) : card.id === 'charging_volume_kwh' ? Math.round(metrics[card.id] ?? 0).toLocaleString('zh-CN') : formatMetric(card.id, metrics[card.id])}</strong><footer><span>环比 <b className={rate(metrics[card.id], previousMetrics[card.id]) != null && rate(metrics[card.id], previousMetrics[card.id])! < 0 ? 'down' : 'up'}>{deltaText(card.id, metrics[card.id], previousMetrics[card.id])}</b></span><span>同比 <b className={rate(metrics[card.id], yearAgoMetrics[card.id]) != null && rate(metrics[card.id], yearAgoMetrics[card.id])! < 0 ? 'down' : 'up'}>{deltaText(card.id, metrics[card.id], yearAgoMetrics[card.id])}</b></span></footer></article>)}</section>
+        <section className="chat-insight-grid">
+          <article><header><h3>近期充电收入趋势（元）</h3><span>按月⌄</span></header><ChatTrend points={trend} /></article>
+          <article><header><h3>主要影响对象</h3><span>变化贡献（元）</span></header><div className="chat-impact-list">{stationImpacts.slice(0, 5).map((item: any) => <div key={item.station_id}><span>{item.station_name}</span><em className={item.contribution < 0 ? 'down' : 'up'}>{item.contribution < 0 ? '下降' : '上升'}</em><b className={item.contribution < 0 ? 'down' : 'up'}>{money(item.contribution)}</b></div>)}</div></article>
+        </section>
+        <section className="chat-action-grid">
+          <article><header><h3>原因拆解（贡献度）</h3><span>ⓘ</span></header><div className="chat-driver-list">{bridge.slice(0, 5).map((item: any) => <div key={item.driver}><span>{chatDriverNames[item.driver] ?? item.driver}</span><b>{money(item.contribution)}</b><i><em className={item.contribution < 0 ? 'negative' : ''} style={{ width: `${Math.max(Math.abs(item.contribution) / maxBridge * 100, 5)}%` }} /></i></div>)}</div><small>对账残差：{money(diagnosis?.reconciliation?.residual)}</small></article>
+          <article><header><h3>建议行动</h3></header><ul><li>复核充电量变化对应的时段与场站结构<b>高影响</b></li><li>复核度电收入变化与价格策略<b>高影响</b></li><li>关注贡献下降场站的运营条件<b>中影响</b></li><li>结合设备指标作同期关联排查<b>中影响</b></li></ul></article>
+        </section>
+        <footer className="chat-followups"><b>推荐追问</b>{['夜间电量下降的主要原因？', '低功率时段占比为何上升？', '快充占比下降的原因？'].map(item => <button key={item} onClick={() => setQuestion(item)}>{item}</button>)}</footer>
+      </article>
+    </main>
+
+    <aside className="chat-evidence-panel">
+      <header><h2>证据与数据来源</h2><span>×</span></header>
+      <section><h3><i>①</i>数据来源</h3><p><b>平台数据库</b><em>simulated</em></p><small>固定 seed 新能源经营分析业务库</small></section>
+      <section><h3><i>②</i>指标口径</h3><p>充电收入：完成订单的电费与服务费实收净额</p><p>毛利率：经营毛利 / 充电收入</p></section>
+      <section><h3><i>③</i>查询条件</h3><ul><li>时间范围：2026-06-01 ~ 2026-06-30</li><li>区域：全部授权区域</li><li>业务类型：充电</li><li>站点类型：全部</li><li>设备类型：全部</li></ul></section>
+      <section><h3><i>④</i>Query Plan 摘要</h3><p>{result?.query_plan ? `${result.query_plan.intent}；指标 ${result.query_plan.metrics.join('、')}；${result.query_plan.comparison?.type ?? '无'}比较。` : '等待结构化解析'}</p><details><summary>查看详情　›</summary><pre>{JSON.stringify(result?.query_plan, null, 2)}</pre></details></section>
+      <section><h3><i>⑤</i>SQL 证据入口</h3><details><summary>查看受控 SQL　‹/›</summary><pre>{result?.evidence?.sql || '当前结果未执行 SQL，或当前角色无权查看。'}</pre></details></section>
+      <section><h3><i>⑥</i>analysis_run_id</h3><code>{result?.evidence?.analysis_run_id ?? '等待生成'}</code></section>
+      <footer><span>♢</span><p><b>业务默认，证据按需查看</b><small>Query Guard：{result?.evidence?.query_guard ?? 'pending'} · Answer Guard：{result?.evidence?.answer_guard?.status ?? 'pending'}</small></p></footer>
+    </aside>
+  </div>
 }
 
 function DiagnosticsPage({ token, start, end }: { token: string; start: string; end: string }) {
@@ -434,7 +559,7 @@ function Sidebar({ active, navigate }: { active: ViewId; navigate: (id: ViewId) 
 }
 
 function ProductHeader({ active, start, end, setStart, setEnd, logout }: { active: ViewId; start: string; end: string; setStart: (v: string) => void; setEnd: (v: string) => void; logout: () => void }) {
-  return <header className="product-header"><div className="page-title"><h1>{titles[active]}</h1>{active === 'overview' && <span>当前场景：<b>charging_ops</b>｜充电运营</span>}{active === 'dashboard' && <small>数据范围：{start} 至 {endInclusive(end)}　｜　模拟数据　｜　来源：平台数据库</small>}</div>{active === 'overview' && <><label className="search"><i>⌕</i><input aria-label="全局搜索" placeholder="搜索场站、指标、报告、问题…" /><kbd>⌘ K</kbd></label><div className="date-range"><input aria-label="开始日期" type="date" value={start} onChange={e => setStart(e.target.value)} /><span>→</span><input aria-label="结束日期" type="date" value={endInclusive(end)} onChange={e => { const next = new Date(`${e.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></>}<button className="organization">国际新能源集团　⌄</button><button className="bell" aria-label="通知">♧<b>!</b></button><button className="profile" onClick={logout}><span>张</span><div><b>张伟</b><small>运营分析师</small></div><i>⌄</i></button></header>
+  return <header className={`product-header${active === 'chat' ? ' chat-header' : ''}`}><div className="page-title"><h1>{titles[active]}</h1>{active === 'overview' && <span>当前场景：<b>charging_ops</b>｜充电运营</span>}{active === 'dashboard' && <small>数据范围：{start} 至 {endInclusive(end)}　｜　模拟数据　｜　来源：平台数据库</small>}</div>{active === 'overview' && <><label className="search"><i>⌕</i><input aria-label="全局搜索" placeholder="搜索场站、指标、报告、问题…" /><kbd>⌘ K</kbd></label><div className="date-range"><input aria-label="开始日期" type="date" value={start} onChange={e => setStart(e.target.value)} /><span>→</span><input aria-label="结束日期" type="date" value={endInclusive(end)} onChange={e => { const next = new Date(`${e.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></>}{active === 'chat' && <><button className="chat-model">分析模式　确定性链路⌄</button><div className="chat-period">2026-06-01　~　2026-06-30　▣</div></>}<button className="organization">{active === 'chat' ? '国内新能源集团' : '国际新能源集团'}　⌄</button><button className="bell" aria-label="通知">♧<b>!</b></button><button className="profile" onClick={logout}><span>张</span><div><b>张伟</b><small>运营分析师</small></div><i>⌄</i></button></header>
 }
 
 function ProductShell({ token, logout }: { token: string; logout: () => void }) {
