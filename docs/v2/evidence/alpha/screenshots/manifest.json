@@ -1,0 +1,54 @@
+{
+  "captured_at": "2026-07-28T07:32:41.846Z",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "base_url": "http://127.0.0.1:8080",
+  "data_classification": "fixed_seed_simulated",
+  "data_source_label_verified": "platform_database",
+  "screenshots": [
+    {
+      "page": "登录页",
+      "file": "01-login.png"
+    },
+    {
+      "page": "经营总览",
+      "file": "02-overview.png"
+    },
+    {
+      "page": "收入分析",
+      "file": "03-revenue.png"
+    },
+    {
+      "page": "毛利分析",
+      "file": "04-gross-profit.png"
+    },
+    {
+      "page": "场站分析",
+      "file": "05-stations.png"
+    },
+    {
+      "page": "设备分析",
+      "file": "06-devices.png"
+    },
+    {
+      "page": "异常诊断",
+      "file": "07-diagnostics.png"
+    },
+    {
+      "page": "可信问数 / ChatBI",
+      "file": "08-chatbi.png"
+    },
+    {
+      "page": "报告草稿",
+      "file": "09-report.png"
+    }
+  ],
+  "unavailable_pages": [
+    {
+      "page": "系统或审计页面",
+      "reason": "当前 Alpha 前端没有系统或审计导航/路由；后端审计能力存在，但无对应页面。"
+    }
+  ]
+}

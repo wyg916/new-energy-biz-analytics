@@ -1,0 +1,14 @@
+{
+  "executed_at": "2026-07-28T15:32:36.7440592+08:00",
+  "command": ".\\.venv\\Scripts\\python.exe scripts\\verify_alembic_schema_cycle.py",
+  "isolation": "dedicated_schema",
+  "schema": "v2_p0_0_alembic_verify",
+  "upgrade": true,
+  "downgrade": true,
+  "reupgrade": true,
+  "schema_removed": true,
+  "business_schema_revision_after_test": "0003",
+  "duration_seconds": 35.012,
+  "exit_code": 0,
+  "passed": true
+}

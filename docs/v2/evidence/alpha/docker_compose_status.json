@@ -1,0 +1,41 @@
+{
+  "collected_at": "2026-07-28T07:34:59.850879+00:00",
+  "services": [
+    {
+      "service": "api",
+      "name": "renewable-operations-alpha-api-1",
+      "image": "renewable-operations-alpha-api",
+      "state": "running",
+      "health": "healthy",
+      "status": "Up 22 minutes (healthy)",
+      "ports": "0.0.0.0:18000->8000/tcp"
+    },
+    {
+      "service": "db",
+      "name": "renewable-operations-alpha-db-1",
+      "image": "postgres:16.9-alpine",
+      "state": "running",
+      "health": "healthy",
+      "status": "Up 22 minutes (healthy)",
+      "ports": "5432/tcp"
+    },
+    {
+      "service": "redis",
+      "name": "renewable-operations-alpha-redis-1",
+      "image": "redis:7.4.5-alpine",
+      "state": "running",
+      "health": "healthy",
+      "status": "Up 22 minutes (healthy)",
+      "ports": "6379/tcp"
+    },
+    {
+      "service": "web",
+      "name": "renewable-operations-alpha-web-1",
+      "image": "renewable-operations-alpha-web",
+      "state": "running",
+      "health": "not_configured",
+      "status": "Up 22 minutes",
+      "ports": "0.0.0.0:8080->80/tcp"
+    }
+  ]
+}

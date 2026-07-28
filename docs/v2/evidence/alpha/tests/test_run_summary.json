@@ -1,0 +1,149 @@
+{
+  "executed_on": "2026-07-28",
+  "timezone": "Asia/Shanghai",
+  "results": [
+    {
+      "id": "backend_pytest",
+      "command": "..\\.venv\\Scripts\\python.exe -m pytest --cov=app --cov-report=term-missing",
+      "workdir": "backend",
+      "started_at": "2026-07-28T15:14:10.1370264+08:00",
+      "ended_at": "2026-07-28T15:23:59.2256339+08:00",
+      "duration_seconds": 589.089,
+      "passed": 33,
+      "failed": 0,
+      "skipped": 0,
+      "coverage_percent": 89,
+      "exit_code": 0
+    },
+    {
+      "id": "frontend_vitest",
+      "command": "npm.cmd test",
+      "workdir": "frontend",
+      "started_at": "2026-07-28T15:24:24.7561068+08:00",
+      "ended_at": "2026-07-28T15:24:52.8794692+08:00",
+      "duration_seconds": 28.123,
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "id": "frontend_build",
+      "command": "npm.cmd run build",
+      "workdir": "frontend",
+      "started_at": "2026-07-28T15:24:24.8504538+08:00",
+      "ended_at": "2026-07-28T15:24:56.9740129+08:00",
+      "duration_seconds": 32.124,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "id": "npm_audit",
+      "command": "npm.cmd audit --audit-level=low",
+      "workdir": "frontend",
+      "started_at": "2026-07-28T15:24:24.8554544+08:00",
+      "ended_at": "2026-07-28T15:26:04.2632887+08:00",
+      "duration_seconds": 99.408,
+      "vulnerabilities": 0,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "id": "chatbi_fixed_evaluation",
+      "command": ".\\.venv\\Scripts\\python.exe scripts\\run_chatbi_eval.py",
+      "workdir": ".",
+      "started_at": "2026-07-28T15:24:24.8609866+08:00",
+      "ended_at": "2026-07-28T15:24:27.5368716+08:00",
+      "duration_seconds": 2.676,
+      "passed": 40,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "id": "docker_smoke",
+      "command": ".\\.venv\\Scripts\\python.exe scripts\\docker_smoke.py",
+      "workdir": ".",
+      "started_at": "2026-07-28T15:24:24.8659863+08:00",
+      "ended_at": "2026-07-28T15:24:34.3805279+08:00",
+      "duration_seconds": 9.515,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "id": "playwright_core_journey",
+      "command": "npm.cmd run e2e",
+      "workdir": "frontend",
+      "started_at": "2026-07-28T15:24:24.9190544+08:00",
+      "ended_at": "2026-07-28T15:26:46.8939633+08:00",
+      "duration_seconds": 141.975,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "id": "dangerous_sql",
+      "command": "..\\.venv\\Scripts\\python.exe -m pytest tests\\test_query_security.py::test_arbitrary_and_dangerous_sql_is_always_rejected",
+      "workdir": "backend",
+      "pytest_duration_seconds": 149.38,
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "id": "unsupported_business_numbers",
+      "command": "..\\.venv\\Scripts\\python.exe -m pytest tests\\test_chatbi.py::test_chatbi_complete_chain_and_truthful_evidence",
+      "workdir": "backend",
+      "pytest_duration_seconds": 31.18,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "unsupported_numbers_observed": 0,
+      "exit_code": 0
+    },
+    {
+      "id": "data_quality",
+      "command": "docker compose exec -T api python -c <validate_published_batch invocation>",
+      "workdir": ".",
+      "started_at": "2026-07-28T15:24:24.9530548+08:00",
+      "ended_at": "2026-07-28T15:24:41.8724642+08:00",
+      "duration_seconds": 16.919,
+      "passed": 20,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "id": "alembic_schema_cycle",
+      "command": ".\\.venv\\Scripts\\python.exe scripts\\verify_alembic_schema_cycle.py",
+      "workdir": ".",
+      "started_at": "2026-07-28T15:32:36.7440592+08:00",
+      "ended_at": "2026-07-28T15:33:11.7563041+08:00",
+      "duration_seconds": 35.012,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "id": "p0_0_screenshot_capture",
+      "command": "npm.cmd exec playwright test e2e/v2_p0_0_evidence.spec.ts",
+      "workdir": "frontend",
+      "started_at": "2026-07-28T15:32:36.7760354+08:00",
+      "ended_at": "2026-07-28T15:33:08.2594990+08:00",
+      "duration_seconds": 31.483,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0
+    }
+  ],
+  "result": "PASS"
+}

@@ -1,0 +1,11 @@
+{
+  "collected_at": "2026-07-28T07:34:59.850879+00:00",
+  "api_http_status": 200,
+  "api": {
+    "status": "ok",
+    "service": "alpha-api",
+    "data_classification": "simulated"
+  },
+  "web_http_status": 200,
+  "web_response_bytes": 168
+}

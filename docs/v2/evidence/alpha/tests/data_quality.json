@@ -1,0 +1,37 @@
+{
+  "executed_at": "2026-07-28T15:24:24.9530548+08:00",
+  "status": "passed",
+  "rules_checked": 20,
+  "rule_results": {
+    "DQ-001": true,
+    "DQ-002": true,
+    "DQ-003": true,
+    "DQ-004": true,
+    "DQ-005": true,
+    "DQ-006": true,
+    "DQ-007": true,
+    "DQ-008": true,
+    "DQ-009": true,
+    "DQ-010": true,
+    "DQ-011": true,
+    "DQ-012": true,
+    "DQ-013": true,
+    "DQ-014": true,
+    "DQ-015": true,
+    "DQ-016": true,
+    "DQ-017": true,
+    "DQ-018": true,
+    "DQ-019": true,
+    "DQ-020": true
+  },
+  "counts": {
+    "regions": 3,
+    "cities": 6,
+    "stations": 30,
+    "devices": 120,
+    "users": 10000,
+    "dates": 546,
+    "sessions": 300000
+  },
+  "failures": []
+}

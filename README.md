@@ -86,6 +86,10 @@ docker-compose.yml          PostgreSQL、Redis、API、Web 统一编排
 - [15 项指标合同](docs/metric_dictionary_v0.1.md)
 - [Query Plan 合同](docs/query_plan_contract_v0.1.md)
 - [安全合同](docs/rbac_and_sql_security_contract_v0.1.md)
+- [V2 产品化正式执行基线 v1.1](docs/v2/V2_productization_execution_baseline_v1.1.md)
+- [V2 P0 范围与验收清单](docs/v2/V2_P0_scope_and_acceptance.md)
+- [V2-P0.0 验收记录](docs/v2/V2_P0_0_acceptance.md)
+- [V2-P0.0 Alpha 证据](docs/v2/evidence/alpha/README.md)
 
 当前已知限制：自然语言解析为合同范围内的确定性中文规则，不是开放域大模型；会话记忆仅限结构化短期状态；报告导出为 Markdown/CSV 草稿；Compose 是单机 Alpha 部署，不包含高可用、备份编排或生产运维承诺。
 

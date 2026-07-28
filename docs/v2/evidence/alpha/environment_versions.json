@@ -1,0 +1,11 @@
+{
+  "collected_at": "2026-07-28T07:34:59.850879+00:00",
+  "python": "3.11.9",
+  "node": "v24.18.0",
+  "npm": "11.16.0",
+  "docker": "Docker version 26.0.0, build 2ae903e",
+  "docker_compose": "Docker Compose version v2.26.1-desktop.1",
+  "git": "git version 2.55.0.windows.3",
+  "github_cli": "gh version 2.96.0 (2026-07-02)",
+  "os": "Windows"
+}

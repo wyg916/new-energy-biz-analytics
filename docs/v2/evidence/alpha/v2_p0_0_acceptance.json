@@ -1,0 +1,66 @@
+{
+  "timestamp": "2026-07-28T15:34:59.850879+08:00",
+  "branch": "feature/v2-productization",
+  "head": "1f6f2dc47bf99f4ecbb34d636b5efd5831a97d33",
+  "head_role": "verified pre-P0.0 branch baseline",
+  "alpha_acceptance_commit": "1f580b6c251c0f20d4ed6927b4b60252b7deba8d",
+  "tag": {
+    "name": "alpha-v1.0.0",
+    "target": "1f580b6c251c0f20d4ed6927b4b60252b7deba8d",
+    "annotated": true,
+    "pushed": true
+  },
+  "remote": {
+    "url": "https://github.com/wyg916/new-energy-biz-analytics.git",
+    "authenticated_account": "wyg916",
+    "alpha_branch_pushed": true,
+    "feature_branch_push_after_p0_0_commit_required": true
+  },
+  "docker_services": [
+    {"service": "db", "state": "running", "health": "healthy"},
+    {"service": "redis", "state": "running", "health": "healthy"},
+    {"service": "api", "state": "running", "health": "healthy"},
+    {"service": "web", "state": "running", "health": "not_configured", "http_status": 200}
+  ],
+  "health_status": {
+    "api_http_status": 200,
+    "api_status": "ok",
+    "web_http_status": 200,
+    "alembic_current": "0003",
+    "alembic_head": "0003"
+  },
+  "backend_tests": {"passed": 33, "failed": 0, "skipped": 0, "coverage_percent": 89, "duration_seconds": 589.089},
+  "frontend_tests": {"passed": 3, "failed": 0, "skipped": 0, "duration_seconds": 28.123},
+  "frontend_build": {"passed": true, "duration_seconds": 32.124},
+  "playwright": {"passed": 1, "failed": 0, "skipped": 0, "duration_seconds": 141.975},
+  "docker_smoke": {"passed": 6, "failed": 0, "skipped": 0, "duration_seconds": 9.515},
+  "chatbi_evaluation": {"passed": 40, "failed": 0, "skipped": 0, "duration_seconds": 2.676},
+  "dangerous_sql": {"passed": 12, "failed": 0, "skipped": 0, "rejection_rate": 1.0},
+  "data_quality": {"passed": 20, "failed": 0, "skipped": 0, "sessions": 300000},
+  "npm_audit": {"vulnerabilities": 0, "exit_code": 0, "duration_seconds": 99.408},
+  "alembic_cycle": {
+    "isolation": "dedicated_schema",
+    "upgrade": true,
+    "downgrade": true,
+    "reupgrade": true,
+    "schema_removed": true,
+    "business_revision_after_test": "0003"
+  },
+  "unsupported_numbers": {"test_passed": true, "observed": 0},
+  "openapi_hash": "1370d72515ff7fe8498d6eef639170f6f36cc3eef8f5b997f83a9acb4693b75d",
+  "openapi_path_count": 15,
+  "screenshots": {"captured": 9, "viewport": "1440x900", "system_or_audit_page_available": false},
+  "business_code_modified": false,
+  "business_fact_or_seed_data_modified": false,
+  "normal_audit_and_analysis_run_rows_created_by_acceptance_requests": true,
+  "blockers": [],
+  "differences": [
+    "Current pre-P0.0 HEAD is 1f6f2dc, one non-business startup commit after the stated Alpha acceptance commit 1f580b6.",
+    "Docker daemon was stopped at initial inspection and was restarted without recreating volumes.",
+    "Node runtime is v24.18.0 rather than the earlier recorded v24.3.0.",
+    "The product architecture and UI optimization Markdown reference is missing.",
+    "The current Alpha has no system or audit frontend route.",
+    "LibreOffice/soffice is unavailable, so Word references were structurally extracted but not visually rendered."
+  ],
+  "result": "PASS"
+}
