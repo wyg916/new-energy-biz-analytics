@@ -361,36 +361,79 @@ function MarginWaterfall({ diagnostic }: { diagnostic: ProfitDiagnostic | null }
   if (!diagnostic) return <div className="margin-chart-loading">正在计算毛利变化贡献…</div>
   const startValue = diagnostic.previous.gross_profit ?? 0
   const endValue = diagnostic.current.gross_profit ?? 0
+  let cumulative = startValue
   const values = [
-    { label: '上期毛利', value: startValue, total: true },
-    ...diagnostic.bridge.map(item => ({ label: marginDriverNames[item.driver] || item.driver, value: item.contribution, total: false })),
-    { label: '本期毛利', value: endValue, total: true },
+    { label: '上期毛利', value: startValue, start: 0, end: startValue, total: true },
+    ...diagnostic.bridge.map(item => {
+      const start = cumulative
+      cumulative += item.contribution
+      return { label: marginDriverNames[item.driver] || item.driver, value: item.contribution, start, end: cumulative, total: false }
+    }),
+    { label: '本期毛利', value: endValue, start: 0, end: endValue, total: true },
   ]
-  const max = Math.max(...values.map(item => Math.abs(item.value)), 1)
+  const allLevels = values.flatMap(item => [item.start, item.end, 0])
+  const rawMin = Math.min(...allLevels)
+  const rawMax = Math.max(...allLevels)
+  const spread = Math.max(rawMax - rawMin, 1)
+  const axisMin = rawMin < 0 ? rawMin - spread * .08 : 0
+  const axisMax = rawMax + spread * .17
+  const plot = { left: 58, right: 592, top: 18, bottom: 150 }
+  const plotHeight = plot.bottom - plot.top
+  const step = (plot.right - plot.left) / values.length
+  const barWidth = Math.min(42, step * .43)
+  const y = (value: number) => plot.top + (axisMax - value) / (axisMax - axisMin) * plotHeight
+  const ticks = Array.from({ length: 5 }, (_, index) => axisMin + (axisMax - axisMin) * index / 4)
+  const shortAxis = (value: number) => Math.abs(value) >= 10000 ? Math.round(value).toLocaleString('zh-CN') : value.toFixed(0)
+  const labelParts = (label: string) => label.length > 7 ? [label.slice(0, 6), label.slice(6)] : [label]
   return <div className="margin-waterfall" role="img" aria-label="毛利桥接环比图">
-    {values.map((item, index) => {
-      const height = Math.max(Math.abs(item.value) / max * 68, 8)
-      const positive = item.total || item.value >= 0
-      return <div key={`${item.label}-${index}`}><b className={positive ? 'up' : 'down'}>{item.value >= 0 && !item.total ? '+' : ''}{money(item.value)}</b><span className={`${item.total ? 'total ' : ''}${positive ? 'positive' : 'negative'}`} style={{ height: `${height}%` }} /><small>{item.label}</small></div>
-    })}
+    <svg viewBox="0 0 600 188" preserveAspectRatio="none">
+      {ticks.map((tick, index) => {
+        const tickY = y(tick)
+        return <g key={`tick-${index}`}><line className="waterfall-grid" x1={plot.left} x2={plot.right} y1={tickY} y2={tickY} /><text className="waterfall-axis-label" x={plot.left - 8} y={tickY + 3}>{shortAxis(tick)}</text></g>
+      })}
+      {values.map((item, index) => {
+        const x = plot.left + step * index + (step - barWidth) / 2
+        const rectTop = Math.min(y(item.start), y(item.end))
+        const rectBottom = Math.max(y(item.start), y(item.end))
+        const rectHeight = Math.max(rectBottom - rectTop, 3)
+        const positive = item.value >= 0
+        const connectorLevel = item.total && index === 0 ? item.end : item.end
+        const connectorY = y(connectorLevel)
+        const nextX = plot.left + step * (index + 1) + (step - barWidth) / 2
+        const parts = labelParts(item.label)
+        return <g key={`${item.label}-${index}`}>
+          {index < values.length - 1 && <line className="waterfall-connector" x1={x + barWidth} x2={nextX} y1={connectorY} y2={connectorY} />}
+          <rect className={item.total ? 'waterfall-total' : positive ? 'waterfall-positive' : 'waterfall-negative'} x={x} y={rectTop} width={barWidth} height={rectHeight} rx="1.5" />
+          <text className={item.total || positive ? 'waterfall-value up' : 'waterfall-value down'} x={x + barWidth / 2} y={Math.max(rectTop - 6, 10)}>
+            {positive && !item.total ? '+' : ''}{money(item.value)}
+          </text>
+          <text className="waterfall-category" x={x + barWidth / 2} y="164">{parts.map((part, partIndex) => <tspan key={part} x={x + barWidth / 2} dy={partIndex ? 10 : 0}>{part}</tspan>)}</text>
+        </g>
+      })}
+    </svg>
   </div>
 }
 
 function MarginTrend({ points }: { points: TrendPoint[] }) {
   if (!points.length) return <div className="margin-chart-loading">正在加载度电成本趋势…</div>
   const values = points.map(item => item.value ?? 0)
-  const max = Math.max(...values, 1)
-  const min = Math.min(...values)
+  const stepSize = .2
+  const min = Math.floor((Math.min(...values) - .3) / stepSize) * stepSize
+  const max = Math.ceil((Math.max(...values) + .3) / stepSize) * stepSize
   const spread = max - min || 1
-  const coords = values.map((value, index) => `${index / Math.max(values.length - 1, 1) * 100},${83 - (value - min) / spread * 57}`).join(' ')
+  const plot = { left: 38, right: 342, top: 17, bottom: 143 }
+  const x = (index: number) => plot.left + index / Math.max(values.length - 1, 1) * (plot.right - plot.left)
+  const y = (value: number) => plot.top + (max - value) / spread * (plot.bottom - plot.top)
+  const coords = values.map((value, index) => `${x(index)},${y(value)}`).join(' ')
+  const ticks = Array.from({ length: 5 }, (_, index) => min + spread * index / 4)
   return <div className="margin-trend" role="img" aria-label="度电成本月度趋势">
-    <svg viewBox="0 0 100 90" preserveAspectRatio="none"><polygon points={`0,90 ${coords} 100,90`} /><polyline points={coords} />{values.map((value, index) => {
-      const x = index / Math.max(values.length - 1, 1) * 100
-      const y = 83 - (value - min) / spread * 57
-      return <circle key={`${points[index].period}-${index}`} cx={x} cy={y} r="1.2" />
-    })}</svg>
-    <div className="margin-trend-labels">{values.map((value, index) => <b key={`${points[index].period}-value`}>{value.toFixed(2)}</b>)}</div>
-    <div className="margin-trend-axis">{points.map(point => <span key={point.period}>{point.period.slice(0, 7)}</span>)}</div>
+    <svg viewBox="0 0 360 178" preserveAspectRatio="none">
+      <defs><linearGradient id="marginTrendArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#78cfc1" stopOpacity=".28" /><stop offset="100%" stopColor="#e8f7f4" stopOpacity=".04" /></linearGradient></defs>
+      {ticks.map((tick, index) => <g key={`trend-tick-${index}`}><line className="trend-grid" x1={plot.left} x2={plot.right} y1={y(tick)} y2={y(tick)} /><text className="trend-axis-label" x={plot.left - 8} y={y(tick) + 3}>{tick.toFixed(2)}</text></g>)}
+      <polygon points={`${plot.left},${plot.bottom} ${coords} ${plot.right},${plot.bottom}`} />
+      <polyline points={coords} />
+      {values.map((value, index) => <g key={`${points[index].period}-${index}`}><circle cx={x(index)} cy={y(value)} r="3.2" /><text className="trend-value" x={x(index)} y={y(value) - 10}>{value.toFixed(2)}</text><text className="trend-period" x={x(index)} y="165">{points[index].period.slice(0, 7)}</text></g>)}
+    </svg>
   </div>
 }
 
@@ -402,18 +445,23 @@ function CostStructure({ metrics }: { metrics: Record<string, number | null> }) 
   const energyShare = energy / total
   const operationShare = variable / total
   const operationItems = [
-    { label: '运维服务', share: .363, value: variable * .363, color: '#f59e0b' },
-    { label: '人员成本', share: .226, value: variable * .226, color: '#fb923c' },
-    { label: '保险费用', share: .122, value: variable * .122, color: '#64748b' },
+    { label: '运维服务', share: .363, value: variable * .363, color: '#744fe8' },
+    { label: '人员成本', share: .226, value: variable * .226, color: '#f59e0b' },
+    { label: '保险费用', share: .122, value: variable * .122, color: '#78879c' },
     { label: '场地租赁', share: .109, value: variable * .109, color: '#ef4444' },
-    { label: '其他费用', share: .18, value: variable * .18, color: '#a8b4c8' },
+    { label: '其他费用', share: .18, value: variable * .18, color: '#bdc7d8' },
   ]
   const operationGradient = `conic-gradient(${operationItems.map((item, index) => {
     const start = operationItems.slice(0, index).reduce((sum, row) => sum + row.share, 0) * 100
     return `${item.color} ${start}% ${start + item.share * 100}%`
   }).join(',')})`
+  const totalItems = [
+    { label: '电费成本', share: energyShare, value: energy, color: '#0fa678' },
+    { label: '可变运营成本', share: operationShare, value: variable, color: '#1f8fff' },
+    { label: '其他成本', share: 0, value: 0, color: '#bdc7d8' },
+  ]
   return <div className="cost-structure">
-    <section><h3>成本结构占比</h3><div><div className="margin-donut" style={{ background: `conic-gradient(#0fa678 0 ${energyShare * 100}%,#1f8fff ${energyShare * 100}% 100%)` }}><span><small>合计</small><b>{compactMoney(total)}</b></span></div><ul><li><i style={{ background: '#0fa678' }} />电费成本 <b>{(energyShare * 100).toFixed(1)}%</b><em>{compactMoney(energy)}</em></li><li><i style={{ background: '#1f8fff' }} />可变运营成本 <b>{(operationShare * 100).toFixed(1)}%</b><em>{compactMoney(variable)}</em></li></ul></div></section>
+    <section><h3>成本结构占比</h3><div><div className="margin-donut" style={{ background: `conic-gradient(#0fa678 0 ${energyShare * 100}%,#1f8fff ${energyShare * 100}% 100%)` }}><span><small>合计</small><b>{compactMoney(total)}</b></span></div><ul>{totalItems.map(item => <li key={item.label}><i style={{ background: item.color }} /><span>{item.label}</span><b>{item.share ? `${(item.share * 100).toFixed(1)}%` : '—'}</b><em>{item.value ? compactMoney(item.value) : '—'}</em></li>)}</ul></div></section>
     <section><h3>可变运营成本构成</h3><div><div className="margin-donut" style={{ background: operationGradient }}><span><small>合计</small><b>{compactMoney(variable)}</b></span></div><ul>{operationItems.map(item => <li key={item.label}><i style={{ background: item.color }} />{item.label}<b>{(item.share * 100).toFixed(1)}%</b><em>{compactMoney(item.value)}</em></li>)}</ul></div></section>
   </div>
 }
