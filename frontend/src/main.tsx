@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { formatMetric, metricNames } from './format'
 import './styles.css'
 import { ProductApp } from './overview'
+import './typography.css'
 
 type Metadata = {data_classification:string;data_time_range:{start:string;end_exclusive:string};source:string;batch_id:string|null;analysis_run_id:string}
 type Summary = {metrics:Record<string,number|null>;metadata:Metadata}
