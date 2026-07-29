@@ -16,6 +16,7 @@ type StationRow = {
   station_id: string
   station_name: string
   region_id: string
+  city_id: string
   station_type: string
   metrics: Record<string, number | null>
 }
@@ -342,6 +343,252 @@ function DetailPage({ active, summary, stations, trend }: { active: ViewId; summ
   </div>
 }
 
+type StationSegment = 'core' | 'growth' | 'cost' | 'priority'
+type StationThresholds = { utilization: number; margin: number }
+
+const stationSegmentMeta: Record<StationSegment, { label: string; description: string; color: string }> = {
+  core: { label: '核心场站', description: '高利用 · 高毛利', color: '#0aa37a' },
+  growth: { label: '成长场站', description: '低利用 · 高毛利', color: '#1677ff' },
+  cost: { label: '成本优化', description: '低利用 · 低毛利', color: '#f59e0b' },
+  priority: { label: '重点治理', description: '高利用 · 低毛利', color: '#f0444d' },
+}
+
+function stationThresholds(stations: StationRow[]): StationThresholds {
+  const median = (values: number[]) => {
+    const sorted = [...values].sort((a, b) => a - b)
+    if (!sorted.length) return 0
+    const middle = Math.floor(sorted.length / 2)
+    return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2
+  }
+  return {
+    utilization: median(stations.map(row => row.metrics.station_utilization_rate ?? 0)),
+    margin: median(stations.map(row => row.metrics.gross_margin ?? 0)),
+  }
+}
+
+function stationSegment(row: StationRow, thresholds: StationThresholds = { utilization: .1, margin: .12 }): StationSegment {
+  const utilization = row.metrics.station_utilization_rate ?? 0
+  const margin = row.metrics.gross_margin ?? 0
+  if (utilization >= thresholds.utilization && margin >= thresholds.margin) return 'core'
+  if (utilization < thresholds.utilization && margin >= thresholds.margin) return 'growth'
+  if (utilization < thresholds.utilization && margin < thresholds.margin) return 'cost'
+  return 'priority'
+}
+
+function stationScore(row: StationRow) {
+  const utilization = Math.min((row.metrics.station_utilization_rate ?? 0) / .2, 1)
+  const margin = Math.min(Math.max((row.metrics.gross_margin ?? 0) / .3, 0), 1)
+  const online = Math.min(row.metrics.device_online_rate ?? 0, 1)
+  return Math.round((utilization * .35 + margin * .35 + online * .3) * 1000) / 10
+}
+
+function StationMatrix({ stations, thresholds, selectedId, select }: { stations: StationRow[]; thresholds: StationThresholds; selectedId?: string; select: (id: string) => void }) {
+  const maxRevenue = Math.max(...stations.map(row => row.metrics.charging_revenue ?? 0), 1)
+  const utilizationValues = stations.map(row => row.metrics.station_utilization_rate ?? 0)
+  const marginValues = stations.map(row => row.metrics.gross_margin ?? 0)
+  const utilizationFloor = utilizationValues.length ? Math.min(...utilizationValues) : 0
+  const utilizationCeiling = utilizationValues.length ? Math.max(...utilizationValues) : .01
+  const marginFloor = marginValues.length ? Math.min(...marginValues) : 0
+  const marginCeiling = marginValues.length ? Math.max(...marginValues) : .01
+  const utilizationSpan = Math.max(utilizationCeiling - utilizationFloor, .004)
+  const marginSpan = Math.max(marginCeiling - marginFloor, .006)
+  const utilizationMin = utilizationFloor - utilizationSpan * .12
+  const utilizationMax = utilizationCeiling + utilizationSpan * .12
+  const marginMin = marginFloor - marginSpan * .12
+  const marginMax = marginCeiling + marginSpan * .12
+  const xAt = (value: number) => (value - utilizationMin) / (utilizationMax - utilizationMin || 1) * 78 + 11
+  const yAt = (value: number) => 89 - (value - marginMin) / (marginMax - marginMin || 1) * 78
+  const percent = (value: number) => `${(value * 100).toFixed(1)}%`
+  return <div className="station-matrix" role="img" aria-label="场站利用率与毛利率矩阵">
+    <span className="matrix-y">毛利率</span>
+    <span className="matrix-x">场站利用率</span>
+    <div className="matrix-axis horizontal" style={{ top: `${yAt(thresholds.margin)}%` }} /><div className="matrix-axis vertical" style={{ left: `${xAt(thresholds.utilization)}%` }} />
+    <div className="matrix-quadrant q-growth"><b>Ⅱ　成长区</b><span>低利用 · 高毛利</span></div>
+    <div className="matrix-quadrant q-core"><b>Ⅰ　核心区</b><span>高利用 · 高毛利</span></div>
+    <div className="matrix-quadrant q-cost"><b>Ⅲ　成本优化区</b><span>低利用 · 低毛利</span></div>
+    <div className="matrix-quadrant q-priority"><b>Ⅳ　重点治理区</b><span>高利用 · 低毛利</span></div>
+    {stations.map(row => {
+      const utilization = xAt(row.metrics.station_utilization_rate ?? 0)
+      const margin = yAt(row.metrics.gross_margin ?? 0)
+      const size = 12 + Math.sqrt((row.metrics.charging_revenue ?? 0) / maxRevenue) * 24
+      const segment = stationSegment(row, thresholds)
+      return <button
+        key={row.station_id}
+        type="button"
+        aria-label={`${row.station_name}，${stationSegmentMeta[segment].label}`}
+        className={`station-bubble ${segment}${selectedId === row.station_id ? ' selected' : ''}`}
+        style={{ left: `${utilization}%`, top: `${margin}%`, width: size, height: size }}
+        title={`${row.station_name}｜利用率 ${formatMetric('station_utilization_rate', row.metrics.station_utilization_rate)}｜毛利率 ${formatMetric('gross_margin', row.metrics.gross_margin)}`}
+        onClick={() => select(row.station_id)}
+      />
+    })}
+    <div className="matrix-scale y"><span>{percent(marginMax)}</span><span>{percent((marginMax + thresholds.margin) / 2)}</span><span>{percent(thresholds.margin)}</span><span>{percent(marginMin)}</span></div>
+    <div className="matrix-scale x"><span>{percent(utilizationMin)}</span><span>{percent((utilizationMin + thresholds.utilization) / 2)}</span><span>{percent(thresholds.utilization)}</span><span>{percent((thresholds.utilization + utilizationMax) / 2)}</span><span>{percent(utilizationMax)}</span></div>
+  </div>
+}
+
+function StationTrend({ points }: { points: TrendPoint[] }) {
+  const values = points.map(point => point.value ?? 0)
+  if (!values.length) return <div className="station-trend-empty">趋势数据加载中…</div>
+  const rawMax = Math.max(...values, 1)
+  const rawMin = Math.min(...values)
+  const padding = Math.max((rawMax - rawMin) * .12, rawMax * .015, 1)
+  const max = rawMax + padding
+  const min = rawMin - padding
+  const coords = values.map((value, index) => `${index / Math.max(values.length - 1, 1) * 100},${88 - (value - min) / (max - min || 1) * 67}`).join(' ')
+  return <div className="station-trend-chart">
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="平台充电收入趋势">
+      <polygon points={`0,92 ${coords} 100,92`} />
+      <polyline points={coords} />
+    </svg>
+    <div>{points.map(point => <span key={point.period}>{point.period.slice(5)}</span>)}</div>
+  </div>
+}
+
+function StationPage({
+  token,
+  summary,
+  stations,
+  trend,
+  start,
+  end,
+  setStart,
+  setEnd,
+  refresh,
+  navigate,
+}: {
+  token: string
+  summary: Summary | null
+  stations: StationRow[]
+  trend: TrendPoint[]
+  start: string
+  end: string
+  setStart: (value: string) => void
+  setEnd: (value: string) => void
+  refresh: () => void
+  navigate: (id: ViewId) => void
+}) {
+  const [previous, setPrevious] = useState<Summary | null>(null)
+  const [previousStations, setPreviousStations] = useState<StationRow[]>([])
+  const [selectedId, setSelectedId] = useState('')
+  const [region, setRegion] = useState('all')
+  const [stationType, setStationType] = useState('all')
+  const [status, setStatus] = useState<'all' | StationSegment>('all')
+  const [city, setCity] = useState('all')
+
+  useEffect(() => {
+    const previousRange = compareRange(start, end, 'mom')
+    const metrics = 'charging_revenue,gross_profit,gross_margin,charging_volume_kwh,station_utilization_rate,device_online_rate,device_fault_rate'
+    Promise.all([
+      api<Summary>(`/api/v1/dashboard/summary?start=${previousRange.start}&end_exclusive=${previousRange.end}`, token),
+      api<{ rows: StationRow[] }>(`/api/v1/dashboard/stations?start=${previousRange.start}&end_exclusive=${previousRange.end}&limit=30&metrics=${metrics}`, token),
+    ]).then(([summaryResult, stationResult]) => {
+      setPrevious(summaryResult)
+      setPreviousStations(stationResult.rows)
+    }).catch(() => {
+      setPrevious(null)
+      setPreviousStations([])
+    })
+  }, [token, start, end])
+
+  useEffect(() => {
+    if (!selectedId && stations[0]) setSelectedId(stations[0].station_id)
+  }, [selectedId, stations])
+
+  if (!summary) return <div className="notice">正在从平台数据库计算场站经营指标…</div>
+
+  const regionOptions = [...new Set(stations.map(row => row.region_id))]
+  const cityOptions = [...new Set(stations.map(row => row.city_id))]
+  const typeOptions = [...new Set(stations.map(row => row.station_type))]
+  const thresholds = stationThresholds(stations)
+  const visibleStations = stations.filter(row =>
+    (region === 'all' || row.region_id === region)
+    && (city === 'all' || row.city_id === city)
+    && (stationType === 'all' || row.station_type === stationType)
+    && (status === 'all' || stationSegment(row, thresholds) === status),
+  )
+  const rankedStations = [...visibleStations].sort((a, b) => (b.metrics.charging_revenue ?? 0) - (a.metrics.charging_revenue ?? 0))
+  const selected = stations.find(row => row.station_id === selectedId) ?? rankedStations[0] ?? stations[0]
+  const previousThresholds = stationThresholds(previousStations)
+  const currentRiskCount = stations.filter(row => stationSegment(row, thresholds) === 'priority').length
+  const previousRiskCount = previousStations.filter(row => stationSegment(row, previousThresholds) === 'priority').length
+  const currentMetrics = summary.metrics
+  const previousMetrics = previous?.metrics ?? {}
+  const cards = [
+    { id: 'station_utilization_rate', label: '场站利用率', icon: '▥', tone: 'teal', value: formatMetric('station_utilization_rate', currentMetrics.station_utilization_rate), unit: '', delta: deltaText('station_utilization_rate', currentMetrics.station_utilization_rate, previousMetrics.station_utilization_rate) },
+    { id: 'charging_revenue', label: '充电收入', icon: '▣', tone: 'blue', value: money(currentMetrics.charging_revenue), unit: '元', delta: deltaText('charging_revenue', currentMetrics.charging_revenue, previousMetrics.charging_revenue) },
+    { id: 'gross_profit', label: '经营毛利', icon: '◎', tone: 'orange', value: money(currentMetrics.gross_profit), unit: '元', delta: deltaText('gross_profit', currentMetrics.gross_profit, previousMetrics.gross_profit) },
+    { id: 'charging_volume_kwh', label: '充电量', icon: '◆', tone: 'green', value: currentMetrics.charging_volume_kwh == null ? '数据不足' : currentMetrics.charging_volume_kwh.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), unit: '度', delta: deltaText('charging_volume_kwh', currentMetrics.charging_volume_kwh, previousMetrics.charging_volume_kwh) },
+    { id: 'device_online_rate', label: '设备在线率', icon: '◉', tone: 'blue', value: formatMetric('device_online_rate', currentMetrics.device_online_rate), unit: '', delta: deltaText('device_online_rate', currentMetrics.device_online_rate, previousMetrics.device_online_rate) },
+    { id: 'risk_station_count', label: '风险场站数', icon: '◇', tone: 'red', value: String(currentRiskCount), unit: '个', delta: previousStations.length ? `${currentRiskCount >= previousRiskCount ? '↑' : '↓'} ${Math.abs(currentRiskCount - previousRiskCount)} 个` : '数据加载中' },
+  ]
+
+  const regionStats = regionOptions.map(regionId => {
+    const rows = stations.filter(row => row.region_id === regionId)
+    const average = (metric: string) => rows.reduce((sum, row) => sum + (row.metrics[metric] ?? 0), 0) / Math.max(rows.length, 1)
+    return {
+      id: regionId,
+      count: rows.length,
+      utilization: average('station_utilization_rate'),
+      margin: average('gross_margin'),
+      revenue: rows.reduce((sum, row) => sum + (row.metrics.charging_revenue ?? 0), 0),
+    }
+  }).sort((a, b) => b.revenue - a.revenue).slice(0, 5)
+  const segmentCounts = (Object.keys(stationSegmentMeta) as StationSegment[]).reduce((result, segment) => {
+    result[segment] = stations.filter(row => stationSegment(row, thresholds) === segment).length
+    return result
+  }, {} as Record<StationSegment, number>)
+  const total = Math.max(stations.length, 1)
+  const coreStop = segmentCounts.core / total * 100
+  const growthStop = coreStop + segmentCounts.growth / total * 100
+  const costStop = growthStop + segmentCounts.cost / total * 100
+  const donut = `conic-gradient(${stationSegmentMeta.core.color} 0 ${coreStop}%,${stationSegmentMeta.growth.color} ${coreStop}% ${growthStop}%,${stationSegmentMeta.cost.color} ${growthStop}% ${costStop}%,${stationSegmentMeta.priority.color} ${costStop}% 100%)`
+  const selectedSegment = selected ? stationSegment(selected, thresholds) : 'core'
+  const selectedMeta = stationSegmentMeta[selectedSegment]
+  const reset = () => {
+    setRegion('all')
+    setCity('all')
+    setStationType('all')
+    setStatus('all')
+  }
+
+  return <div className="station-page">
+    <section className="station-filter-bar">
+      <label className="filter-period"><span>时间范围</span><div><input aria-label="场站开始日期" type="date" value={start} onChange={event => setStart(event.target.value)} /><b>~</b><input aria-label="场站结束日期" type="date" value={endInclusive(end)} onChange={event => { const next = new Date(`${event.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></label>
+      <label><span>区域</span><select value={region} onChange={event => setRegion(event.target.value)}><option value="all">全部区域</option>{regionOptions.map(option => <option value={option} key={option}>{option}</option>)}</select></label>
+      <label><span>省份</span><select aria-label="省份"><option>全部省份</option></select></label>
+      <label><span>城市</span><select value={city} onChange={event => setCity(event.target.value)}><option value="all">全部城市</option>{cityOptions.map(option => <option value={option} key={option}>{option}</option>)}</select></label>
+      <label><span>场站类型</span><select value={stationType} onChange={event => setStationType(event.target.value)}><option value="all">全部类型</option>{typeOptions.map(option => <option value={option} key={option}>{option}</option>)}</select></label>
+      <label><span>运营状态</span><select value={status} onChange={event => setStatus(event.target.value as 'all' | StationSegment)}><option value="all">全部状态</option>{(Object.keys(stationSegmentMeta) as StationSegment[]).map(segment => <option value={segment} key={segment}>{stationSegmentMeta[segment].label}</option>)}</select></label>
+      <button type="button" className="filter-reset" onClick={reset}>重置</button>
+      <button type="button" className="filter-submit" onClick={refresh}>查询</button>
+      <div className="station-truth"><b>模拟数据</b><span>{summary.metadata.data_time_range.start} 至 {endInclusive(summary.metadata.data_time_range.end_exclusive)}</span><span>来源：{summary.metadata.source}</span><span title={summary.metadata.analysis_run_id}>run：{summary.metadata.analysis_run_id}</span></div>
+    </section>
+
+    <section className="station-kpis">
+      {cards.map(card => <article key={card.id}>
+        <i className={card.tone}>{card.icon}</i>
+        <div><span>{card.label}</span><p><strong>{card.value}</strong>{card.unit && <em>{card.unit}</em>}</p><small>较上期 <b className={card.delta.includes('↓') ? 'down' : 'up'}>{card.delta}</b></small></div>
+      </article>)}
+    </section>
+
+    <section className="station-top-grid">
+      <article className="station-panel matrix-panel"><header><h2>场站矩阵分布 <small>（本页中位数分层；气泡大小：收入）</small></h2><select aria-label="矩阵区域" value={region} onChange={event => setRegion(event.target.value)}><option value="all">全部区域</option>{regionOptions.map(option => <option value={option} key={option}>{option}</option>)}</select></header><StationMatrix stations={visibleStations} thresholds={thresholds} selectedId={selected?.station_id} select={setSelectedId} /><footer>{(Object.keys(stationSegmentMeta) as StationSegment[]).map(segment => <span key={segment}><i style={{ background: stationSegmentMeta[segment].color }} />{stationSegmentMeta[segment].label}</span>)}</footer></article>
+      <article className="station-panel region-panel"><header><h2>区域表现分布</h2><button type="button">查看地图　›</button></header><div>{regionStats.map((item, index) => <section key={item.id}><i>{index + 1}</i><strong>{item.id}</strong><em>场站数 {item.count}</em><p><span>利用率　<b>{formatMetric('station_utilization_rate', item.utilization)}</b></span><span>毛利率　<b>{formatMetric('gross_margin', item.margin)}</b></span><span>收入(万)　<b>{(item.revenue / 10000).toFixed(1)}</b></span></p></section>)}</div></article>
+      <article className="station-panel segment-panel"><header><div><h2>场站等级分布</h2><p>本页场站 {stations.length} 个 · 相对分层</p></div></header><div className="segment-overview"><div className="segment-donut" style={{ background: donut }}><span><small>场站总数</small><b>{stations.length} 个</b></span></div><ul>{(Object.keys(stationSegmentMeta) as StationSegment[]).map(segment => <li key={segment}><i style={{ background: stationSegmentMeta[segment].color }} /><span>{stationSegmentMeta[segment].label}</span><b>{segmentCounts[segment]}（{(segmentCounts[segment] / total * 100).toFixed(1)}%）</b></li>)}</ul></div><div className="segment-cards">{(Object.keys(stationSegmentMeta) as StationSegment[]).map(segment => <button type="button" key={segment} className={segment} onClick={() => setStatus(status === segment ? 'all' : segment)}><span>{stationSegmentMeta[segment].label}<b>{segmentCounts[segment]} ↑</b></span><small>{stationSegmentMeta[segment].description}</small><em>收入占比 {stations.length ? (stations.filter(row => stationSegment(row, thresholds) === segment).reduce((sum, row) => sum + (row.metrics.charging_revenue ?? 0), 0) / Math.max(stations.reduce((sum, row) => sum + (row.metrics.charging_revenue ?? 0), 0), 1) * 100).toFixed(1) : '0.0'}%</em></button>)}</div></article>
+    </section>
+
+    <section className="station-bottom-grid">
+      <article className="station-panel rank-panel"><header><h2>场站综合排名</h2><div>{(['all', 'core', 'growth', 'cost', 'priority'] as const).map(segment => <button type="button" className={status === segment ? 'active' : ''} key={segment} onClick={() => setStatus(segment)}>{segment === 'all' ? '全部场站' : stationSegmentMeta[segment].label}</button>)}</div></header><div className="station-table-wrap"><table><thead><tr><th>排名</th><th>场站名称</th><th>区域</th><th>城市</th><th>收入（元）</th><th>利用率</th><th>毛利率</th><th>在线率</th><th>综合得分</th><th>风险等级</th><th>操作</th></tr></thead><tbody>{rankedStations.slice(0, 5).map((row, index) => {
+        const segment = stationSegment(row, thresholds)
+        return <tr key={row.station_id} className={selected?.station_id === row.station_id ? 'selected' : ''} onClick={() => setSelectedId(row.station_id)}><td>{index + 1}</td><td title={row.station_name}>{row.station_name}</td><td>{row.region_id}</td><td>{row.city_id}</td><td>{money(row.metrics.charging_revenue)}</td><td className="up">{formatMetric('station_utilization_rate', row.metrics.station_utilization_rate)}</td><td>{formatMetric('gross_margin', row.metrics.gross_margin)}</td><td>{formatMetric('device_online_rate', row.metrics.device_online_rate)}</td><td><b>{stationScore(row).toFixed(1)}</b></td><td><em className={segment}>{stationSegmentMeta[segment].label}</em></td><td><button type="button" aria-label={`查看${row.station_name}`}>◎</button></td></tr>
+      })}</tbody></table></div><footer><span>显示 {rankedStations.slice(0, 5).length} / {rankedStations.length} 条</span><div><button type="button">‹</button><b>1</b><button type="button">2</button><button type="button">3</button><button type="button">…</button><button type="button">›</button><select aria-label="每页条数"><option>10 条/页</option></select></div></footer></article>
+
+      <article className="station-panel station-detail-panel"><header><h2>场站详情（{selected?.station_name ?? '暂无场站'}）</h2><button type="button">更多详情　›</button></header>{selected && <><div className="detail-summary"><div><span>利用率</span><b>{formatMetric('station_utilization_rate', selected.metrics.station_utilization_rate)}</b></div><div><span>毛利率</span><b>{formatMetric('gross_margin', selected.metrics.gross_margin)}</b></div><div><span>在线率</span><b>{formatMetric('device_online_rate', selected.metrics.device_online_rate)}</b></div><div><span>经营分层</span><b style={{ color: selectedMeta.color }}>{selectedMeta.label}</b></div></div><div className="station-detail-body"><section><header><h3>趋势（当前数据区间）</h3><div><b>收入</b><span>利用率</span><span>毛利率</span></div></header><StationTrend points={trend} /></section><section><h3>结构化点评</h3><p>• 该站利用率 {formatMetric('station_utilization_rate', selected.metrics.station_utilization_rate)}，毛利率 {formatMetric('gross_margin', selected.metrics.gross_margin)}，当前归入“{selectedMeta.label}”。</p><p>• 设备在线率 {formatMetric('device_online_rate', selected.metrics.device_online_rate)}；设备与经营变化仅作相关线索，不构成因果结论。</p><button type="button" onClick={() => navigate('chat')}>◇　查看策略建议</button></section></div></>}</article>
+    </section>
+  </div>
+}
+
 const CHAT_INITIAL_QUESTION = '2026年6月充电收入环比变化的原因？'
 const chatDriverNames: Record<string, string> = {
   charging_volume_effect: '充电量变化',
@@ -617,7 +864,9 @@ function Sidebar({ active, navigate }: { active: ViewId; navigate: (id: ViewId) 
 }
 
 function ProductHeader({ active, start, end, setStart, setEnd, logout }: { active: ViewId; start: string; end: string; setStart: (v: string) => void; setEnd: (v: string) => void; logout: () => void }) {
-  return <header className={`product-header${active === 'chat' ? ' chat-header' : ''}`}><div className="page-title"><h1>{titles[active]}</h1>{active === 'overview' && <span>当前场景：<b>charging_ops</b>｜充电运营</span>}{active === 'dashboard' && <small>数据范围：{start} 至 {endInclusive(end)}　｜　模拟数据　｜　来源：平台数据库</small>}</div>{active === 'overview' && <><label className="search"><i>⌕</i><input aria-label="全局搜索" placeholder="搜索场站、指标、报告、问题…" /><kbd>⌘ K</kbd></label><div className="date-range"><input aria-label="开始日期" type="date" value={start} onChange={e => setStart(e.target.value)} /><span>→</span><input aria-label="结束日期" type="date" value={endInclusive(end)} onChange={e => { const next = new Date(`${e.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></>}{active === 'chat' && <><button className="chat-model">分析模式　确定性链路⌄</button><div className="chat-period">2026-06-01　~　2026-06-30　▣</div></>}<button className="organization">{active === 'chat' ? '国内新能源集团' : '国际新能源集团'}　⌄</button><button className="bell" aria-label="通知">♧<b>!</b></button><button className="profile" onClick={logout}><span>张</span><div><b>张伟</b><small>运营分析师</small></div><i>⌄</i></button></header>
+  const showSearchAndDate = active === 'overview' || active === 'margin' || active === 'stations' || active === 'reports'
+  const searchPlaceholder = active === 'stations' ? '搜索场站名称、区域、城市…' : '搜索场站、指标、报告、问题…'
+  return <header className={`product-header${active === 'chat' ? ' chat-header' : ''}`}><div className="page-title"><h1>{titles[active]}</h1>{(active === 'overview' || active === 'margin') && <span>当前场景：<b>charging_ops</b>｜充电运营</span>}{active === 'dashboard' && <small>数据范围：{start} 至 {endInclusive(end)}　｜　模拟数据　｜　来源：平台数据库</small>}</div>{showSearchAndDate && <><label className="search"><i>⌕</i><input aria-label="全局搜索" placeholder={searchPlaceholder} />{active === 'overview' && <kbd>⌘ K</kbd>}</label><div className="date-range"><input aria-label="开始日期" type="date" value={start} onChange={e => setStart(e.target.value)} /><span>～</span><input aria-label="结束日期" type="date" value={endInclusive(end)} onChange={e => { const next = new Date(`${e.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></>}{active === 'chat' && <><button className="chat-model">分析模式　确定性链路⌄</button><div className="chat-period">2026-06-01　~　2026-06-30　▣</div></>}<button className="organization">{active === 'chat' ? '国内新能源集团' : '国际新能源集团'}　⌄</button><button className="bell" aria-label="通知">♧<b>12</b></button><button className="profile" onClick={logout}><span>张</span><div><b>张伟</b><small>运营分析师</small></div><i>⌄</i></button></header>
 }
 
 function ProductShell({ token, logout }: { token: string; logout: () => void }) {
@@ -630,7 +879,7 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
   const [start, setStart] = useState('2026-01-01')
   const [end, setEnd] = useState('2026-07-01')
   const [refreshKey, setRefreshKey] = useState(0)
-  const primary = useMemo(() => pageMetrics[active]?.[0] || 'charging_revenue', [active])
+  const primary = useMemo(() => active === 'stations' ? 'charging_revenue' : pageMetrics[active]?.[0] || 'charging_revenue', [active])
   useEffect(() => {
     let cancelled = false
     setLoading(true)
@@ -648,12 +897,13 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
   let content: React.ReactNode
   if (active === 'overview') content = <Overview summary={summary} trend={trend} loading={loading} error={error} navigate={setActive} />
   else if (active === 'dashboard') content = <WorkbenchPage token={token} summary={summary} stations={stations} revenueTrend={trend} start={start} end={end} setStart={setStart} setEnd={setEnd} navigate={setActive} refreshKey={refreshKey} refresh={() => setRefreshKey(value => value + 1)} />
+  else if (active === 'stations') content = <>{error && <div className="notice error">{error}</div>}<StationPage token={token} summary={summary} stations={stations} trend={trend} start={start} end={end} setStart={setStart} setEnd={setEnd} refresh={() => setRefreshKey(value => value + 1)} navigate={setActive} /></>
   else if (active === 'chat') content = <ChatPage token={token} />
   else if (active === 'alerts') content = <DiagnosticsPage token={token} start={start} end={end} />
   else if (active === 'reports') content = <ReportPage token={token} start={start} end={end} summary={summary} stations={stations} trend={trend} />
   else if (active === 'mapping' || active === 'metrics') content = <BoundaryPage active={active} summary={summary} />
   else content = <>{error && <div className="notice error">{error}</div>}<DetailPage active={active} summary={summary} stations={stations} trend={trend} /></>
-  return <div className="product-shell"><Sidebar active={active} navigate={setActive} /><div className="workspace"><ProductHeader active={active} start={start} end={end} setStart={setStart} setEnd={setEnd} logout={logout} /><main className="product-main">{content}</main></div></div>
+  return <div className={`product-shell${active === 'stations' ? ' station-mode' : ''}`}><Sidebar active={active} navigate={setActive} /><div className="workspace"><ProductHeader active={active} start={start} end={end} setStart={setStart} setEnd={setEnd} logout={logout} /><main className={`product-main${active === 'stations' ? ' station-main' : ''}`}>{content}</main></div></div>
 }
 
 function Login({ loggedIn }: { loggedIn: (token: string) => void }) {
