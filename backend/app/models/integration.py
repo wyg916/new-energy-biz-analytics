@@ -66,6 +66,43 @@ class DataIngestionRun(Base):
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
+class DataIngestionQualityCheck(Base):
+    __tablename__ = "data_ingestion_quality_check"
+    __table_args__ = (UniqueConstraint("run_id", "rule_id", name="uq_ingestion_quality_run_rule"),)
+
+    check_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("data_ingestion_run.run_id"), index=True)
+    dataset_id: Mapped[str] = mapped_column(ForeignKey("data_set_definition.dataset_id"), index=True)
+    rule_id: Mapped[str] = mapped_column(String(32))
+    rule_name: Mapped[str] = mapped_column(String(128))
+    severity: Mapped[str] = mapped_column(String(16), default="blocking")
+    status: Mapped[str] = mapped_column(String(16), index=True)
+    detail_json: Mapped[str] = mapped_column(Text, default="{}")
+    checked_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+
+
+class DataIngestionReview(Base):
+    __tablename__ = "data_ingestion_review"
+    __table_args__ = (UniqueConstraint("run_id", name="uq_ingestion_review_run"),)
+
+    review_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("data_ingestion_run.run_id"), index=True)
+    dataset_id: Mapped[str] = mapped_column(ForeignKey("data_set_definition.dataset_id"), index=True)
+    quality_status: Mapped[str] = mapped_column(String(24), default="pending", index=True)
+    workflow_status: Mapped[str] = mapped_column(String(24), default="quality_pending", index=True)
+    quality_summary_json: Mapped[str] = mapped_column(Text, default="{}")
+    release_version: Mapped[str | None] = mapped_column(String(48), nullable=True)
+    requested_by: Mapped[int | None] = mapped_column(ForeignKey("app_user.id"), nullable=True)
+    requested_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    decided_by: Mapped[int | None] = mapped_column(ForeignKey("app_user.id"), nullable=True)
+    decided_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    published_by: Mapped[int | None] = mapped_column(ForeignKey("app_user.id"), nullable=True)
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    rejection_reason: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+
+
 class IngestedStationPreview(Base):
     __tablename__ = "ingested_station_preview"
     __table_args__ = (UniqueConstraint("dataset_id", "source_record_id", name="uq_ingested_station_preview_record"),)

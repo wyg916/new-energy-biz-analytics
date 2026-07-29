@@ -14,13 +14,14 @@ import httpx
 import psycopg
 import pymysql
 from openpyxl import load_workbook
-from sqlalchemy import delete, select, text
+from sqlalchemy import delete, func, select, text
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
 from app.models.auth import User
 from app.models.integration import (
-    DataIngestionRun, DataSetDefinition, DataSourceConnection, IngestedStationPreview,
+    DataIngestionQualityCheck, DataIngestionReview, DataIngestionRun,
+    DataSetDefinition, DataSourceConnection, IngestedStationPreview,
 )
 from app.services.dashboard import DashboardService
 
@@ -103,8 +104,16 @@ class DataIntegrationService:
         latest_run = self.db.scalar(
             select(DataIngestionRun)
             .where(DataIngestionRun.dataset_id == dataset.dataset_id)
-            .order_by(DataIngestionRun.started_at.desc())
+            .order_by(DataIngestionRun.started_at.desc(), DataIngestionRun.run_id.desc())
         )
+        review = self.db.scalar(
+            select(DataIngestionReview).where(DataIngestionReview.run_id == latest_run.run_id)
+        ) if latest_run else None
+        checks = list(self.db.scalars(
+            select(DataIngestionQualityCheck)
+            .where(DataIngestionQualityCheck.run_id == latest_run.run_id)
+            .order_by(DataIngestionQualityCheck.rule_id)
+        )) if latest_run else []
         source_payload = [self._source_payload(source) for source in sources]
         validations = {
             "mapping": all(item.get("source") and item.get("standard") in STANDARD_FIELDS for item in mapping),
@@ -130,6 +139,7 @@ class DataIntegrationService:
             "preview": preview,
             "validations": validations,
             "latest_ingestion": self._run_payload(latest_run) if latest_run else None,
+            "workflow": self._review_payload(review, checks) if review else None,
             "metadata": {
                 "data_classification": dataset.data_classification,
                 "source": "platform_database",
@@ -230,6 +240,194 @@ class DataIntegrationService:
             if isinstance(exc, DataIntegrationError):
                 raise
             raise DataIntegrationError(_safe_error_code(exc), "接入任务失败，详细异常未暴露") from exc
+
+    def validate_ingestion(self, dataset_id: str, run_id: str) -> dict:
+        self._require_governance_role()
+        dataset, run = self._require_current_completed_run(dataset_id, run_id)
+        review = self.db.scalar(select(DataIngestionReview).where(DataIngestionReview.run_id == run.run_id))
+        if review and review.workflow_status in {"pending_approval", "approved", "published"}:
+            raise DataIntegrationError("WORKFLOW_INVALID_STATE", "已进入审批流程的批次不能重新执行质量校验")
+
+        detail = json.loads(run.detail_json or "{}")
+        batch_id = detail.get("batch_id")
+        rows = list(self.db.scalars(
+            select(IngestedStationPreview)
+            .where(
+                IngestedStationPreview.dataset_id == dataset.dataset_id,
+                IngestedStationPreview.batch_id == batch_id,
+            )
+            .order_by(IngestedStationPreview.id)
+        ))
+        station_ids = [row.station_id for row in rows]
+        required_complete = all(row.station_id and row.station_name and row.region_id for row in rows)
+        ranges_valid = all(
+            (row.charging_revenue is None or row.charging_revenue >= 0)
+            and (row.charging_volume_kwh is None or row.charging_volume_kwh >= 0)
+            and (row.gross_margin is None or Decimal("-1") <= row.gross_margin <= Decimal("1"))
+            for row in rows
+        )
+        forbidden_tokens = {
+            "name", "phone", "mobile", "id_card", "license_plate",
+            "payment_account", "longitude", "latitude",
+        }
+        stored_columns = {column.name.lower() for column in IngestedStationPreview.__table__.columns}
+        rule_specs = [
+            ("DQI-001", "批次包含可发布数据", bool(rows), {"rows": len(rows)}),
+            ("DQI-002", "关键字段完整", required_complete, {"required": ["station_id", "station_name", "region_id"]}),
+            ("DQI-003", "场站主键唯一", len(station_ids) == len(set(station_ids)), {"distinct": len(set(station_ids))}),
+            (
+                "DQI-004", "接入行数对账",
+                len(rows) == run.rows_written == run.rows_read and run.rows_rejected == 0,
+                {"rows_read": run.rows_read, "rows_written": run.rows_written, "rows_rejected": run.rows_rejected},
+            ),
+            ("DQI-005", "数值范围符合业务规则", ranges_valid, {"revenue_and_energy_non_negative": True, "margin_range": [-1, 1]}),
+            (
+                "DQI-006", "批次溯源与分类完整",
+                bool(batch_id) and all(row.data_classification == "simulated" for row in rows),
+                {"batch_id": batch_id, "data_classification": dataset.data_classification},
+            ),
+            ("DQI-007", "源数据校验摘要存在", bool(run.source_checksum), {"checksum_algorithm": "sha256"}),
+            (
+                "DQI-008", "受控结构不含直接身份字段",
+                not bool(forbidden_tokens & stored_columns),
+                {"forbidden_fields_present": sorted(forbidden_tokens & stored_columns)},
+            ),
+        ]
+
+        self.db.execute(delete(DataIngestionQualityCheck).where(DataIngestionQualityCheck.run_id == run.run_id))
+        now = _utc_now()
+        checks: list[DataIngestionQualityCheck] = []
+        for rule_id, rule_name, passed, rule_detail in rule_specs:
+            check = DataIngestionQualityCheck(
+                check_id=f"DQC-{uuid.uuid4()}",
+                run_id=run.run_id,
+                dataset_id=dataset.dataset_id,
+                rule_id=rule_id,
+                rule_name=rule_name,
+                severity="blocking",
+                status="passed" if passed else "failed",
+                detail_json=json.dumps(rule_detail, ensure_ascii=False),
+                checked_at=now,
+            )
+            self.db.add(check)
+            checks.append(check)
+        failures = [check.rule_id for check in checks if check.status != "passed"]
+        quality_status = "passed" if not failures else "failed"
+        summary = {
+            "rules_checked": len(checks),
+            "rules_passed": len(checks) - len(failures),
+            "failures": failures,
+            "batch_id": batch_id,
+        }
+        if review is None:
+            review = DataIngestionReview(
+                review_id=f"REV-{uuid.uuid4()}",
+                run_id=run.run_id,
+                dataset_id=dataset.dataset_id,
+            )
+            self.db.add(review)
+        review.quality_status = quality_status
+        review.workflow_status = "quality_passed" if quality_status == "passed" else "quality_failed"
+        review.quality_summary_json = json.dumps(summary, ensure_ascii=False)
+        review.updated_at = now
+        dataset.status = "quality_passed" if quality_status == "passed" else "quality_failed"
+        dataset.updated_at = now
+        self.db.commit()
+        return self._review_payload(review, checks)
+
+    def submit_ingestion(self, dataset_id: str, run_id: str) -> dict:
+        self._require_governance_role()
+        dataset, run = self._require_current_completed_run(dataset_id, run_id)
+        review = self._require_review(run.run_id)
+        if review.quality_status != "passed" or review.workflow_status != "quality_passed":
+            raise DataIntegrationError("WORKFLOW_INVALID_STATE", "只有质量校验通过的批次可以提交审批")
+        review.workflow_status = "pending_approval"
+        review.requested_by = self.user.id
+        review.requested_at = _utc_now()
+        review.updated_at = review.requested_at
+        dataset.status = "pending_approval"
+        dataset.updated_at = review.requested_at
+        self.db.commit()
+        return self._review_payload(review, self._checks(run.run_id))
+
+    def decide_ingestion(self, dataset_id: str, run_id: str, action: str, reason: str | None = None) -> dict:
+        self._require_governance_role()
+        dataset, run = self._require_current_completed_run(dataset_id, run_id)
+        review = self._require_review(run.run_id)
+        if review.workflow_status != "pending_approval":
+            raise DataIntegrationError("WORKFLOW_INVALID_STATE", "当前批次不在待审批状态")
+        if action not in {"approve", "reject"}:
+            raise DataIntegrationError("INVALID_REVIEW_ACTION", "审批动作仅支持 approve 或 reject")
+        if action == "reject" and not reason:
+            raise DataIntegrationError("REJECTION_REASON_REQUIRED", "驳回审批必须填写原因")
+        now = _utc_now()
+        review.workflow_status = "approved" if action == "approve" else "rejected"
+        review.decided_by = self.user.id
+        review.decided_at = now
+        review.rejection_reason = reason if action == "reject" else None
+        review.updated_at = now
+        dataset.status = review.workflow_status
+        dataset.updated_at = now
+        self.db.commit()
+        return self._review_payload(review, self._checks(run.run_id))
+
+    def publish_ingestion(self, dataset_id: str, run_id: str) -> dict:
+        self._require_governance_role()
+        dataset, run = self._require_current_completed_run(dataset_id, run_id)
+        review = self._require_review(run.run_id)
+        if review.workflow_status != "approved" or review.quality_status != "passed":
+            raise DataIntegrationError("WORKFLOW_INVALID_STATE", "只有质量通过且审批通过的批次可以发布")
+        published_count = self.db.scalar(
+            select(func.count()).select_from(DataIngestionReview).where(
+                DataIngestionReview.dataset_id == dataset.dataset_id,
+                DataIngestionReview.workflow_status == "published",
+            )
+        ) or 0
+        now = _utc_now()
+        review.workflow_status = "published"
+        review.release_version = f"v{published_count + 1}.0"
+        review.published_by = self.user.id
+        review.published_at = now
+        review.updated_at = now
+        dataset.status = "published"
+        dataset.updated_at = now
+        self.db.commit()
+        return self._review_payload(review, self._checks(run.run_id))
+
+    def _require_governance_role(self) -> None:
+        if self.user is None or self.user.role != "analyst_admin":
+            raise DataIntegrationError("FORBIDDEN", "仅数据分析师/管理员可执行数据治理操作")
+
+    def _require_current_completed_run(self, dataset_id: str, run_id: str) -> tuple[DataSetDefinition, DataIngestionRun]:
+        dataset = self.db.get(DataSetDefinition, dataset_id)
+        if dataset is None:
+            raise DataIntegrationError("DATASET_NOT_FOUND", "数据集不存在")
+        run = self.db.get(DataIngestionRun, run_id)
+        if run is None or run.dataset_id != dataset.dataset_id:
+            raise DataIntegrationError("INGESTION_RUN_NOT_FOUND", "接入批次不存在")
+        if run.status != "completed":
+            raise DataIntegrationError("WORKFLOW_INVALID_STATE", "只有已完成的接入批次可以进入质量与发布流程")
+        latest = self.db.scalar(
+            select(DataIngestionRun)
+            .where(DataIngestionRun.dataset_id == dataset.dataset_id)
+            .order_by(DataIngestionRun.started_at.desc(), DataIngestionRun.run_id.desc())
+        )
+        if latest is None or latest.run_id != run.run_id:
+            raise DataIntegrationError("STALE_INGESTION_RUN", "旧接入批次不能覆盖或发布当前数据预览")
+        return dataset, run
+
+    def _require_review(self, run_id: str) -> DataIngestionReview:
+        review = self.db.scalar(select(DataIngestionReview).where(DataIngestionReview.run_id == run_id))
+        if review is None:
+            raise DataIntegrationError("QUALITY_REVIEW_NOT_FOUND", "请先执行质量校验")
+        return review
+
+    def _checks(self, run_id: str) -> list[DataIngestionQualityCheck]:
+        return list(self.db.scalars(
+            select(DataIngestionQualityCheck)
+            .where(DataIngestionQualityCheck.run_id == run_id)
+            .order_by(DataIngestionQualityCheck.rule_id)
+        ))
 
     def _test_by_type(self, source: DataSourceConnection, password: str | None, resource_locator: str | None) -> dict:
         if source.source_id == "platform-postgresql":
@@ -450,4 +648,38 @@ class DataIntegrationService:
             "error_code": run.error_code,
             "started_at": run.started_at.isoformat(),
             "finished_at": run.finished_at.isoformat() if run.finished_at else None,
+        }
+
+    @staticmethod
+    def _review_payload(
+        review: DataIngestionReview,
+        checks: list[DataIngestionQualityCheck],
+    ) -> dict:
+        summary = json.loads(review.quality_summary_json or "{}")
+        return {
+            "review_id": review.review_id,
+            "run_id": review.run_id,
+            "dataset_id": review.dataset_id,
+            "quality_status": review.quality_status,
+            "workflow_status": review.workflow_status,
+            "release_version": review.release_version,
+            "requested_by": review.requested_by,
+            "requested_at": review.requested_at.isoformat() if review.requested_at else None,
+            "decided_by": review.decided_by,
+            "decided_at": review.decided_at.isoformat() if review.decided_at else None,
+            "published_by": review.published_by,
+            "published_at": review.published_at.isoformat() if review.published_at else None,
+            "rejection_reason": review.rejection_reason,
+            "summary": summary,
+            "checks": [
+                {
+                    "rule_id": check.rule_id,
+                    "rule_name": check.rule_name,
+                    "severity": check.severity,
+                    "status": check.status,
+                    "detail": json.loads(check.detail_json or "{}"),
+                    "checked_at": check.checked_at.isoformat(),
+                }
+                for check in checks
+            ],
         }

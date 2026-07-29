@@ -1514,6 +1514,26 @@ type IntegrationPreview = {
   gross_profit: number | null
   gross_margin: number | null
 }
+type IntegrationWorkflow = {
+  review_id: string
+  run_id: string
+  dataset_id: string
+  quality_status: 'pending' | 'passed' | 'failed'
+  workflow_status: 'quality_pending' | 'quality_passed' | 'quality_failed' | 'pending_approval' | 'approved' | 'published' | 'rejected'
+  release_version: string | null
+  requested_at: string | null
+  decided_at: string | null
+  published_at: string | null
+  rejection_reason: string | null
+  summary: { rules_checked?: number; rules_passed?: number; failures?: string[]; batch_id?: string }
+  checks: Array<{
+    rule_id: string
+    rule_name: string
+    severity: string
+    status: 'passed' | 'failed'
+    checked_at: string
+  }>
+}
 type IntegrationOverview = {
   sources: IntegrationSource[]
   dataset: {
@@ -1530,6 +1550,7 @@ type IntegrationOverview = {
   preview: IntegrationPreview[]
   validations: Record<string, boolean>
   latest_ingestion: { run_id: string; status: string; rows_written: number } | null
+  workflow: IntegrationWorkflow | null
   metadata: {
     data_classification: string
     source: string
@@ -1556,6 +1577,7 @@ function MappingPage({ token, summary, stations, start, end }: { token: string; 
   const [feedback, setFeedback] = useState('')
   const [integration, setIntegration] = useState<IntegrationOverview | null>(null)
   const [integrationLoading, setIntegrationLoading] = useState(true)
+  const [workflowLoading, setWorkflowLoading] = useState(false)
   const loadIntegration = async () => {
     setIntegrationLoading(true)
     try {
@@ -1610,6 +1632,35 @@ function MappingPage({ token, summary, stations, start, end }: { token: string; 
     ['主键唯一性', integration?.validations.primary_key ?? uniqueStations],
     ['溯源字段', integration?.validations.lineage ?? Boolean(summary?.metadata.analysis_run_id)],
   ]
+  const workflow = integration?.workflow
+  const validationRows: Array<[string, boolean]> = workflow?.checks.length
+    ? workflow.checks.map(check => [`${check.rule_id} ${check.rule_name}`, check.status === 'passed'])
+    : validations
+  const workflowLabels: Record<string, string> = {
+    quality_pending: '待质量校验',
+    quality_passed: '质量已通过',
+    quality_failed: '质量未通过',
+    pending_approval: '待管理员审批',
+    approved: '审批已通过',
+    published: `已发布 ${workflow?.release_version || ''}`.trim(),
+    rejected: '审批已驳回',
+  }
+  const workflowStatusLabel = workflow ? workflowLabels[workflow.workflow_status] : integration?.latest_ingestion ? '待质量校验' : '等待试运行'
+  const workflowButtonLabel = !integration?.latest_ingestion
+    ? '先执行试运行'
+    : !workflow
+      ? '执行质量校验'
+      : workflow.workflow_status === 'quality_passed'
+        ? '提交审批'
+        : workflow.workflow_status === 'pending_approval'
+          ? '审批通过'
+          : workflow.workflow_status === 'approved'
+            ? '发布数据集'
+            : workflow.workflow_status === 'published'
+              ? `已发布 ${workflow.release_version || ''}`
+              : workflow.workflow_status === 'quality_failed' || workflow.workflow_status === 'rejected'
+                ? '重新试运行'
+                : '继续治理流程'
   const act = (message: string) => {
     setFeedback(message)
     window.setTimeout(() => setFeedback(''), 2600)
@@ -1657,6 +1708,45 @@ function MappingPage({ token, summary, stations, start, end }: { token: string; 
       act(reason instanceof Error ? reason.message : '试运行失败')
     }
   }
+  const advanceWorkflow = async () => {
+    if (!integration?.latest_ingestion) return act('请先执行试运行，让业务数据写入 PostgreSQL 暂存表。')
+    if (workflowLoading) return
+    const datasetId = integration.dataset.dataset_id
+    const runId = integration.latest_ingestion.run_id
+    setWorkflowLoading(true)
+    try {
+      let result: IntegrationWorkflow
+      if (!workflow) {
+        result = await postIntegration<IntegrationWorkflow>(`/api/v1/data-integration/datasets/${datasetId}/runs/${runId}/quality`, {})
+        act(`质量校验完成：${result.summary.rules_passed || 0}/${result.summary.rules_checked || 0} 条通过。`)
+      } else if (workflow.workflow_status === 'quality_passed') {
+        result = await postIntegration<IntegrationWorkflow>(`/api/v1/data-integration/datasets/${datasetId}/runs/${runId}/submit`, {})
+        act('批次已提交管理员审批，状态和操作人已写入数据库。')
+      } else if (workflow.workflow_status === 'pending_approval') {
+        if (!window.confirm('确认以数据分析师/管理员身份批准当前模拟数据批次？')) return
+        result = await postIntegration<IntegrationWorkflow>(`/api/v1/data-integration/datasets/${datasetId}/runs/${runId}/review`, { action: 'approve' })
+        act('审批已通过，可执行受控发布。')
+      } else if (workflow.workflow_status === 'approved') {
+        result = await postIntegration<IntegrationWorkflow>(`/api/v1/data-integration/datasets/${datasetId}/runs/${runId}/publish`, {})
+        act(`数据集 ${result.release_version || ''} 已发布，发布记录可审计。`)
+      } else if (workflow.workflow_status === 'published') {
+        act(`当前批次已发布，版本 ${workflow.release_version || '已登记'}。`)
+        return
+      } else if (workflow.workflow_status === 'quality_failed' || workflow.workflow_status === 'rejected') {
+        await runIngestion()
+        return
+      } else {
+        act('当前治理状态不允许继续，请刷新后重试。')
+        return
+      }
+      await loadIntegration()
+    } catch (reason) {
+      act(reason instanceof Error ? reason.message : '数据治理操作失败')
+      await loadIntegration()
+    } finally {
+      setWorkflowLoading(false)
+    }
+  }
   const mappingSections = [
     ['数据类型转换', ['数字：decimal(18,2)', '字符串：varchar(100) → 标准文本']],
     ['单位转换', ['金额：元 → 元', '电量：kWh → kWh', '比例：小数 → %']],
@@ -1668,8 +1758,11 @@ function MappingPage({ token, summary, stations, start, end }: { token: string; 
 
   return <div className="mapping-page">
     <section className="mapping-flowbar">
-      <div className="mapping-steps">{['数据源', '数据集', '字段映射', '同步任务', '数据质量'].map((label, index) => <React.Fragment key={label}><div className={index === 2 ? 'active' : index < 2 ? 'done' : ''}><b>{index + 1}</b><span>{label}</span></div>{index < 4 && <i>›</i>}</React.Fragment>)}</div>
-      <nav><button onClick={() => void testConnection()}>⟳　测试连接</button><button onClick={() => act(`已从 PostgreSQL 数据集目录读取 ${mappingFields.length} 条已发布字段映射。`)}>▣　自动推荐映射</button><button onClick={() => void runIngestion()}>▷　试运行</button><button className="primary" onClick={() => act('当前 Alpha 仅保留已验证入库批次，不执行未经审批的正式发布。')}>⌘　发布数据集　⌄</button></nav>
+      <div className="mapping-steps">{['数据源', '数据集', '字段映射', '同步任务', '数据质量'].map((label, index) => {
+        const activeStep = !integration?.latest_ingestion ? 2 : workflow?.workflow_status === 'published' ? 5 : 4
+        return <React.Fragment key={label}><div className={index === activeStep ? 'active' : index < activeStep ? 'done' : ''}><b>{index + 1}</b><span>{label}</span></div>{index < 4 && <i>›</i>}</React.Fragment>
+      })}</div>
+      <nav><button onClick={() => void testConnection()}>⟳　测试连接</button><button onClick={() => act(`已从 PostgreSQL 数据集目录读取 ${mappingFields.length} 条已发布字段映射。`)}>▣　自动推荐映射</button><button onClick={() => void runIngestion()}>▷　试运行</button><button className="primary" disabled={workflowLoading} onClick={() => void advanceWorkflow()}>⌘　{workflowLoading ? '处理中…' : workflowButtonLabel}</button></nav>
     </section>
 
     {feedback && <div className="mapping-feedback">{feedback}</div>}
@@ -1697,12 +1790,12 @@ function MappingPage({ token, summary, stations, start, end }: { token: string; 
       </main>
 
       <aside className="mapping-right">
-        <article className="mapping-config-panel"><header><h2>映射配置</h2><span>模拟草稿</span></header><div>{mappingSections.map(([title, lines]) => <section key={title}><h3>▦　{title}<em>●</em></h3>{lines.map(line => <p key={line}>{line}</p>)}</section>)}</div></article>
-        <article className="mapping-validation-panel"><h2>校验状态</h2><div>{validations.map(([label, passed]) => <p key={label}><span>{label}：</span><b className={passed ? '' : 'waiting'}>{passed ? '●　预览通过' : '○　等待数据'}</b></p>)}</div><button onClick={() => act('已展示当前模拟草稿的全部本地预览校验。')}>查看校验详情</button></article>
+        <article className="mapping-config-panel"><header><h2>映射配置</h2><span className={workflow?.workflow_status === 'published' ? 'published' : ''}>{workflowStatusLabel}</span></header><div>{mappingSections.map(([title, lines]) => <section key={title}><h3>▦　{title}<em>●</em></h3>{lines.map(line => <p key={line}>{line}</p>)}</section>)}</div></article>
+        <article className="mapping-validation-panel"><h2>校验状态 <small>{workflow?.summary.rules_checked ? `${workflow.summary.rules_passed}/${workflow.summary.rules_checked}` : '预览'}</small></h2><div>{validationRows.map(([label, passed]) => <p key={label}><span>{label}</span><b className={passed ? '' : 'waiting'}>{passed ? '●　通过' : '●　未通过'}</b></p>)}</div><button onClick={() => act(workflow ? `质量结果已落库；失败规则：${workflow.summary.failures?.join('、') || '无'}。` : '请先完成试运行，再执行数据库质量校验。')}>查看校验详情</button></article>
       </aside>
     </section>
 
-    <footer className="mapping-truth"><b>模拟数据</b><span>数据时间：{integration?.metadata.data_time_range.start || summary?.metadata.data_time_range.start || start} 至 {endInclusive(integration?.metadata.data_time_range.end_exclusive || summary?.metadata.data_time_range.end_exclusive || end)}</span><span>来源：PostgreSQL 平台数据库</span><span>run_id：{integration?.latest_ingestion?.run_id || summary?.metadata.analysis_run_id || '加载中'}</span><em>配置状态：数据库已登记 / 发布待审批</em></footer>
+    <footer className="mapping-truth"><b>模拟数据</b><span>数据时间：{integration?.metadata.data_time_range.start || summary?.metadata.data_time_range.start || start} 至 {endInclusive(integration?.metadata.data_time_range.end_exclusive || summary?.metadata.data_time_range.end_exclusive || end)}</span><span>来源：PostgreSQL 平台数据库</span><span>run_id：{integration?.latest_ingestion?.run_id || summary?.metadata.analysis_run_id || '加载中'}</span><em>治理状态：{workflowStatusLabel}</em></footer>
   </div>
 }
 
