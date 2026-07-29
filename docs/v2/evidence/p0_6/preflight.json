@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "checked_at": "2026-07-29T14:02:12.657133+00:00",
+  "release_version": "0.6.0-rc1",
+  "public_host": "localhost",
+  "expected_database_revision": "0006",
+  "tls_certificate_present": true,
+  "tls_private_key_present": true,
+  "database_port_private": true,
+  "api_port_private": true,
+  "production_fail_closed": true,
+  "simulated_data_only": true
+}

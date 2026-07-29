@@ -8,6 +8,8 @@ def test_health_is_public(client):
     response = client.get("/api/v1/health")
     assert response.status_code == 200
     assert response.json()["data_classification"] == "simulated"
+    assert response.json()["release_version"] == "0.1.0-dev"
+    assert response.headers["x-request-id"].startswith("REQ-")
 
 
 def test_login_and_me(client, login):
@@ -34,3 +36,47 @@ def test_regional_user_is_403_for_admin(client, login):
 def test_production_configuration_fails_closed():
     with pytest.raises(ValidationError):
         Settings(app_env="production", database_url="sqlite:///bad.db", secret_key="short", auto_bootstrap_demo_users=True)
+
+
+def test_production_configuration_accepts_private_rc_baseline():
+    settings = Settings(
+        app_env="production",
+        database_url="postgresql+psycopg://renewable:strong-db-password@db:5432/renewable_private",
+        redis_url="redis://redis:6379/0",
+        secret_key="a-secure-private-release-secret-key",
+        auto_bootstrap_demo_users=False,
+        public_base_url="https://analytics.example.internal",
+        cors_origins="https://analytics.example.internal",
+        trusted_hosts="analytics.example.internal",
+        release_version="0.6.0-rc1",
+        simulated_data_only=True,
+    )
+    assert settings.app_env == "production"
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("public_base_url", "http://analytics.example.internal"),
+        ("cors_origins", "http://analytics.example.internal"),
+        ("trusted_hosts", "*"),
+        ("release_version", "0.6.0-dev"),
+        ("simulated_data_only", False),
+    ],
+)
+def test_production_configuration_rejects_unsafe_release_values(field, value):
+    values = {
+        "app_env": "production",
+        "database_url": "postgresql+psycopg://renewable:strong-db-password@db:5432/renewable_private",
+        "redis_url": "redis://redis:6379/0",
+        "secret_key": "a-secure-private-release-secret-key",
+        "auto_bootstrap_demo_users": False,
+        "public_base_url": "https://analytics.example.internal",
+        "cors_origins": "https://analytics.example.internal",
+        "trusted_hosts": "analytics.example.internal",
+        "release_version": "0.6.0-rc1",
+        "simulated_data_only": True,
+    }
+    values[field] = value
+    with pytest.raises(ValidationError):
+        Settings(**values)

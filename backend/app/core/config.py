@@ -1,6 +1,7 @@
 from functools import lru_cache
 from pathlib import Path
 from typing import Literal
+from urllib.parse import urlparse
 
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -21,6 +22,10 @@ class Settings(BaseSettings):
     simulated_data_only: bool = True
     data_import_root: str = "data/imports"
     api_source_allowlist: str = "localhost,127.0.0.1,host.docker.internal"
+    public_base_url: str = "http://localhost:8080"
+    trusted_hosts: str = "localhost,127.0.0.1,testserver"
+    release_version: str = "0.1.0-dev"
+    expected_database_revision: str = "0006"
 
     @model_validator(mode="after")
     def fail_closed_in_production(self) -> "Settings":
@@ -34,6 +39,25 @@ class Settings(BaseSettings):
                 failures.append("AUTO_BOOTSTRAP_DEMO_USERS must be false")
             if not self.database_url.startswith("postgresql"):
                 failures.append("DATABASE_URL must use PostgreSQL")
+            else:
+                parsed_database = urlparse(self.database_url.replace("postgresql+psycopg", "postgresql", 1))
+                if not parsed_database.password or parsed_database.password in {"alpha-local-only", "change-me"}:
+                    failures.append("DATABASE_URL must contain a non-default password")
+            if not self.redis_url.startswith("redis://"):
+                failures.append("REDIS_URL must use Redis")
+            if not self.public_base_url.startswith("https://"):
+                failures.append("PUBLIC_BASE_URL must use HTTPS")
+            if any(not origin.startswith("https://") for origin in self.cors_origin_list):
+                failures.append("CORS_ORIGINS must contain HTTPS origins only")
+            public_host = urlparse(self.public_base_url).hostname
+            if not public_host or public_host not in self.trusted_host_list:
+                failures.append("TRUSTED_HOSTS must contain the PUBLIC_BASE_URL host")
+            if "*" in self.trusted_host_list:
+                failures.append("TRUSTED_HOSTS must not contain wildcard hosts")
+            if self.release_version.endswith("-dev"):
+                failures.append("RELEASE_VERSION must identify a release candidate or release")
+            if not self.simulated_data_only:
+                failures.append("SIMULATED_DATA_ONLY must remain true for this release candidate")
             if failures:
                 raise ValueError("production configuration rejected: " + "; ".join(failures))
         return self
@@ -50,6 +74,10 @@ class Settings(BaseSettings):
     @property
     def api_source_allowed_hosts(self) -> set[str]:
         return {item.strip().lower() for item in self.api_source_allowlist.split(",") if item.strip()}
+
+    @property
+    def trusted_host_list(self) -> list[str]:
+        return [item.strip().lower() for item in self.trusted_hosts.split(",") if item.strip()]
 
 
 @lru_cache

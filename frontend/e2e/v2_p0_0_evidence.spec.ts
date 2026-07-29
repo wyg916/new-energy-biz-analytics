@@ -22,55 +22,48 @@ test('capture current Alpha product pages without changing business data', async
   }
 
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: '新能源经营分析平台' })).toBeVisible()
+  await expect(page.getByText('新能源经营分析智能平台', { exact: true })).toBeVisible()
   await capture('登录页', '01-login.png')
 
   await page.getByRole('button', { name: '安全登录' }).click()
-  await expect(page.getByRole('heading', { name: '经营总览' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '功能总览', exact: true })).toBeVisible()
   await expect(page.getByText('来源：平台数据库')).toBeVisible({ timeout: 90_000 })
   await expect(page.getByText('模拟数据', { exact: true })).toBeVisible()
-  await capture('经营总览', '02-overview.png')
+  await capture('功能总览', '02-overview.png')
 
   for (const [pageName, file] of [
-    ['收入分析', '03-revenue.png'],
-    ['毛利分析', '04-gross-profit.png'],
-    ['场站分析', '05-stations.png'],
-    ['设备分析', '06-devices.png'],
+    ['收入与订单', '03-revenue.png'],
+    ['毛利与成本', '04-gross-profit.png'],
+    ['场站经营', '05-stations.png'],
+    ['设备健康', '06-devices.png'],
   ] as const) {
-    const response = page.waitForResponse(
-      item => item.url().includes('/api/v1/dashboard/summary') && item.ok(),
-    )
     await page.getByRole('button', { name: pageName }).click()
-    await response
-    await expect(page.getByRole('heading', { name: pageName })).toBeVisible()
-    await expect(page.getByText('来源：平台数据库')).toBeVisible()
+    await expect(page.getByRole('heading', { name: pageName, exact: true })).toBeVisible()
+    await expect(page.getByText('模拟数据', { exact: true }).first()).toBeVisible()
     await capture(pageName, file)
   }
 
-  await page.getByRole('button', { name: '异常诊断' }).click()
-  await expect(page.getByRole('heading', { name: '毛利变化桥接' })).toBeVisible({ timeout: 90_000 })
-  await expect(page.getByText(/不构成因果/)).toBeVisible()
-  await capture('异常诊断', '07-diagnostics.png')
+  await page.getByRole('button', { name: '经营预警' }).click()
+  await expect(page.getByRole('heading', { name: '经营预警', exact: true })).toBeVisible()
+  await expect(page.getByText(/run_id：DIAG-/)).toBeVisible({ timeout: 90_000 })
+  await expect(page.getByText('关联因素说明，不构成因果结论')).toBeVisible()
+  await capture('经营预警', '07-diagnostics.png')
 
-  await page.getByRole('button', { name: '可信问数' }).click()
-  const chatResponse = page.waitForResponse(
-    item => item.url().includes('/api/v1/chat/query') && item.ok(),
-  )
-  await page.getByRole('button', { name: '开始分析' }).click()
-  await chatResponse
-  await expect(page.getByText(/充电收入：/)).toBeVisible({ timeout: 90_000 })
-  await expect(page.getByText('passed', { exact: true }).last()).toBeVisible()
-  await capture('可信问数 / ChatBI', '08-chatbi.png')
+  await page.getByRole('button', { name: 'AI经营分析' }).click()
+  await expect(page.getByRole('heading', { name: 'AI经营分析', exact: true })).toBeVisible()
+  await expect(page.locator('.chat-evidence-panel code')).toContainText('CHAT-', { timeout: 90_000 })
+  await expect(page.getByText('Query Guard：passed')).toBeVisible()
+  await expect(page.getByText('Answer Guard：passed')).toBeVisible()
+  await capture('AI经营分析 / ChatBI', '08-chatbi.png')
 
-  await page.getByRole('button', { name: '报告草稿' }).click()
   const reportResponse = page.waitForResponse(
     item => item.url().includes('/api/v1/reports/draft') && item.ok(),
   )
-  await page.getByRole('button', { name: '生成月报草稿' }).click()
+  await page.getByRole('button', { name: '经营报告' }).click()
   await reportResponse
-  await expect(page.getByText(/新能源经营分析月报草稿/)).toBeVisible({ timeout: 90_000 })
-  await expect(page.getByText('状态：草稿')).toBeVisible()
-  await capture('报告草稿', '09-report.png')
+  await expect(page.locator('.report-truth')).toContainText('run_id：', { timeout: 90_000 })
+  await expect(page.getByText(/报告只生成可审核草稿/)).toBeVisible()
+  await capture('经营报告草稿', '09-report.png')
 
   const manifest = {
     captured_at: capturedAt,

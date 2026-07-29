@@ -5,12 +5,16 @@ from datetime import UTC, datetime
 
 class JsonFormatter(logging.Formatter):
     def format(self, record: logging.LogRecord) -> str:
-        return json.dumps({
+        payload = {
             "timestamp": datetime.now(UTC).isoformat(),
             "level": record.levelname,
             "logger": record.name,
             "message": record.getMessage(),
-        }, ensure_ascii=False)
+        }
+        context = getattr(record, "context", None)
+        if isinstance(context, dict):
+            payload["context"] = context
+        return json.dumps(payload, ensure_ascii=False)
 
 
 def configure_logging() -> None:

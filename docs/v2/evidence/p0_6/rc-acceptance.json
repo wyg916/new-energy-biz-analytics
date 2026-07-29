@@ -1,0 +1,90 @@
+{
+  "stage": "V2-P0.6",
+  "release_version": "0.6.0-rc1",
+  "collected_at": "2026-07-29T15:10:23.313096+00:00",
+  "status": "passed",
+  "data_classification": "simulated",
+  "deployment_scope": "single_customer_single_host_docker_compose",
+  "backend": {
+    "tests": 60,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duration_seconds": 1197.691,
+    "passed": true
+  },
+  "frontend_e2e": {
+    "tests": 13,
+    "unexpected": 0,
+    "flaky": 0,
+    "skipped": 0,
+    "duration_seconds": 125.01,
+    "passed": true
+  },
+  "chatbi_fixed_evaluation": {
+    "tests": 40,
+    "passed": 40,
+    "failed": 0
+  },
+  "docker_smoke": {
+    "executed_at": "2026-07-29T14:58:31.966814+00:00",
+    "base_url": "http://127.0.0.1:18000/api/v1",
+    "checks": {
+      "health": true,
+      "dashboard_15_metrics": true,
+      "chatbi_guarded": true,
+      "diagnostic_reconciled": true,
+      "report_traceable": true,
+      "regional_scope_403": true
+    },
+    "passed": true
+  },
+  "phase_gate_statuses": {
+    "preflight": "passed",
+    "cold_install": "passed",
+    "backup": "completed",
+    "restore_drill": "passed",
+    "monitor": "passed",
+    "migration_rollback": "passed"
+  },
+  "command_gates": [
+    {
+      "name": "frontend_vitest",
+      "exit_code": 0,
+      "duration_seconds": 2.203,
+      "passed": true
+    },
+    {
+      "name": "frontend_build",
+      "exit_code": 0,
+      "duration_seconds": 7.547,
+      "passed": true
+    },
+    {
+      "name": "python_compile",
+      "exit_code": 0,
+      "duration_seconds": 0.156,
+      "passed": true
+    },
+    {
+      "name": "npm_audit",
+      "exit_code": 0,
+      "known_vulnerabilities": 0,
+      "passed": true
+    }
+  ],
+  "restore_reconciliation": {
+    "tables": 25,
+    "rows": 507283,
+    "table_counts_match": true,
+    "business_fingerprint_match": true,
+    "schema_removed": true
+  },
+  "truth_boundary": {
+    "production_deployed": false,
+    "real_customer_validated": false,
+    "real_enterprise_data_used": false,
+    "high_availability_validated": false,
+    "shared_multitenancy_validated": false
+  }
+}

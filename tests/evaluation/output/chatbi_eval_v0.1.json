@@ -2,7 +2,7 @@
   "evaluation_set": "新能源企业经营分析智能平台 ChatBI 固定评测集",
   "evaluation_version": "0.1.0",
   "query_plan_version": "0.1.0",
-  "executed_at": "2026-07-29T13:08:00.377866+00:00",
+  "executed_at": "2026-07-29T14:41:21.345570+00:00",
   "total": 40,
   "passed": 40,
   "failed": 0,

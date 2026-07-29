@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "executed_at": "2026-07-29T14:14:22.665929+00:00",
+  "project_name": "renewable-rc-p06-cold2",
+  "release_version": "0.6.0-rc1",
+  "data_classification": "simulated",
+  "services": {
+    "api": {
+      "state": "running",
+      "health": "healthy"
+    },
+    "db": {
+      "state": "running",
+      "health": "healthy"
+    },
+    "redis": {
+      "state": "running",
+      "health": "healthy"
+    },
+    "web": {
+      "state": "running",
+      "health": "healthy"
+    }
+  },
+  "https_readiness": {
+    "status": "ready",
+    "service": "renewable-operations-api",
+    "release_version": "0.6.0-rc1",
+    "data_classification": "simulated",
+    "components": {
+      "database": {
+        "status": "ok",
+        "revision": "0006",
+        "expected_revision": "0006"
+      },
+      "redis": {
+        "status": "ok"
+      }
+    }
+  },
+  "http_redirect_code": 308,
+  "http_redirect_location_is_https": true,
+  "database_revision": "0006",
+  "demo_users_created": 0,
+  "elapsed_seconds": 105.484,
+  "volumes_preserved": true,
+  "production_claim": false
+}
