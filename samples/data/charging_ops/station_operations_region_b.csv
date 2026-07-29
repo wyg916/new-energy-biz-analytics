@@ -1,0 +1,3 @@
+station_id,station_name,region_id,city_id,charging_revenue,charging_volume_kwh,gross_profit,gross_margin
+FILE-B-001,文件样例模拟场站B1,R02,C03,14680.75,10820.7500,4012.55,0.2733
+FILE-B-002,文件样例模拟场站B2,R02,C04,9750.20,7420.1250,2210.10,0.2267

@@ -1701,7 +1701,7 @@ function MappingPage({ token, summary, stations, start, end }: { token: string; 
   const runIngestion = async () => {
     if (!integration) return act('数据集仍在加载。')
     try {
-      const result = await postIntegration<{ rows_written: number; run_id: string }>(`/api/v1/data-integration/datasets/${integration.dataset.dataset_id}/run`, { start, end_exclusive: end, limit: 5 })
+      const result = await postIntegration<{ rows_written: number; run_id: string }>(`/api/v1/data-integration/datasets/${integration.dataset.dataset_id}/run`, { start, end_exclusive: end, limit: 30 })
       act(`试运行完成：${result.rows_written} 行已先写入 PostgreSQL，run_id=${result.run_id}`)
       await loadIntegration()
     } catch (reason) {

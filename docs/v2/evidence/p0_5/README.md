@@ -2,7 +2,7 @@
 
 > 验收日期：2026-07-29
 > 数据边界：固定种子和业务规则驱动的模拟数据
-> 工作包状态：质量校验、审批、发布闭环已实现并验证；V2-P0.5 总阶段尚未全部关闭
+> 阶段状态：V2-P0.5 核心验收项已实现并验证
 
 ## 1. 本工作包目标
 
@@ -44,17 +44,21 @@ PostgreSQL 暂存批次
 
 ## 3. PostgreSQL 实际运行证据
 
-本地 Docker Compose 的 PostgreSQL 16.9 实例完成：
+本地 Docker Compose 的 PostgreSQL 16.9 实例最终完成：
 
-- Alembic `0005 → 0004 → 0005`；
+- Alembic `0006 → 0005 → 0006`；
 - 两张治理表实际创建；
-- 接入运行：`ING-51085cbb-a651-4d8d-a849-47c447681c81`；
-- 写入 PostgreSQL 暂存数据 5 行；
+- `charging_ops 0.1.0` 场景包发布并绑定 `SIM-20260722-v010-n300000`；
+- 场景清单 SHA-256：`7950265c8d3d46ca22d23307b41b47579d1dbbafd527122f46e9ee10fc7f002b`；
+- 接入运行：`ING-baa17d9b-e07b-45e1-bf2e-0a6c32aa42a8`；
+- 写入 PostgreSQL 暂存数据 30 行；
 - 质量结果 8/8；
 - 提交状态 `pending_approval`；
 - 审批状态 `approved`；
 - 发布状态 `published`；
-- 发布版本 `v1.0`；
+- 发布版本 `v2.0`；
+- 固化不可变场站快照 30 行；
+- 场站业务查询来源 `published_station_snapshot`；
 - 数据分类 `simulated`。
 
 这证明本地 Alpha 环境中的迁移和治理链路可执行，不代表企业生产环境上线。
@@ -67,9 +71,13 @@ PostgreSQL 暂存批次
 | SQL 安全与权限负向 | 15/15 | `phase-next-query-security.xml` |
 | ChatBI、驾驶舱、诊断、记忆、指标、报告、收入 | 16/16 | `phase-next-backend-regression.xml` |
 | 数据接入、质量、审批、发布、连接器安全 | 8/8 | `phase-next-data-integration.xml` |
-| 后端合计 | 45/45 | 上述四份 JUnit XML |
+| 后端最终全量回归 | 47/47 | `p0_5-final-backend.xml` |
 | 前端 Vitest | 3/3 | 命令行验收记录 |
 | TypeScript 与 Vite 生产构建 | 通过 | 命令行验收记录 |
+| P0.5 专用 Playwright E2E | 1/1 | `data-integration-governance.png` |
+| ChatBI 固定评测 | 40/40 | `tests/evaluation/output/chatbi_eval_v0.1.json` |
+| Docker/API 烟测 | 6/6 | `tests/evaluation/output/docker_smoke.json` |
+| 15 项指标迁移对账 | 15/15，差异 0 | `metric_baseline_before_scenario.json` |
 
 ## 5. 单屏 UI 验收
 
@@ -89,21 +97,26 @@ Chrome 以 1600×900、浏览器 100% 缩放验证：
 为主存储的事实。若要将 MySQL/API 正式纳入 P0.5 产品范围，需要更新冻结范围与
 验收合同，不能仅凭代码存在宣称范围已变更。
 
-## 7. 尚未完成
+## 7. 阶段关闭情况
 
-- 将 `charging_ops` 从当前模块抽离为可安装、可版本化场景包；
-- 补齐 P0.5 要求的第二个文件样例及专用 schema 集成证据；
-- 将发布版本绑定到不可变数据快照或正式业务事实表，而非仅保留当前暂存预览与发布记录；
-- 完成 15 项指标在迁移前后的全量结果对账；
-- 运行 P0.5 专用 E2E 并保存仓库内截图。
+已关闭：
 
-因此，本工作包允许合入并继续完成 P0.5，但尚不允许宣称 P0.5 整体完成，
-也不建议直接进入 V2-P0.6 发布候选阶段。
+- `charging_ops` 已抽离为可导入、可版本化场景包；
+- 已提供两份受版本控制的 CSV 样例，另有 Excel 连接器测试；
+- 发布版本绑定不可变 PostgreSQL 快照；
+- 完整覆盖授权场站和请求指标时，场站业务查询读取发布快照；
+- 不完整或不匹配的快照不会覆盖底层已发布事实查询；
+- 15 项指标迁移前后逐项一致；
+- P0.5 专用 E2E 和仓库内截图已完成。
+
+保留限制：当前场景包仍是模块化单体内的 Python 包，不是独立发布到外部包仓库的
+制品；数据接入正式提升覆盖场站经营快照，底层会话、成本、设备事件事实仍绑定原
+固定种子发布批次。两者均符合当前 Alpha 单实例与模拟数据边界。
 
 ## 8. 回滚
 
-1. 应用代码执行 `git revert <本工作包提交>`；
-2. 数据库执行 `docker compose exec api alembic downgrade 0004`；
-3. 降级会删除本工作包新增的质量与审批记录表，不会删除既有源数据登记、
-   接入批次和暂存预览；
-4. 如需保留治理审计证据，应先导出新增两张表，再执行降级。
+1. 应用代码执行 `git revert <P0.5 最终提交>`；
+2. 仅回滚场景包和不可变快照执行 `docker compose exec api alembic downgrade 0005`；
+3. 连同质量审批工作流回滚执行 `docker compose exec api alembic downgrade 0004`；
+4. 降级不会删除原有模拟事实表，但会删除对应阶段新增的场景/快照或治理表；
+5. 如需保留治理审计证据，应先导出新增表，再执行降级。

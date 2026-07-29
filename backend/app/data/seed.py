@@ -44,6 +44,9 @@ def generate_simulated_data(db: Session, session_count: int = 300_000, seed: int
     batch_id = f"SIM-{seed}-v010-n{session_count}"
     existing = db.get(DataGenerationRun, batch_id)
     if existing and existing.status == "completed":
+        from app.scenarios.registry import install_charging_ops
+        install_charging_ops(db, batch_id, publish=existing.quality_status == "passed")
+        db.commit()
         return json.loads(existing.actual_counts_json)
     if db.scalar(select(func.count()).select_from(Region)):
         raise RuntimeError("database is not empty; refusing to mix simulated batches")
@@ -188,6 +191,8 @@ def generate_simulated_data(db: Session, session_count: int = 300_000, seed: int
     db.flush()
     from app.data.quality import validate_published_batch
     validate_published_batch(db)
+    from app.scenarios.registry import install_charging_ops
+    install_charging_ops(db, batch_id, publish=True)
     db.commit()
     return counts
 

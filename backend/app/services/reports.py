@@ -13,6 +13,7 @@ from app.models.business import AnalysisRun, DataGenerationRun
 from app.services.dashboard import allowed_station_ids
 from app.services.diagnostics import DiagnosticService
 from app.services.metric_catalog import METRICS
+from app.scenarios.registry import published_charging_ops_batch
 from app.services.metrics import MetricService
 
 
@@ -39,7 +40,7 @@ class ReportService:
         metrics = MetricService(self.db).compute(list(METRICS), start, end_exclusive, station_ids)
         diagnostic = DiagnosticService(self.db, self.user).decompose("gross_profit", start, end_exclusive, "mom", 5)
         run_id = f"REPORT-{uuid4()}"
-        batch = self.db.scalar(select(DataGenerationRun).where(DataGenerationRun.quality_status == "passed").order_by(DataGenerationRun.finished_at.desc()))
+        batch = published_charging_ops_batch(self.db)
         title = f"新能源经营分析{'周报' if report_type == 'weekly' else '月报'}草稿"
         lines = [f"# {title}", "", "> 模拟数据 · 可审核草稿 · 不代表真实企业经营结论", "", f"数据时间：{start.isoformat()} 至 {end_exclusive.isoformat()}（右开）", f"来源：平台数据库 / 批次 {batch.batch_id if batch else '无可用批次'}", f"analysis_run_id：{run_id}", "", "## 核心指标", "", "| 指标 | 值 | 单位 |", "|---|---:|---|"]
         for metric_id, value in metrics.items():

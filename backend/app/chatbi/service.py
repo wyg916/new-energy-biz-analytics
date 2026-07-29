@@ -16,6 +16,7 @@ from app.models.auth import AuditLog, User
 from app.models.business import AnalysisRun, DataGenerationRun
 from app.services.dashboard import DashboardService, allowed_station_ids
 from app.services.metric_catalog import METRICS
+from app.scenarios.registry import published_charging_ops_batch
 from app.services.diagnostics import DiagnosticService
 
 
@@ -51,7 +52,7 @@ class ChatBIService:
         plan = self.memory.resolve(question)
         plan_json = json.dumps(plan.model_dump(mode="json"), ensure_ascii=False, sort_keys=True)
         work_state = WORK_MEMORY.start(run_id, self.user.id, self.conversation_id, _hash(plan_json))
-        batch = self.db.scalar(select(DataGenerationRun).where(DataGenerationRun.quality_status == "passed").order_by(DataGenerationRun.finished_at.desc()))
+        batch = published_charging_ops_batch(self.db)
         run = AnalysisRun(
             run_id=run_id, request_id=f"REQ-{uuid4()}", conversation_id=self.conversation_id,
             user_id=self.user.id, role_id=self.user.role,
@@ -149,5 +150,5 @@ class ChatBIService:
         self.db.commit()
 
     def _evidence(self, run_id: str, plan: QueryPlan, sql: str | None, station_count: int, guard_status: str, sql_hash: str | None = None, answer_guard_result: dict | None = None) -> dict:
-        batch = self.db.scalar(select(DataGenerationRun).where(DataGenerationRun.quality_status == "passed").order_by(DataGenerationRun.finished_at.desc()))
+        batch = published_charging_ops_batch(self.db)
         return {"analysis_run_id": run_id, "conversation_id": self.conversation_id, "state_version": self.state_version, "data_classification": "simulated", "source": "platform_database", "batch_id": batch.batch_id if batch else None, "query_plan_version": plan.version, "query_plan_hash": _hash(json.dumps(plan.model_dump(mode="json"), ensure_ascii=False, sort_keys=True)), "sql_hash": sql_hash, "sql": sql, "authorized_station_count": station_count, "metric_versions": {metric_id: "0.1.0" for metric_id in plan.metrics}, "query_guard": guard_status, "answer_guard": answer_guard_result, "explanation_mode": "deterministic"}

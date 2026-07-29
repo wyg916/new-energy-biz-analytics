@@ -1,7 +1,7 @@
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from decimal import Decimal
 
-from sqlalchemy import DateTime, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint
+from sqlalchemy import Date, DateTime, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -101,6 +101,46 @@ class DataIngestionReview(Base):
     rejection_reason: Mapped[str | None] = mapped_column(String(500), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+
+
+class ScenarioPackageRelease(Base):
+    __tablename__ = "scenario_package_release"
+    __table_args__ = (UniqueConstraint("scenario_id", "version", name="uq_scenario_package_version"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    scenario_id: Mapped[str] = mapped_column(String(64), index=True)
+    version: Mapped[str] = mapped_column(String(32))
+    display_name: Mapped[str] = mapped_column(String(128))
+    manifest_json: Mapped[str] = mapped_column(Text)
+    manifest_checksum: Mapped[str] = mapped_column(String(64))
+    status: Mapped[str] = mapped_column(String(24), index=True)
+    source_batch_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    installed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class PublishedStationSnapshot(Base):
+    __tablename__ = "published_station_snapshot"
+    __table_args__ = (UniqueConstraint("review_id", "source_record_id", name="uq_published_snapshot_review_record"),)
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    review_id: Mapped[str] = mapped_column(ForeignKey("data_ingestion_review.review_id"), index=True)
+    dataset_id: Mapped[str] = mapped_column(ForeignKey("data_set_definition.dataset_id"), index=True)
+    run_id: Mapped[str] = mapped_column(ForeignKey("data_ingestion_run.run_id"), index=True)
+    scenario_id: Mapped[str] = mapped_column(String(64), default="charging_ops", index=True)
+    scenario_version: Mapped[str] = mapped_column(String(32))
+    release_version: Mapped[str] = mapped_column(String(48), index=True)
+    source_record_id: Mapped[str] = mapped_column(String(128))
+    station_id: Mapped[str] = mapped_column(String(32), index=True)
+    station_name: Mapped[str] = mapped_column(String(128))
+    region_id: Mapped[str] = mapped_column(String(32), index=True)
+    city_id: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    metrics_json: Mapped[str] = mapped_column(Text)
+    period_start: Mapped[date] = mapped_column(Date)
+    period_end_exclusive: Mapped[date] = mapped_column(Date)
+    data_classification: Mapped[str] = mapped_column(String(32), default="simulated")
+    snapshot_checksum: Mapped[str] = mapped_column(String(64))
+    published_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
 
 
 class IngestedStationPreview(Base):
