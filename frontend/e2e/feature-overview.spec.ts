@@ -38,7 +38,7 @@ test('功能总览复刻页使用后端指标并支持核心入口', async ({ pa
   await page.getByRole('button', { name: '功能总览' }).click()
   await expect(page.getByRole('heading', { name: '功能总览', exact: true })).toBeVisible()
   await page.getByRole('button', { name: '经营预警' }).click()
-  await expect(page.getByRole('heading', { name: '毛利变化桥接' })).toBeVisible({ timeout: 90_000 })
+  await expect(page.getByRole('heading', { name: '预警列表' })).toBeVisible({ timeout: 90_000 })
   await page.getByRole('button', { name: '经营报告' }).click()
   await expect(page.getByRole('heading', { name: '周报 / 月报草稿' })).toBeVisible()
   await page.getByRole('button', { name: '生成月报草稿' }).click()

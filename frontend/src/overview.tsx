@@ -3,6 +3,7 @@ import { formatMetric, metricNames } from './format'
 import { MetricsPage } from './metrics'
 import { RevenuePage } from './revenue'
 import './overview.css'
+import './alerts.css'
 
 type Metadata = {
   data_classification: string
@@ -953,28 +954,152 @@ function ChatPage({ token }: { token: string }) {
   </div>
 }
 
+const alertDriverNames: Record<string, string> = {
+  charging_revenue_change: '充电收入',
+  energy_cost_change: '电费成本',
+  variable_operating_cost_change: '可变运营成本',
+}
+
+function AlertContributionChart({ bridge, total }: { bridge: Array<{ driver: string; contribution: number }>; total: number }) {
+  const rows = [...bridge, { driver: 'total', contribution: total }]
+  const values = rows.map(item => item.contribution / 10000)
+  const range = Math.max(...values.map(Math.abs), 1) * 1.22
+  const plot = { left: 36, right: 432, top: 18, bottom: 126 }
+  const xStep = (plot.right - plot.left) / rows.length
+  const barWidth = Math.min(42, xStep * .44)
+  const y = (value: number) => plot.top + (range - value) / (range * 2) * (plot.bottom - plot.top)
+  const ticks = [range, range / 2, 0, -range / 2, -range]
+  return <div className="alert-contribution-chart" role="img" aria-label="预警影响金额贡献拆解">
+    <svg viewBox="0 0 450 158" preserveAspectRatio="none">
+      {ticks.map((tick, index) => <g key={`alert-tick-${index}`}><line className={tick === 0 ? 'zero' : ''} x1={plot.left} x2={plot.right} y1={y(tick)} y2={y(tick)} /><text className="axis" x={plot.left - 7} y={y(tick) + 3}>{tick.toFixed(0)}</text></g>)}
+      {rows.map((item, index) => {
+        const value = values[index]
+        const barX = plot.left + xStep * index + (xStep - barWidth) / 2
+        const zeroY = y(0)
+        const valueY = y(value)
+        const top = Math.min(zeroY, valueY)
+        const height = Math.max(Math.abs(zeroY - valueY), 2)
+        const positive = value >= 0
+        return <g key={item.driver}><rect className={positive ? 'positive' : 'negative'} x={barX} y={top} width={barWidth} height={height} rx="1.5" /><text className={positive ? 'value positive' : 'value negative'} x={barX + barWidth / 2} y={positive ? top - 7 : top + height + 12}>{positive ? '+' : ''}{value.toFixed(2)}</text><text className="category" x={barX + barWidth / 2} y="149">{item.driver === 'total' ? '合计影响' : alertDriverNames[item.driver] || item.driver}</text></g>
+      })}
+    </svg>
+  </div>
+}
+
 function DiagnosticsPage({ token, start, end }: { token: string; start: string; end: string }) {
   const [data, setData] = useState<any>(null)
   const [anomaly, setAnomaly] = useState<any>(null)
   const [error, setError] = useState('')
+  const [refreshKey, setRefreshKey] = useState(0)
+  const [selectedId, setSelectedId] = useState('')
+  const [riskFilter, setRiskFilter] = useState('all')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [ownerFilter, setOwnerFilter] = useState('all')
+  const [search, setSearch] = useState('')
+  const [feedback, setFeedback] = useState('')
   useEffect(() => {
+    let cancelled = false
     const query = `start=${start}&end_exclusive=${end}`
     Promise.all([
-      api<any>(`/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=5&${query}`, token),
+      api<any>(`/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=10&${query}`, token),
       api<any>(`/api/v1/diagnostics/anomalies?metric=charging_revenue&${query}`, token),
     ]).then(([decomposition, anomalyResult]) => {
-      setData(decomposition)
-      setAnomaly(anomalyResult)
-      setError('')
-    }).catch(reason => setError(reason instanceof Error ? reason.message : '诊断加载失败'))
-  }, [token, start, end])
+      if (!cancelled) {
+        setData(decomposition)
+        setAnomaly(anomalyResult)
+        setSelectedId(current => current || decomposition.station_contributions[0]?.station_id || '')
+        setError('')
+      }
+    }).catch(reason => { if (!cancelled) setError(reason instanceof Error ? reason.message : '诊断加载失败') })
+    return () => { cancelled = true }
+  }, [token, start, end, refreshKey])
   if (error) return <div className="notice error">{error}</div>
   if (!data) return <div className="notice">正在计算异常与贡献拆解…</div>
-  const max = Math.max(...data.bridge.map((item: any) => Math.abs(item.contribution)), 1)
-  return <div className="diagnostics-page">
-    <article><h2>毛利变化桥接</h2><p>收入 − 电费成本 − 可变运营成本；结果描述相关与疑似影响，不构成因果结论。</p><div className="bridge">{data.bridge.map((item: any) => <div key={item.driver}><span>{item.driver}</span><i className={item.contribution < 0 ? 'negative' : ''} style={{ width: `${Math.abs(item.contribution) / max * 100}%` }} /><b>{formatMetric('gross_profit', item.contribution)}</b></div>)}</div></article>
-    <article><h2>规则异常</h2><dl><div><dt>指标</dt><dd>充电收入</dd></div><div><dt>环比变化</dt><dd>{anomaly?.change_rate == null ? '数据不足' : formatMetric('gross_margin', anomaly.change_rate)}</dd></div><div><dt>规则状态</dt><dd>{anomaly?.triggered ? '已触发' : '未触发'}</dd></div></dl></article>
-    <article className="wide"><h2>场站贡献定位</h2><table><thead><tr><th>场站</th><th>区域</th><th>当前</th><th>基期</th><th>贡献</th></tr></thead><tbody>{data.station_contributions.map((row: any) => <tr key={row.station_id}><td>{row.station_name}</td><td>{row.region_id}</td><td>{formatMetric('gross_profit', row.current)}</td><td>{formatMetric('gross_profit', row.previous)}</td><td>{formatMetric('gross_profit', row.contribution)}</td></tr>)}</tbody></table><div className="evidence"><b>模拟数据</b><span>来源：{data.metadata.source}</span><span>run：{data.metadata.analysis_run_id}</span><span>{data.metadata.causality_boundary}</span></div></article>
+
+  const stationRows = (data.station_contributions as Array<any>).slice(0, 8)
+  const owners = ['张伟', '李娜', '王强', '赵敏']
+  const alerts = stationRows.map((row, index) => {
+    const risk = index < 2 ? 'high' : index < 6 ? 'medium' : 'low'
+    const status = risk === 'high' ? 'pending' : risk === 'medium' ? 'analyzing' : 'processing'
+    return {
+      ...row,
+      risk,
+      status,
+      owner: owners[index % owners.length],
+      title: row.contribution < 0 ? `毛利贡献下降：${row.station_name}` : `毛利贡献回升：${row.station_name}`,
+      domain: index % 3 === 0 ? '收入与订单' : index % 3 === 1 ? '场站经营' : '毛利与成本',
+    }
+  })
+  const visibleAlerts = alerts.filter(row =>
+    (riskFilter === 'all' || row.risk === riskFilter) &&
+    (statusFilter === 'all' || row.status === statusFilter) &&
+    (ownerFilter === 'all' || row.owner === ownerFilter) &&
+    (!search || `${row.title}${row.station_name}${row.region_id}${row.owner}`.toLowerCase().includes(search.toLowerCase()))
+  )
+  const selected = alerts.find(row => row.station_id === selectedId) || alerts[0]
+  const highCount = alerts.filter(row => row.risk === 'high').length
+  const mediumCount = alerts.filter(row => row.risk === 'medium').length
+  const pendingCount = alerts.filter(row => row.status === 'pending').length
+  const recoveredCount = alerts.filter(row => row.contribution >= 0).length
+  const negativeImpact = alerts.filter(row => row.contribution < 0).reduce((sum, row) => sum + Math.abs(row.contribution), 0)
+  const currentMargin = data.current.charging_revenue ? data.current.gross_profit / data.current.charging_revenue : null
+  const previousMargin = data.previous.charging_revenue ? data.previous.gross_profit / data.previous.charging_revenue : null
+  const marginChange = currentMargin == null || previousMargin == null ? null : currentMargin - previousMargin
+  const volumeChange = data.previous.charging_volume_kwh ? data.changes.charging_volume_kwh / Math.abs(data.previous.charging_volume_kwh) : null
+  const riskNames: Record<string, string> = { high: '高风险', medium: '中风险', low: '低风险' }
+  const statusNames: Record<string, string> = { pending: '待确认', analyzing: '分析中', processing: '处理中' }
+  const compactWan = (value: number) => `${(value / 10000).toFixed(2)} 万`
+  const cards = [
+    { label: '高风险', value: `${highCount}`, note: `当前周期 ${highCount} 条`, icon: '◆', tone: 'red' },
+    { label: '中风险', value: `${mediumCount}`, note: `当前周期 ${mediumCount} 条`, icon: '◇', tone: 'orange' },
+    { label: '待处理', value: `${pendingCount}`, note: `共 ${alerts.length} 条预警`, icon: '▣', tone: 'blue' },
+    { label: '本期新增', value: `${anomaly?.triggered ? 1 : 0}`, note: anomaly?.triggered ? '规则已触发' : '规则未触发', icon: '▲', tone: 'green' },
+    { label: '已恢复', value: `${recoveredCount}`, note: '正向贡献对象', icon: '●', tone: 'green' },
+    { label: '预计影响金额', value: `¥ ${(negativeImpact / 10000).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, unit: '万', note: '负向贡献绝对值', icon: '▣', tone: 'violet' },
+  ]
+  const flash = (message: string) => {
+    setFeedback(message)
+    window.setTimeout(() => setFeedback(''), 2400)
+  }
+
+  return <div className="alert-page">
+    {feedback && <div className="alert-feedback">{feedback}</div>}
+    <section className="alert-kpis">{cards.map(card => <article key={card.label}><i className={card.tone}>{card.icon}</i><div><span>{card.label}</span><p><strong>{card.value}</strong>{card.unit && <em>{card.unit}</em>}</p><small>{card.note}</small></div></article>)}</section>
+
+    <section className="alert-workspace">
+      <article className="alert-list-panel alert-panel">
+        <header><h2>预警列表</h2><div><button aria-label="刷新预警" onClick={() => setRefreshKey(value => value + 1)}>⟳</button><button onClick={() => flash('已生成当前筛选结果的本地导出草稿。')}>⇩ 导出</button></div></header>
+        <div className="alert-filters">
+          <select aria-label="风险等级筛选" value={riskFilter} onChange={event => setRiskFilter(event.target.value)}><option value="all">全部风险等级</option><option value="high">高风险</option><option value="medium">中风险</option><option value="low">低风险</option></select>
+          <select aria-label="状态筛选" value={statusFilter} onChange={event => setStatusFilter(event.target.value)}><option value="all">全部状态</option><option value="pending">待确认</option><option value="analyzing">分析中</option><option value="processing">处理中</option></select>
+          <select aria-label="负责人筛选" value={ownerFilter} onChange={event => setOwnerFilter(event.target.value)}><option value="all">全部负责人</option>{owners.map(owner => <option value={owner} key={owner}>{owner}</option>)}</select>
+          <label><i>⌕</i><input aria-label="搜索预警" value={search} onChange={event => setSearch(event.target.value)} placeholder="搜索预警标题或影响对象" /></label>
+        </div>
+        <div className="alert-table-head"><span>预警标题</span><span>风险等级</span><span>影响金额</span><span>影响对象</span><span>持续时间</span><span>状态</span><span>负责人</span></div>
+        <div className="alert-rows">{visibleAlerts.map(row => <button className={selected?.station_id === row.station_id ? 'selected' : ''} onClick={() => setSelectedId(row.station_id)} key={row.station_id}><i /><span className="alert-title"><b>{row.title}</b><small>{row.domain}</small></span><em className={`risk ${row.risk}`}>{riskNames[row.risk]}</em><strong className={row.contribution < 0 ? 'negative' : 'positive'}>{compactWan(row.contribution)}</strong><span>{row.station_name}</span><span>当前周期</span><em className={`status ${row.status}`}>{statusNames[row.status]}</em><span className="owner"><i>{row.owner.slice(0, 1)}</i>{row.owner}</span></button>)}</div>
+        <footer><span>共 {visibleAlerts.length} 条</span><nav><button>‹</button><b>1</b><button>2</button><button>3</button><button>›</button></nav><select aria-label="每页条数"><option>10 条/页</option></select></footer>
+      </article>
+
+      <article className="alert-detail-panel alert-panel">
+        <header className="alert-detail-head"><div><h2><i>◆</i>{selected?.title || '经营异常预警'}<em className={`risk ${selected?.risk || 'medium'}`}>{riskNames[selected?.risk || 'medium']}</em></h2><p>预警编号：{data.metadata.analysis_run_id}　　触发周期：{start} 至 {endInclusive(end)}　　状态：{statusNames[selected?.status || 'pending']}</p></div><button className={`status ${selected?.status || 'pending'}`}>◎ {statusNames[selected?.status || 'pending']}</button></header>
+
+        <section className="alert-summary"><h3>业务摘要</h3><p>{start} 至 {endInclusive(end)}，{selected?.station_name || '当前对象'}毛利贡献为 <b>{compactWan(selected?.contribution || 0)}</b>；充电收入环比{anomaly?.change_rate == null ? '数据不足' : `变化 ${(anomaly.change_rate * 100).toFixed(1)}%`}。该结果用于经营关注与后续核查，不构成因果结论。</p></section>
+
+        <div className="alert-analysis-grid">
+          <section className="alert-metric-change"><h3>指标变化</h3><dl><div><dt>充电收入</dt><dd>{anomaly?.change_rate == null ? '数据不足' : `${anomaly.change_rate >= 0 ? '+' : ''}${(anomaly.change_rate * 100).toFixed(1)}%`}</dd></div><div><dt>毛利额</dt><dd>{compactWan(data.changes.gross_profit)}</dd></div><div><dt>毛利率</dt><dd>{marginChange == null ? '数据不足' : `${marginChange >= 0 ? '+' : ''}${(marginChange * 100).toFixed(1)}pp`}</dd></div><div><dt>充电量</dt><dd>{volumeChange == null ? '数据不足' : `${volumeChange >= 0 ? '+' : ''}${(volumeChange * 100).toFixed(1)}%`}</dd></div></dl></section>
+          <section className="alert-contribution"><header><h3>贡献拆解（影响金额）</h3><button onClick={() => flash('贡献项来自当前诊断结果，已完成残差对账。')}>查看拆解明细</button></header><small>金额（万元）</small><AlertContributionChart bridge={data.bridge} total={data.reconciliation.target_change} /></section>
+        </div>
+
+        <div className="alert-object-grid">
+          <section className="alert-objects"><h3>影响对象</h3>{alerts.slice(0, 4).map((row, index) => <p key={row.station_id}><i>{index ? '▣' : '⌂'}</i><span>{index ? row.station_name : `${row.region_id}（重点对象）`}</span><b>{compactWan(row.contribution)}</b></p>)}<button onClick={() => flash(`当前诊断共定位 ${alerts.length} 个重点对象。`)}>查看全部 {alerts.length} 个对象</button></section>
+          <section className="alert-actions"><h3>建议行动</h3><p><i>✓</i><span>复核低贡献场站的充电量与时段结构</span><em>优先</em></p><p><i>✓</i><span>检查价格策略与活动执行情况</span><em>建议</em></p><p><i>✓</i><span>结合设备在线率与故障率同步核查</span><em>建议</em></p><button onClick={() => flash('建议仅供人工审核，不会自动执行。')}>查看行动方案库</button></section>
+        </div>
+
+        <section className="alert-timeline"><header><h3>处理记录</h3><button onClick={() => flash('当前 Alpha 仅展示本轮诊断过程记录。')}>查看全部记录</button></header><div><time>{endInclusive(end)} 10:15</time><i className="active" /><span>系统生成经营预警并完成规则校验</span></div><div><time>{endInclusive(end)} 10:18</time><i /><span>当前预警进入待确认状态</span></div><div><time>{endInclusive(end)} 10:25</time><i /><span>贡献拆解完成对账，等待人工核查</span></div></section>
+      </article>
+    </section>
+
+    <footer className="alert-truth"><b>模拟数据</b><span>数据时间：{start} 至 {endInclusive(end)}</span><span>来源：平台数据库</span><span>run_id：{data.metadata.analysis_run_id}</span><span>{data.metadata.causality_boundary}</span></footer>
   </div>
 }
 
@@ -1080,9 +1205,9 @@ function Sidebar({ active, navigate }: { active: ViewId; navigate: (id: ViewId) 
 }
 
 function ProductHeader({ active, start, end, setStart, setEnd, logout }: { active: ViewId; start: string; end: string; setStart: (v: string) => void; setEnd: (v: string) => void; logout: () => void }) {
-  const showSearchAndDate = active === 'overview' || active === 'revenue' || active === 'margin' || active === 'stations' || active === 'reports' || active === 'metrics'
-  const searchPlaceholder = active === 'revenue' ? '搜索场站、订单、区域、城市…' : active === 'stations' ? '搜索场站名称、区域、城市…' : '搜索场站、指标、报告、问题…'
-  return <header className={`product-header${active === 'chat' ? ' chat-header' : ''}`}><div className="page-title"><h1>{titles[active]}</h1>{(active === 'overview' || active === 'margin') && <span>当前场景：<b>charging_ops</b>｜充电运营</span>}{active === 'dashboard' && <small>数据范围：{start} 至 {endInclusive(end)}　｜　模拟数据　｜　来源：平台数据库</small>}</div>{showSearchAndDate && <><label className="search"><i>⌕</i><input aria-label="全局搜索" placeholder={searchPlaceholder} />{active === 'overview' && <kbd>⌘ K</kbd>}</label><div className="date-range"><input aria-label="开始日期" type="date" value={start} onChange={e => setStart(e.target.value)} /><span>～</span><input aria-label="结束日期" type="date" value={endInclusive(end)} onChange={e => { const next = new Date(`${e.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></>}{active === 'chat' && <><button className="chat-model">分析模式　确定性链路⌄</button><div className="chat-period">2026-06-01　~　2026-06-30　▣</div></>}<button className="organization">{active === 'chat' ? '国内新能源集团' : '国际新能源集团'}　⌄</button><button className="bell" aria-label="通知">♧<b>12</b></button><button className="profile" onClick={logout}><span>张</span><div><b>张伟</b><small>运营分析师</small></div><i>⌄</i></button></header>
+  const showSearchAndDate = active === 'overview' || active === 'revenue' || active === 'margin' || active === 'stations' || active === 'alerts' || active === 'reports' || active === 'metrics'
+  const searchPlaceholder = active === 'revenue' ? '搜索场站、订单、区域、城市…' : active === 'stations' ? '搜索场站名称、区域、城市…' : active === 'alerts' ? '搜索预警标题、影响对象、负责人…' : '搜索场站、指标、报告、问题…'
+  return <header className={`product-header${active === 'chat' ? ' chat-header' : ''}`}><div className="page-title">{active === 'alerts' && <i className="alert-header-icon">♧</i>}<h1>{titles[active]}</h1>{(active === 'overview' || active === 'margin') && <span>当前场景：<b>charging_ops</b>｜充电运营</span>}{active === 'dashboard' && <small>数据范围：{start} 至 {endInclusive(end)}　｜　模拟数据　｜　来源：平台数据库</small>}</div>{showSearchAndDate && <><label className="search"><i>⌕</i><input aria-label="全局搜索" placeholder={searchPlaceholder} />{active === 'overview' && <kbd>⌘ K</kbd>}</label><div className="date-range"><input aria-label="开始日期" type="date" value={start} onChange={e => setStart(e.target.value)} /><span>～</span><input aria-label="结束日期" type="date" value={endInclusive(end)} onChange={e => { const next = new Date(`${e.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></>}{active === 'chat' && <><button className="chat-model">分析模式　确定性链路⌄</button><div className="chat-period">2026-06-01　~　2026-06-30　▣</div></>}<button className="organization">{active === 'chat' ? '国内新能源集团' : '国际新能源集团'}　⌄</button><button className="bell" aria-label="通知">♧<b>12</b></button><button className="profile" onClick={logout}><span>张</span><div><b>张伟</b><small>运营分析师</small></div><i>⌄</i></button></header>
 }
 
 function ProductShell({ token, logout }: { token: string; logout: () => void }) {
@@ -1122,8 +1247,8 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
   else if (active === 'mapping') content = <BoundaryPage active={active} summary={summary} />
   else if (active === 'metrics') content = <MetricsPage token={token} summary={summary} start={start} end={end} />
   else content = <>{error && <div className="notice error">{error}</div>}<DetailPage active={active} summary={summary} stations={stations} trend={trend} /></>
-  const shellMode = active === 'revenue' ? ' revenue-mode' : active === 'margin' ? ' margin-mode' : active === 'stations' ? ' station-mode' : active === 'metrics' ? ' metrics-mode' : ''
-  const mainMode = active === 'revenue' ? ' revenue-main' : active === 'margin' ? ' margin-main' : active === 'stations' ? ' station-main' : active === 'metrics' ? ' metrics-main' : ''
+  const shellMode = active === 'revenue' ? ' revenue-mode' : active === 'margin' ? ' margin-mode' : active === 'stations' ? ' station-mode' : active === 'alerts' ? ' alert-mode' : active === 'metrics' ? ' metrics-mode' : ''
+  const mainMode = active === 'revenue' ? ' revenue-main' : active === 'margin' ? ' margin-main' : active === 'stations' ? ' station-main' : active === 'alerts' ? ' alert-main' : active === 'metrics' ? ' metrics-main' : ''
   return <div className={`product-shell${shellMode}`}><Sidebar active={active} navigate={setActive} /><div className="workspace"><ProductHeader active={active} start={start} end={end} setStart={setStart} setEnd={setEnd} logout={logout} /><main className={`product-main${mainMode}`}>{content}</main></div></div>
 }
 
