@@ -515,15 +515,31 @@ function DiagnosticsPage({ token, start, end }: { token: string; start: string; 
   </div>
 }
 
-function ReportPage({ token, start, end }: { token: string; start: string; end: string }) {
+function ReportTrend({ points }: { points: TrendPoint[] }) {
+  const values = points.map(point => point.value ?? 0)
+  const max = Math.max(...values, 1)
+  const coords = values.map((value, index) => `${index / Math.max(values.length - 1, 1) * 100},${92 - value / max * 70}`).join(' ')
+  return <div className="report-trend" aria-label="充电收入趋势">
+    <div className="report-bars">{values.map((value, index) => <i key={index} style={{ height: `${Math.max(value / max * 100, 10)}%` }} />)}</div>
+    <svg viewBox="0 0 100 100" preserveAspectRatio="none"><polyline points={coords} /></svg>
+    <div className="report-trend-axis">{points.map(point => <span key={point.period}>{point.period.slice(5)}</span>)}</div>
+  </div>
+}
+
+function ReportPage({ token, start, end, summary, stations, trend }: { token: string; start: string; end: string; summary: Summary | null; stations: StationRow[]; trend: TrendPoint[] }) {
   const [report, setReport] = useState<any>(null)
+  const [reportType, setReportType] = useState<'weekly' | 'monthly'>('weekly')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [enabled, setEnabled] = useState({ summary: true, metric: true, trend: true, station: true, device: true, action: true })
+  const metrics = report?.metrics ?? summary?.metrics ?? {}
+  const metadata = report?.metadata ?? summary?.metadata
+  const isReady = Boolean(report)
   const generate = async () => {
     setLoading(true)
     setError('')
     try {
-      setReport(await api<any>(`/api/v1/reports/draft?report_type=monthly&start=${start}&end_exclusive=${end}`, token))
+      setReport(await api<any>(`/api/v1/reports/draft?report_type=${reportType}&start=${start}&end_exclusive=${end}`, token))
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : '报告生成失败')
     } finally {
@@ -531,17 +547,59 @@ function ReportPage({ token, start, end }: { token: string; start: string; end: 
     }
   }
   const download = async (format: 'markdown' | 'csv') => {
-    const response = await fetch(`/api/v1/reports/export?report_type=monthly&format=${format}&start=${start}&end_exclusive=${end}`, { headers: { Authorization: `Bearer ${token}` } })
+    const response = await fetch(`/api/v1/reports/export?report_type=${reportType}&format=${format}&start=${start}&end_exclusive=${end}`, { headers: { Authorization: `Bearer ${token}` } })
     if (!response.ok) return setError('导出失败')
     const blob = await response.blob()
     const url = URL.createObjectURL(blob)
     const anchor = document.createElement('a')
     anchor.href = url
-    anchor.download = `新能源经营分析月报草稿.${format === 'csv' ? 'csv' : 'md'}`
+    anchor.download = `新能源经营分析${reportType === 'weekly' ? '周报' : '月报'}草稿.${format === 'csv' ? 'csv' : 'md'}`
     anchor.click()
     URL.revokeObjectURL(url)
   }
-  return <div className="report-page"><article><header><div><h2>周报 / 月报草稿</h2><p>只引用验证后的结构化结果，导出时重新鉴权</p></div><button onClick={() => void generate()}>{loading ? '生成中…' : '生成月报草稿'}</button></header>{error && <div className="notice error">{error}</div>}{!report && !loading && <div className="report-empty">选择数据期后生成可审核草稿；不会自动发送或发布。</div>}{report && <><div className="evidence"><b>模拟数据</b><span>来源：{report.metadata.source}</span><span>批次：{report.metadata.batch_id}</span><span>run：{report.metadata.analysis_run_id}</span><span>状态：草稿</span></div><div className="report-actions"><button onClick={() => void download('markdown')}>导出 Markdown</button><button onClick={() => void download('csv')}>导出 CSV</button></div><pre>{report.markdown}</pre></>}</article></div>
+  const reportName = `新能源经营分析${reportType === 'weekly' ? '周报' : '月报'}`
+  const primaryMetrics = [
+    ['charging_revenue', '收入（元）'], ['gross_profit', '毛利（元）'], ['gross_margin', '毛利率'], ['charging_volume_kwh', '充电电量（kWh）'], ['device_online_rate', '设备在线率'],
+  ] as const
+  const reportRows = ['新能源经营分析周报', '新能源经营分析日报', '场站运营分析月报', '设备健康分析月报', '收入与毛利分析月报']
+  const diagnosticRows = report?.diagnostic?.station_contributions ?? []
+  const actionRows = [
+    '优先核查低毛利场站的费率、利用率与设备可用性。',
+    '复核异常站点的运营数据与已发布指标口径。',
+    '报告草稿仅供审核；结论须基于已验证结构化结果。',
+  ]
+  return <div className="report-workspace">
+    <aside className="report-list-panel">
+      <button className="report-create" onClick={() => void generate()}>＋ 新建报告</button>
+      <label className="report-search">⌕<input aria-label="搜索报告名称" placeholder="搜索报告名称" /></label>
+      <div className="report-tabs"><b>全部</b><span>我创建的</span><span>我订阅的</span></div>
+      <header><h2>报告列表 <small>({reportRows.length})</small></h2><button aria-label="筛选报告">⌄</button></header>
+      <div className="report-list-items">{reportRows.map((name, index) => <button className={index === 0 ? 'active' : ''} key={name}><i>{index === 0 ? '●' : '○'}</i><span>{name}<small>{index === 0 && isReady ? '已完成' : '可生成'}　{endInclusive(end).slice(5)}</small></span><b>⋮</b></button>)}</div>
+      <section className="report-subscriptions"><h3>我的订阅 <small>(2)</small></h3><p>新能源经营分析周报<br /><span>每周一 · 08:30</span></p><p>场站运营分析月报<br /><span>每月 1 日 · 09:00</span></p><button>查看全部订阅　›</button></section>
+    </aside>
+
+    <section className="report-canvas">
+      <header className="report-titlebar"><div><h2>{reportName}</h2><span>{start} ～ {endInclusive(end)}（{reportType === 'weekly' ? '周报' : '月报'}）</span><em>{isReady ? '已完成' : '待生成'}</em><p>模拟数据 · 来源：平台数据库 · run_id：{metadata?.analysis_run_id || '待生成报告'}</p></div><div><button className="report-primary" onClick={() => void generate()}>{loading ? '生成中…' : '生成报告'}</button><button disabled={!isReady} onClick={() => void download('markdown')}>导出 MD</button><button disabled={!isReady} onClick={() => void download('csv')}>导出 CSV</button></div></header>
+      {error && <div className="notice error">{error}</div>}
+      <section className="report-executive">
+        <header><h3>一、管理摘要</h3><span>模拟数据 · {metadata?.batch_id || '数据加载中'}</span></header>
+        <p>本期经营数据已按发布的指标语义层汇总。报告只呈现可审核的结构化结果；设备与经营指标仅作同期相关线索，不构成因果结论。</p>
+        <div className="report-kpis">{primaryMetrics.map(([id, label]) => <article key={id}><span>{label}</span><strong>{formatMetric(id, metrics[id])}</strong><small>{isReady ? '已验证报告结果' : '已发布指标口径'}</small></article>)}</div>
+      </section>
+      <section className="report-analysis-grid">
+        <article className="report-table-card"><header><h3>二、核心指标</h3><span>{isReady ? '报告结果' : '实时汇总'}</span></header><table><thead><tr><th>指标</th><th>本期值</th><th>口径</th></tr></thead><tbody>{primaryMetrics.map(([id, label]) => <tr key={id}><td>{label}</td><td>{formatMetric(id, metrics[id])}</td><td>v0.1.0</td></tr>)}</tbody></table></article>
+        <article className="report-chart-card"><header><h3>三、收入趋势</h3><span>充电收入（元）</span></header>{trend.length ? <ReportTrend points={trend} /> : <div className="report-chart-empty">正在加载趋势数据…</div>}</article>
+      </section>
+      <section className="report-detail-grid">
+        <article><header><h3>四、重点场站 TOP5（按毛利）</h3><span>模拟数据</span></header><table><thead><tr><th>排名</th><th>场站名称</th><th>毛利（元）</th></tr></thead><tbody>{stations.slice(0, 5).map((station, index) => <tr key={station.station_id}><td>{index + 1}</td><td>{station.station_name}</td><td>{formatMetric('gross_profit', station.metrics.gross_profit)}</td></tr>)}</tbody></table></article>
+        <article><header><h3>五、贡献归因</h3><span>仅在生成后显示</span></header>{diagnosticRows.length ? <ul className="report-attribution">{diagnosticRows.slice(0, 4).map((item: any) => <li key={item.station_id}><span>{item.station_name}</span><b>{formatMetric('gross_profit', item.contribution)}</b></li>)}</ul> : <p className="report-pending">生成报告后展示已验证的场站贡献拆解。</p>}</article>
+        <article><header><h3>六、设备状态</h3><span>模拟数据</span></header><div className="report-device"><div className="device-ring"><b>{formatMetric('device_online_rate', metrics.device_online_rate)}</b><span>在线率</span></div><p>故障率 <b>{formatMetric('device_fault_rate', metrics.device_fault_rate)}</b><br />场站利用率 <b>{formatMetric('station_utilization_rate', metrics.station_utilization_rate)}</b></p></div></article>
+      </section>
+      <section className="report-actions-card"><div><h3>七、建议行动</h3>{actionRows.map(item => <p key={item}>✓　{item}</p>)}</div><aside><span>责任部门</span><b>运营部 / 运维部 / 技术部</b><span>数据时间</span><b>{start} ～ {endInclusive(end)}</b></aside></section>
+    </section>
+
+    <aside className="report-settings"><header><h2>报告设置</h2><button onClick={() => setEnabled({ summary: true, metric: true, trend: true, station: true, device: true, action: true })}>恢复默认</button></header><section><h3>报告类型</h3><div className="report-type-buttons"><button className={reportType === 'weekly' ? 'active' : ''} onClick={() => setReportType('weekly')}>周报</button><button className={reportType === 'monthly' ? 'active' : ''} onClick={() => setReportType('monthly')}>月报</button></div></section><section><h3>时间范围</h3><p>{start}　～　{endInclusive(end)}</p></section><section><h3>区域范围</h3><p>全部区域　⌄</p></section><section className="report-switches"><h3>模块开关</h3>{([['summary', '管理摘要'], ['metric', '核心指标'], ['trend', '收入趋势'], ['station', '重点场站 TOP5'], ['device', '设备状态'], ['action', '建议行动']] as Array<[keyof typeof enabled, string]>).map(([key, label]) => <label key={key}><span>{label}</span><input type="checkbox" checked={enabled[key]} onChange={() => setEnabled(value => ({ ...value, [key]: !value[key] }))} /></label>)}</section><section className="report-note"><h3>说明备注（选填）</h3><textarea maxLength={200} placeholder="输入报告备注信息…" /><small>报告只生成草稿，不会自动发送或发布。</small></section></aside>
+  </div>
 }
 
 function BoundaryPage({ active, summary }: { active: ViewId; summary: Summary | null }) {
@@ -592,7 +650,7 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
   else if (active === 'dashboard') content = <WorkbenchPage token={token} summary={summary} stations={stations} revenueTrend={trend} start={start} end={end} setStart={setStart} setEnd={setEnd} navigate={setActive} refreshKey={refreshKey} refresh={() => setRefreshKey(value => value + 1)} />
   else if (active === 'chat') content = <ChatPage token={token} />
   else if (active === 'alerts') content = <DiagnosticsPage token={token} start={start} end={end} />
-  else if (active === 'reports') content = <ReportPage token={token} start={start} end={end} />
+  else if (active === 'reports') content = <ReportPage token={token} start={start} end={end} summary={summary} stations={stations} trend={trend} />
   else if (active === 'mapping' || active === 'metrics') content = <BoundaryPage active={active} summary={summary} />
   else content = <>{error && <div className="notice error">{error}</div>}<DetailPage active={active} summary={summary} stations={stations} trend={trend} /></>
   return <div className="product-shell"><Sidebar active={active} navigate={setActive} /><div className="workspace"><ProductHeader active={active} start={start} end={end} setStart={setStart} setEnd={setEnd} logout={logout} /><main className="product-main">{content}</main></div></div>
