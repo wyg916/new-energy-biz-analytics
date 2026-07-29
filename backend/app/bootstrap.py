@@ -1,8 +1,11 @@
+import json
+
 from sqlalchemy import select
 
 from app.core.database import Base, SessionLocal, engine
 from app.core.security import hash_password
 from app.models.auth import User
+from app.models.integration import DataSetDefinition, DataSourceConnection
 
 
 DEMO_USERS = (
@@ -11,6 +14,17 @@ DEMO_USERS = (
     ("analyst", "AlphaAnalyst!2026", "数据分析师/管理员", "analyst_admin", None),
 )
 
+MAPPING_FIELDS = [
+    {"source": "station_id", "source_type": "varchar(50)", "label": "场站编码", "standard": "station_id", "target_type": "varchar(50)", "transform": "—", "unit": "—"},
+    {"source": "station_name", "source_type": "varchar(200)", "label": "场站名称", "standard": "station_name", "target_type": "varchar(200)", "transform": "—", "unit": "—"},
+    {"source": "region_id", "source_type": "varchar(50)", "label": "运营区域", "standard": "region_id", "target_type": "varchar(50)", "transform": "—", "unit": "—"},
+    {"source": "city_id", "source_type": "varchar(50)", "label": "所属城市", "standard": "city_id", "target_type": "varchar(50)", "transform": "—", "unit": "—"},
+    {"source": "charging_revenue", "source_type": "decimal(18,2)", "label": "充电收入", "standard": "charging_revenue", "target_type": "decimal(18,2)", "transform": "类型：decimal", "unit": "元"},
+    {"source": "charging_volume_kwh", "source_type": "decimal(18,3)", "label": "充电电量", "standard": "charging_volume_kwh", "target_type": "decimal(18,3)", "transform": "精度：3 位", "unit": "kWh"},
+    {"source": "gross_profit", "source_type": "decimal(18,2)", "label": "经营毛利", "standard": "gross_profit", "target_type": "decimal(18,2)", "transform": "类型：decimal", "unit": "元"},
+    {"source": "gross_margin", "source_type": "decimal(8,4)", "label": "毛利率", "standard": "gross_margin", "target_type": "decimal(8,4)", "transform": "比例：×100", "unit": "%"},
+]
+
 
 def bootstrap_demo_users() -> None:
     Base.metadata.create_all(bind=engine)
@@ -18,4 +32,35 @@ def bootstrap_demo_users() -> None:
         for username, password, display_name, role, region_code in DEMO_USERS:
             if db.scalar(select(User.id).where(User.username == username)) is None:
                 db.add(User(username=username, password_hash=hash_password(password), display_name=display_name, role=role, region_code=region_code))
+        sources = (
+            ("platform-postgresql", "PostgreSQL", "postgresql", "db", 5432, "renewable_alpha", "alpha", None, None, {"managed_platform": True}),
+            ("chatbi-postgresql", "PostgreSQL（chatBI）", "postgresql", "host.docker.internal", 5432, "postgres", "postgres", None, "CHATBI_PG_PASSWORD", {}),
+            ("chatbi-mysql", "MySQL", "mysql", "host.docker.internal", 3306, None, "root", None, "CHATBI_MYSQL_PASSWORD", {}),
+            ("excel-import", "Excel/CSV", "excel", None, None, None, None, "station_operations.xlsx", None, {}),
+            ("api-import", "API", "api", None, None, None, None, None, None, {}),
+        )
+        for source_id, name, source_type, host, port, database_name, username, locator, credential_key, options in sources:
+            existing_source = db.get(DataSourceConnection, source_id)
+            if existing_source is None:
+                db.add(DataSourceConnection(
+                    source_id=source_id, display_name=name, source_type=source_type,
+                    host=host, port=port, database_name=database_name, username=username,
+                    resource_locator=locator, credential_env_key=credential_key,
+                    connection_options_json=json.dumps(options), status="configured",
+                ))
+            elif credential_key and existing_source.credential_env_key != credential_key:
+                existing_source.credential_env_key = credential_key
+        db.flush()
+        if db.get(DataSetDefinition, "station-operations") is None:
+            db.add(DataSetDefinition(
+                dataset_id="station-operations",
+                source_id="platform-postgresql",
+                display_name="场站经营指标视图",
+                source_object="dashboard/stations",
+                target_table="ingested_station_preview",
+                standard_schema="charging_ops",
+                mapping_json=json.dumps(MAPPING_FIELDS, ensure_ascii=False),
+                data_classification="simulated",
+                status="validated",
+            ))
         db.commit()

@@ -26,3 +26,29 @@ def test_dashboard_uses_database_and_enforces_region_scope(client, login):
 def test_dashboard_rejects_unapproved_metric(client, login):
     response = client.get("/api/v1/dashboard/trend?metric=repurchase_rate&start=2025-01-01&end_exclusive=2025-02-01", headers=login())
     assert response.status_code == 422
+
+
+def test_device_dashboard_uses_simulated_database_and_enforces_region_scope(client, login):
+    with SessionLocal() as db:
+        generate_simulated_data(db, session_count=1_000)
+    analyst = client.get(
+        "/api/v1/dashboard/devices?start=2026-06-01&end_exclusive=2026-07-01",
+        headers=login(),
+    )
+    assert analyst.status_code == 200
+    body = analyst.json()
+    assert body["rows"]
+    assert body["totals"]["device_count"] == 120
+    assert body["metadata"]["data_classification"] == "simulated"
+    assert body["metadata"]["source"] == "platform_database"
+    assert body["metadata"]["analysis_run_id"].startswith("DASH-")
+    assert all(row["recent_events"] for row in body["rows"])
+
+    regional = client.get(
+        "/api/v1/dashboard/devices?start=2026-06-01&end_exclusive=2026-07-01",
+        headers=login("regional", "AlphaRegion!2026"),
+    )
+    assert regional.status_code == 200
+    regional_body = regional.json()
+    assert regional_body["totals"]["device_count"] == 40
+    assert {row["region_id"] for row in regional_body["rows"]} == {"R01"}
