@@ -75,6 +75,7 @@ textarea {
 .station-page :where(p, button, span, small, td, th, label, select, input),
 .margin-page :where(p, button, span, small, td, th, label, select, input),
 .report-workspace :where(p, button, span, small, td, th, label, select, input, textarea),
+.revenue-page :where(p, button, span, small, td, th, label, select, input),
 .ai-analysis-page :where(p, button, span, small, li, dt, dd, label, input, textarea) {
   letter-spacing: 0;
 }
@@ -82,6 +83,7 @@ textarea {
 .station-page :where(.matrix-scale span, .station-trend-chart span),
 .margin-page :where(.margin-trend text, .margin-trend > div, .cost-structure li),
 .report-workspace :where(.report-trend-axis span, .report-truth),
+.revenue-page :where(.revenue-trend-axis span, .heat-hours span, .heat-row b, .revenue-truth),
 .ai-analysis-page :where(.chat-evidence-panel p, .chat-evidence-panel small, .chat-evidence-panel li, .chat-evidence-panel code, .chat-evidence-panel summary, .chat-history-list small) {
   font-size: var(--ui-font-dense) !important;
 }
