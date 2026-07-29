@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from app.models.auth import AuditLog, User
 from app.models.business import DataGenerationRun, Station
+from app.models.business import MetricDefinition
 from app.services.metric_catalog import METRICS
 from app.services.metrics import MetricService
 
@@ -46,6 +47,39 @@ class DashboardService:
         metrics = MetricService(self.db).compute(list(METRICS), start, end_exclusive, self.station_ids)
         self._audit("dashboard.summary", run_id, {"start": start.isoformat(), "end_exclusive": end_exclusive.isoformat(), "station_count": len(self.station_ids)})
         return {"metrics": metrics, "metadata": self._metadata(start, end_exclusive, run_id)}
+
+    def metric_catalog(self, start: date, end_exclusive: date) -> dict:
+        run_id = f"DASH-{uuid4()}"
+        definitions = self.db.scalars(
+            select(MetricDefinition).order_by(MetricDefinition.metric_id)
+        ).all()
+        rows = [{
+            "metric_id": definition.metric_id,
+            "display_name": definition.display_name,
+            "unit": definition.unit,
+            "version": definition.version,
+            "status": definition.status,
+            "formula": definition.formula,
+            "allowed_dimensions": json.loads(definition.allowed_dimensions_json),
+        } for definition in definitions]
+        self._audit(
+            "dashboard.metric_catalog",
+            run_id,
+            {
+                "start": start.isoformat(),
+                "end_exclusive": end_exclusive.isoformat(),
+                "metric_count": len(rows),
+            },
+        )
+        return {
+            "rows": rows,
+            "scenario": {
+                "scenario_id": "charging_ops",
+                "display_name": "\u5145\u7535\u8fd0\u8425",
+                "status": "approved_for_implementation",
+            },
+            "metadata": self._metadata(start, end_exclusive, run_id),
+        }
 
     def station_analysis(self, metric_ids: list[str], start: date, end_exclusive: date, limit: int = 30) -> dict:
         run_id = f"DASH-{uuid4()}"

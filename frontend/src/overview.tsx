@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { formatMetric, metricNames } from './format'
+import { MetricsPage } from './metrics'
 import { RevenuePage } from './revenue'
 import './overview.css'
 
@@ -1079,7 +1080,7 @@ function Sidebar({ active, navigate }: { active: ViewId; navigate: (id: ViewId) 
 }
 
 function ProductHeader({ active, start, end, setStart, setEnd, logout }: { active: ViewId; start: string; end: string; setStart: (v: string) => void; setEnd: (v: string) => void; logout: () => void }) {
-  const showSearchAndDate = active === 'overview' || active === 'revenue' || active === 'margin' || active === 'stations' || active === 'reports'
+  const showSearchAndDate = active === 'overview' || active === 'revenue' || active === 'margin' || active === 'stations' || active === 'reports' || active === 'metrics'
   const searchPlaceholder = active === 'revenue' ? '搜索场站、订单、区域、城市…' : active === 'stations' ? '搜索场站名称、区域、城市…' : '搜索场站、指标、报告、问题…'
   return <header className={`product-header${active === 'chat' ? ' chat-header' : ''}`}><div className="page-title"><h1>{titles[active]}</h1>{(active === 'overview' || active === 'margin') && <span>当前场景：<b>charging_ops</b>｜充电运营</span>}{active === 'dashboard' && <small>数据范围：{start} 至 {endInclusive(end)}　｜　模拟数据　｜　来源：平台数据库</small>}</div>{showSearchAndDate && <><label className="search"><i>⌕</i><input aria-label="全局搜索" placeholder={searchPlaceholder} />{active === 'overview' && <kbd>⌘ K</kbd>}</label><div className="date-range"><input aria-label="开始日期" type="date" value={start} onChange={e => setStart(e.target.value)} /><span>～</span><input aria-label="结束日期" type="date" value={endInclusive(end)} onChange={e => { const next = new Date(`${e.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></>}{active === 'chat' && <><button className="chat-model">分析模式　确定性链路⌄</button><div className="chat-period">2026-06-01　~　2026-06-30　▣</div></>}<button className="organization">{active === 'chat' ? '国内新能源集团' : '国际新能源集团'}　⌄</button><button className="bell" aria-label="通知">♧<b>12</b></button><button className="profile" onClick={logout}><span>张</span><div><b>张伟</b><small>运营分析师</small></div><i>⌄</i></button></header>
 }
@@ -1118,10 +1119,11 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
   else if (active === 'chat') content = <ChatPage token={token} />
   else if (active === 'alerts') content = <DiagnosticsPage token={token} start={start} end={end} />
   else if (active === 'reports') content = <ReportPage token={token} start={start} end={end} summary={summary} stations={stations} trend={trend} />
-  else if (active === 'mapping' || active === 'metrics') content = <BoundaryPage active={active} summary={summary} />
+  else if (active === 'mapping') content = <BoundaryPage active={active} summary={summary} />
+  else if (active === 'metrics') content = <MetricsPage token={token} summary={summary} start={start} end={end} />
   else content = <>{error && <div className="notice error">{error}</div>}<DetailPage active={active} summary={summary} stations={stations} trend={trend} /></>
-  const shellMode = active === 'revenue' ? ' revenue-mode' : active === 'margin' ? ' margin-mode' : active === 'stations' ? ' station-mode' : ''
-  const mainMode = active === 'revenue' ? ' revenue-main' : active === 'margin' ? ' margin-main' : active === 'stations' ? ' station-main' : ''
+  const shellMode = active === 'revenue' ? ' revenue-mode' : active === 'margin' ? ' margin-mode' : active === 'stations' ? ' station-mode' : active === 'metrics' ? ' metrics-mode' : ''
+  const mainMode = active === 'revenue' ? ' revenue-main' : active === 'margin' ? ' margin-main' : active === 'stations' ? ' station-main' : active === 'metrics' ? ' metrics-main' : ''
   return <div className={`product-shell${shellMode}`}><Sidebar active={active} navigate={setActive} /><div className="workspace"><ProductHeader active={active} start={start} end={end} setStart={setStart} setEnd={setEnd} logout={logout} /><main className={`product-main${mainMode}`}>{content}</main></div></div>
 }
 

@@ -25,6 +25,11 @@ def summary(start: date, end_exclusive: date, db: Session = Depends(get_db), use
     return DashboardService(db, user).summary(start, end_exclusive)
 
 
+@router.get("/metric-catalog")
+def metric_catalog(start: date, end_exclusive: date, db: Session = Depends(get_db), user: User = Depends(current_user)) -> dict:
+    validate_range(start, end_exclusive)
+    return DashboardService(db, user).metric_catalog(start, end_exclusive)
+
 @router.get("/stations")
 def stations(start: date, end_exclusive: date, metrics: str = Query("charging_revenue,gross_profit,gross_margin,charging_volume_kwh,station_utilization_rate,device_fault_rate"), limit: int = Query(30, ge=1, le=30), db: Session = Depends(get_db), user: User = Depends(current_user)) -> dict:
     validate_range(start, end_exclusive)
