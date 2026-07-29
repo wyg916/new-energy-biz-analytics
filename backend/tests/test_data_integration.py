@@ -11,7 +11,8 @@ from app.core.database import SessionLocal
 from app.data.seed import generate_simulated_data
 from app.models.auth import AuditLog, User
 from app.models.integration import (
-    DataIngestionRun, DataSetDefinition, DataSourceConnection, IngestedStationPreview,
+    DataIngestionQualityCheck, DataIngestionReview, DataIngestionRun,
+    DataSetDefinition, DataSourceConnection, IngestedStationPreview,
 )
 from app.services.data_integration import DataIntegrationError, DataIntegrationService
 
@@ -50,6 +51,98 @@ def test_overview_and_platform_ingestion_are_database_backed(client, login):
         assert audit and "password" not in audit.detail_json.lower()
 
 
+def test_quality_approval_and_publication_are_database_backed_and_audited(client, login):
+    with SessionLocal() as db:
+        generate_simulated_data(db, session_count=1_000)
+    headers = login()
+    run = client.post(
+        "/api/v1/data-integration/datasets/station-operations/run",
+        json={"start": "2026-01-01", "end_exclusive": "2026-07-01", "limit": 5},
+        headers=headers,
+    )
+    run_id = run.json()["run_id"]
+
+    quality = client.post(
+        f"/api/v1/data-integration/datasets/station-operations/runs/{run_id}/quality",
+        headers=headers,
+    )
+    assert quality.status_code == 200
+    assert quality.json()["quality_status"] == "passed"
+    assert quality.json()["workflow_status"] == "quality_passed"
+    assert len(quality.json()["checks"]) == 8
+
+    submitted = client.post(
+        f"/api/v1/data-integration/datasets/station-operations/runs/{run_id}/submit",
+        headers=headers,
+    )
+    assert submitted.status_code == 200
+    assert submitted.json()["workflow_status"] == "pending_approval"
+
+    approved = client.post(
+        f"/api/v1/data-integration/datasets/station-operations/runs/{run_id}/review",
+        json={"action": "approve"},
+        headers=headers,
+    )
+    assert approved.status_code == 200
+    assert approved.json()["workflow_status"] == "approved"
+
+    published = client.post(
+        f"/api/v1/data-integration/datasets/station-operations/runs/{run_id}/publish",
+        headers=headers,
+    )
+    assert published.status_code == 200
+    assert published.json()["workflow_status"] == "published"
+    assert published.json()["release_version"] == "v1.0"
+
+    overview = client.get(
+        "/api/v1/data-integration/overview?start=2026-01-01&end_exclusive=2026-07-01",
+        headers=headers,
+    ).json()
+    assert overview["dataset"]["status"] == "published"
+    assert overview["workflow"]["workflow_status"] == "published"
+    assert overview["workflow"]["summary"]["rules_passed"] == 8
+    with SessionLocal() as db:
+        assert len(db.scalars(select(DataIngestionQualityCheck)).all()) == 8
+        review = db.scalar(select(DataIngestionReview))
+        assert review and review.published_by is not None and review.release_version == "v1.0"
+        actions = set(db.scalars(select(AuditLog.action)).all())
+        assert {
+            "data_ingestion.quality", "data_ingestion.submit",
+            "data_ingestion.review", "data_ingestion.publish",
+        }.issubset(actions)
+
+
+def test_quality_failure_and_invalid_publication_fail_closed(client, login):
+    with SessionLocal() as db:
+        generate_simulated_data(db, session_count=1_000)
+    headers = login()
+    run_id = client.post(
+        "/api/v1/data-integration/datasets/station-operations/run",
+        json={"start": "2026-01-01", "end_exclusive": "2026-07-01", "limit": 5},
+        headers=headers,
+    ).json()["run_id"]
+    with SessionLocal() as db:
+        row = db.scalar(select(IngestedStationPreview).order_by(IngestedStationPreview.id))
+        row.charging_revenue = -1
+        db.commit()
+
+    quality = client.post(
+        f"/api/v1/data-integration/datasets/station-operations/runs/{run_id}/quality",
+        headers=headers,
+    )
+    assert quality.status_code == 200
+    assert quality.json()["quality_status"] == "failed"
+    assert quality.json()["summary"]["failures"] == ["DQI-005"]
+    assert client.post(
+        f"/api/v1/data-integration/datasets/station-operations/runs/{run_id}/submit",
+        headers=headers,
+    ).status_code == 409
+    assert client.post(
+        f"/api/v1/data-integration/datasets/station-operations/runs/{run_id}/publish",
+        headers=headers,
+    ).status_code == 409
+
+
 def test_connection_test_is_audited_and_credentials_are_never_persisted(client, login):
     headers = login()
     response = client.post("/api/v1/data-integration/sources/platform-postgresql/test", json={}, headers=headers)
@@ -75,6 +168,14 @@ def test_regional_user_cannot_test_or_run_connectors(client, login):
     assert client.post(
         "/api/v1/data-integration/datasets/station-operations/run",
         json={"start": "2026-01-01", "end_exclusive": "2026-07-01"},
+        headers=headers,
+    ).status_code == 403
+    assert client.post(
+        "/api/v1/data-integration/datasets/station-operations/runs/ING-UNKNOWN/quality",
+        headers=headers,
+    ).status_code == 403
+    assert client.post(
+        "/api/v1/data-integration/datasets/station-operations/runs/ING-UNKNOWN/publish",
         headers=headers,
     ).status_code == 403
 

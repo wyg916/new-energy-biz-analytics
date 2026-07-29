@@ -1,5 +1,6 @@
 import json
 from datetime import date
+from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field, SecretStr
@@ -26,8 +27,20 @@ class IngestionRequest(BaseModel):
     limit: int = Field(default=100, ge=1, le=1000)
 
 
+class ReviewDecisionRequest(BaseModel):
+    action: Literal["approve", "reject"]
+    reason: str | None = Field(default=None, max_length=500)
+
+
 def _http_error(exc: DataIntegrationError) -> HTTPException:
-    status_code = 404 if exc.code.endswith("NOT_FOUND") else 422
+    if exc.code == "FORBIDDEN":
+        status_code = 403
+    elif exc.code.endswith("NOT_FOUND"):
+        status_code = 404
+    elif exc.code in {"WORKFLOW_INVALID_STATE", "STALE_INGESTION_RUN"}:
+        status_code = 409
+    else:
+        status_code = 422
     return HTTPException(status_code=status_code, detail={"code": exc.code, "message": exc.message})
 
 
@@ -104,4 +117,82 @@ def run_ingestion(
         return result
     except DataIntegrationError as exc:
         _audit(db, user, "data_ingestion.run", dataset_id, "failed", {"error_code": exc.code})
+        raise _http_error(exc) from exc
+
+
+@router.post("/datasets/{dataset_id}/runs/{run_id}/quality")
+def validate_ingestion(
+    dataset_id: str,
+    run_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_roles("analyst_admin")),
+) -> dict:
+    try:
+        result = DataIntegrationService(db, user).validate_ingestion(dataset_id, run_id)
+        _audit(db, user, "data_ingestion.quality", run_id, result["quality_status"], {
+            "dataset_id": dataset_id,
+            "rules_checked": result["summary"]["rules_checked"],
+            "failures": result["summary"]["failures"],
+        })
+        return result
+    except DataIntegrationError as exc:
+        _audit(db, user, "data_ingestion.quality", run_id, "failed", {"dataset_id": dataset_id, "error_code": exc.code})
+        raise _http_error(exc) from exc
+
+
+@router.post("/datasets/{dataset_id}/runs/{run_id}/submit")
+def submit_ingestion(
+    dataset_id: str,
+    run_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_roles("analyst_admin")),
+) -> dict:
+    try:
+        result = DataIntegrationService(db, user).submit_ingestion(dataset_id, run_id)
+        _audit(db, user, "data_ingestion.submit", run_id, "pending_approval", {"dataset_id": dataset_id})
+        return result
+    except DataIntegrationError as exc:
+        _audit(db, user, "data_ingestion.submit", run_id, "failed", {"dataset_id": dataset_id, "error_code": exc.code})
+        raise _http_error(exc) from exc
+
+
+@router.post("/datasets/{dataset_id}/runs/{run_id}/review")
+def review_ingestion(
+    dataset_id: str,
+    run_id: str,
+    payload: ReviewDecisionRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_roles("analyst_admin")),
+) -> dict:
+    try:
+        result = DataIntegrationService(db, user).decide_ingestion(
+            dataset_id, run_id, payload.action, payload.reason,
+        )
+        _audit(db, user, "data_ingestion.review", run_id, result["workflow_status"], {
+            "dataset_id": dataset_id,
+            "action": payload.action,
+            "reason_supplied": bool(payload.reason),
+        })
+        return result
+    except DataIntegrationError as exc:
+        _audit(db, user, "data_ingestion.review", run_id, "failed", {"dataset_id": dataset_id, "error_code": exc.code})
+        raise _http_error(exc) from exc
+
+
+@router.post("/datasets/{dataset_id}/runs/{run_id}/publish")
+def publish_ingestion(
+    dataset_id: str,
+    run_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_roles("analyst_admin")),
+) -> dict:
+    try:
+        result = DataIntegrationService(db, user).publish_ingestion(dataset_id, run_id)
+        _audit(db, user, "data_ingestion.publish", run_id, "published", {
+            "dataset_id": dataset_id,
+            "release_version": result["release_version"],
+        })
+        return result
+    except DataIntegrationError as exc:
+        _audit(db, user, "data_ingestion.publish", run_id, "failed", {"dataset_id": dataset_id, "error_code": exc.code})
         raise _http_error(exc) from exc
