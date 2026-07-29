@@ -55,7 +55,7 @@ try:
     schema_engine = create_engine(schema_url, pool_pre_ping=True)
     with schema_engine.connect() as connection:
         revision = connection.scalar(text("SELECT version_num FROM alembic_version"))
-    result["upgrade"] = revision == "0003"
+    result["upgrade"] = revision == "0004"
 
     command.downgrade(config, "base")
     remaining = inspect(schema_engine).get_table_names(schema=SCHEMA)
@@ -64,7 +64,7 @@ try:
     command.upgrade(config, "head")
     with schema_engine.connect() as connection:
         revision = connection.scalar(text("SELECT version_num FROM alembic_version"))
-    result["reupgrade"] = revision == "0003"
+    result["reupgrade"] = revision == "0004"
 finally:
     os.environ["DATABASE_URL"] = original_url
     if schema_engine is not None:

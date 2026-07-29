@@ -19,6 +19,8 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:5173,http://localhost:8080"
     auto_bootstrap_demo_users: bool = True
     simulated_data_only: bool = True
+    data_import_root: str = "data/imports"
+    api_source_allowlist: str = "localhost,127.0.0.1,host.docker.internal"
 
     @model_validator(mode="after")
     def fail_closed_in_production(self) -> "Settings":
@@ -43,6 +45,11 @@ class Settings(BaseSettings):
     def ensure_local_directories(self) -> None:
         if self.database_url.startswith("sqlite"):
             Path("data").mkdir(parents=True, exist_ok=True)
+        Path(self.data_import_root).mkdir(parents=True, exist_ok=True)
+
+    @property
+    def api_source_allowed_hosts(self) -> set[str]:
+        return {item.strip().lower() for item in self.api_source_allowlist.split(",") if item.strip()}
 
 
 @lru_cache

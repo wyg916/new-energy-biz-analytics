@@ -16,9 +16,12 @@ services:
     healthcheck: {test: ["CMD", "redis-cli", "ping"], interval: 5s, timeout: 3s, retries: 20}
   api:
     build: ./backend
+    volumes: [alpha_imports:/app/data/imports]
     environment:
       APP_ENV: development
       DATABASE_URL: postgresql+psycopg://alpha:${POSTGRES_PASSWORD:-alpha-local-only}@db:5432/renewable_alpha
+      CHATBI_PG_PASSWORD: ${CHATBI_PG_PASSWORD:-}
+      CHATBI_MYSQL_PASSWORD: ${CHATBI_MYSQL_PASSWORD:-}
       REDIS_URL: redis://redis:6379/0
       SECRET_KEY: ${SECRET_KEY:-local-alpha-change-me}
       AUTO_BOOTSTRAP_DEMO_USERS: "true"
@@ -35,3 +38,4 @@ services:
 volumes:
   alpha_pgdata:
   alpha_redisdata:
+  alpha_imports:

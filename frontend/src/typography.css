@@ -1,0 +1,148 @@
+:root {
+  --ui-font-family: "Noto Sans SC", "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+  --ui-font-base: clamp(11px, .68vw, 13px);
+  --ui-font-small: clamp(10.5px, .61vw, 12px);
+  --ui-font-dense: clamp(10px, .56vw, 11px);
+  --ui-font-h1: clamp(22px, 1.35vw, 26px);
+  --ui-font-h2: clamp(15px, .9vw, 17px);
+  --ui-font-h3: clamp(13px, .76vw, 15px);
+}
+
+body,
+button,
+input,
+select,
+textarea {
+  font-family: var(--ui-font-family);
+}
+
+.product-shell,
+.product-login {
+  font-family: var(--ui-font-family);
+  font-size: var(--ui-font-base);
+  line-height: 1.4;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+.product-shell :where(p, li, dt, dd, label, button, input, select, textarea, span) {
+  font-size: var(--ui-font-base) !important;
+}
+
+.product-shell :where(small, em, time, kbd, code, summary, th, td) {
+  font-size: var(--ui-font-small) !important;
+}
+
+.product-shell :where(h1, .page-title h1) {
+  font-size: var(--ui-font-h1) !important;
+  line-height: 1.2;
+}
+
+.product-shell :where(h2, .station-panel h2, .report-workspace h2) {
+  font-size: var(--ui-font-h2) !important;
+  line-height: 1.3;
+}
+
+.product-shell :where(h3, .station-detail-body h3, .report-workspace h3) {
+  font-size: var(--ui-font-h3) !important;
+  line-height: 1.35;
+}
+
+.product-sidebar nav button,
+.product-sidebar nav button span,
+.product-sidebar .collapse,
+.product-header button,
+.product-header input {
+  font-size: var(--ui-font-base) !important;
+}
+
+.product-sidebar nav h2,
+.page-title > span,
+.product-header small,
+.truth-row,
+.evidence,
+.station-truth,
+.margin-truth,
+.report-truth {
+  font-size: var(--ui-font-small) !important;
+}
+
+.overview-page :where(p, li, button, span, small),
+.workbench-page :where(p, li, button, span, small, td, th),
+.detail-page :where(p, button, span, small, td, th),
+.boundary-page :where(p, button, span, small),
+.diagnostics-page :where(p, button, span, small, td, th, dt, dd),
+.station-page :where(p, button, span, small, td, th, label, select, input),
+.margin-page :where(p, button, span, small, td, th, label, select, input),
+.report-workspace :where(p, button, span, small, td, th, label, select, input, textarea),
+.revenue-page :where(p, button, span, small, td, th, label, select, input),
+.ai-analysis-page :where(p, button, span, small, li, dt, dd, label, input, textarea) {
+  letter-spacing: 0;
+}
+
+.station-page :where(.matrix-scale span, .station-trend-chart span),
+.margin-page :where(.margin-trend text, .margin-trend > div, .cost-structure li),
+.report-workspace :where(.report-trend-axis span, .report-truth),
+.revenue-page :where(.revenue-trend-axis span, .heat-hours span, .heat-row b, .revenue-truth),
+.ai-analysis-page :where(.chat-evidence-panel p, .chat-evidence-panel small, .chat-evidence-panel li, .chat-evidence-panel code, .chat-evidence-panel summary, .chat-history-list small) {
+  font-size: var(--ui-font-dense) !important;
+}
+
+.station-kpis span,
+.workbench-kpis span,
+.detail-summary span,
+.report-kpis span {
+  font-size: var(--ui-font-small) !important;
+}
+
+.station-kpis strong,
+.detail-summary b {
+  letter-spacing: 0;
+}
+
+@media (min-width: 1081px) {
+  .station-mode .station-page {
+    padding-bottom: 22px;
+    grid-template-rows: 44px 96px minmax(300px, 1.25fr) minmax(260px, 1fr);
+  }
+
+  .station-mode .station-filter-bar {
+    padding-top: 3px;
+    grid-template-rows: 36px;
+  }
+
+  .station-mode .station-truth {
+    position: fixed;
+    z-index: 20;
+    right: 0;
+    bottom: 0;
+    left: 245px;
+    height: 22px;
+    padding: 0 14px;
+    justify-content: center;
+    border-top: 1px solid #e2e8ef;
+    background: rgba(248, 250, 252, .97);
+    color: #718096;
+    font-size: var(--ui-font-dense) !important;
+    box-shadow: 0 -1px 4px rgba(18, 33, 63, .03);
+  }
+
+  .station-mode .station-truth b {
+    padding: 0;
+    background: transparent;
+    color: #596a80;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 1320px) and (min-width: 1081px) {
+  .station-mode .station-truth {
+    left: 228px;
+  }
+}
+
+@media (max-height: 820px) and (min-width: 1081px) {
+  .station-mode .station-page {
+    grid-template-rows: 40px 86px minmax(270px, 1.2fr) minmax(235px, 1fr);
+  }
+}
