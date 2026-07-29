@@ -7,6 +7,7 @@ from app.data.quality import validate_published_batch
 from app.data.seed import generate_simulated_data
 from app.models.business import ChargingSession, MetricDefinition
 from app.services.metric_catalog import METRICS
+from app.scenarios.charging_ops.manifest import MANIFEST, MANIFEST_CHECKSUM
 from app.services.metrics import MetricService
 
 
@@ -24,6 +25,8 @@ def test_fixed_seed_data_metrics_and_quality():
         assert validate_published_batch(db)["status"] == "passed"
         assert db.scalar(select(ChargingSession.session_id).order_by(ChargingSession.session_id)) == "CS-20260722-000000"
         assert len(db.scalars(select(MetricDefinition)).all()) == 15
+        assert len(MANIFEST["metric_ids"]) == 15
+        assert len(MANIFEST_CHECKSUM) == 64
 
         values = MetricService(db).compute(list(METRICS), date(2025, 1, 1), date(2026, 7, 1))
         assert set(values) == set(METRICS)

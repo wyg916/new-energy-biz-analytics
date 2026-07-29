@@ -22,8 +22,12 @@ from app.models.auth import User
 from app.models.integration import (
     DataIngestionQualityCheck, DataIngestionReview, DataIngestionRun,
     DataSetDefinition, DataSourceConnection, IngestedStationPreview,
+    PublishedStationSnapshot,
 )
+from app.scenarios.charging_ops.manifest import METRICS, SCENARIO_ID, VERSION
+from app.scenarios.registry import published_charging_ops
 from app.services.dashboard import DashboardService
+from app.services.metrics import MetricService
 
 IDENTIFIER = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 STANDARD_FIELDS = {
@@ -224,7 +228,10 @@ class DataIntegrationService:
             run.source_checksum = checksum
             run.status = "completed"
             run.finished_at = _utc_now()
-            run.detail_json = json.dumps({"batch_id": batch_id, "target_table": dataset.target_table})
+            run.detail_json = json.dumps({
+                "batch_id": batch_id, "target_table": dataset.target_table,
+                "start": start.isoformat(), "end_exclusive": end_exclusive.isoformat(),
+            })
             dataset.status = "validated"
             dataset.updated_at = _utc_now()
             self.db.commit()
@@ -391,6 +398,56 @@ class DataIntegrationService:
         review.updated_at = now
         dataset.status = "published"
         dataset.updated_at = now
+        scenario = published_charging_ops(self.db)
+        if scenario is None or not scenario.source_batch_id:
+            raise DataIntegrationError("SCENARIO_NOT_PUBLISHED", "charging_ops 场景包尚未绑定已发布事实批次")
+        detail = json.loads(run.detail_json or "{}")
+        if not detail.get("start") or not detail.get("end_exclusive"):
+            raise DataIntegrationError("INGESTION_PERIOD_MISSING", "接入批次缺少不可变快照所需的数据期间")
+        period_start = date.fromisoformat(detail["start"])
+        period_end = date.fromisoformat(detail["end_exclusive"])
+        preview_rows = list(self.db.scalars(
+            select(IngestedStationPreview).where(
+                IngestedStationPreview.dataset_id == dataset.dataset_id,
+                IngestedStationPreview.batch_id == detail.get("batch_id"),
+            ).order_by(IngestedStationPreview.id)
+        ))
+        metric_service = MetricService(self.db)
+        snapshot_digests: list[str] = []
+        for row in preview_rows:
+            if source := self.db.get(DataSourceConnection, run.source_id):
+                if source.source_id == "platform-postgresql":
+                    metrics = metric_service.compute(list(METRICS), period_start, period_end, [row.station_id])
+                else:
+                    metrics = {
+                        "charging_revenue": float(row.charging_revenue) if row.charging_revenue is not None else None,
+                        "charging_volume_kwh": float(row.charging_volume_kwh) if row.charging_volume_kwh is not None else None,
+                        "gross_profit": float(row.gross_profit) if row.gross_profit is not None else None,
+                        "gross_margin": float(row.gross_margin) if row.gross_margin is not None else None,
+                    }
+            payload = {
+                "station_id": row.station_id, "station_name": row.station_name,
+                "region_id": row.region_id, "city_id": row.city_id, "metrics": metrics,
+            }
+            digest = hashlib.sha256(json.dumps(payload, ensure_ascii=False, sort_keys=True).encode()).hexdigest()
+            snapshot_digests.append(digest)
+            self.db.add(PublishedStationSnapshot(
+                review_id=review.review_id, dataset_id=dataset.dataset_id, run_id=run.run_id,
+                scenario_id=SCENARIO_ID, scenario_version=VERSION,
+                release_version=review.release_version, source_record_id=row.source_record_id,
+                station_id=row.station_id, station_name=row.station_name,
+                region_id=row.region_id, city_id=row.city_id,
+                metrics_json=json.dumps(metrics, ensure_ascii=False, sort_keys=True),
+                period_start=period_start, period_end_exclusive=period_end,
+                data_classification=dataset.data_classification, snapshot_checksum=digest,
+                published_at=now,
+            ))
+        summary = json.loads(review.quality_summary_json or "{}")
+        summary["snapshot_rows"] = len(preview_rows)
+        summary["snapshot_checksum"] = hashlib.sha256("".join(snapshot_digests).encode()).hexdigest()
+        summary["scenario_version"] = VERSION
+        summary["source_batch_id"] = scenario.source_batch_id
+        review.quality_summary_json = json.dumps(summary, ensure_ascii=False)
         self.db.commit()
         return self._review_payload(review, self._checks(run.run_id))
 

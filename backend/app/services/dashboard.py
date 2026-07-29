@@ -8,6 +8,9 @@ from sqlalchemy.orm import Session
 from app.models.auth import AuditLog, User
 from app.models.business import ChargingSession, DataGenerationRun, Device, DeviceStatusEvent, Station
 from app.models.business import MetricDefinition
+from app.models.integration import PublishedStationSnapshot
+from app.scenarios.charging_ops.manifest import MANIFEST_CHECKSUM, VERSION
+from app.scenarios.registry import published_charging_ops
 from app.services.metric_catalog import METRICS
 from app.services.metrics import MetricService
 
@@ -28,13 +31,17 @@ class DashboardService:
         self.station_ids = allowed_station_ids(db, user)
 
     def _metadata(self, start: date, end_exclusive: date, analysis_run_id: str) -> dict:
-        batch = self.db.scalar(select(DataGenerationRun).where(DataGenerationRun.quality_status == "passed").order_by(DataGenerationRun.finished_at.desc()))
+        scenario = published_charging_ops(self.db)
+        batch = self.db.get(DataGenerationRun, scenario.source_batch_id) if scenario and scenario.source_batch_id else None
         return {
             "data_classification": "simulated",
             "data_time_range": {"start": start.isoformat(), "end_exclusive": end_exclusive.isoformat()},
             "source": "platform_database",
             "batch_id": batch.batch_id if batch else None,
             "analysis_run_id": analysis_run_id,
+            "scenario_id": "charging_ops",
+            "scenario_version": scenario.version if scenario else None,
+            "scenario_manifest_checksum": scenario.manifest_checksum if scenario else None,
             "generated_at": datetime.now(timezone.utc).isoformat(),
         }
 
@@ -76,7 +83,9 @@ class DashboardService:
             "scenario": {
                 "scenario_id": "charging_ops",
                 "display_name": "充电运营",
-                "status": "approved_for_implementation",
+                "version": VERSION,
+                "manifest_checksum": MANIFEST_CHECKSUM,
+                "status": "published" if published_charging_ops(self.db) else "installed",
             },
             "metadata": self._metadata(start, end_exclusive, run_id),
         }
@@ -84,6 +93,35 @@ class DashboardService:
     def station_analysis(self, metric_ids: list[str], start: date, end_exclusive: date, limit: int = 30) -> dict:
         run_id = f"DASH-{uuid4()}"
         stations = self.db.scalars(select(Station).where(Station.station_id.in_(self.station_ids)).order_by(Station.station_id)).all()
+        station_map = {station.station_id: station for station in stations}
+        snapshots = list(self.db.scalars(
+            select(PublishedStationSnapshot).where(
+                PublishedStationSnapshot.scenario_id == "charging_ops",
+                PublishedStationSnapshot.period_start == start,
+                PublishedStationSnapshot.period_end_exclusive == end_exclusive,
+                PublishedStationSnapshot.station_id.in_(self.station_ids),
+            ).order_by(PublishedStationSnapshot.published_at.desc(), PublishedStationSnapshot.station_id)
+        ))
+        if snapshots:
+            latest_version = snapshots[0].release_version
+            snapshots = [row for row in snapshots if row.release_version == latest_version]
+            payloads = [(row, json.loads(row.metrics_json)) for row in snapshots]
+            if {row.station_id for row, _ in payloads} == set(self.station_ids) and all(set(metric_ids) <= values.keys() for _, values in payloads):
+                rows = [{
+                    "station_id": row.station_id, "station_name": row.station_name,
+                    "region_id": row.region_id, "city_id": row.city_id,
+                    "station_type": station_map[row.station_id].station_type,
+                    "metrics": {metric_id: values[metric_id] for metric_id in metric_ids},
+                } for row, values in payloads]
+                primary = metric_ids[0]
+                rows.sort(key=lambda item: (item["metrics"][primary] is not None, item["metrics"][primary] or 0), reverse=True)
+                self._audit("dashboard.station_analysis", run_id, {
+                    "metrics": metric_ids, "start": start.isoformat(), "end_exclusive": end_exclusive.isoformat(),
+                    "query_source": "published_station_snapshot", "release_version": latest_version,
+                })
+                metadata = self._metadata(start, end_exclusive, run_id)
+                metadata.update({"query_source": "published_station_snapshot", "dataset_release_version": latest_version})
+                return {"rows": rows[:limit], "metadata": metadata}
         rows = []
         metric_service = MetricService(self.db)
         for station in stations:

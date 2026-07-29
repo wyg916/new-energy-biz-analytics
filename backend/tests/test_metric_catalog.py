@@ -25,6 +25,10 @@ def test_metric_catalog_returns_published_semantic_layer_with_truth_metadata(cli
     assert charging_revenue["status"] == "approved_for_implementation"
     assert "station" in charging_revenue["allowed_dimensions"]
     assert body["scenario"]["scenario_id"] == "charging_ops"
+    assert body["scenario"]["version"] == "0.1.0"
+    assert body["scenario"]["status"] == "published"
+    assert len(body["scenario"]["manifest_checksum"]) == 64
+    assert body["metadata"]["scenario_version"] == "0.1.0"
     assert body["metadata"]["data_classification"] == "simulated"
     assert body["metadata"]["source"] == "platform_database"
     assert body["metadata"]["analysis_run_id"].startswith("DASH-")

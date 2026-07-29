@@ -10,6 +10,7 @@ from app.models.auth import AuditLog, User
 from app.models.business import DataGenerationRun, Station
 from app.services.dashboard import allowed_station_ids
 from app.services.metric_catalog import METRICS
+from app.scenarios.registry import published_charging_ops_batch
 from app.services.metrics import MetricService
 
 
@@ -29,7 +30,7 @@ class DiagnosticService:
         self.db = db; self.user = user; self.station_ids = allowed_station_ids(db, user)
 
     def _metadata(self, run_id: str, start: date, end: date, previous_start: date, previous_end: date) -> dict:
-        batch = self.db.scalar(select(DataGenerationRun).where(DataGenerationRun.quality_status == "passed").order_by(DataGenerationRun.finished_at.desc()))
+        batch = published_charging_ops_batch(self.db)
         return {"analysis_run_id": run_id, "data_classification": "simulated", "source": "platform_database", "batch_id": batch.batch_id if batch else None, "current_period": [start.isoformat(), end.isoformat()], "comparison_period": [previous_start.isoformat(), previous_end.isoformat()], "causality_boundary": "关联因素说明，不构成因果结论"}
 
     def _audit(self, run_id: str, action: str, detail: dict) -> None:

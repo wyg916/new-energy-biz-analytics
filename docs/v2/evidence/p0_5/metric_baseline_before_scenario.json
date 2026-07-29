@@ -1,0 +1,22 @@
+{
+  "batch_id": "SIM-20260722-v010-n300000",
+  "data_classification": "simulated",
+  "period": {"start": "2025-01-01", "end_exclusive": "2026-07-01"},
+  "metrics": {
+    "active_user_count": 10000,
+    "avg_order_energy_kwh": 29.824044,
+    "charging_revenue": 10560554.39,
+    "charging_volume_kwh": 8586014.2826,
+    "completed_order_count": 287889,
+    "cost_per_kwh": 0.796759,
+    "device_fault_rate": 0.02587,
+    "device_online_rate": 0.954342,
+    "energy_cost": 6397156.34,
+    "gross_margin": 0.352214,
+    "gross_profit": 3719574.14,
+    "revenue_per_kwh": 1.229972,
+    "service_fee_revenue": 2575886.56,
+    "station_utilization_rate": 0.08704,
+    "variable_operating_cost": 443823.91
+  }
+}

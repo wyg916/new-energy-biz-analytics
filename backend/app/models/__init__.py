@@ -7,6 +7,7 @@ from app.models.business import (
 from app.models.integration import (
     DataIngestionQualityCheck, DataIngestionReview, DataIngestionRun,
     DataSetDefinition, DataSourceConnection, IngestedStationPreview,
+    PublishedStationSnapshot, ScenarioPackageRelease,
 )
 
 __all__ = [
@@ -15,4 +16,5 @@ __all__ = [
     "MetricDefinition", "OperationExpense", "Region", "SessionState", "SimulatedUser", "Station",
     "DataIngestionQualityCheck", "DataIngestionReview", "DataIngestionRun",
     "DataSetDefinition", "DataSourceConnection", "IngestedStationPreview",
+    "PublishedStationSnapshot", "ScenarioPackageRelease",
 ]

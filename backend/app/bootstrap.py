@@ -6,6 +6,8 @@ from app.core.database import Base, SessionLocal, engine
 from app.core.security import hash_password
 from app.models.auth import User
 from app.models.integration import DataSetDefinition, DataSourceConnection
+from app.scenarios.charging_ops.manifest import MAPPING_FIELDS
+from app.scenarios.registry import install_charging_ops
 
 
 DEMO_USERS = (
@@ -13,18 +15,6 @@ DEMO_USERS = (
     ("regional", "AlphaRegion!2026", "区域运营经理", "regional_manager", "R01"),
     ("analyst", "AlphaAnalyst!2026", "数据分析师/管理员", "analyst_admin", None),
 )
-
-MAPPING_FIELDS = [
-    {"source": "station_id", "source_type": "varchar(50)", "label": "场站编码", "standard": "station_id", "target_type": "varchar(50)", "transform": "—", "unit": "—"},
-    {"source": "station_name", "source_type": "varchar(200)", "label": "场站名称", "standard": "station_name", "target_type": "varchar(200)", "transform": "—", "unit": "—"},
-    {"source": "region_id", "source_type": "varchar(50)", "label": "运营区域", "standard": "region_id", "target_type": "varchar(50)", "transform": "—", "unit": "—"},
-    {"source": "city_id", "source_type": "varchar(50)", "label": "所属城市", "standard": "city_id", "target_type": "varchar(50)", "transform": "—", "unit": "—"},
-    {"source": "charging_revenue", "source_type": "decimal(18,2)", "label": "充电收入", "standard": "charging_revenue", "target_type": "decimal(18,2)", "transform": "类型：decimal", "unit": "元"},
-    {"source": "charging_volume_kwh", "source_type": "decimal(18,3)", "label": "充电电量", "standard": "charging_volume_kwh", "target_type": "decimal(18,3)", "transform": "精度：3 位", "unit": "kWh"},
-    {"source": "gross_profit", "source_type": "decimal(18,2)", "label": "经营毛利", "standard": "gross_profit", "target_type": "decimal(18,2)", "transform": "类型：decimal", "unit": "元"},
-    {"source": "gross_margin", "source_type": "decimal(8,4)", "label": "毛利率", "standard": "gross_margin", "target_type": "decimal(8,4)", "transform": "比例：×100", "unit": "%"},
-]
-
 
 def bootstrap_demo_users() -> None:
     Base.metadata.create_all(bind=engine)
@@ -63,4 +53,5 @@ def bootstrap_demo_users() -> None:
                 data_classification="simulated",
                 status="validated",
             ))
+        install_charging_ops(db)
         db.commit()

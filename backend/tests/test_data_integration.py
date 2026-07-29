@@ -2,7 +2,9 @@ import json
 import threading
 from datetime import date
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 
+import pytest
 from openpyxl import Workbook
 from sqlalchemy import select
 
@@ -13,6 +15,7 @@ from app.models.auth import AuditLog, User
 from app.models.integration import (
     DataIngestionQualityCheck, DataIngestionReview, DataIngestionRun,
     DataSetDefinition, DataSourceConnection, IngestedStationPreview,
+    PublishedStationSnapshot, ScenarioPackageRelease,
 )
 from app.services.data_integration import DataIntegrationError, DataIntegrationService
 
@@ -57,7 +60,7 @@ def test_quality_approval_and_publication_are_database_backed_and_audited(client
     headers = login()
     run = client.post(
         "/api/v1/data-integration/datasets/station-operations/run",
-        json={"start": "2026-01-01", "end_exclusive": "2026-07-01", "limit": 5},
+        json={"start": "2026-01-01", "end_exclusive": "2026-07-01", "limit": 30},
         headers=headers,
     )
     run_id = run.json()["run_id"]
@@ -93,6 +96,15 @@ def test_quality_approval_and_publication_are_database_backed_and_audited(client
     assert published.status_code == 200
     assert published.json()["workflow_status"] == "published"
     assert published.json()["release_version"] == "v1.0"
+    assert published.json()["summary"]["snapshot_rows"] == 30
+
+    station_query = client.get(
+        "/api/v1/dashboard/stations?start=2026-01-01&end_exclusive=2026-07-01&metrics=charging_revenue,gross_profit&limit=30",
+        headers=headers,
+    )
+    assert station_query.status_code == 200
+    assert station_query.json()["metadata"]["query_source"] == "published_station_snapshot"
+    assert station_query.json()["metadata"]["dataset_release_version"] == "v1.0"
 
     overview = client.get(
         "/api/v1/data-integration/overview?start=2026-01-01&end_exclusive=2026-07-01",
@@ -103,13 +115,25 @@ def test_quality_approval_and_publication_are_database_backed_and_audited(client
     assert overview["workflow"]["summary"]["rules_passed"] == 8
     with SessionLocal() as db:
         assert len(db.scalars(select(DataIngestionQualityCheck)).all()) == 8
+        assert len(db.scalars(select(PublishedStationSnapshot)).all()) == 30
         review = db.scalar(select(DataIngestionReview))
         assert review and review.published_by is not None and review.release_version == "v1.0"
+        scenario = db.scalar(select(ScenarioPackageRelease))
+        assert scenario and scenario.status == "published" and scenario.source_batch_id.startswith("SIM-")
         actions = set(db.scalars(select(AuditLog.action)).all())
         assert {
             "data_ingestion.quality", "data_ingestion.submit",
             "data_ingestion.review", "data_ingestion.publish",
         }.issubset(actions)
+
+    client.post(
+        "/api/v1/data-integration/datasets/station-operations/run",
+        json={"start": "2026-01-01", "end_exclusive": "2026-07-01", "limit": 5},
+        headers=headers,
+    )
+    with SessionLocal() as db:
+        assert len(db.scalars(select(IngestedStationPreview)).all()) == 5
+        assert len(db.scalars(select(PublishedStationSnapshot)).all()) == 30
 
 
 def test_quality_failure_and_invalid_publication_fail_closed(client, login):
@@ -215,6 +239,37 @@ def test_excel_rows_are_parsed_then_persisted_in_database(client, tmp_path):
         stored = db.scalar(select(IngestedStationPreview).where(IngestedStationPreview.dataset_id == "excel-station-test"))
         assert stored and stored.station_id == "XL001"
         assert str(stored.charging_revenue) == "12680.50"
+
+
+@pytest.mark.parametrize("file_name,expected_station", [
+    ("station_operations_region_a.csv", "FILE-A-001"),
+    ("station_operations_region_b.csv", "FILE-B-001"),
+])
+def test_two_versioned_csv_samples_pass_connector_contract(client, file_name, expected_station):
+    sample_root = Path(__file__).parents[2] / "samples" / "data" / "charging_ops"
+    with SessionLocal() as db:
+        source = db.get(DataSourceConnection, "excel-import")
+        source.resource_locator = file_name
+        dataset_id = f"csv-{expected_station.lower()}"
+        db.add(DataSetDefinition(
+            dataset_id=dataset_id, source_id=source.source_id,
+            display_name=f"CSV 样例 {expected_station}", source_object=file_name,
+            target_table="ingested_station_preview", standard_schema="charging_ops",
+            mapping_json=json.dumps(MAPPING_FIELDS, ensure_ascii=False),
+            data_classification="simulated", status="draft",
+        ))
+        db.commit()
+        user = db.scalar(select(User).where(User.username == "analyst"))
+        service = DataIntegrationService(db, user)
+        service.settings.data_import_root = str(sample_root)
+        assert service.test_source(source.source_id)["details"]["row_count"] == 2
+        result = service.ingest_dataset(dataset_id, date(2026, 1, 1), date(2026, 7, 1), limit=10)
+        assert result["rows_written"] == 2
+        stored = db.scalar(select(IngestedStationPreview).where(
+            IngestedStationPreview.dataset_id == dataset_id,
+            IngestedStationPreview.station_id == expected_station,
+        ))
+        assert stored and stored.data_classification == "simulated"
 
 
 class _ApiHandler(BaseHTTPRequestHandler):
