@@ -2,5 +2,6 @@ node_modules
 dist
 playwright-report
 test-results
+.playwright-browsers
 e2e
 *.tsbuildinfo

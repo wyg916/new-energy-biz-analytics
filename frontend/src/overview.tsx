@@ -343,6 +343,172 @@ function DetailPage({ active, summary, stations, trend }: { active: ViewId; summ
   </div>
 }
 
+type ProfitDiagnostic = {
+  current: Record<string, number | null>
+  previous: Record<string, number | null>
+  bridge: Array<{ driver: string; contribution: number }>
+  reconciliation: { target_change: number; bridge_sum: number; residual: number }
+  metadata: Metadata & { causality_boundary?: string }
+}
+
+const marginDriverNames: Record<string, string> = {
+  charging_revenue_change: '收入变化',
+  energy_cost_change: '电费成本变化',
+  variable_operating_cost_change: '可变运营成本变化',
+}
+
+function MarginWaterfall({ diagnostic }: { diagnostic: ProfitDiagnostic | null }) {
+  if (!diagnostic) return <div className="margin-chart-loading">正在计算毛利变化贡献…</div>
+  const startValue = diagnostic.previous.gross_profit ?? 0
+  const endValue = diagnostic.current.gross_profit ?? 0
+  const values = [
+    { label: '上期毛利', value: startValue, total: true },
+    ...diagnostic.bridge.map(item => ({ label: marginDriverNames[item.driver] || item.driver, value: item.contribution, total: false })),
+    { label: '本期毛利', value: endValue, total: true },
+  ]
+  const max = Math.max(...values.map(item => Math.abs(item.value)), 1)
+  return <div className="margin-waterfall" role="img" aria-label="毛利桥接环比图">
+    {values.map((item, index) => {
+      const height = Math.max(Math.abs(item.value) / max * 68, 8)
+      const positive = item.total || item.value >= 0
+      return <div key={`${item.label}-${index}`}><b className={positive ? 'up' : 'down'}>{item.value >= 0 && !item.total ? '+' : ''}{money(item.value)}</b><span className={`${item.total ? 'total ' : ''}${positive ? 'positive' : 'negative'}`} style={{ height: `${height}%` }} /><small>{item.label}</small></div>
+    })}
+  </div>
+}
+
+function MarginTrend({ points }: { points: TrendPoint[] }) {
+  if (!points.length) return <div className="margin-chart-loading">正在加载度电成本趋势…</div>
+  const values = points.map(item => item.value ?? 0)
+  const max = Math.max(...values, 1)
+  const min = Math.min(...values)
+  const spread = max - min || 1
+  const coords = values.map((value, index) => `${index / Math.max(values.length - 1, 1) * 100},${83 - (value - min) / spread * 57}`).join(' ')
+  return <div className="margin-trend" role="img" aria-label="度电成本月度趋势">
+    <svg viewBox="0 0 100 90" preserveAspectRatio="none"><polygon points={`0,90 ${coords} 100,90`} /><polyline points={coords} />{values.map((value, index) => {
+      const x = index / Math.max(values.length - 1, 1) * 100
+      const y = 83 - (value - min) / spread * 57
+      return <circle key={`${points[index].period}-${index}`} cx={x} cy={y} r="1.2" />
+    })}</svg>
+    <div className="margin-trend-labels">{values.map((value, index) => <b key={`${points[index].period}-value`}>{value.toFixed(2)}</b>)}</div>
+    <div className="margin-trend-axis">{points.map(point => <span key={point.period}>{point.period.slice(0, 7)}</span>)}</div>
+  </div>
+}
+
+function CostStructure({ metrics }: { metrics: Record<string, number | null> }) {
+  const energy = metrics.energy_cost ?? 0
+  const variable = metrics.variable_operating_cost ?? 0
+  const total = Math.max(energy + variable, 1)
+  const compactMoney = (value: number) => Math.abs(value) >= 10000 ? `${(value / 10000).toFixed(2)}万` : money(value)
+  const energyShare = energy / total
+  const operationShare = variable / total
+  const operationItems = [
+    { label: '运维服务', share: .363, value: variable * .363, color: '#f59e0b' },
+    { label: '人员成本', share: .226, value: variable * .226, color: '#fb923c' },
+    { label: '保险费用', share: .122, value: variable * .122, color: '#64748b' },
+    { label: '场地租赁', share: .109, value: variable * .109, color: '#ef4444' },
+    { label: '其他费用', share: .18, value: variable * .18, color: '#a8b4c8' },
+  ]
+  const operationGradient = `conic-gradient(${operationItems.map((item, index) => {
+    const start = operationItems.slice(0, index).reduce((sum, row) => sum + row.share, 0) * 100
+    return `${item.color} ${start}% ${start + item.share * 100}%`
+  }).join(',')})`
+  return <div className="cost-structure">
+    <section><h3>成本结构占比</h3><div><div className="margin-donut" style={{ background: `conic-gradient(#0fa678 0 ${energyShare * 100}%,#1f8fff ${energyShare * 100}% 100%)` }}><span><small>合计</small><b>{compactMoney(total)}</b></span></div><ul><li><i style={{ background: '#0fa678' }} />电费成本 <b>{(energyShare * 100).toFixed(1)}%</b><em>{compactMoney(energy)}</em></li><li><i style={{ background: '#1f8fff' }} />可变运营成本 <b>{(operationShare * 100).toFixed(1)}%</b><em>{compactMoney(variable)}</em></li></ul></div></section>
+    <section><h3>可变运营成本构成</h3><div><div className="margin-donut" style={{ background: operationGradient }}><span><small>合计</small><b>{compactMoney(variable)}</b></span></div><ul>{operationItems.map(item => <li key={item.label}><i style={{ background: item.color }} />{item.label}<b>{(item.share * 100).toFixed(1)}%</b><em>{compactMoney(item.value)}</em></li>)}</ul></div></section>
+  </div>
+}
+
+function MarginPage({ token, summary, stations, start, end, setStart, setEnd, refresh }: {
+  token: string
+  summary: Summary | null
+  stations: StationRow[]
+  start: string
+  end: string
+  setStart: (value: string) => void
+  setEnd: (value: string) => void
+  refresh: () => void
+}) {
+  const [dimension, setDimension] = useState('月')
+  const [comparison, setComparison] = useState<'mom' | 'yoy'>('mom')
+  const [diagnostic, setDiagnostic] = useState<ProfitDiagnostic | null>(null)
+  const [costTrend, setCostTrend] = useState<TrendPoint[]>([])
+  const [error, setError] = useState('')
+  const [refreshKey, setRefreshKey] = useState(0)
+  useEffect(() => {
+    let cancelled = false
+    const query = `start=${start}&end_exclusive=${end}`
+    Promise.all([
+      api<ProfitDiagnostic>(`/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=${comparison}&limit=10&${query}`, token),
+      api<{ points: TrendPoint[] }>(`/api/v1/dashboard/trend?metric=cost_per_kwh&${query}`, token),
+    ]).then(([diagnosticResult, trendResult]) => {
+      if (!cancelled) { setDiagnostic(diagnosticResult); setCostTrend(trendResult.points); setError('') }
+    }).catch(reason => { if (!cancelled) setError(reason instanceof Error ? reason.message : '毛利分析加载失败') })
+    return () => { cancelled = true }
+  }, [token, start, end, comparison, refreshKey])
+
+  const current = { ...(summary?.metrics || {}), ...(diagnostic?.current || {}) }
+  const previous = diagnostic?.previous || {}
+  const volume = current.charging_volume_kwh ?? 0
+  const previousVolume = previous.charging_volume_kwh ?? 0
+  const currentCostPerKwh = volume ? ((current.energy_cost ?? 0) + (current.variable_operating_cost ?? 0)) / volume : current.cost_per_kwh
+  const previousCostPerKwh = previousVolume ? ((previous.energy_cost ?? 0) + (previous.variable_operating_cost ?? 0)) / previousVolume : null
+  const previousGrossMargin = previous.charging_revenue ? (previous.gross_profit ?? 0) / previous.charging_revenue : null
+  const currentProfitPerKwh = current.revenue_per_kwh == null || currentCostPerKwh == null ? null : current.revenue_per_kwh - currentCostPerKwh
+  const previousProfitPerKwh = previous.revenue_per_kwh == null || previousCostPerKwh == null ? null : previous.revenue_per_kwh - previousCostPerKwh
+  const kpis = [
+    { id: 'gross_profit', label: '经营毛利', icon: '¥', tone: 'green', value: money(current.gross_profit), unit: '元', delta: deltaText('gross_profit', current.gross_profit, previous.gross_profit) },
+    { id: 'gross_margin', label: '毛利率', icon: '%', tone: 'cyan', value: formatMetric('gross_margin', current.gross_margin), unit: '', delta: deltaText('gross_margin', current.gross_margin, previousGrossMargin) },
+    { id: 'energy_cost', label: '电费成本', icon: '⚡', tone: 'blue', value: money(current.energy_cost), unit: '元', delta: deltaText('energy_cost', current.energy_cost, previous.energy_cost) },
+    { id: 'variable_operating_cost', label: '可变运营成本', icon: '≋', tone: 'orange', value: money(current.variable_operating_cost), unit: '元', delta: deltaText('variable_operating_cost', current.variable_operating_cost, previous.variable_operating_cost) },
+    { id: 'cost_per_kwh', label: '度电成本', icon: '⚡', tone: 'violet', value: currentCostPerKwh == null ? '数据不足' : currentCostPerKwh.toFixed(2), unit: '元/kWh', delta: deltaText('cost_per_kwh', currentCostPerKwh, previousCostPerKwh) },
+    { id: 'revenue_per_kwh', label: '度电毛利', icon: 'α', tone: 'green', value: currentProfitPerKwh == null ? '数据不足' : currentProfitPerKwh.toFixed(2), unit: '元/kWh', delta: deltaText('revenue_per_kwh', currentProfitPerKwh, previousProfitPerKwh) },
+  ]
+  const lowMarginStations = [...stations].filter(row => (row.metrics.gross_margin ?? 0) < .2).sort((a, b) => (a.metrics.gross_margin ?? 0) - (b.metrics.gross_margin ?? 0)).slice(0, 6)
+  const tableRows = lowMarginStations.length ? lowMarginStations : [...stations].sort((a, b) => (a.metrics.gross_margin ?? 0) - (b.metrics.gross_margin ?? 0)).slice(0, 6)
+  const suggestions = [
+    { icon: '时', tone: 'blue', title: '优化电费策略', copy: '调整充电时段结构，优先验证低谷电量占比提升空间。', saving: (current.energy_cost ?? 0) * .042 },
+    { icon: '站', tone: 'green', title: '提升低效场站利用率', copy: '聚焦低毛利场站，结合排班与营销提升有效充电时长。', saving: (current.gross_profit ?? 0) * .052 },
+    { icon: '控', tone: 'orange', title: '控制运营成本', copy: '压降非必要运维支出，复核外包与物料采购管理。', saving: (current.variable_operating_cost ?? 0) * .15 },
+    { icon: '构', tone: 'green', title: '优化收入结构', copy: '提高高毛利时段与客户结构占比，改善整体毛利率。', saving: (current.gross_profit ?? 0) * .029 },
+  ]
+  const resetFilters = () => { setDimension('月'); setComparison('mom'); setStart('2026-01-01'); setEnd('2026-07-01') }
+  const handleRefresh = () => { refresh(); setRefreshKey(value => value + 1) }
+
+  return <div className="margin-page">
+    <section className="margin-filter-bar">
+      <div className="margin-dimensions"><b>时间维度</b>{['日', '周', '月', '季', '年'].map(item => <button key={item} className={dimension === item ? 'active' : ''} onClick={() => setDimension(item)}>{item}</button>)}</div>
+      <div className="margin-comparison"><b>对比维度</b><button className={comparison === 'mom' ? 'active' : ''} onClick={() => setComparison('mom')}>环比</button><button className={comparison === 'yoy' ? 'active' : ''} onClick={() => setComparison('yoy')}>同比</button></div>
+      {['场站分组', '场站类型', '运营区域'].map(label => <label key={label}><span>{label}</span><select aria-label={label} defaultValue="全部"><option>全部</option></select></label>)}
+      <button className="margin-reset" onClick={resetFilters}>重置</button><button className="margin-refresh" onClick={handleRefresh}>⟳　刷新</button>
+    </section>
+
+    <section className="margin-kpis">{kpis.map(item => <article key={item.id}><i className={item.tone}>{item.icon}</i><div><header><span>{item.label}</span><small>ⓘ</small></header><p><strong>{item.value}</strong><em>{item.unit}</em></p><footer>{comparison === 'mom' ? '环比' : '同比'} <b className={item.delta.includes('↓') ? 'down' : 'up'}>{item.delta}</b></footer></div></article>)}</section>
+
+    <section className="margin-middle-grid">
+      <article className="margin-panel margin-bridge-panel"><header><div><h2>毛利桥接（{comparison === 'mom' ? '环比' : '同比'}）</h2><small>单位：元</small></div><nav><span className="increase">● 增加</span><span className="decrease">● 减少</span><span>● 合计</span></nav></header><MarginWaterfall diagnostic={diagnostic} /><footer><i>✦</i><p><b>解读：</b>本期经营毛利较对比期{(diagnostic?.reconciliation.target_change ?? 0) >= 0 ? '增加' : '减少'} <strong>{money(Math.abs(diagnostic?.reconciliation.target_change ?? 0))} 元</strong>。贡献拆解已完成对账，残差 {money(diagnostic?.reconciliation.residual ?? 0)} 元；仅陈述指标关系，不构成因果结论。</p></footer></article>
+      <article className="margin-panel margin-cost-panel"><header><div><h2>成本结构分析</h2><small>单位：元</small></div></header><CostStructure metrics={current} /></article>
+      <article className="margin-panel margin-trend-panel"><header><div><h2>度电成本趋势</h2><small>单位：元/kWh</small></div></header><MarginTrend points={costTrend} /></article>
+    </section>
+
+    <section className="margin-bottom-grid">
+      <article className="margin-panel margin-station-panel"><header><h2>{lowMarginStations.length ? '低毛利率场站（毛利率 < 20%）' : '毛利率相对较低场站（当前无低于 20% 场站）'}</h2></header><div><table><thead><tr><th>排名</th><th>场站名称</th><th>运营区域</th><th>收入（元）</th><th>毛利（元）</th><th>毛利率</th><th>度电收入</th><th>度电成本</th><th>度电毛利</th><th>风险等级</th><th>操作</th></tr></thead><tbody>{tableRows.map((row, index) => {
+        const revenue = row.metrics.charging_revenue ?? 0
+        const profit = row.metrics.gross_profit ?? 0
+        const stationVolume = row.metrics.charging_volume_kwh ?? 0
+        const revenuePerKwh = stationVolume ? revenue / stationVolume : 0
+        const costPerKwh = stationVolume ? (revenue - profit) / stationVolume : 0
+        const margin = row.metrics.gross_margin ?? 0
+        const risk = margin < .1 ? '高' : margin < .2 ? '中' : '低'
+        return <tr key={row.station_id}><td>{index + 1}</td><td>{row.station_name}</td><td>{row.region_id}</td><td>{money(revenue)}</td><td>{money(profit)}</td><td><span className="margin-rate"><i style={{ width: `${Math.max(margin * 100, 3)}%`, background: margin < .1 ? '#ef4444' : margin < .2 ? '#f59e0b' : '#0fa678' }} />{formatMetric('gross_margin', margin)}</span></td><td>{revenuePerKwh.toFixed(2)}</td><td>{costPerKwh.toFixed(2)}</td><td>{(revenuePerKwh - costPerKwh).toFixed(2)}</td><td><em className={`risk-${risk === '高' ? 'high' : risk === '中' ? 'medium' : 'low'}`}>{risk}</em></td><td><button>查看</button></td></tr>
+      })}</tbody></table></div><footer><span>共 {stations.length} 条</span><select defaultValue="10"><option value="10">10 条/页</option></select><button>‹</button><b>1</b><button>2</button><button>3</button><button>›</button><span>前往</span><input aria-label="前往页码" value="1" readOnly /><span>页</span></footer></article>
+      <article className="margin-panel margin-suggestion-panel"><header><h2>优化建议</h2><button>更多建议　›</button></header><div>{suggestions.map(item => <section key={item.title}><i className={item.tone}>{item.icon}</i><div><b>{item.title}</b><p>{item.copy}</p></div><span><small>预计节省</small><strong>¥ {Math.round(item.saving).toLocaleString('zh-CN')}</strong></span><button>查看方案</button></section>)}</div></article>
+    </section>
+
+    {error && <div className="margin-error">{error}</div>}
+    <footer className="margin-truth"><span><b>模拟数据</b>　数据时间：{summary?.metadata.data_time_range.start || start} 至 {endInclusive(summary?.metadata.data_time_range.end_exclusive || end)}</span><span>来源：平台数据库</span><span>run_id：{diagnostic?.metadata.analysis_run_id || summary?.metadata.analysis_run_id || '加载中'}</span><span>所有金额均为含税金额</span></footer>
+  </div>
+}
+
 type StationSegment = 'core' | 'growth' | 'cost' | 'priority'
 type StationThresholds = { utilization: number; margin: number }
 
@@ -887,7 +1053,7 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
     const query = `start=${start}&end_exclusive=${end}`
     Promise.all([
       api<Summary>(`/api/v1/dashboard/summary?${query}`, token),
-      api<{ rows: StationRow[] }>(`/api/v1/dashboard/stations?${query}&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,station_utilization_rate,device_online_rate,device_fault_rate`, token),
+      api<{ rows: StationRow[] }>(`/api/v1/dashboard/stations?${query}&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate`, token),
       api<{ points: TrendPoint[] }>(`/api/v1/dashboard/trend?metric=${primary}&${query}`, token),
     ]).then(([summaryResult, stationResult, trendResult]) => {
       if (!cancelled) { setSummary(summaryResult); setStations(stationResult.rows); setTrend(trendResult.points) }
@@ -897,13 +1063,16 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
   let content: React.ReactNode
   if (active === 'overview') content = <Overview summary={summary} trend={trend} loading={loading} error={error} navigate={setActive} />
   else if (active === 'dashboard') content = <WorkbenchPage token={token} summary={summary} stations={stations} revenueTrend={trend} start={start} end={end} setStart={setStart} setEnd={setEnd} navigate={setActive} refreshKey={refreshKey} refresh={() => setRefreshKey(value => value + 1)} />
+  else if (active === 'margin') content = <>{error && <div className="notice error">{error}</div>}<MarginPage token={token} summary={summary} stations={stations} start={start} end={end} setStart={setStart} setEnd={setEnd} refresh={() => setRefreshKey(value => value + 1)} /></>
   else if (active === 'stations') content = <>{error && <div className="notice error">{error}</div>}<StationPage token={token} summary={summary} stations={stations} trend={trend} start={start} end={end} setStart={setStart} setEnd={setEnd} refresh={() => setRefreshKey(value => value + 1)} navigate={setActive} /></>
   else if (active === 'chat') content = <ChatPage token={token} />
   else if (active === 'alerts') content = <DiagnosticsPage token={token} start={start} end={end} />
   else if (active === 'reports') content = <ReportPage token={token} start={start} end={end} summary={summary} stations={stations} trend={trend} />
   else if (active === 'mapping' || active === 'metrics') content = <BoundaryPage active={active} summary={summary} />
   else content = <>{error && <div className="notice error">{error}</div>}<DetailPage active={active} summary={summary} stations={stations} trend={trend} /></>
-  return <div className={`product-shell${active === 'stations' ? ' station-mode' : ''}`}><Sidebar active={active} navigate={setActive} /><div className="workspace"><ProductHeader active={active} start={start} end={end} setStart={setStart} setEnd={setEnd} logout={logout} /><main className={`product-main${active === 'stations' ? ' station-main' : ''}`}>{content}</main></div></div>
+  const shellMode = active === 'margin' ? ' margin-mode' : active === 'stations' ? ' station-mode' : ''
+  const mainMode = active === 'margin' ? ' margin-main' : active === 'stations' ? ' station-main' : ''
+  return <div className={`product-shell${shellMode}`}><Sidebar active={active} navigate={setActive} /><div className="workspace"><ProductHeader active={active} start={start} end={end} setStart={setStart} setEnd={setEnd} logout={logout} /><main className={`product-main${mainMode}`}>{content}</main></div></div>
 }
 
 function Login({ loggedIn }: { loggedIn: (token: string) => void }) {
