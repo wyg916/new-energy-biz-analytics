@@ -1,0 +1,12 @@
+{
+  "isolation": "dedicated_schema",
+  "schema": "v2_p0_6_release_verify",
+  "head_revision": "0006",
+  "rollback_revision": "0005",
+  "upgrade": true,
+  "rollback": true,
+  "reupgrade": true,
+  "schema_removed": true,
+  "existing_volume_deleted": false,
+  "passed": true
+}

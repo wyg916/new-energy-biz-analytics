@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "executed_at": "2026-07-29T14:19:16.296002+00:00",
+  "isolation": "dedicated_schema",
+  "restore_schema": "rc_restore_0729141827_fc08fe85",
+  "backup_sha256": "0763ab92d26d8af639212bd6c28894eebed6636ab960407e6bb85cb496e1660f",
+  "alembic_revision": "0006",
+  "table_count": 25,
+  "row_count_total": 507283,
+  "table_counts_match": true,
+  "business_fingerprint_match": true,
+  "revision_match": true,
+  "schema_removed": true,
+  "existing_volume_deleted": false,
+  "data_classification": "simulated"
+}

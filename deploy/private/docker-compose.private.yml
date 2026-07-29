@@ -1,0 +1,113 @@
+name: renewable-operations-private
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+services:
+  db:
+    image: postgres:16.9-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is required}
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - private_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+    stop_grace_period: 60s
+    logging: *default-logging
+
+  redis:
+    image: redis:7.4.5-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - private_redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+    stop_grace_period: 30s
+    logging: *default-logging
+
+  api:
+    image: ${API_IMAGE:-renewable-operations-private-api}:${RELEASE_VERSION:?RELEASE_VERSION is required}
+    build:
+      context: ../../backend
+    command:
+      - sh
+      - -c
+      - >-
+        alembic upgrade head &&
+        uvicorn app.main:app --host 0.0.0.0 --port 8000
+        --proxy-headers --forwarded-allow-ips=*
+    volumes:
+      - private_imports:/app/data/imports
+    environment:
+      APP_ENV: production
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: ${SECRET_KEY:?SECRET_KEY is required}
+      AUTO_BOOTSTRAP_DEMO_USERS: "false"
+      SIMULATED_DATA_ONLY: "true"
+      CORS_ORIGINS: ${CORS_ORIGINS:?CORS_ORIGINS is required}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:?PUBLIC_BASE_URL is required}
+      TRUSTED_HOSTS: ${TRUSTED_HOSTS:?TRUSTED_HOSTS is required}
+      RELEASE_VERSION: ${RELEASE_VERSION:?RELEASE_VERSION is required}
+      EXPECTED_DATABASE_REVISION: ${EXPECTED_DATABASE_REVISION:-0006}
+      API_SOURCE_ALLOWLIST: ${API_SOURCE_ALLOWLIST:-localhost,127.0.0.1}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import urllib.request;
+          urllib.request.urlopen('http://localhost:8000/api/v1/health/ready', timeout=3)
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+    restart: unless-stopped
+    stop_grace_period: 60s
+    logging: *default-logging
+
+  web:
+    image: ${WEB_IMAGE:-renewable-operations-private-web}:${RELEASE_VERSION:?RELEASE_VERSION is required}
+    build:
+      context: ../../frontend
+    volumes:
+      - ./nginx.private.conf:/etc/nginx/conf.d/default.conf:ro
+      - ${TLS_DIR:?TLS_DIR is required}:/etc/nginx/tls:ro
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- --no-check-certificate https://127.0.0.1/healthz | grep -q '^ok$'"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+    stop_grace_period: 30s
+    logging: *default-logging
+
+volumes:
+  private_pgdata:
+  private_redisdata:
+  private_imports:

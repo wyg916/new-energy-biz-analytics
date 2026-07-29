@@ -70,13 +70,22 @@ npm.cmd run e2e --prefix frontend
 PostgreSQL 迁移完成升级/降级/再升级，1600×900 页面无滚动与溢出。详见
 [V2-P0.5 工作包证据](docs/v2/evidence/p0_5/README.md)。
 
+2026-07-29 的 V2-P0.6 建立了单客户、单主机私有化发布候选：生产配置
+fail-closed、HTTPS/Nginx 反向代理、就绪探针、低基数监控指标、JSON 请求日志、
+PostgreSQL 备份与专用 schema 恢复演练、升级回滚门禁和冷环境安装验收。RC
+结果为后端 60/60、前端 3/3、E2E 13/13、固定评测 40/40、烟测 6/6、
+npm 已知漏洞 0；完整恢复核对 25 张表、507,283 行且业务指纹一致。详见
+[V2-P0.6 RC 验收证据](docs/v2/evidence/p0_6/README.md)和
+[私有化部署指南](deploy/private/README.md)。
+
 ## 目录
 
 ```text
 backend/                    FastAPI、SQLAlchemy、Alembic、业务服务与 pytest
 frontend/                   React、Vite、Vitest、Playwright、Nginx
 docs/                       冻结合同、架构、阶段验收和作品证据
-scripts/                    固定评测和容器烟测
+deploy/private/             单客户私有化 Compose、HTTPS 反向代理与安装指南
+scripts/                    固定评测、容器烟测、备份恢复和 RC 验收脚本
 tests/evaluation/           40 题金标集与机器可读运行结果
 docker-compose.yml          PostgreSQL、Redis、API、Web 统一编排
 ```
@@ -96,8 +105,10 @@ docker-compose.yml          PostgreSQL、Redis、API、Web 统一编排
 - [V2 P0 范围与验收清单](docs/v2/V2_P0_scope_and_acceptance.md)
 - [V2-P0.0 验收记录](docs/v2/V2_P0_0_acceptance.md)
 - [V2-P0.0 Alpha 证据](docs/v2/evidence/alpha/README.md)
+- [V2-P0.6 RC 验收证据](docs/v2/evidence/p0_6/README.md)
+- [私有化部署与运维指南](deploy/private/README.md)
 
-当前已知限制：自然语言解析为合同范围内的确定性中文规则，不是开放域大模型；会话记忆仅限结构化短期状态；报告导出为 Markdown/CSV 草稿；Compose 是单机 Alpha 部署，不包含高可用、备份编排或生产运维承诺。
+当前已知限制：自然语言解析为合同范围内的确定性中文规则，不是开放域大模型；会话记忆仅限结构化短期状态；报告导出为 Markdown/CSV 草稿；私有化 RC 只验证单客户、单主机 Compose、备份恢复和升级回滚，不包含 Kubernetes、高可用、共享多租户、SSO 或生产 SLA 承诺。
 
 ## 回滚
 

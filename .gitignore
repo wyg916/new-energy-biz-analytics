@@ -53,6 +53,7 @@ artifacts/*
 *.backup
 data/generated/
 data/exports/
+deploy/private/runtime/
 
 # Office temporary files
 ~$*.docx
