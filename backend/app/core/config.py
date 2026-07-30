@@ -28,6 +28,9 @@ class Settings(BaseSettings):
     expected_database_revision: str = "0009"
     platform_version_routing_enabled: bool = False
     sqlbot_engine_enabled: bool = False
+    chatbi_readonly_execution_enabled: bool = False
+    chatbi_readonly_database_url: str | None = None
+    chatbi_statement_timeout_ms: int = 5000
     platform_tenant_id: str = "tenant-alpha"
     platform_org_id: str = "org-alpha"
     platform_workspace_id: str = "workspace-alpha"
@@ -63,6 +66,13 @@ class Settings(BaseSettings):
                 failures.append("RELEASE_VERSION must identify a release candidate or release")
             if not self.simulated_data_only:
                 failures.append("SIMULATED_DATA_ONLY must remain true for this release candidate")
+            if self.chatbi_readonly_execution_enabled and (
+                not self.chatbi_readonly_database_url
+                or not self.chatbi_readonly_database_url.startswith("postgresql")
+            ):
+                failures.append(
+                    "CHATBI_READONLY_DATABASE_URL must use PostgreSQL when the independent readonly boundary is enabled"
+                )
             if failures:
                 raise ValueError("production configuration rejected: " + "; ".join(failures))
         return self
