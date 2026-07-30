@@ -1,0 +1,56 @@
+{
+  "tables": [
+    {"code": "order_fact", "name": "模拟销售订单事实", "physical_binding": "sales_order", "grain": ["order_id"], "lineage": {"dataset": "sales_operations", "classification": "simulated"}},
+    {"code": "order_item_fact", "name": "模拟销售订单明细", "physical_binding": "sales_order_item", "grain": ["order_item_id"], "lineage": {"dataset": "sales_operations", "classification": "simulated"}},
+    {"code": "customer_dimension", "name": "模拟客户", "physical_binding": "sales_customer", "grain": ["customer_id"], "lineage": {"dataset": "sales_operations", "classification": "simulated"}},
+    {"code": "product_dimension", "name": "模拟产品", "physical_binding": "sales_product", "grain": ["product_id"], "lineage": {"dataset": "sales_operations", "classification": "simulated"}},
+    {"code": "category_dimension", "name": "模拟产品类别", "physical_binding": "sales_product_category", "grain": ["category_id"], "lineage": {"dataset": "sales_operations", "classification": "simulated"}},
+    {"code": "channel_dimension", "name": "模拟销售渠道", "physical_binding": "sales_channel", "grain": ["channel_id"], "lineage": {"dataset": "sales_operations", "classification": "simulated"}},
+    {"code": "region_dimension", "name": "模拟销售区域", "physical_binding": "sales_region", "grain": ["region_id"], "lineage": {"dataset": "sales_operations", "classification": "simulated"}},
+    {"code": "salesperson_dimension", "name": "模拟销售人员", "physical_binding": "salesperson", "grain": ["salesperson_id"], "lineage": {"dataset": "sales_operations", "classification": "simulated"}},
+    {"code": "date_dimension", "name": "业务日期", "physical_binding": "sales_business_date", "grain": ["business_date"], "lineage": {"dataset": "sales_operations", "classification": "simulated"}}
+  ],
+  "fields": [
+    {"table": "order_fact", "code": "order_id", "name": "订单编码", "data_type": "string", "physical_field": "order_id", "nullable": false},
+    {"table": "order_fact", "code": "order_date", "name": "订单日期", "data_type": "date", "physical_field": "order_date", "nullable": false},
+    {"table": "order_fact", "code": "customer_id", "name": "客户编码", "data_type": "string", "physical_field": "customer_id", "nullable": false},
+    {"table": "order_fact", "code": "channel_id", "name": "渠道编码", "data_type": "string", "physical_field": "channel_id", "nullable": false},
+    {"table": "order_fact", "code": "region_id", "name": "区域编码", "data_type": "string", "physical_field": "region_id", "nullable": false},
+    {"table": "order_fact", "code": "salesperson_id", "name": "销售人员编码", "data_type": "string", "physical_field": "salesperson_id", "nullable": false},
+    {"table": "order_fact", "code": "organization_code", "name": "组织编码", "data_type": "string", "physical_field": "organization_code", "nullable": false},
+    {"table": "order_fact", "code": "gross_amount", "name": "订单原价", "data_type": "number", "physical_field": "gross_amount", "nullable": false},
+    {"table": "order_fact", "code": "refund_amount", "name": "退款金额", "data_type": "number", "physical_field": "refund_amount", "nullable": false},
+    {"table": "order_fact", "code": "net_revenue", "name": "销售收入", "data_type": "number", "physical_field": "net_revenue", "nullable": false},
+    {"table": "order_fact", "code": "gross_profit", "name": "销售毛利", "data_type": "number", "physical_field": "gross_profit", "nullable": false},
+    {"table": "order_fact", "code": "is_new_customer", "name": "新客户标识", "data_type": "boolean", "physical_field": "is_new_customer", "nullable": false},
+    {"table": "order_item_fact", "code": "order_item_id", "name": "订单明细编码", "data_type": "string", "physical_field": "order_item_id", "nullable": false},
+    {"table": "order_item_fact", "code": "order_id", "name": "订单编码", "data_type": "string", "physical_field": "order_id", "nullable": false},
+    {"table": "order_item_fact", "code": "product_id", "name": "产品编码", "data_type": "string", "physical_field": "product_id", "nullable": false},
+    {"table": "order_item_fact", "code": "quantity", "name": "销售数量", "data_type": "integer", "physical_field": "quantity", "nullable": false},
+    {"table": "order_item_fact", "code": "net_revenue", "name": "明细销售收入", "data_type": "number", "physical_field": "net_revenue", "nullable": false},
+    {"table": "order_item_fact", "code": "gross_profit", "name": "明细销售毛利", "data_type": "number", "physical_field": "gross_profit", "nullable": false},
+    {"table": "customer_dimension", "code": "customer_id", "name": "客户编码", "data_type": "string", "physical_field": "customer_id", "nullable": false},
+    {"table": "customer_dimension", "code": "customer_name", "name": "模拟客户名称", "data_type": "string", "physical_field": "customer_name", "nullable": false, "classification": "restricted"},
+    {"table": "customer_dimension", "code": "customer_segment", "name": "客户分群", "data_type": "string", "physical_field": "customer_segment", "nullable": false},
+    {"table": "product_dimension", "code": "product_id", "name": "产品编码", "data_type": "string", "physical_field": "product_id", "nullable": false},
+    {"table": "product_dimension", "code": "product_name", "name": "产品名称", "data_type": "string", "physical_field": "product_name", "nullable": false},
+    {"table": "product_dimension", "code": "category_id", "name": "类别编码", "data_type": "string", "physical_field": "category_id", "nullable": false},
+    {"table": "category_dimension", "code": "category_id", "name": "类别编码", "data_type": "string", "physical_field": "category_id", "nullable": false},
+    {"table": "category_dimension", "code": "category_name", "name": "类别名称", "data_type": "string", "physical_field": "category_name", "nullable": false},
+    {"table": "channel_dimension", "code": "channel_id", "name": "渠道编码", "data_type": "string", "physical_field": "channel_id", "nullable": false},
+    {"table": "channel_dimension", "code": "channel_name", "name": "渠道名称", "data_type": "string", "physical_field": "channel_name", "nullable": false},
+    {"table": "region_dimension", "code": "region_id", "name": "区域编码", "data_type": "string", "physical_field": "region_id", "nullable": false},
+    {"table": "region_dimension", "code": "region_name", "name": "区域名称", "data_type": "string", "physical_field": "region_name", "nullable": false},
+    {"table": "region_dimension", "code": "organization_code", "name": "组织编码", "data_type": "string", "physical_field": "organization_code", "nullable": false},
+    {"table": "salesperson_dimension", "code": "salesperson_id", "name": "销售人员编码", "data_type": "string", "physical_field": "salesperson_id", "nullable": false},
+    {"table": "salesperson_dimension", "code": "salesperson_name", "name": "销售人员名称", "data_type": "string", "physical_field": "salesperson_name", "nullable": false},
+    {"table": "date_dimension", "code": "business_date", "name": "业务日期", "data_type": "date", "physical_field": "business_date", "nullable": false}
+  ],
+  "time_dimensions": [
+    {"code": "order_date", "field_ref": "order_fact.order_date", "timezone": "Asia/Shanghai", "grains": ["day", "week", "month", "quarter", "year"]}
+  ],
+  "filters": [
+    {"code": "authorized_sales_scope", "expression": {"field": "region_id", "source": "identity.data_scopes"}, "required": true},
+    {"code": "simulated_orders_only", "expression": {"field": "data_classification", "operator": "eq", "value": "simulated"}, "required": true}
+  ]
+}

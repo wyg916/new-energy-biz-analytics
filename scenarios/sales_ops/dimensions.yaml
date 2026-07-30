@@ -1,0 +1,12 @@
+{
+  "dimensions": [
+    {"code": "date", "name": "日期", "aliases": ["日", "月份"], "field_ref": "order_fact.order_date", "data_type": "date", "hierarchy": ["year", "quarter", "month", "date"]},
+    {"code": "region", "name": "销售区域", "aliases": ["区域"], "field_ref": "region_dimension.region_id", "data_type": "string", "hierarchy": ["organization", "region"]},
+    {"code": "channel", "name": "销售渠道", "aliases": ["渠道"], "field_ref": "channel_dimension.channel_id", "data_type": "string", "hierarchy": ["channel_type", "channel"]},
+    {"code": "product", "name": "产品", "aliases": ["商品"], "field_ref": "product_dimension.product_id", "data_type": "string", "hierarchy": ["category", "product"]},
+    {"code": "category", "name": "产品类别", "aliases": ["品类"], "field_ref": "category_dimension.category_id", "data_type": "string", "hierarchy": ["category"]},
+    {"code": "customer_segment", "name": "客户分群", "aliases": ["客户类型"], "field_ref": "customer_dimension.customer_segment", "data_type": "string", "hierarchy": []},
+    {"code": "salesperson", "name": "销售人员", "aliases": ["销售"], "field_ref": "salesperson_dimension.salesperson_id", "data_type": "string", "hierarchy": ["organization", "region", "salesperson"]},
+    {"code": "organization", "name": "销售组织", "aliases": ["组织"], "field_ref": "region_dimension.organization_code", "data_type": "string", "hierarchy": ["organization", "region"]}
+  ]
+}

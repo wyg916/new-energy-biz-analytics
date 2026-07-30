@@ -1,0 +1,9 @@
+{
+  "profiles": [
+    {"role": "executive", "detail": "summary", "max_rows": 20, "show_sql": false},
+    {"role": "regional_manager", "detail": "operational", "max_rows": 50, "show_sql": false},
+    {"role": "analyst_admin", "detail": "evidence", "max_rows": 500, "show_sql": true}
+  ],
+  "required_labels": ["模拟数据", "数据时间", "数据来源", "run_id"],
+  "error_states": ["clarification", "rejected", "not_available"]
+}

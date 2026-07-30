@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     public_base_url: str = "http://localhost:8080"
     trusted_hosts: str = "localhost,127.0.0.1,testserver"
     release_version: str = "0.1.0-dev"
-    expected_database_revision: str = "0010"
+    expected_database_revision: str = "0011"
     platform_version_routing_enabled: bool = False
     sqlbot_engine_enabled: bool = False
     sqlbot_runtime_verified: bool = False

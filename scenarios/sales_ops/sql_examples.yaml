@@ -1,0 +1,8 @@
+{
+  "examples": [
+    {"question": "2026年6月销售收入是多少？", "intent": "metric", "metrics": ["sales_revenue"], "dimensions": [], "sql_policy": "deterministic_compiler_only"},
+    {"question": "2026年上半年各渠道销售收入排名", "intent": "ranking", "metrics": ["sales_revenue"], "dimensions": ["channel"], "sql_policy": "deterministic_or_guarded_shadow"},
+    {"question": "2026年6月毛利率和退款率", "intent": "metric", "metrics": ["gross_margin", "refund_rate"], "dimensions": [], "sql_policy": "deterministic_compiler_only"},
+    {"question": "2026年第二季度各区域新客户数", "intent": "ranking", "metrics": ["new_customer_count"], "dimensions": ["region"], "sql_policy": "deterministic_or_guarded_shadow"}
+  ]
+}

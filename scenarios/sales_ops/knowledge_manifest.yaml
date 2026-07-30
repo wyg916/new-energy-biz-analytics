@@ -1,0 +1,10 @@
+{
+  "knowledge_sources": [
+    {"code": "sales_metric_dictionary", "type": "scenario_contract", "path": "metrics.yaml", "status": "PUBLISHED"},
+    {"code": "sales_terminology", "type": "scenario_contract", "path": "terminology.yaml", "status": "PUBLISHED"},
+    {"code": "sales_sql_examples", "type": "scenario_contract", "path": "sql_examples.yaml", "status": "PUBLISHED"}
+  ],
+  "rag_enabled": false,
+  "external_sources_allowed": false,
+  "data_classification": "simulated"
+}

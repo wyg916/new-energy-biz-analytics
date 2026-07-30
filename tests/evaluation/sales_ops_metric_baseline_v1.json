@@ -1,0 +1,27 @@
+{
+  "scenario_id": "sales_ops",
+  "scenario_version": "1.0.0",
+  "semantic_version": "1.0.0",
+  "data_classification": "simulated",
+  "seed": 20260730,
+  "seed_run_id": "SALES-SIM-v1-20260730",
+  "order_count": 50000,
+  "period": {
+    "start": "2025-01-01",
+    "end_exclusive": "2026-07-01"
+  },
+  "metrics": {
+    "sales_revenue": 81367951.98,
+    "order_count": 50000,
+    "customer_count": 7982,
+    "average_order_value": 1627.35904,
+    "sales_quantity": 247535,
+    "gross_profit": 26096093.89,
+    "gross_margin": 0.320717,
+    "refund_amount": 3830409.18,
+    "refund_rate": 0.041402,
+    "new_customer_count": 7982,
+    "repeat_customer_count": 7880,
+    "channel_contribution": 0.325847
+  }
+}

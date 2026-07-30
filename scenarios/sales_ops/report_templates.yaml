@@ -1,0 +1,11 @@
+{
+  "templates": [
+    {
+      "code": "sales_monthly_draft",
+      "title": "模拟销售月度经营报告草稿",
+      "sections": ["核心指标", "区域与渠道结构", "产品与客户结构", "退款与毛利风险", "证据与限制"],
+      "required_metrics": ["sales_revenue", "order_count", "customer_count", "gross_profit", "gross_margin", "refund_rate"],
+      "disclaimer": "全部数据为固定随机种子生成的模拟数据，本报告仅为可审核草稿。"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "scenario_id": "sales_ops",
+  "version": "1.0.0",
+  "display_name": "模拟销售经营分析",
+  "platform_api_range": ">=0.1.0,<0.2.0",
+  "contract_versions": {
+    "connector": "0.1",
+    "dataset_release": "0.1",
+    "semantic_model": "0.1",
+    "scenario_package": "0.1",
+    "query_engine": "0.1",
+    "identity_security": "0.1"
+  },
+  "data_classification": "simulated",
+  "entry_capabilities": ["dashboard", "chatbi", "diagnostics", "report_draft"],
+  "required_roles": ["executive", "regional_manager", "analyst_admin"],
+  "dataset_code": "sales_operations",
+  "semantic_model_code": "sales_operations_model",
+  "semantic_version": "1.0.0",
+  "migration": {"plugin": "app.scenarios.sales_ops.package_adapter"},
+  "validation": {"metric_count": 12, "free_sql_allowed": false},
+  "uninstall_boundary": "disable_only_preserve_history",
+  "files": [
+    "data_models.yaml",
+    "metrics.yaml",
+    "dimensions.yaml",
+    "relationships.yaml",
+    "terminology.yaml",
+    "sql_examples.yaml",
+    "diagnostics.yaml",
+    "report_templates.yaml",
+    "permissions.yaml",
+    "response_profiles.yaml",
+    "knowledge_manifest.yaml"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "policies": [
+    {"code": "executive_sales_read", "roles": ["executive"], "row_filter": {"scope": "all_authorized"}, "column_masks": {"customer_name": "deny"}, "export_allowed": true, "status": "PUBLISHED"},
+    {"code": "regional_sales_read", "roles": ["regional_manager"], "row_filter": {"field": "region_id", "source": "identity.data_scopes"}, "column_masks": {"customer_name": "deny"}, "export_allowed": false, "status": "PUBLISHED"},
+    {"code": "analyst_sales_governance", "roles": ["analyst_admin"], "row_filter": {"scope": "all_authorized"}, "column_masks": {"customer_name": "deny"}, "export_allowed": true, "status": "PUBLISHED"}
+  ],
+  "default": "deny",
+  "cross_scenario": "deny"
+}

@@ -189,7 +189,7 @@ class PrivateDeployment:
             "checked_at": utc_now(),
             "release_version": self.env["RELEASE_VERSION"],
             "public_host": public_url.hostname,
-            "expected_database_revision": self.env.get("EXPECTED_DATABASE_REVISION", "0010"),
+            "expected_database_revision": self.env.get("EXPECTED_DATABASE_REVISION", "0011"),
             "tls_certificate_present": True,
             "tls_private_key_present": True,
             "database_port_private": True,

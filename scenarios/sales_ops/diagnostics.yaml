@@ -1,0 +1,11 @@
+{
+  "diagnostics": [
+    {"code": "sales_revenue_change", "metric": "sales_revenue", "drivers": ["region", "channel", "product", "customer_segment"], "causality": "correlation_only"},
+    {"code": "gross_margin_change", "metric": "gross_margin", "drivers": ["channel", "product", "category", "refund_amount"], "causality": "correlation_only"},
+    {"code": "refund_rate_change", "metric": "refund_rate", "drivers": ["channel", "product", "category", "region"], "causality": "correlation_only"}
+  ],
+  "guardrails": [
+    "不得把同期销售变化表述为已证明的因果关系",
+    "只引用当前 ACTIVE 模拟数据版本中的结构化结果"
+  ]
+}

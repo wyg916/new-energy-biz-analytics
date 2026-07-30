@@ -1,0 +1,12 @@
+{
+  "relationships": [
+    {"code": "item_to_order", "source_table": "order_item_fact", "source_fields": ["order_id"], "target_table": "order_fact", "target_fields": ["order_id"], "cardinality": "many_to_one", "join_type": "inner", "status": "PUBLISHED"},
+    {"code": "order_to_customer", "source_table": "order_fact", "source_fields": ["customer_id"], "target_table": "customer_dimension", "target_fields": ["customer_id"], "cardinality": "many_to_one", "join_type": "inner", "status": "PUBLISHED"},
+    {"code": "order_to_channel", "source_table": "order_fact", "source_fields": ["channel_id"], "target_table": "channel_dimension", "target_fields": ["channel_id"], "cardinality": "many_to_one", "join_type": "inner", "status": "PUBLISHED"},
+    {"code": "order_to_region", "source_table": "order_fact", "source_fields": ["region_id"], "target_table": "region_dimension", "target_fields": ["region_id"], "cardinality": "many_to_one", "join_type": "inner", "status": "PUBLISHED"},
+    {"code": "order_to_salesperson", "source_table": "order_fact", "source_fields": ["salesperson_id"], "target_table": "salesperson_dimension", "target_fields": ["salesperson_id"], "cardinality": "many_to_one", "join_type": "inner", "status": "PUBLISHED"},
+    {"code": "order_to_date", "source_table": "order_fact", "source_fields": ["order_date"], "target_table": "date_dimension", "target_fields": ["business_date"], "cardinality": "many_to_one", "join_type": "inner", "status": "PUBLISHED"},
+    {"code": "item_to_product", "source_table": "order_item_fact", "source_fields": ["product_id"], "target_table": "product_dimension", "target_fields": ["product_id"], "cardinality": "many_to_one", "join_type": "inner", "status": "PUBLISHED"},
+    {"code": "product_to_category", "source_table": "product_dimension", "source_fields": ["category_id"], "target_table": "category_dimension", "target_fields": ["category_id"], "cardinality": "many_to_one", "join_type": "inner", "status": "PUBLISHED"}
+  ]
+}

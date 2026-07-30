@@ -1,0 +1,14 @@
+{
+  "terms": [
+    {"term": "销售收入", "definition": "模拟订单明细原价扣除折扣和退款后的净收入。", "metric": "sales_revenue"},
+    {"term": "客单价", "definition": "销售收入除以订单数。", "metric": "average_order_value"},
+    {"term": "退款率", "definition": "退款金额除以订单原价金额。", "metric": "refund_rate"},
+    {"term": "新客户", "definition": "模拟数据期内首次产生销售订单的客户。", "metric": "new_customer_count"},
+    {"term": "复购客户", "definition": "模拟数据期内首次订单之后再次购买的客户。", "metric": "repeat_customer_count"},
+    {"term": "渠道贡献", "definition": "销售收入最高渠道占全部销售收入的比例。", "metric": "channel_contribution"}
+  ],
+  "ambiguity_rules": [
+    {"term": "收入", "action": "clarify_scenario", "message": "请确认是充电运营收入还是销售收入。"},
+    {"term": "订单", "action": "clarify_scenario", "message": "请确认是充电订单还是销售订单。"}
+  ]
+}
