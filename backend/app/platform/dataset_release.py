@@ -140,6 +140,7 @@ class DatasetVersionService:
                 created_by=identity.subject_id,
             )
             self.db.add(mapping_version)
+            self.db.flush()
         quality = QualityResult(
             quality_result_id=f"DQ-{uuid4()}",
             dataset_id=dataset_id,
@@ -179,7 +180,9 @@ class DatasetVersionService:
             idempotency_key=idempotency_key,
             created_by=identity.subject_id,
         )
-        self.db.add_all([quality, version])
+        self.db.add(quality)
+        self.db.flush()
+        self.db.add(version)
         try:
             self.db.commit()
         except IntegrityError:
