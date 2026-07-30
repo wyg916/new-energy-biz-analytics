@@ -233,7 +233,7 @@ export function MetricsPage({
           </table>
           {!visibleRows.length && <div className="metric-empty">未找到匹配指标，请调整搜索条件。</div>}
         </div>
-        <div className="metric-pagination"><span>共 {visibleRows.length} 条</span><button>8 条/页⌄</button><div><button>‹</button><button className="active">1</button>{visibleRows.length > 8 && <button>2</button>}<button>›</button></div></div>
+        <div className="metric-pagination"><span>共 {visibleRows.length} 条</span><button disabled>当前结果</button><div><button disabled>‹</button><button disabled className="active">1</button><button disabled>›</button></div></div>
       </main>
 
       <aside className="metric-detail-column">
