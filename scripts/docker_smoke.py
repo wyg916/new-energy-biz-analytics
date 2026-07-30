@@ -1,11 +1,13 @@
 import argparse
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
 import httpx
 
-BASE = "http://127.0.0.1:18000/api/v1"
+BASE = os.getenv("DOCKER_SMOKE_BASE", "http://127.0.0.1:18000/api/v1")
+HOST_HEADER = os.getenv("DOCKER_SMOKE_HOST_HEADER")
 
 
 def main() -> None:
@@ -17,7 +19,8 @@ def main() -> None:
     )
     args = parser.parse_args()
     checks = {}
-    with httpx.Client(timeout=120, trust_env=False) as client:
+    client_headers = {"Host": HOST_HEADER} if HOST_HEADER else {}
+    with httpx.Client(timeout=120, trust_env=False, headers=client_headers) as client:
         health = client.get(f"{BASE}/health"); health.raise_for_status()
         checks["health"] = health.json()["status"] == "ok"
         login = client.post(f"{BASE}/auth/login", json={"username": "analyst", "password": "AlphaAnalyst!2026"}); login.raise_for_status()

@@ -3,7 +3,8 @@
 **/*.pyc
 **/.pytest_cache
 **/.coverage*
-**/data
+backend/data
+frontend/data
 backend/tests
 frontend/node_modules
 frontend/dist
