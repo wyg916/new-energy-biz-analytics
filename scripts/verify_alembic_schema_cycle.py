@@ -17,6 +17,7 @@ from pathlib import Path
 from alembic import command
 from alembic.config import Config
 from alembic.script import ScriptDirectory
+from alembic.runtime.migration import MigrationContext
 from sqlalchemy import create_engine, text
 from sqlalchemy.engine import make_url
 
@@ -30,7 +31,10 @@ result = {
     "isolation": "dedicated_schema",
     "schema": SCHEMA,
     "head_revision": None,
-    "rollback_revision": None,
+    "rollback_revision": "base",
+    "base_to_head": False,
+    "head_to_base": False,
+    "base_to_head_again": False,
     "upgrade": False,
     "rollback": False,
     "reupgrade": False,
@@ -58,28 +62,26 @@ try:
     config.set_main_option("script_location", str(ROOT / "alembic"))
     revisions = ScriptDirectory.from_config(config)
     head_revision = revisions.get_current_head()
-    head_script = revisions.get_revision(head_revision)
-    rollback_revision = head_script.down_revision
-    if not isinstance(rollback_revision, str):
-        raise RuntimeError("release rollback requires one linear previous revision")
     result["head_revision"] = head_revision
-    result["rollback_revision"] = rollback_revision
 
     command.upgrade(config, "head")
     schema_engine = create_engine(schema_url, pool_pre_ping=True)
     with schema_engine.connect() as connection:
-        revision = connection.scalar(text("SELECT version_num FROM alembic_version"))
-    result["upgrade"] = revision == head_revision
+        revision = MigrationContext.configure(connection).get_current_revision()
+    result["base_to_head"] = revision == head_revision
+    result["upgrade"] = result["base_to_head"]
 
-    command.downgrade(config, rollback_revision)
+    command.downgrade(config, "base")
     with schema_engine.connect() as connection:
-        revision = connection.scalar(text("SELECT version_num FROM alembic_version"))
-    result["rollback"] = revision == rollback_revision
+        revision = MigrationContext.configure(connection).get_current_revision()
+    result["head_to_base"] = revision is None
+    result["rollback"] = result["head_to_base"]
 
     command.upgrade(config, "head")
     with schema_engine.connect() as connection:
-        revision = connection.scalar(text("SELECT version_num FROM alembic_version"))
-    result["reupgrade"] = revision == head_revision
+        revision = MigrationContext.configure(connection).get_current_revision()
+    result["base_to_head_again"] = revision == head_revision
+    result["reupgrade"] = result["base_to_head_again"]
 finally:
     os.environ["DATABASE_URL"] = original_url
     if schema_engine is not None:
@@ -95,7 +97,9 @@ finally:
     base_engine.dispose()
 
 result["passed"] = all(
-    result[key] for key in ("upgrade", "rollback", "reupgrade", "schema_removed")
+    result[key] for key in (
+        "base_to_head", "head_to_base", "base_to_head_again", "schema_removed"
+    )
 )
 print(json.dumps(result, ensure_ascii=False))
 raise SystemExit(0 if result["passed"] else 1)
