@@ -343,6 +343,8 @@ class SemanticActivationService:
         failure_hook: Callable[[], None] | None = None,
     ) -> SemanticActivation:
         try:
+            semantic_version = None
+            semantic_model = None
             version = self.db.get(DatasetVersion, dataset_version_id)
             if version is None:
                 raise DatasetReleaseError("VERSION_NOT_FOUND", "数据集版本不存在")
@@ -359,6 +361,35 @@ class SemanticActivationService:
                 raise DatasetReleaseError("DATASET_NOT_FOUND", "数据集不存在或不在当前工作区")
             if version.status not in {"PUBLISHED", "SUPERSEDED", "ACTIVE"}:
                 raise DatasetReleaseError("NOT_PUBLISHED", "只有已发布版本可以激活")
+            if semantic_model_version_id:
+                from app.models.semantic import SemanticModel, SemanticModelVersion
+                from app.platform.versioning import version_satisfies
+
+                semantic_version = self.db.get(SemanticModelVersion, semantic_model_version_id)
+                semantic_model = (
+                    self.db.get(SemanticModel, semantic_version.semantic_model_id)
+                    if semantic_version else None
+                )
+                if (
+                    semantic_version is None
+                    or semantic_model is None
+                    or semantic_version.status not in {"PUBLISHED", "SUPERSEDED", "ACTIVE"}
+                    or semantic_model.tenant_id != identity.tenant_id
+                    or semantic_model.workspace_id != identity.workspace_id
+                    or semantic_model.scenario_id != dataset.scenario_id
+                    or semantic_version.scenario_version != scenario_version
+                ):
+                    raise DatasetReleaseError(
+                        "SEMANTIC_VERSION_INVALID",
+                        "语义版本未发布、范围不匹配或场景版本不兼容",
+                    )
+                if not version_satisfies(
+                    semantic_version.version, version.compatible_semantic_range
+                ):
+                    raise DatasetReleaseError(
+                        "SEMANTIC_VERSION_INCOMPATIBLE",
+                        "数据集版本与语义版本不兼容",
+                    )
             pointer = self.db.scalar(
                 select(SemanticActivation).where(
                     SemanticActivation.tenant_id == identity.tenant_id,
@@ -367,13 +398,32 @@ class SemanticActivationService:
                     SemanticActivation.dataset_id == dataset.dataset_id,
                 ).with_for_update()
             )
-            if pointer and pointer.active_dataset_version_id == dataset_version_id:
+            if (
+                pointer
+                and pointer.active_dataset_version_id == dataset_version_id
+                and pointer.active_semantic_model_version_id == semantic_model_version_id
+                and pointer.scenario_version == scenario_version
+            ):
                 return pointer
             prior = self.db.get(DatasetVersion, pointer.active_dataset_version_id) if pointer else None
             if prior:
                 prior.status = "SUPERSEDED"
                 self.db.flush()
+            if pointer and pointer.active_semantic_model_version_id:
+                from app.models.semantic import SemanticModelVersion
+
+                prior_semantic = self.db.get(
+                    SemanticModelVersion, pointer.active_semantic_model_version_id
+                )
+                if (
+                    prior_semantic
+                    and prior_semantic.semantic_model_version_id != semantic_model_version_id
+                ):
+                    prior_semantic.status = "SUPERSEDED"
+                    self.db.flush()
             version.status = "ACTIVE"
+            if semantic_version:
+                semantic_version.status = "ACTIVE"
             now = _now()
             if pointer is None:
                 pointer = SemanticActivation(
