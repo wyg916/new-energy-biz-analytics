@@ -1,17 +1,9 @@
 import { expect, test } from '@playwright/test'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { mkdir } from 'node:fs/promises'
 
 test.use({
   viewport: { width: 1600, height: 900 },
   channel: process.env.PLAYWRIGHT_USE_SYSTEM_CHROME === '1' ? 'chrome' : undefined,
 })
-
-const screenshotPath = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  '../../docs/v2/evidence/ui/revenue-orders.png',
-)
 
 test('收入与订单复刻页在100%缩放下一屏完整展示', async ({ page }) => {
   const consoleErrors: string[] = []
@@ -67,7 +59,6 @@ test('收入与订单复刻页在100%缩放下一屏完整展示', async ({ page
   expect(fit.minFontSize).toBeGreaterThanOrEqual(10)
   expect(fit.medianFontSize).toBeGreaterThanOrEqual(11)
 
-  await mkdir(path.dirname(screenshotPath), { recursive: true })
-  await page.screenshot({ path: screenshotPath, fullPage: true })
+  await page.screenshot({ fullPage: true })
   expect(consoleErrors).toEqual([])
 })

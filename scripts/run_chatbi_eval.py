@@ -1,3 +1,4 @@
+import argparse
 import json
 import sys
 from datetime import datetime, timezone
@@ -43,9 +44,14 @@ def evaluate_case(case: dict) -> tuple[bool, str, dict]:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Run the fixed ChatBI Query Plan evaluation set.")
+    parser.add_argument(
+        "--output-dir",
+        type=Path,
+        help="Optional evidence directory. Omit for a side-effect-free verification run.",
+    )
+    args = parser.parse_args()
     source_path = ROOT / "tests" / "evaluation" / "chatbi_evaluation_set_v0.1.json"
-    output_dir = ROOT / "tests" / "evaluation" / "output"
-    output_dir.mkdir(parents=True, exist_ok=True)
     source = json.loads(source_path.read_text(encoding="utf-8"))
     results = []
     for case in source["cases"]:
@@ -59,10 +65,15 @@ def main() -> None:
         "pass_rate": round(passed_count / len(results), 4), "hardcoded_answers": False,
         "results": results,
     }
-    (output_dir / "chatbi_eval_v0.1.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     failed_ids = [item["case_id"] for item in results if not item["passed"]]
-    markdown = f"# ChatBI 固定评测报告 v0.1\n\n- 总数：{len(results)}\n- 通过：{passed_count}\n- 失败：{len(failed_ids)}\n- 通过率：{report['pass_rate']:.2%}\n- 失败用例：{', '.join(failed_ids) if failed_ids else '无'}\n- 评测边界：Query Plan 子集、澄清/拒绝和安全行为；经营数字正确性由指标与集成测试覆盖。\n"
-    (output_dir / "chatbi_eval_v0.1.md").write_text(markdown, encoding="utf-8")
+    if args.output_dir:
+        args.output_dir.mkdir(parents=True, exist_ok=True)
+        (args.output_dir / "chatbi_eval_v0.1.json").write_text(
+            json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        markdown = f"# ChatBI 固定评测报告 v0.1\n\n- 总数：{len(results)}\n- 通过：{passed_count}\n- 失败：{len(failed_ids)}\n- 通过率：{report['pass_rate']:.2%}\n- 失败用例：{', '.join(failed_ids) if failed_ids else '无'}\n- 评测边界：Query Plan 子集、澄清/拒绝和安全行为；经营数字正确性由指标与集成测试覆盖。\n"
+        (args.output_dir / "chatbi_eval_v0.1.md").write_text(markdown, encoding="utf-8")
     print(json.dumps({"total": len(results), "passed": passed_count, "failed": len(failed_ids), "failed_ids": failed_ids}, ensure_ascii=False))
     raise SystemExit(0 if not failed_ids else 1)
 

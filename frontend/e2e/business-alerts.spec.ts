@@ -1,7 +1,4 @@
 import { expect, test } from '@playwright/test'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { mkdir } from 'node:fs/promises'
 
 test.use({
   viewport: { width: 1600, height: 900 },
@@ -11,11 +8,6 @@ test.use({
       : {}),
   },
 })
-
-const screenshotPath = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  '../../docs/v2/evidence/ui/business-alerts.png',
-)
 
 test('经营预警复刻页在100%缩放下一屏完整展示', async ({ page }) => {
   const consoleErrors: string[] = []
@@ -29,13 +21,14 @@ test('经营预警复刻页在100%缩放下一屏完整展示', async ({ page })
   await page.getByRole('button', { name: '经营预警' }).click()
 
   await expect(page.getByRole('heading', { name: '经营预警', exact: true })).toBeVisible()
-  await expect(page.getByRole('heading', { name: '预警列表' })).toBeVisible({ timeout: 120_000 })
+  await expect(page.getByRole('heading', { name: '规则诊断列表（非预警工单）' })).toBeVisible({ timeout: 120_000 })
   await expect(page.getByRole('heading', { name: '业务摘要' })).toBeVisible()
   await expect(page.getByRole('heading', { name: '指标变化' })).toBeVisible()
   await expect(page.getByRole('heading', { name: /贡献拆解/ })).toBeVisible()
   await expect(page.getByRole('heading', { name: '影响对象' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: '建议行动' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: '处理记录' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '人工核查建议' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '本轮诊断证据' })).toBeVisible()
+  await expect(page.getByText('无虚构处理记录')).toBeVisible()
   await expect(page.getByText('模拟数据', { exact: true })).toBeVisible()
   await expect(page.getByText(/run_id：DIAG-/)).toBeVisible()
 
@@ -55,11 +48,10 @@ test('经营预警复刻页在100%缩放下一屏完整展示', async ({ page })
   expect(fit.pageBottom).toBeLessThanOrEqual(fit.viewportHeight)
   expect(fit.overflowingPanels).toEqual([])
 
-  await page.getByLabel('风险等级筛选').selectOption('high')
-  await expect(page.locator('.alert-rows > button')).toHaveCount(2)
-  await page.getByLabel('风险等级筛选').selectOption('all')
+  await page.getByLabel('贡献方向筛选').selectOption('high')
+  await expect.poll(() => page.locator('.alert-rows > button').count()).toBeGreaterThan(0)
+  await page.getByLabel('贡献方向筛选').selectOption('all')
 
-  await mkdir(path.dirname(screenshotPath), { recursive: true })
-  await page.screenshot({ path: screenshotPath, fullPage: true })
+  await page.screenshot({ fullPage: true })
   expect(consoleErrors).toEqual([])
 })

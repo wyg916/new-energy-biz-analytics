@@ -35,6 +35,8 @@ def test_overview_and_platform_ingestion_are_database_backed(client, login):
     assert len(body["dataset"]["mapping"]) == 8
     assert len(body["preview"]) == 5
     assert body["metadata"]["source"] == "platform_database"
+    assert body["metadata"]["preview_source"] == "managed_platform_source_preview"
+    assert body["metadata"]["semantic_activation_status"] == "not_implemented"
     assert body["metadata"]["batch_id"].startswith("SIM-")
     assert all(body["validations"].values())
 
@@ -96,6 +98,9 @@ def test_quality_approval_and_publication_are_database_backed_and_audited(client
     assert published.status_code == 200
     assert published.json()["workflow_status"] == "published"
     assert published.json()["release_version"] == "v1.0"
+    assert published.json()["publication_scope"] == "immutable_station_snapshot"
+    assert published.json()["semantic_activation_status"] == "not_implemented"
+    assert published.json()["formal_consumer_status"] == "conditional_station_snapshot_only"
     assert published.json()["summary"]["snapshot_rows"] == 30
 
     station_query = client.get(
@@ -134,6 +139,55 @@ def test_quality_approval_and_publication_are_database_backed_and_audited(client
     with SessionLocal() as db:
         assert len(db.scalars(select(IngestedStationPreview)).all()) == 5
         assert len(db.scalars(select(PublishedStationSnapshot)).all()) == 30
+
+
+def test_failed_publication_rolls_back_workflow_before_failure_audit(client, login):
+    with SessionLocal() as db:
+        generate_simulated_data(db, session_count=1_000)
+    headers = login()
+    run_id = client.post(
+        "/api/v1/data-integration/datasets/station-operations/run",
+        json={"start": "2026-01-01", "end_exclusive": "2026-07-01", "limit": 5},
+        headers=headers,
+    ).json()["run_id"]
+    client.post(
+        f"/api/v1/data-integration/datasets/station-operations/runs/{run_id}/quality",
+        headers=headers,
+    )
+    client.post(
+        f"/api/v1/data-integration/datasets/station-operations/runs/{run_id}/submit",
+        headers=headers,
+    )
+    client.post(
+        f"/api/v1/data-integration/datasets/station-operations/runs/{run_id}/review",
+        json={"action": "approve"},
+        headers=headers,
+    )
+    with SessionLocal() as db:
+        scenario = db.scalar(select(ScenarioPackageRelease))
+        scenario.status = "installed"
+        scenario.source_batch_id = None
+        db.commit()
+
+    failed = client.post(
+        f"/api/v1/data-integration/datasets/station-operations/runs/{run_id}/publish",
+        headers=headers,
+    )
+    assert failed.status_code == 422
+    assert failed.json()["detail"]["code"] == "SCENARIO_NOT_PUBLISHED"
+    with SessionLocal() as db:
+        review = db.scalar(select(DataIngestionReview).where(DataIngestionReview.run_id == run_id))
+        dataset = db.get(DataSetDefinition, "station-operations")
+        assert review and review.workflow_status == "approved"
+        assert review.release_version is None
+        assert dataset and dataset.status == "approved"
+        assert db.scalar(select(PublishedStationSnapshot.id)) is None
+        audit = db.scalar(
+            select(AuditLog)
+            .where(AuditLog.action == "data_ingestion.publish")
+            .order_by(AuditLog.id.desc())
+        )
+        assert audit and audit.outcome == "failed"
 
 
 def test_quality_failure_and_invalid_publication_fail_closed(client, login):

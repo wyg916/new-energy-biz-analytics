@@ -1,6 +1,6 @@
 # 新能源企业经营分析智能平台（产品级 Alpha）
 
-> 状态：Phase 1—8 已实现并完成自动化验收。
+> 状态：新能源充电运营产品级 Alpha；Phase 1—8 有历史自动化验收证据。2026-07-30 起正在执行 ChatBI 平台化 P0，当前通过情况以 [`docs/platformization/p0/12_ACCEPTANCE_TEST_MATRIX.md`](docs/platformization/p0/12_ACCEPTANCE_TEST_MATRIX.md) 为准。
 >
 > 数据边界：仅使用固定种子生成的模拟数据；未接入企业真实数据，不代表生产部署或真实经营收益。
 
@@ -62,15 +62,15 @@ npm.cmd audit --prefix frontend
 npm.cmd run e2e --prefix frontend
 ```
 
-2026-07-22 的 Alpha 验收结果：后端 33/33（覆盖率 89%）、前端 3/3、固定评测 40/40、危险 SQL 12/12 拒绝、数据质量 20/20、容器烟测 6/6、Playwright 1/1、npm 已知漏洞 0。详情见[测试与评测报告](docs/test_and_evaluation_report.md)。
+历史证据：2026-07-22 的 Alpha 验收记录为后端 33/33（覆盖率 89%）、前端 3/3、固定评测 40/40、危险 SQL 12/12 拒绝、数据质量 20/20、容器烟测 6/6、Playwright 1/1、npm 已知漏洞 0。详情见[测试与评测报告](docs/test_and_evaluation_report.md)。这些数字不是当前工作分支的自动继承结论。
 
-2026-07-29 的 V2-P0.5 新增了数据库批次质量校验、管理员审批、受控发布、
+历史证据：2026-07-29 的 V2-P0.5 新增了数据库批次质量校验、管理员审批、受控发布、
 `charging_ops 0.1.0` 场景包和不可变场站快照。回归结果为后端 47/47、前端
 3/3、P0.5 E2E 1/1、固定评测 40/40、烟测 6/6；15 项指标迁移前后差异为 0，
 PostgreSQL 迁移完成升级/降级/再升级，1600×900 页面无滚动与溢出。详见
 [V2-P0.5 工作包证据](docs/v2/evidence/p0_5/README.md)。
 
-2026-07-29 的 V2-P0.6 建立了单客户、单主机私有化发布候选：生产配置
+历史证据：2026-07-29 的 V2-P0.6 建立了单客户、单主机私有化发布候选：生产配置
 fail-closed、HTTPS/Nginx 反向代理、就绪探针、低基数监控指标、JSON 请求日志、
 PostgreSQL 备份与专用 schema 恢复演练、升级回滚门禁和冷环境安装验收。RC
 结果为后端 60/60、前端 3/3、E2E 13/13、固定评测 40/40、烟测 6/6、
@@ -107,8 +107,11 @@ docker-compose.yml          PostgreSQL、Redis、API、Web 统一编排
 - [V2-P0.0 Alpha 证据](docs/v2/evidence/alpha/README.md)
 - [V2-P0.6 RC 验收证据](docs/v2/evidence/p0_6/README.md)
 - [私有化部署与运维指南](deploy/private/README.md)
+- [平台化 P0 当前事实基线](docs/platformization/p0/00_CURRENT_FACT_BASELINE.md)
+- [平台化 P0 定位、合同与迁移入口](docs/platformization/p0/01_PLATFORM_POSITIONING.md)
+- [平台化 P0 当前验收矩阵](docs/platformization/p0/12_ACCEPTANCE_TEST_MATRIX.md)
 
-当前已知限制：自然语言解析为合同范围内的确定性中文规则，不是开放域大模型；会话记忆仅限结构化短期状态；报告导出为 Markdown/CSV 草稿；私有化 RC 只验证单客户、单主机 Compose、备份恢复和升级回滚，不包含 Kubernetes、高可用、共享多租户、SSO 或生产 SLA 承诺。
+当前已知限制：自然语言解析为合同范围内的确定性中文规则，不是开放域大模型；会话记忆仅限结构化短期状态；报告导出为 Markdown/CSV 草稿；已发布场站快照尚未原子激活为所有正式消费者的数据版本；私有化 RC 只验证过单客户、单主机 Compose、备份恢复和升级回滚，不包含 Kubernetes、高可用、共享多租户、SSO 或生产 SLA 承诺。
 
 ## 回滚
 
@@ -116,4 +119,4 @@ docker-compose.yml          PostgreSQL、Redis、API、Web 统一编排
 
 ## 真实性声明
 
-可以表述为“产品级 Alpha、已实现并在模拟数据和本地 Compose 环境验证”。不得表述为生产上线、真实客户使用、接入真实企业数据或产生真实经营收益。
+可以表述为“面向新能源充电运营的产品级 Alpha；存在模拟数据和本地 Compose 的历史验证证据，当前分支验收以 P0 矩阵为准”。不得表述为通用企业级 ChatBI 已完成、生产上线、真实客户使用、接入真实企业数据或产生真实经营收益。

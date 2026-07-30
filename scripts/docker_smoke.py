@@ -1,3 +1,4 @@
+import argparse
 import json
 from datetime import datetime, timezone
 from pathlib import Path
@@ -5,10 +6,16 @@ from pathlib import Path
 import httpx
 
 BASE = "http://127.0.0.1:18000/api/v1"
-ROOT = Path(__file__).resolve().parents[1]
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Run side-effect-free Docker smoke checks.")
+    parser.add_argument(
+        "--output",
+        type=Path,
+        help="Optional evidence JSON path. Omit for a side-effect-free verification run.",
+    )
+    args = parser.parse_args()
     checks = {}
     with httpx.Client(timeout=120, trust_env=False) as client:
         health = client.get(f"{BASE}/health"); health.raise_for_status()
@@ -33,8 +40,9 @@ def main() -> None:
         forbidden = client.post(f"{BASE}/chat/query", headers=regional_headers, json={"question": "区域B在2026年6月充电收入是多少？"})
         checks["regional_scope_403"] = forbidden.status_code == 403
     report = {"executed_at": datetime.now(timezone.utc).isoformat(), "base_url": BASE, "checks": checks, "passed": all(checks.values())}
-    output = ROOT / "tests" / "evaluation" / "output" / "docker_smoke.json"
-    output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False))
     raise SystemExit(0 if report["passed"] else 1)
 

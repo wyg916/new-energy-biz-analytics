@@ -37,7 +37,7 @@
 
 ## 测试与证据
 
-最终命令和状态见 `12_ACCEPTANCE_TEST_MATRIX.md`。Docker/PostgreSQL 未运行的项目不得标记为本轮 PASS。
+最终命令和状态见 `12_ACCEPTANCE_TEST_MATRIX.md`。已通过后端 61/61、前端单元 3/3 与生产构建、固定评测 40/40、npm 审计、发布回滚指定测试和数据接入 fail-closed E2E。Docker/PostgreSQL 未运行的项目不得标记为本轮 PASS。
 
 ## 限制与未完成
 
@@ -52,5 +52,4 @@
 
 ## 阶段结论
 
-只有验收矩阵全部必选项通过且 Critical/High 阻塞关闭后，才允许进入 P1。当前结论随本轮最终测试更新。
-
+当前结论：`P0 NOT PASS / 不允许进入 P1`。只有验收矩阵全部必选项通过、Docker 依赖验收重跑、查询只读角色边界证明和附件凭据轮换完成后，才允许进入 P1。

@@ -1,14 +1,6 @@
 import { expect, test } from '@playwright/test'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { mkdir } from 'node:fs/promises'
 
 test.use({ viewport: { width: 1600, height: 900 } })
-
-const screenshotPath = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  '../../docs/v2/evidence/ui/station-operations.png',
-)
 
 test('场站经营复刻页在100%缩放下一屏完整展示', async ({ page }) => {
   const consoleErrors: string[] = []
@@ -46,7 +38,6 @@ test('场站经营复刻页在100%缩放下一屏完整展示', async ({ page })
   expect(fit.pageBottom).toBeLessThanOrEqual(fit.viewportHeight)
   expect(fit.overflowingPanels).toEqual([])
 
-  await mkdir(path.dirname(screenshotPath), { recursive: true })
-  await page.screenshot({ path: screenshotPath, fullPage: true })
+  await page.screenshot({ fullPage: true })
   expect(consoleErrors).toEqual([])
 })

@@ -13,6 +13,8 @@ def test_dashboard_uses_database_and_enforces_region_scope(client, login):
     assert body["metrics"]["charging_revenue"] > 0
     assert body["metadata"]["data_classification"] == "simulated"
     assert body["metadata"]["source"] == "platform_database"
+    assert body["metadata"]["query_source"] == "platform_fact_tables"
+    assert body["metadata"]["semantic_activation_status"] == "not_implemented"
     assert body["metadata"]["batch_id"].startswith("SIM-")
     assert body["metadata"]["analysis_run_id"].startswith("DASH-")
 

@@ -1,23 +1,14 @@
 import { expect, test } from '@playwright/test'
-import { mkdir, writeFile } from 'node:fs/promises'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-const evidenceDir = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  '../../docs/v2/evidence/alpha/screenshots',
-)
 
 const viewport = { width: 1440, height: 900 }
 test.use({ viewport })
 
 test('capture current Alpha product pages without changing business data', async ({ page }) => {
-  await mkdir(evidenceDir, { recursive: true })
   const capturedAt = new Date().toISOString()
   const screenshots: Array<{ page: string; file: string }> = []
 
   async function capture(pageName: string, file: string) {
-    await page.screenshot({ path: path.join(evidenceDir, file), fullPage: true })
+    await page.screenshot({ fullPage: true })
     screenshots.push({ page: pageName, file })
   }
 
@@ -79,9 +70,6 @@ test('capture current Alpha product pages without changing business data', async
       },
     ],
   }
-  await writeFile(
-    path.join(evidenceDir, 'manifest.json'),
-    JSON.stringify(manifest, null, 2) + '\n',
-    'utf-8',
-  )
+  expect(manifest.screenshots).toHaveLength(9)
+  expect(manifest.data_classification).toBe('fixed_seed_simulated')
 })

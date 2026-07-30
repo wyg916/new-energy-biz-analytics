@@ -1,13 +1,6 @@
 import { expect, test } from '@playwright/test'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { mkdir } from 'node:fs/promises'
 
 test.use({ viewport: { width: 1600, height: 900 } })
-const screenshotPath = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  '../../docs/v2/evidence/ui/feature-overview.png',
-)
 
 test('功能总览复刻页使用后端指标并支持核心入口', async ({ page }) => {
   const consoleErrors: string[] = []
@@ -30,15 +23,14 @@ test('功能总览复刻页使用后端指标并支持核心入口', async ({ pa
     viewportHeight: window.innerHeight,
   }))
   expect(viewportFit.scrollHeight).toBeLessThanOrEqual(viewportFit.viewportHeight)
-  await mkdir(path.dirname(screenshotPath), { recursive: true })
-  await page.screenshot({ path: screenshotPath, fullPage: true })
+  await page.screenshot({ fullPage: true })
   await page.getByRole('button', { name: /向 AI 提问/ }).click()
   await expect(page.getByRole('heading', { name: 'AI经营分析', exact: true })).toBeVisible()
   await expect(page.getByRole('heading', { name: '可信 ChatBI' })).toBeVisible()
   await page.getByRole('button', { name: '功能总览' }).click()
   await expect(page.getByRole('heading', { name: '功能总览', exact: true })).toBeVisible()
   await page.getByRole('button', { name: '经营预警' }).click()
-  await expect(page.getByRole('heading', { name: '预警列表' })).toBeVisible({ timeout: 90_000 })
+  await expect(page.getByRole('heading', { name: '规则诊断列表（非预警工单）' })).toBeVisible({ timeout: 90_000 })
   await page.getByRole('button', { name: '经营报告' }).click()
   await expect(page.getByRole('heading', { name: '新能源经营分析周报' })).toBeVisible()
   await page.getByRole('button', { name: /生成报告/ }).click()
