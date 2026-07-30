@@ -103,6 +103,7 @@ class SQLBotEngine(QueryEngine):
             tenant_id=request.identity_context.tenant_id,
             workspace_id=request.identity_context.workspace_id,
             subject_id=request.identity_context.subject_id,
+            conversation_id=context.conversation_id,
             scenario_id=request.scenario_id,
             scenario_version=context.scenario_version,
             semantic_version=context.semantic_version,

@@ -8,6 +8,7 @@ class SQLBotSessionKey:
     tenant_id: str
     workspace_id: str
     subject_id: str
+    conversation_id: str
     scenario_id: str
     scenario_version: str
     semantic_version: str
@@ -18,6 +19,7 @@ class SQLBotSessionKey:
             self.tenant_id,
             self.workspace_id,
             self.subject_id,
+            self.conversation_id,
             self.scenario_id,
             self.scenario_version,
             self.semantic_version,

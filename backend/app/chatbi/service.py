@@ -18,6 +18,11 @@ from app.models.business import AnalysisRun, DataGenerationRun
 from app.core.config import get_settings
 from app.platform.identity import IdentityContextFactory
 from app.platform.query_engine import QueryRequest
+from app.query_engines.context import build_query_context
+from app.query_engines.router import EngineRouter
+from app.query_engines.shadow import RoutingEvidenceRepository
+from app.query_engines.sqlbot.engine import SQLBotEngine
+from app.query_engines.sqlbot.session_manager import SQLBotSessionManager
 from app.scenarios.charging_ops.runtime import SCENARIO_ID, resolve_charging_ops_context
 from app.services.dashboard import DashboardService, allowed_station_ids
 from app.services.metric_catalog import METRICS
@@ -60,7 +65,7 @@ class ChatBIService:
                 self.db, self.user, request_id=identity.request_id
             )
         engine = DeterministicEngine(self._ask_deterministic, self.platform_context)
-        query_result = engine.execute(QueryRequest(
+        request = QueryRequest(
             question=question,
             identity_context=identity,
             scenario_id=SCENARIO_ID,
@@ -68,9 +73,37 @@ class ChatBIService:
                 "conversation_id": self.conversation_id,
                 "state_version": self.state_version,
             },
-        ))
+        )
+        query_context = build_query_context(
+            self.db,
+            conversation_id=self.conversation_id,
+            platform_context=self.platform_context,
+        )
+        evidence_repository = RoutingEvidenceRepository(self.db)
+        sqlbot = SQLBotEngine(
+            session_manager=SQLBotSessionManager(
+                on_bind=evidence_repository.record_session_binding
+            )
+        )
+        routed = EngineRouter.from_settings(
+            engine,
+            sqlbot,
+            evidence=evidence_repository,
+        ).execute(
+            request,
+            query_context,
+            deterministic_supported=True,
+        )
+        query_result = routed.result
         response = engine.legacy_response or {}
         response["query_result"] = query_result.as_dict()
+        response["engine_routing"] = {
+            "mode": get_settings().effective_query_engine_mode,
+            "route_decision": routed.route_decision,
+            "route_reason": routed.route_reason,
+            "feature_flag_version": get_settings().query_engine_feature_flag_version,
+            "shadow_compared": routed.shadow_comparison is not None,
+        }
         return response
 
     def _ask_deterministic(self, question: str) -> dict:

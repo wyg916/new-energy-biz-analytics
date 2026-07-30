@@ -55,15 +55,16 @@ QueryRequest + QueryContext -> QueryResult
 
 ## 会话隔离
 
-SQLBot 会话键由以下七个维度组成：
+SQLBot 会话键由以下八个维度组成：
 
 1. tenant；
 2. workspace；
 3. subject/user；
-4. scenario；
-5. scenario_version；
-6. semantic_version；
-7. dataset_version。
+4. conversation；
+5. scenario；
+6. scenario_version；
+7. semantic_version；
+8. dataset_version。
 
 任何一个维度变化都会创建新 SQLBot 会话。访问 Token 只保存在后端进程内存，
 不写入数据库证据、不写入日志、不进入 `QueryResult`。认证失效只允许一次受控

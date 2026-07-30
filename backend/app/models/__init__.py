@@ -18,6 +18,9 @@ from app.models.semantic import (
     SemanticMetric, SemanticModel, SemanticModelVersion, SemanticRelationship,
     SemanticTable, SemanticTimeDimension,
 )
+from app.models.query_routing import (
+    QueryRouteDecisionRecord, ShadowEvaluation, SQLBotSessionBindingRecord,
+)
 
 __all__ = [
     "AuditLog", "User", "AnalysisRun", "ChargingSession", "City", "DataGenerationRun",
@@ -31,4 +34,5 @@ __all__ = [
     "DataPolicy", "SemanticDimension", "SemanticField", "SemanticFilter",
     "SemanticMetric", "SemanticModel", "SemanticModelVersion", "SemanticRelationship",
     "SemanticTable", "SemanticTimeDimension",
+    "QueryRouteDecisionRecord", "ShadowEvaluation", "SQLBotSessionBindingRecord",
 ]

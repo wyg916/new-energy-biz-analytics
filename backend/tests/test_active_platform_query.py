@@ -65,8 +65,15 @@ def test_active_versions_route_all_formal_consumers_and_fail_closed(client, logi
     }
     assert required == set(query_result)
     assert query_result["engine"] == "deterministic"
-    assert query_result["warnings"] == []
+    assert query_result["warnings"] == ["SQLBOT_DISABLED"]
     assert query_result["rows"]
+    assert chat_body["engine_routing"] == {
+        "mode": "SHADOW",
+        "route_decision": "DETERMINISTIC_WITH_SHADOW",
+        "route_reason": "SQLBOT_DISABLED",
+        "feature_flag_version": "p1b-1",
+        "shadow_compared": False,
+    }
 
     metadata_rows = [
         summary.json()["metadata"],

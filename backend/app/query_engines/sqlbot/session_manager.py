@@ -1,6 +1,6 @@
 from datetime import UTC, datetime, timedelta
 from threading import RLock
-from typing import Protocol
+from typing import Callable, Protocol
 
 from app.query_engines.sqlbot.contracts import SQLBotSession, SQLBotSessionKey
 
@@ -13,8 +13,13 @@ class SessionFactory(Protocol):
 class SQLBotSessionManager:
     """Secret-bearing runtime cache; durable mappings are added by the router layer."""
 
-    def __init__(self, max_age_seconds: int = 3600):
+    def __init__(
+        self,
+        max_age_seconds: int = 3600,
+        on_bind: Callable[[SQLBotSession], None] | None = None,
+    ):
         self.max_age = timedelta(seconds=max_age_seconds)
+        self.on_bind = on_bind
         self._sessions: dict[tuple[str, ...], SQLBotSession] = {}
         self._lock = RLock()
 
@@ -41,6 +46,8 @@ class SQLBotSessionManager:
                 generation=(current.generation + 1) if current else 1,
             )
             self._sessions[cache_key] = session
+            if self.on_bind:
+                self.on_bind(session)
             return session
 
     def invalidate(self, key: SQLBotSessionKey) -> None:

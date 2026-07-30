@@ -4,9 +4,12 @@ import importlib.util
 from io import BytesIO
 from pathlib import Path
 
+import pytest
+
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_PATH = ROOT / "scripts" / "private_deployment.py"
+pytestmark = pytest.mark.no_db
 
 
 def load_private_deployment_module():

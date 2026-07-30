@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     public_base_url: str = "http://localhost:8080"
     trusted_hosts: str = "localhost,127.0.0.1,testserver"
     release_version: str = "0.1.0-dev"
-    expected_database_revision: str = "0009"
+    expected_database_revision: str = "0010"
     platform_version_routing_enabled: bool = False
     sqlbot_engine_enabled: bool = False
     sqlbot_runtime_verified: bool = False
@@ -35,6 +35,19 @@ class Settings(BaseSettings):
     sqlbot_timeout_seconds: float = 20.0
     sqlbot_circuit_failure_threshold: int = 3
     sqlbot_circuit_recovery_seconds: int = 30
+    query_engine_mode: Literal[
+        "DETERMINISTIC_ONLY",
+        "SHADOW",
+        "CANARY",
+        "SQLBOT_ENABLED",
+        "DISABLED",
+    ] | None = None
+    query_engine_feature_flag_version: str = "p1b-1"
+    query_engine_canary_percentage: float = 5.0
+    query_engine_canary_tenants: str = ""
+    query_engine_canary_workspaces: str = ""
+    query_engine_canary_users: str = ""
+    query_engine_canary_scenarios: str = "charging_ops,sales_ops"
     chatbi_readonly_execution_enabled: bool = False
     chatbi_readonly_database_url: str | None = None
     chatbi_statement_timeout_ms: int = 5000
@@ -89,6 +102,10 @@ class Settings(BaseSettings):
                     failures.append(
                         "CHATBI_READONLY_EXECUTION_ENABLED must be true before enabling SQLBot in production"
                     )
+            if self.effective_query_engine_mode != "DETERMINISTIC_ONLY":
+                failures.append(
+                    "production QUERY_ENGINE_MODE must be DETERMINISTIC_ONLY"
+                )
             if failures:
                 raise ValueError("production configuration rejected: " + "; ".join(failures))
         return self
@@ -109,6 +126,25 @@ class Settings(BaseSettings):
     @property
     def trusted_host_list(self) -> list[str]:
         return [item.strip().lower() for item in self.trusted_hosts.split(",") if item.strip()]
+
+    @property
+    def effective_query_engine_mode(self) -> str:
+        if self.query_engine_mode:
+            return self.query_engine_mode
+        return "DETERMINISTIC_ONLY" if self.app_env == "production" else "SHADOW"
+
+    @staticmethod
+    def _csv_set(value: str) -> frozenset[str]:
+        return frozenset(item.strip() for item in value.split(",") if item.strip())
+
+    @property
+    def query_engine_canary_scope(self) -> dict[str, frozenset[str]]:
+        return {
+            "tenants": self._csv_set(self.query_engine_canary_tenants),
+            "workspaces": self._csv_set(self.query_engine_canary_workspaces),
+            "users": self._csv_set(self.query_engine_canary_users),
+            "scenarios": self._csv_set(self.query_engine_canary_scenarios),
+        }
 
 
 @lru_cache
