@@ -113,7 +113,7 @@ def main() -> int:
                 database=database,
             )
         )
-        if revision != deployment.env.get("EXPECTED_DATABASE_REVISION", "0006"):
+        if revision != deployment.env.get("EXPECTED_DATABASE_REVISION", "0009"):
             raise OperationError("cold database revision does not match the release contract")
         if demo_users != 0:
             raise OperationError("production cold install unexpectedly created demo users")

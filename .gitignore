@@ -49,6 +49,7 @@ artifacts/*
 *.sqlite
 *.sqlite3
 *.db
+*.db-journal
 *.dump
 *.backup
 data/generated/

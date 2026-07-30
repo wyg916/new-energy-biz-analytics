@@ -1,5 +1,8 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
+from uuid import uuid4
+
+from app.core.config import get_settings
 
 
 @dataclass(frozen=True)
@@ -15,3 +18,21 @@ class IdentityContext:
     issued_at: datetime
     request_id: str
 
+
+class IdentityContextFactory:
+    @staticmethod
+    def from_user(user, *, request_id: str | None = None) -> IdentityContext:
+        settings = get_settings()
+        scopes = (f"region:{user.region_code}",) if user.region_code else ("workspace:all",)
+        return IdentityContext(
+            subject_id=f"user:{user.id}",
+            tenant_id=settings.platform_tenant_id,
+            org_id=settings.platform_org_id,
+            workspace_id=settings.platform_workspace_id,
+            roles=(user.role,),
+            groups=(),
+            data_scopes=scopes,
+            auth_strength="local-jwt",
+            issued_at=datetime.now(UTC),
+            request_id=request_id or f"REQ-{uuid4()}",
+        )

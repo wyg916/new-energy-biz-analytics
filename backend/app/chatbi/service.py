@@ -7,6 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.chatbi.compiler import ScopeDenied, compile_query
+from app.chatbi.engine import DeterministicEngine
 from app.chatbi.executor import execute_readonly
 from app.chatbi.guard import guard_compiled_query
 from app.chatbi.parser import parse_question
@@ -14,6 +15,10 @@ from app.chatbi.plan import QueryPlan
 from app.chatbi.memory import SessionMemory, WORK_MEMORY
 from app.models.auth import AuditLog, User
 from app.models.business import AnalysisRun, DataGenerationRun
+from app.core.config import get_settings
+from app.platform.identity import IdentityContextFactory
+from app.platform.query_engine import QueryRequest
+from app.scenarios.charging_ops.runtime import SCENARIO_ID, resolve_charging_ops_context
 from app.services.dashboard import DashboardService, allowed_station_ids
 from app.services.metric_catalog import METRICS
 from app.scenarios.registry import published_charging_ops_batch
@@ -45,8 +50,30 @@ class ChatBIService:
         self.memory = SessionMemory(db, user, conversation_id)
         self.conversation_id = self.memory.conversation_id
         self.state_version = self.memory.state.state_version if self.memory.state else 0
+        self.platform_context = None
 
     def ask(self, question: str) -> dict:
+        settings = get_settings()
+        identity = IdentityContextFactory.from_user(self.user)
+        if settings.platform_version_routing_enabled:
+            identity, self.platform_context = resolve_charging_ops_context(
+                self.db, self.user, request_id=identity.request_id
+            )
+        engine = DeterministicEngine(self._ask_deterministic, self.platform_context)
+        query_result = engine.execute(QueryRequest(
+            question=question,
+            identity_context=identity,
+            scenario_id=SCENARIO_ID,
+            conversation_state={
+                "conversation_id": self.conversation_id,
+                "state_version": self.state_version,
+            },
+        ))
+        response = engine.legacy_response or {}
+        response["query_result"] = query_result.as_dict()
+        return response
+
+    def _ask_deterministic(self, question: str) -> dict:
         started_at = datetime.now(UTC)
         run_id = f"CHAT-{uuid4()}"
         plan = self.memory.resolve(question)
@@ -81,7 +108,11 @@ class ChatBIService:
 
         authorized = allowed_station_ids(self.db, self.user)
         WORK_MEMORY.update(work_state.task_id, "guarding")
-        compiled = compile_query(self.db, plan, authorized)
+        source_relations = (
+            self.platform_context.source_binding["relations"]
+            if self.platform_context else None
+        )
+        compiled = compile_query(self.db, plan, authorized, source_relations)
         sql_hash = _hash(compiled.sql)
         WORK_MEMORY.update(work_state.task_id, "executing")
         chart = None
@@ -115,7 +146,10 @@ class ChatBIService:
                 duration = plan.time_range.end_exclusive - plan.time_range.start
                 previous_plan.time_range.end_exclusive = plan.time_range.start
                 previous_plan.time_range.start = plan.time_range.start - duration
-            previous = execute_readonly(self.db, compile_query(self.db, previous_plan, authorized))
+            previous = execute_readonly(
+                self.db,
+                compile_query(self.db, previous_plan, authorized, source_relations),
+            )
             changes = {metric_id: None if previous[metric_id] in (None, 0) or current[metric_id] is None else round((current[metric_id] - previous[metric_id]) / abs(previous[metric_id]), 6) for metric_id in plan.metrics}
             result = {"current": current, "previous": previous, "change_rate": changes}
             flat_values = current
@@ -151,4 +185,21 @@ class ChatBIService:
 
     def _evidence(self, run_id: str, plan: QueryPlan, sql: str | None, station_count: int, guard_status: str, sql_hash: str | None = None, answer_guard_result: dict | None = None) -> dict:
         batch = published_charging_ops_batch(self.db)
-        return {"analysis_run_id": run_id, "conversation_id": self.conversation_id, "state_version": self.state_version, "data_classification": "simulated", "source": "platform_database", "batch_id": batch.batch_id if batch else None, "query_plan_version": plan.version, "query_plan_hash": _hash(json.dumps(plan.model_dump(mode="json"), ensure_ascii=False, sort_keys=True)), "sql_hash": sql_hash, "sql": sql, "authorized_station_count": station_count, "metric_versions": {metric_id: "0.1.0" for metric_id in plan.metrics}, "query_guard": guard_status, "answer_guard": answer_guard_result, "explanation_mode": "deterministic"}
+        versions = (
+            {
+                "scenario_version": self.platform_context.scenario_version,
+                "semantic_version": self.platform_context.semantic_version,
+                "semantic_model_version_id": self.platform_context.semantic_model_version_id,
+                "dataset_version": str(self.platform_context.dataset_version),
+                "dataset_version_id": self.platform_context.dataset_version_id,
+            }
+            if self.platform_context
+            else {
+                "scenario_version": None,
+                "semantic_version": None,
+                "semantic_model_version_id": None,
+                "dataset_version": None,
+                "dataset_version_id": None,
+            }
+        )
+        return {"analysis_run_id": run_id, "conversation_id": self.conversation_id, "state_version": self.state_version, "data_classification": "simulated", "source": "platform_database", "batch_id": batch.batch_id if batch else None, "query_plan_version": plan.version, "query_plan_hash": _hash(json.dumps(plan.model_dump(mode="json"), ensure_ascii=False, sort_keys=True)), "sql_hash": sql_hash, "sql": sql, "authorized_station_count": station_count, "metric_versions": {metric_id: "0.1.0" for metric_id in plan.metrics}, "query_guard": guard_status, "answer_guard": answer_guard_result, "explanation_mode": "deterministic", **versions}

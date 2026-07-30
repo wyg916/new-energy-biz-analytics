@@ -15,6 +15,11 @@ from app.services.diagnostics import DiagnosticService
 from app.services.metric_catalog import METRICS
 from app.scenarios.registry import published_charging_ops_batch
 from app.services.metrics import MetricService
+from app.core.config import get_settings
+from app.scenarios.charging_ops.runtime import (
+    platform_version_metadata,
+    resolve_charging_ops_context,
+)
 
 
 def _digest(value: str) -> str:
@@ -32,6 +37,11 @@ def _display_value(metric_id: str, value):
 class ReportService:
     def __init__(self, db: Session, user: User):
         self.db = db; self.user = user
+        self.platform_context = (
+            resolve_charging_ops_context(db, user)[1]
+            if get_settings().platform_version_routing_enabled
+            else None
+        )
 
     def draft(self, report_type: str, start: date, end_exclusive: date) -> dict:
         if report_type not in {"weekly", "monthly"}:
@@ -43,6 +53,12 @@ class ReportService:
         batch = published_charging_ops_batch(self.db)
         title = f"新能源经营分析{'周报' if report_type == 'weekly' else '月报'}草稿"
         lines = [f"# {title}", "", "> 模拟数据 · 可审核草稿 · 不代表真实企业经营结论", "", f"数据时间：{start.isoformat()} 至 {end_exclusive.isoformat()}（右开）", f"来源：平台数据库 / 批次 {batch.batch_id if batch else '无可用批次'}", f"analysis_run_id：{run_id}", "", "## 核心指标", "", "| 指标 | 值 | 单位 |", "|---|---:|---|"]
+        if self.platform_context:
+            lines[7:7] = [
+                f"scenario_version：{self.platform_context.scenario_version}",
+                f"semantic_version：{self.platform_context.semantic_version}",
+                f"dataset_version：{self.platform_context.dataset_version}",
+            ]
         for metric_id, value in metrics.items():
             lines.append(f"| {METRICS[metric_id][0]} | {_display_value(metric_id, value)} | {METRICS[metric_id][1]} |")
         lines.extend(["", "## 毛利变化拆解", ""])
@@ -59,7 +75,10 @@ class ReportService:
         self.db.add(run)
         self.db.add(AuditLog(actor_user_id=self.user.id, action="report.draft", resource="report_draft", outcome="success", detail_json=json.dumps({"analysis_run_id": run_id, "report_type": report_type})))
         self.db.commit()
-        return {"title": title, "report_type": report_type, "metrics": metrics, "diagnostic": diagnostic, "markdown": markdown, "metadata": {"analysis_run_id": run_id, "data_classification": "simulated", "data_time_range": {"start": start.isoformat(), "end_exclusive": end_exclusive.isoformat()}, "source": "platform_database", "batch_id": batch.batch_id if batch else None, "metric_versions": {key: "0.1.0" for key in METRICS}, "status": "draft"}}
+        metadata = {"analysis_run_id": run_id, "data_classification": "simulated", "data_time_range": {"start": start.isoformat(), "end_exclusive": end_exclusive.isoformat()}, "source": "platform_database", "batch_id": batch.batch_id if batch else None, "metric_versions": {key: "0.1.0" for key in METRICS}, "status": "draft"}
+        if self.platform_context:
+            metadata.update(platform_version_metadata(self.platform_context))
+        return {"title": title, "report_type": report_type, "metrics": metrics, "diagnostic": diagnostic, "markdown": markdown, "metadata": metadata}
 
     @staticmethod
     def csv_bytes(report: dict) -> bytes:
@@ -69,6 +88,9 @@ class ReportService:
         writer.writerow(["analysis_run_id", report["metadata"]["analysis_run_id"]])
         writer.writerow(["source", report["metadata"]["source"]])
         writer.writerow(["batch_id", report["metadata"]["batch_id"]])
+        writer.writerow(["scenario_version", report["metadata"].get("scenario_version")])
+        writer.writerow(["semantic_version", report["metadata"].get("semantic_version")])
+        writer.writerow(["dataset_version", report["metadata"].get("dataset_version")])
         writer.writerow(["metric_id", "metric_name", "value", "unit", "metric_version"])
         for metric_id, value in report["metrics"].items():
             writer.writerow([metric_id, METRICS[metric_id][0], _display_value(metric_id, value), METRICS[metric_id][1], "0.1.0"])

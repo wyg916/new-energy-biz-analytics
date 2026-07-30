@@ -13,6 +13,11 @@ from app.scenarios.charging_ops.manifest import MANIFEST_CHECKSUM, VERSION
 from app.scenarios.registry import published_charging_ops
 from app.services.metric_catalog import METRICS
 from app.services.metrics import MetricService
+from app.core.config import get_settings
+from app.scenarios.charging_ops.runtime import (
+    platform_version_metadata,
+    resolve_charging_ops_context,
+)
 
 
 def allowed_station_ids(db: Session, user: User) -> list[str]:
@@ -29,11 +34,16 @@ class DashboardService:
         self.db = db
         self.user = user
         self.station_ids = allowed_station_ids(db, user)
+        self.platform_context = (
+            resolve_charging_ops_context(db, user)[1]
+            if get_settings().platform_version_routing_enabled
+            else None
+        )
 
     def _metadata(self, start: date, end_exclusive: date, analysis_run_id: str) -> dict:
         scenario = published_charging_ops(self.db)
         batch = self.db.get(DataGenerationRun, scenario.source_batch_id) if scenario and scenario.source_batch_id else None
-        return {
+        metadata = {
             "data_classification": "simulated",
             "data_time_range": {"start": start.isoformat(), "end_exclusive": end_exclusive.isoformat()},
             "source": "platform_database",
@@ -47,6 +57,12 @@ class DashboardService:
             "semantic_activation_status": "not_implemented",
             "generated_at": datetime.now(timezone.utc).isoformat(),
         }
+        if self.platform_context:
+            metadata.update(platform_version_metadata(self.platform_context))
+            metadata["dataset_release_version"] = str(
+                self.platform_context.dataset_version
+            )
+        return metadata
 
     def _audit(self, action: str, run_id: str, detail: dict) -> None:
         self.db.add(AuditLog(actor_user_id=self.user.id, action=action, resource="dashboard", outcome="success", detail_json=json.dumps({"analysis_run_id": run_id, **detail})))
@@ -97,7 +113,7 @@ class DashboardService:
         run_id = f"DASH-{uuid4()}"
         stations = self.db.scalars(select(Station).where(Station.station_id.in_(self.station_ids)).order_by(Station.station_id)).all()
         station_map = {station.station_id: station for station in stations}
-        snapshots = list(self.db.scalars(
+        snapshots = [] if self.platform_context else list(self.db.scalars(
             select(PublishedStationSnapshot).where(
                 PublishedStationSnapshot.scenario_id == "charging_ops",
                 PublishedStationSnapshot.period_start == start,

@@ -10,6 +10,8 @@ from app.chatbi.memory import MemoryAccessDenied, SessionMemory
 from app.chatbi.service import ChatBIService
 from app.core.database import get_db
 from app.models.auth import User
+from app.platform.scenario_packages import ScenarioPackageError
+from app.platform.semantic_registry import SemanticRegistryError
 
 router = APIRouter(prefix="/chat", tags=["chatbi"])
 
@@ -32,6 +34,11 @@ def query(payload: ChatRequest, db: Session = Depends(get_db), user: User = Depe
         raise HTTPException(status_code=403, detail={"code": "AUTH_SCOPE_DENIED", "message": "请求范围不在当前授权范围内"})
     except QueryRejected:
         raise HTTPException(status_code=422, detail={"code": "QUERY_REJECTED", "message": "查询未通过安全校验"})
+    except (ScenarioPackageError, SemanticRegistryError) as exc:
+        raise HTTPException(
+            status_code=409,
+            detail={"code": exc.code, "message": exc.message},
+        ) from exc
 
 
 @router.delete("/sessions/{conversation_id}")

@@ -38,6 +38,14 @@ EXPRESSIONS = {
     "active_user_count": "s.active_user_count",
 }
 
+DEFAULT_RELATIONS = {
+    "session_fact": "fact_charging_session",
+    "energy_cost_fact": "fact_energy_cost",
+    "operation_expense_fact": "fact_operation_expense",
+    "status_event_fact": "fact_device_status_event",
+    "station_dimension": "dim_station",
+}
+
 
 def _requested_scope(db: Session, plan: QueryPlan, authorized_station_ids: list[str]) -> list[str]:
     requested = set(authorized_station_ids)
@@ -56,12 +64,22 @@ def _requested_scope(db: Session, plan: QueryPlan, authorized_station_ids: list[
     return sorted(requested)
 
 
-def compile_query(db: Session, plan: QueryPlan, authorized_station_ids: list[str]) -> CompiledQuery:
+def compile_query(
+    db: Session,
+    plan: QueryPlan,
+    authorized_station_ids: list[str],
+    source_relations: dict[str, str] | None = None,
+) -> CompiledQuery:
     if plan.status != "ready" or plan.time_range is None:
         raise ValueError("only ready plans can be compiled")
     station_ids = _requested_scope(db, plan, authorized_station_ids)
     station_placeholders = ", ".join(f":station_{index}" for index in range(len(station_ids)))
     expressions = ", ".join(f"{EXPRESSIONS[metric_id]} AS {metric_id}" for metric_id in plan.metrics)
+    relations = source_relations or DEFAULT_RELATIONS
+    if set(relations) != set(DEFAULT_RELATIONS):
+        raise ValueError("active dataset source binding is incomplete")
+    if any(not value.replace("_", "").isalnum() for value in relations.values()):
+        raise ValueError("active dataset source binding contains unsafe relation")
     sql = f"""WITH s AS (
       SELECT COALESCE(SUM(electricity_fee_net_amount + service_fee_net_amount), 0) AS charging_revenue,
              COALESCE(SUM(service_fee_net_amount), 0) AS service_fee_revenue,
@@ -69,22 +87,22 @@ def compile_query(db: Session, plan: QueryPlan, authorized_station_ids: list[str
              COALESCE(SUM(energy_kwh), 0) AS charging_volume_kwh,
              COALESCE(SUM(charging_duration_seconds), 0) AS charging_duration,
              COUNT(DISTINCT user_id) AS active_user_count
-      FROM fact_charging_session
+      FROM {relations["session_fact"]}
       WHERE session_status = 'completed' AND settlement_time >= :start_ts AND settlement_time < :end_ts
         AND station_id IN ({station_placeholders})
     ), e AS (
-      SELECT COALESCE(SUM(energy_cost), 0) AS energy_cost FROM fact_energy_cost
+      SELECT COALESCE(SUM(energy_cost), 0) AS energy_cost FROM {relations["energy_cost_fact"]}
       WHERE cost_date >= :start_date AND cost_date < :end_date AND station_id IN ({station_placeholders})
     ), o AS (
-      SELECT COALESCE(SUM(amount), 0) AS variable_operating_cost FROM fact_operation_expense
+      SELECT COALESCE(SUM(amount), 0) AS variable_operating_cost FROM {relations["operation_expense_fact"]}
       WHERE is_variable = TRUE AND expense_date >= :start_date AND expense_date < :end_date AND station_id IN ({station_placeholders})
     ), st AS (
-      SELECT COALESCE(SUM(connector_count), 0) AS connector_count FROM dim_station WHERE station_id IN ({station_placeholders})
+      SELECT COALESCE(SUM(connector_count), 0) AS connector_count FROM {relations["station_dimension"]} WHERE station_id IN ({station_placeholders})
     ), ds AS (
       SELECT SUM(CASE WHEN status = 'online' THEN 1 ELSE 0 END) AS online_count,
              SUM(CASE WHEN status = 'fault' THEN 1 ELSE 0 END) AS fault_count,
              SUM(CASE WHEN status != 'unknown' THEN 1 ELSE 0 END) AS observable_count
-      FROM fact_device_status_event
+      FROM {relations["status_event_fact"]}
       WHERE start_time >= :start_ts AND start_time < :end_ts AND station_id IN ({station_placeholders})
     ) SELECT {expressions} FROM s CROSS JOIN e CROSS JOIN o CROSS JOIN st CROSS JOIN ds LIMIT :limit"""
     period = plan.time_range

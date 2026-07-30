@@ -25,7 +25,12 @@ class Settings(BaseSettings):
     public_base_url: str = "http://localhost:8080"
     trusted_hosts: str = "localhost,127.0.0.1,testserver"
     release_version: str = "0.1.0-dev"
-    expected_database_revision: str = "0006"
+    expected_database_revision: str = "0009"
+    platform_version_routing_enabled: bool = False
+    sqlbot_engine_enabled: bool = False
+    platform_tenant_id: str = "tenant-alpha"
+    platform_org_id: str = "org-alpha"
+    platform_workspace_id: str = "workspace-alpha"
 
     @model_validator(mode="after")
     def fail_closed_in_production(self) -> "Settings":

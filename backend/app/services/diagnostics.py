@@ -12,6 +12,11 @@ from app.services.dashboard import allowed_station_ids
 from app.services.metric_catalog import METRICS
 from app.scenarios.registry import published_charging_ops_batch
 from app.services.metrics import MetricService
+from app.core.config import get_settings
+from app.scenarios.charging_ops.runtime import (
+    platform_version_metadata,
+    resolve_charging_ops_context,
+)
 
 
 def comparison_period(start: date, end_exclusive: date, comparison: str) -> tuple[date, date]:
@@ -28,10 +33,18 @@ def comparison_period(start: date, end_exclusive: date, comparison: str) -> tupl
 class DiagnosticService:
     def __init__(self, db: Session, user: User):
         self.db = db; self.user = user; self.station_ids = allowed_station_ids(db, user)
+        self.platform_context = (
+            resolve_charging_ops_context(db, user)[1]
+            if get_settings().platform_version_routing_enabled
+            else None
+        )
 
     def _metadata(self, run_id: str, start: date, end: date, previous_start: date, previous_end: date) -> dict:
         batch = published_charging_ops_batch(self.db)
-        return {"analysis_run_id": run_id, "data_classification": "simulated", "source": "platform_database", "batch_id": batch.batch_id if batch else None, "current_period": [start.isoformat(), end.isoformat()], "comparison_period": [previous_start.isoformat(), previous_end.isoformat()], "causality_boundary": "关联因素说明，不构成因果结论"}
+        metadata = {"analysis_run_id": run_id, "data_classification": "simulated", "source": "platform_database", "batch_id": batch.batch_id if batch else None, "current_period": [start.isoformat(), end.isoformat()], "comparison_period": [previous_start.isoformat(), previous_end.isoformat()], "causality_boundary": "关联因素说明，不构成因果结论"}
+        if self.platform_context:
+            metadata.update(platform_version_metadata(self.platform_context))
+        return metadata
 
     def _audit(self, run_id: str, action: str, detail: dict) -> None:
         self.db.add(AuditLog(actor_user_id=self.user.id, action=action, resource="diagnostics", outcome="success", detail_json=json.dumps({"analysis_run_id": run_id, **detail})))
