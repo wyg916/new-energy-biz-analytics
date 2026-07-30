@@ -84,6 +84,7 @@ class DataIntegrationService:
         if stored:
             preview = [self._preview_model(row) for row in stored]
             preview_batch_id = stored[0].batch_id
+            preview_source = "ingested_staging"
         else:
             if self.user is None:
                 raise DataIntegrationError("USER_CONTEXT_REQUIRED", "读取业务预览需要用户权限上下文")
@@ -105,6 +106,7 @@ class DataIntegrationService:
                 for row in station_rows["rows"]
             ]
             preview_batch_id = station_rows["metadata"]["batch_id"]
+            preview_source = "managed_platform_source_preview"
         latest_run = self.db.scalar(
             select(DataIngestionRun)
             .where(DataIngestionRun.dataset_id == dataset.dataset_id)
@@ -147,9 +149,12 @@ class DataIntegrationService:
             "metadata": {
                 "data_classification": dataset.data_classification,
                 "source": "platform_database",
+                "preview_source": preview_source,
                 "batch_id": preview_batch_id,
                 "data_time_range": {"start": start.isoformat(), "end_exclusive": end_exclusive.isoformat()},
                 "generated_at": _utc_now().isoformat(),
+                "semantic_activation_status": "not_implemented",
+                "formal_consumer_status": "platform_fact_tables_with_conditional_station_snapshot",
             },
         }
 
@@ -727,6 +732,17 @@ class DataIntegrationService:
             "published_by": review.published_by,
             "published_at": review.published_at.isoformat() if review.published_at else None,
             "rejection_reason": review.rejection_reason,
+            "publication_scope": (
+                "immutable_station_snapshot"
+                if review.workflow_status == "published"
+                else "not_published"
+            ),
+            "semantic_activation_status": "not_implemented",
+            "formal_consumer_status": (
+                "conditional_station_snapshot_only"
+                if review.workflow_status == "published"
+                else "platform_fact_tables"
+            ),
             "summary": summary,
             "checks": [
                 {

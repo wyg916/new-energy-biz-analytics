@@ -42,6 +42,9 @@ class DashboardService:
             "scenario_id": "charging_ops",
             "scenario_version": scenario.version if scenario else None,
             "scenario_manifest_checksum": scenario.manifest_checksum if scenario else None,
+            "query_source": "platform_fact_tables",
+            "dataset_release_version": None,
+            "semantic_activation_status": "not_implemented",
             "generated_at": datetime.now(timezone.utc).isoformat(),
         }
 

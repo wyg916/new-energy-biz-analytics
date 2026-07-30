@@ -89,6 +89,7 @@ def test_source(
         })
         return result
     except DataIntegrationError as exc:
+        db.rollback()
         _audit(db, user, "data_source.test", source_id, "failed", {"error_code": exc.code, "credential_persisted": False})
         raise _http_error(exc) from exc
 
@@ -116,6 +117,7 @@ def run_ingestion(
         })
         return result
     except DataIntegrationError as exc:
+        db.rollback()
         _audit(db, user, "data_ingestion.run", dataset_id, "failed", {"error_code": exc.code})
         raise _http_error(exc) from exc
 
@@ -136,6 +138,7 @@ def validate_ingestion(
         })
         return result
     except DataIntegrationError as exc:
+        db.rollback()
         _audit(db, user, "data_ingestion.quality", run_id, "failed", {"dataset_id": dataset_id, "error_code": exc.code})
         raise _http_error(exc) from exc
 
@@ -152,6 +155,7 @@ def submit_ingestion(
         _audit(db, user, "data_ingestion.submit", run_id, "pending_approval", {"dataset_id": dataset_id})
         return result
     except DataIntegrationError as exc:
+        db.rollback()
         _audit(db, user, "data_ingestion.submit", run_id, "failed", {"dataset_id": dataset_id, "error_code": exc.code})
         raise _http_error(exc) from exc
 
@@ -175,6 +179,7 @@ def review_ingestion(
         })
         return result
     except DataIntegrationError as exc:
+        db.rollback()
         _audit(db, user, "data_ingestion.review", run_id, "failed", {"dataset_id": dataset_id, "error_code": exc.code})
         raise _http_error(exc) from exc
 
@@ -194,5 +199,6 @@ def publish_ingestion(
         })
         return result
     except DataIntegrationError as exc:
+        db.rollback()
         _audit(db, user, "data_ingestion.publish", run_id, "failed", {"dataset_id": dataset_id, "error_code": exc.code})
         raise _http_error(exc) from exc

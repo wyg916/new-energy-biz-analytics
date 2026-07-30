@@ -14,6 +14,9 @@ type Metadata = {
   batch_id: string | null
   analysis_run_id: string
   generated_at?: string
+  query_source?: string
+  dataset_release_version?: string | null
+  semantic_activation_status?: string
 }
 type Summary = { metrics: Record<string, number | null>; metadata: Metadata }
 type TrendPoint = { period: string; value: number | null }
@@ -170,14 +173,14 @@ function Overview({ summary, trend, loading, error, navigate }: { summary: Summa
       <article className="module-card action"><ModuleTitle icon="警" color="red" title="经营预警" subtitle="风险预警、异常监控与告警管理" /><ul className="status-list warning"><li>毛利率异常<span>规则检测</span></li><li>高功率利用率异常<span>规则检测</span></li><li>设备离线告警<span>进入查看</span></li></ul><CardLink label="查看预警中心" onClick={() => navigate('alerts')} /></article>
       <article className="module-card action"><ModuleTitle icon="AI" color="blue" title="AI经营分析" subtitle="自然语言分析、智能问答与归因" /><div className="ask-sample">区域A的充电收入环比下降原因？</div><button className="ask-button" onClick={() => navigate('chat')}>◉　向 AI 提问 <b>›</b></button><CardLink label="查看分析洞察" onClick={() => navigate('chat')} /></article>
       <article className="module-card action"><ModuleTitle icon="报" color="teal" title="经营报告" subtitle="经营日报、周报、月报与专题报告" /><ul className="status-list"><li>经营日报<span>按需生成</span></li><li>经营周报<span>草稿可审核</span></li><li>经营月报<span>结果可追溯</span></li></ul><CardLink label="查看全部报告" onClick={() => navigate('reports')} /></article>
-      <article className="module-card action"><ModuleTitle icon="数" color="blue" title="数据接入与映射" subtitle="数据连接、同步管理与字段映射" /><ul className="status-list"><li>平台数据源<span>已连接</span></li><li>数据批次<span>{summary?.metadata.batch_id ? '可追溯' : '加载中'}</span></li><li>数据口径<span>已发布</span></li></ul><CardLink label="进入映射配置" onClick={() => navigate('mapping')} /></article>
+      <article className="module-card action"><ModuleTitle icon="数" color="blue" title="数据接入与映射" subtitle="数据连接、同步管理与字段映射" /><ul className="status-list"><li>平台数据源<span>{error ? '查询失败' : summary ? '当前查询可用' : '加载中'}</span></li><li>数据批次<span>{summary?.metadata.batch_id ? '可追溯' : '未取得'}</span></li><li>正式消费<span>平台事实表</span></li></ul><CardLink label="进入映射配置" onClick={() => navigate('mapping')} /></article>
       <article className="module-card action"><ModuleTitle icon="指" color="orange" title="指标与场景管理" subtitle="指标体系、业务场景与权限管理" /><ul className="status-list"><li>核心指标<span>15 项</span></li><li>当前场景<span>充电运营</span></li><li>权限模式<span>RBAC</span></li></ul><CardLink label="进入管理中心" onClick={() => navigate('metrics')} /></article>
     </section>
 
     <section className="bottom-grid">
-      <article className="bottom-card questions"><header><h3>常用分析入口</h3><button>⟳ 换一批</button></header><div>{questions.map((question, index) => <button key={question} onClick={() => navigate('chat')}><i>{index % 2 ? '⌁' : '↗'}</i>{question}</button>)}</div></article>
-      <article className="bottom-card system"><header><h3>近期动态 / 系统状态</h3></header><ul><li><i>◷</i><span>数据最后刷新</span><b>{summary?.metadata.generated_at ? new Date(summary.metadata.generated_at).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false }) : '加载中'}</b></li><li><i>♧</i><span>预警告警</span><b className="attention">进入预警查看</b></li><li><i>▱</i><span>报告生成</span><b>草稿按需生成</b></li><li><i>◎</i><span>数据同步状态</span><b>平台数据库已连接</b></li><li><i>✓</i><span>系统运行状态</span><b className="healthy">正常</b></li></ul></article>
-      <article className="bottom-card guide"><header><h3>视图说明</h3></header><div><i>业</i><span><b>业务视图</b><small>面向运营与分析人员，聚焦经营分析与监控</small></span></div><div><i>管</i><span><b>管理视图</b><small>面向管理员，负责配置与系统管理</small></span></div><button>了解更多视图差异　→</button></article>
+      <article className="bottom-card questions"><header><h3>常用分析入口</h3><button disabled title="问题推荐轮换尚未实现">固定题集</button></header><div>{questions.map((question, index) => <button key={question} onClick={() => navigate('chat')}><i>{index % 2 ? '⌁' : '↗'}</i>{question}</button>)}</div></article>
+      <article className="bottom-card system"><header><h3>近期动态 / 当前页面状态</h3></header><ul><li><i>◷</i><span>数据最后刷新</span><b>{summary?.metadata.generated_at ? new Date(summary.metadata.generated_at).toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour12: false }) : '未取得'}</b></li><li><i>♧</i><span>异常检测</span><b className="attention">规则结果按需计算</b></li><li><i>▱</i><span>报告生成</span><b>仅可审核草稿</b></li><li><i>◎</i><span>数据查询状态</span><b>{error ? '失败' : summary ? '成功' : '加载中'}</b></li><li><i>✓</i><span>当前页面 API</span><b className={error ? 'attention' : 'healthy'}>{error ? '不可用' : summary ? '可用' : '检查中'}</b></li></ul></article>
+      <article className="bottom-card guide"><header><h3>视图说明</h3></header><div><i>业</i><span><b>业务视图</b><small>面向运营与分析人员，聚焦经营分析与监控</small></span></div><div><i>管</i><span><b>管理视图</b><small>面向管理员，负责配置与系统管理</small></span></div><button disabled title="帮助中心尚未实现">帮助中心未开放</button></article>
     </section>
   </div>
 }
@@ -561,19 +564,19 @@ function MarginPage({ token, summary, stations, start, end, setStart, setEnd, re
   const lowMarginStations = [...stations].filter(row => (row.metrics.gross_margin ?? 0) < .2).sort((a, b) => (a.metrics.gross_margin ?? 0) - (b.metrics.gross_margin ?? 0)).slice(0, 6)
   const tableRows = lowMarginStations.length ? lowMarginStations : [...stations].sort((a, b) => (a.metrics.gross_margin ?? 0) - (b.metrics.gross_margin ?? 0)).slice(0, 6)
   const suggestions = [
-    { icon: '时', tone: 'blue', title: '优化电费策略', copy: '调整充电时段结构，优先验证低谷电量占比提升空间。', saving: (current.energy_cost ?? 0) * .042 },
-    { icon: '站', tone: 'green', title: '提升低效场站利用率', copy: '聚焦低毛利场站，结合排班与营销提升有效充电时长。', saving: (current.gross_profit ?? 0) * .052 },
-    { icon: '控', tone: 'orange', title: '控制运营成本', copy: '压降非必要运维支出，复核外包与物料采购管理。', saving: (current.variable_operating_cost ?? 0) * .15 },
-    { icon: '构', tone: 'green', title: '优化收入结构', copy: '提高高毛利时段与客户结构占比，改善整体毛利率。', saving: (current.gross_profit ?? 0) * .029 },
+    { icon: '时', tone: 'blue', title: '复核电费策略', copy: '结合时段结构和已验证成本结果，人工评估低谷电量占比。' },
+    { icon: '站', tone: 'green', title: '核查低毛利场站', copy: '聚焦低毛利场站，核对利用率、设备可用性和费率记录。' },
+    { icon: '控', tone: 'orange', title: '复核运营成本', copy: '核对外包、物料与运维费用记录；当前未计算可实现节省额。' },
+    { icon: '构', tone: 'green', title: '分析收入结构', copy: '比较时段与客户结构；所有建议需要人工确认后才能使用。' },
   ]
   const resetFilters = () => { setDimension('月'); setComparison('mom'); setStart('2026-01-01'); setEnd('2026-07-01') }
   const handleRefresh = () => { refresh(); setRefreshKey(value => value + 1) }
 
   return <div className="margin-page">
     <section className="margin-filter-bar">
-      <div className="margin-dimensions"><b>时间维度</b>{['日', '周', '月', '季', '年'].map(item => <button key={item} className={dimension === item ? 'active' : ''} onClick={() => setDimension(item)}>{item}</button>)}</div>
+      <div className="margin-dimensions"><b>时间维度</b>{['日', '周', '月', '季', '年'].map(item => <button key={item} disabled={item !== '月'} title={item !== '月' ? '当前接口仅提供月粒度' : undefined} className={dimension === item ? 'active' : ''} onClick={() => setDimension(item)}>{item}</button>)}</div>
       <div className="margin-comparison"><b>对比维度</b><button className={comparison === 'mom' ? 'active' : ''} onClick={() => setComparison('mom')}>环比</button><button className={comparison === 'yoy' ? 'active' : ''} onClick={() => setComparison('yoy')}>同比</button></div>
-      {['场站分组', '场站类型', '运营区域'].map(label => <label key={label}><span>{label}</span><select aria-label={label} defaultValue="全部"><option>全部</option></select></label>)}
+      {['场站分组', '场站类型', '运营区域'].map(label => <label key={label}><span>{label}</span><select aria-label={label} disabled defaultValue="未开放"><option>未开放</option></select></label>)}
       <button className="margin-reset" onClick={resetFilters}>重置</button><button className="margin-refresh" onClick={handleRefresh}>⟳　刷新</button>
     </section>
 
@@ -594,9 +597,9 @@ function MarginPage({ token, summary, stations, start, end, setStart, setEnd, re
         const costPerKwh = stationVolume ? (revenue - profit) / stationVolume : 0
         const margin = row.metrics.gross_margin ?? 0
         const risk = margin < .1 ? '高' : margin < .2 ? '中' : '低'
-        return <tr key={row.station_id}><td>{index + 1}</td><td>{row.station_name}</td><td>{row.region_id}</td><td>{money(revenue)}</td><td>{money(profit)}</td><td><span className="margin-rate"><i style={{ width: `${Math.max(margin * 100, 3)}%`, background: margin < .1 ? '#ef4444' : margin < .2 ? '#f59e0b' : '#0fa678' }} />{formatMetric('gross_margin', margin)}</span></td><td>{revenuePerKwh.toFixed(2)}</td><td>{costPerKwh.toFixed(2)}</td><td>{(revenuePerKwh - costPerKwh).toFixed(2)}</td><td><em className={`risk-${risk === '高' ? 'high' : risk === '中' ? 'medium' : 'low'}`}>{risk}</em></td><td><button>查看</button></td></tr>
-      })}</tbody></table></div><footer><span>共 {stations.length} 条</span><select defaultValue="10"><option value="10">10 条/页</option></select><button>‹</button><b>1</b><button>2</button><button>3</button><button>›</button><span>前往</span><input aria-label="前往页码" value="1" readOnly /><span>页</span></footer></article>
-      <article className="margin-panel margin-suggestion-panel"><header><h2>优化建议</h2><button>更多建议　›</button></header><div>{suggestions.map(item => <section key={item.title}><i className={item.tone}>{item.icon}</i><div><b>{item.title}</b><p>{item.copy}</p></div><span><small>预计节省</small><strong>¥ {Math.round(item.saving).toLocaleString('zh-CN')}</strong></span><button>查看方案</button></section>)}</div></article>
+        return <tr key={row.station_id}><td>{index + 1}</td><td>{row.station_name}</td><td>{row.region_id}</td><td>{money(revenue)}</td><td>{money(profit)}</td><td><span className="margin-rate"><i style={{ width: `${Math.max(margin * 100, 3)}%`, background: margin < .1 ? '#ef4444' : margin < .2 ? '#f59e0b' : '#0fa678' }} />{formatMetric('gross_margin', margin)}</span></td><td>{revenuePerKwh.toFixed(2)}</td><td>{costPerKwh.toFixed(2)}</td><td>{(revenuePerKwh - costPerKwh).toFixed(2)}</td><td><em className={`risk-${risk === '高' ? 'high' : risk === '中' ? 'medium' : 'low'}`}>{risk}</em></td><td><button disabled title="场站详情跳转未实现">未开放</button></td></tr>
+      })}</tbody></table></div><footer><span>共 {stations.length} 条</span><select disabled defaultValue="10"><option value="10">10 条/页</option></select><button disabled>‹</button><b>1</b><button disabled>›</button><span>当前页</span></footer></article>
+      <article className="margin-panel margin-suggestion-panel"><header><h2>人工核查建议</h2><button disabled title="方案库尚未实现">方案库未开放</button></header><div>{suggestions.map(item => <section key={item.title}><i className={item.tone}>{item.icon}</i><div><b>{item.title}</b><p>{item.copy}</p></div><span><small>结果边界</small><strong>未估算收益</strong></span><button disabled title="当前仅生成建议草稿">需人工审核</button></section>)}</div></article>
     </section>
 
     {error && <div className="margin-error">{error}</div>}
@@ -1185,8 +1188,6 @@ function DiagnosticsPage({ token, start, end }: { token: string; start: string; 
   const [refreshKey, setRefreshKey] = useState(0)
   const [selectedId, setSelectedId] = useState('')
   const [riskFilter, setRiskFilter] = useState('all')
-  const [statusFilter, setStatusFilter] = useState('all')
-  const [ownerFilter, setOwnerFilter] = useState('all')
   const [search, setSearch] = useState('')
   const [feedback, setFeedback] = useState('')
   useEffect(() => {
@@ -1209,45 +1210,33 @@ function DiagnosticsPage({ token, start, end }: { token: string; start: string; 
   if (!data) return <div className="notice">正在计算异常与贡献拆解…</div>
 
   const stationRows = (data.station_contributions as Array<any>).slice(0, 8)
-  const owners = ['张伟', '李娜', '王强', '赵敏']
-  const alerts = stationRows.map((row, index) => {
-    const risk = index < 2 ? 'high' : index < 6 ? 'medium' : 'low'
-    const status = risk === 'high' ? 'pending' : risk === 'medium' ? 'analyzing' : 'processing'
-    return {
-      ...row,
-      risk,
-      status,
-      owner: owners[index % owners.length],
-      title: row.contribution < 0 ? `毛利贡献下降：${row.station_name}` : `毛利贡献回升：${row.station_name}`,
-      domain: index % 3 === 0 ? '收入与订单' : index % 3 === 1 ? '场站经营' : '毛利与成本',
-    }
-  })
+  const alerts = stationRows.map(row => ({
+    ...row,
+    risk: row.contribution < 0 ? 'high' : 'low',
+    title: row.contribution < 0 ? `毛利负向贡献：${row.station_name}` : `毛利正向贡献：${row.station_name}`,
+    domain: '规则贡献诊断',
+  }))
   const visibleAlerts = alerts.filter(row =>
     (riskFilter === 'all' || row.risk === riskFilter) &&
-    (statusFilter === 'all' || row.status === statusFilter) &&
-    (ownerFilter === 'all' || row.owner === ownerFilter) &&
-    (!search || `${row.title}${row.station_name}${row.region_id}${row.owner}`.toLowerCase().includes(search.toLowerCase()))
+    (!search || `${row.title}${row.station_name}${row.region_id}`.toLowerCase().includes(search.toLowerCase()))
   )
   const selected = alerts.find(row => row.station_id === selectedId) || alerts[0]
-  const highCount = alerts.filter(row => row.risk === 'high').length
-  const mediumCount = alerts.filter(row => row.risk === 'medium').length
-  const pendingCount = alerts.filter(row => row.status === 'pending').length
-  const recoveredCount = alerts.filter(row => row.contribution >= 0).length
+  const negativeCount = alerts.filter(row => row.contribution < 0).length
+  const positiveCount = alerts.filter(row => row.contribution >= 0).length
   const negativeImpact = alerts.filter(row => row.contribution < 0).reduce((sum, row) => sum + Math.abs(row.contribution), 0)
   const currentMargin = data.current.charging_revenue ? data.current.gross_profit / data.current.charging_revenue : null
   const previousMargin = data.previous.charging_revenue ? data.previous.gross_profit / data.previous.charging_revenue : null
   const marginChange = currentMargin == null || previousMargin == null ? null : currentMargin - previousMargin
   const volumeChange = data.previous.charging_volume_kwh ? data.changes.charging_volume_kwh / Math.abs(data.previous.charging_volume_kwh) : null
-  const riskNames: Record<string, string> = { high: '高风险', medium: '中风险', low: '低风险' }
-  const statusNames: Record<string, string> = { pending: '待确认', analyzing: '分析中', processing: '处理中' }
+  const riskNames: Record<string, string> = { high: '负向贡献', low: '正向贡献' }
   const compactWan = (value: number) => `${(value / 10000).toFixed(2)} 万`
   const cards = [
-    { label: '高风险', value: `${highCount}`, note: `当前周期 ${highCount} 条`, icon: '◆', tone: 'red' },
-    { label: '中风险', value: `${mediumCount}`, note: `当前周期 ${mediumCount} 条`, icon: '◇', tone: 'orange' },
-    { label: '待处理', value: `${pendingCount}`, note: `共 ${alerts.length} 条预警`, icon: '▣', tone: 'blue' },
-    { label: '本期新增', value: `${anomaly?.triggered ? 1 : 0}`, note: anomaly?.triggered ? '规则已触发' : '规则未触发', icon: '▲', tone: 'green' },
-    { label: '已恢复', value: `${recoveredCount}`, note: '正向贡献对象', icon: '●', tone: 'green' },
-    { label: '预计影响金额', value: `¥ ${(negativeImpact / 10000).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, unit: '万', note: '负向贡献绝对值', icon: '▣', tone: 'violet' },
+    { label: '负向贡献对象', value: `${negativeCount}`, note: `当前周期 ${negativeCount} 个`, icon: '◆', tone: 'red' },
+    { label: '正向贡献对象', value: `${positiveCount}`, note: `当前周期 ${positiveCount} 个`, icon: '◇', tone: 'green' },
+    { label: '规则状态', value: anomaly?.triggered ? '已触发' : '未触发', note: '确定性异常规则', icon: '▣', tone: 'blue' },
+    { label: '诊断对象', value: `${alerts.length}`, note: '贡献拆解返回对象', icon: '▲', tone: 'green' },
+    { label: '负向贡献绝对值', value: `${(negativeImpact / 10000).toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, unit: '万', note: '非预计损失', icon: '▣', tone: 'violet' },
+    { label: '对账残差', value: compactWan(data.reconciliation.residual), note: data.reconciliation.status, icon: '●', tone: 'orange' },
   ]
   const flash = (message: string) => {
     setFeedback(message)
@@ -1260,20 +1249,18 @@ function DiagnosticsPage({ token, start, end }: { token: string; start: string; 
 
     <section className="alert-workspace">
       <article className="alert-list-panel alert-panel">
-        <header><h2>预警列表</h2><div><button aria-label="刷新预警" onClick={() => setRefreshKey(value => value + 1)}>⟳</button><button onClick={() => flash('已生成当前筛选结果的本地导出草稿。')}>⇩ 导出</button></div></header>
+        <header><h2>规则诊断列表（非预警工单）</h2><div><button aria-label="刷新诊断" onClick={() => setRefreshKey(value => value + 1)}>⟳</button><button disabled title="诊断列表导出未实现">⇩ 未开放</button></div></header>
         <div className="alert-filters">
-          <select aria-label="风险等级筛选" value={riskFilter} onChange={event => setRiskFilter(event.target.value)}><option value="all">全部风险等级</option><option value="high">高风险</option><option value="medium">中风险</option><option value="low">低风险</option></select>
-          <select aria-label="状态筛选" value={statusFilter} onChange={event => setStatusFilter(event.target.value)}><option value="all">全部状态</option><option value="pending">待确认</option><option value="analyzing">分析中</option><option value="processing">处理中</option></select>
-          <select aria-label="负责人筛选" value={ownerFilter} onChange={event => setOwnerFilter(event.target.value)}><option value="all">全部负责人</option>{owners.map(owner => <option value={owner} key={owner}>{owner}</option>)}</select>
-          <label><i>⌕</i><input aria-label="搜索预警" value={search} onChange={event => setSearch(event.target.value)} placeholder="搜索预警标题或影响对象" /></label>
+          <select aria-label="贡献方向筛选" value={riskFilter} onChange={event => setRiskFilter(event.target.value)}><option value="all">全部贡献方向</option><option value="high">负向贡献</option><option value="low">正向贡献</option></select>
+          <label><i>⌕</i><input aria-label="搜索诊断" value={search} onChange={event => setSearch(event.target.value)} placeholder="搜索诊断标题或对象" /></label>
         </div>
-        <div className="alert-table-head"><span>预警标题</span><span>风险等级</span><span>影响金额</span><span>影响对象</span><span>持续时间</span><span>状态</span><span>负责人</span></div>
-        <div className="alert-rows">{visibleAlerts.map(row => <button className={selected?.station_id === row.station_id ? 'selected' : ''} onClick={() => setSelectedId(row.station_id)} key={row.station_id}><i /><span className="alert-title"><b>{row.title}</b><small>{row.domain}</small></span><em className={`risk ${row.risk}`}>{riskNames[row.risk]}</em><strong className={row.contribution < 0 ? 'negative' : 'positive'}>{compactWan(row.contribution)}</strong><span>{row.station_name}</span><span>当前周期</span><em className={`status ${row.status}`}>{statusNames[row.status]}</em><span className="owner"><i>{row.owner.slice(0, 1)}</i>{row.owner}</span></button>)}</div>
-        <footer><span>共 {visibleAlerts.length} 条</span><nav><button>‹</button><b>1</b><button>2</button><button>3</button><button>›</button></nav><select aria-label="每页条数"><option>10 条/页</option></select></footer>
+        <div className="alert-table-head"><span>诊断标题</span><span>贡献方向</span><span>贡献值</span><span>影响对象</span><span>数据周期</span><span>证据</span><span>流程边界</span></div>
+        <div className="alert-rows">{visibleAlerts.map(row => <button className={selected?.station_id === row.station_id ? 'selected' : ''} onClick={() => setSelectedId(row.station_id)} key={row.station_id}><i /><span className="alert-title"><b>{row.title}</b><small>{row.domain}</small></span><em className={`risk ${row.risk}`}>{riskNames[row.risk]}</em><strong className={row.contribution < 0 ? 'negative' : 'positive'}>{compactWan(row.contribution)}</strong><span>{row.station_name}</span><span>当前周期</span><em className="status processing">run_id</em><span className="owner">非工单</span></button>)}</div>
+        <footer><span>共 {visibleAlerts.length} 条</span><nav><button disabled>‹</button><b>1</b><button disabled>›</button></nav><select aria-label="每页条数" disabled><option>当前结果</option></select></footer>
       </article>
 
       <article className="alert-detail-panel alert-panel">
-        <header className="alert-detail-head"><div><h2><i>◆</i>{selected?.title || '经营异常预警'}<em className={`risk ${selected?.risk || 'medium'}`}>{riskNames[selected?.risk || 'medium']}</em></h2><p>预警编号：{data.metadata.analysis_run_id}　　触发周期：{start} 至 {endInclusive(end)}　　状态：{statusNames[selected?.status || 'pending']}</p></div><button className={`status ${selected?.status || 'pending'}`}>◎ {statusNames[selected?.status || 'pending']}</button></header>
+        <header className="alert-detail-head"><div><h2><i>◆</i>{selected?.title || '经营规则诊断'}<em className={`risk ${selected?.risk || 'low'}`}>{riskNames[selected?.risk || 'low']}</em></h2><p>run_id：{data.metadata.analysis_run_id}　　数据周期：{start} 至 {endInclusive(end)}　　类型：规则诊断</p></div><button disabled className="status processing">◎ 非预警工单</button></header>
 
         <section className="alert-summary"><h3>业务摘要</h3><p>{start} 至 {endInclusive(end)}，{selected?.station_name || '当前对象'}毛利贡献为 <b>{compactWan(selected?.contribution || 0)}</b>；充电收入环比{anomaly?.change_rate == null ? '数据不足' : `变化 ${(anomaly.change_rate * 100).toFixed(1)}%`}。该结果用于经营关注与后续核查，不构成因果结论。</p></section>
 
@@ -1284,10 +1271,10 @@ function DiagnosticsPage({ token, start, end }: { token: string; start: string; 
 
         <div className="alert-object-grid">
           <section className="alert-objects"><h3>影响对象</h3>{alerts.slice(0, 4).map((row, index) => <p key={row.station_id}><i>{index ? '▣' : '⌂'}</i><span>{index ? row.station_name : `${row.region_id}（重点对象）`}</span><b>{compactWan(row.contribution)}</b></p>)}<button onClick={() => flash(`当前诊断共定位 ${alerts.length} 个重点对象。`)}>查看全部 {alerts.length} 个对象</button></section>
-          <section className="alert-actions"><h3>建议行动</h3><p><i>✓</i><span>复核低贡献场站的充电量与时段结构</span><em>优先</em></p><p><i>✓</i><span>检查价格策略与活动执行情况</span><em>建议</em></p><p><i>✓</i><span>结合设备在线率与故障率同步核查</span><em>建议</em></p><button onClick={() => flash('建议仅供人工审核，不会自动执行。')}>查看行动方案库</button></section>
+          <section className="alert-actions"><h3>人工核查建议</h3><p><i>✓</i><span>复核低贡献场站的充电量与时段结构</span><em>建议</em></p><p><i>✓</i><span>检查价格策略与活动执行记录</span><em>建议</em></p><p><i>✓</i><span>结合设备在线率与故障率同步核查</span><em>建议</em></p><button disabled title="行动方案库未实现">方案库未开放</button></section>
         </div>
 
-        <section className="alert-timeline"><header><h3>处理记录</h3><button onClick={() => flash('当前 Alpha 仅展示本轮诊断过程记录。')}>查看全部记录</button></header><div><time>{endInclusive(end)} 10:15</time><i className="active" /><span>系统生成经营预警并完成规则校验</span></div><div><time>{endInclusive(end)} 10:18</time><i /><span>当前预警进入待确认状态</span></div><div><time>{endInclusive(end)} 10:25</time><i /><span>贡献拆解完成对账，等待人工核查</span></div></section>
+        <section className="alert-timeline"><header><h3>本轮诊断证据</h3><button disabled>无虚构处理记录</button></header><div><time>运行</time><i className="active" /><span>结构化结果 run_id：{data.metadata.analysis_run_id}</span></div><div><time>规则</time><i /><span>{anomaly?.triggered ? '异常规则已触发' : '异常规则未触发'}，阈值来自已发布规则</span></div><div><time>对账</time><i /><span>贡献拆解状态：{data.reconciliation.status}；残差 {compactWan(data.reconciliation.residual)}</span></div></section>
       </article>
     </section>
 
@@ -1325,7 +1312,6 @@ function ReportPage({ token, start, end, summary, stations, trend }: { token: st
   const [profitTrend, setProfitTrend] = useState<TrendPoint[]>([])
   const [marginTrend, setMarginTrend] = useState<TrendPoint[]>([])
   const [reportType, setReportType] = useState<'weekly' | 'monthly'>('weekly')
-  const [periodPreset, setPeriodPreset] = useState('current')
   const [generatedAt, setGeneratedAt] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -1398,16 +1384,9 @@ function ReportPage({ token, start, end, summary, stations, trend }: { token: st
     ['station_utilization_rate', '平均利用率（%）'],
     ['service_fee_revenue', '服务费收入（元）'],
   ] as const
-  const reportRows = [
-    ['新能源经营分析周报', '已完成', '06-30 08:30'],
-    ['新能源经营分析日报', '已完成', '06-30 08:30'],
-    ['场站运营分析月报', '已完成', '06-29 08:31'],
-    ['设备健康分析月报', '已完成', '06-28 08:29'],
-    ['收入与毛利分析月报', '已完成', '06-27 08:30'],
-    ['充电业务经营分析报表', '生成中', '06-27 08:30'],
-    ['区域经营分析月报', '已完成', '06-26 18:20'],
-    ['投资回报分析季度报告', '已完成', '06-25 17:10'],
-  ] as const
+  const reportRows: Array<[string, string, string]> = report
+    ? [[reportName, loading ? '生成中' : '草稿', generatedAt || '本轮生成']]
+    : []
   const driverNames: Record<string, string> = {
     charging_revenue_change: '收入变化',
     energy_cost_change: '电费成本变化',
@@ -1422,26 +1401,26 @@ function ReportPage({ token, start, end, summary, stations, trend }: { token: st
   const deviceDonut = `conic-gradient(#4d8fe9 0 ${healthyRate * 100}%,#51c7aa ${healthyRate * 100}% ${(healthyRate + faultRate) * 100}%,#cad5e5 ${(healthyRate + faultRate) * 100}% 100%)`
   const momSummary = deltaText('charging_revenue', metrics.charging_revenue, previous?.metrics.charging_revenue)
   const actionRows = [
-    ['针对低毛利贡献场站，优先复核费率、利用率与设备可用性。', '运营部', '2026-07-05'],
-    ['排查设备离线和故障率同期变化，优先修复高频故障设备。', '运维部', '2026-07-07'],
-    ['复核指标口径和报告数据链路，确保草稿结果可追溯。', '技术部', '2026-07-10'],
-  ] as const
+    '针对低毛利贡献场站，人工复核费率、利用率与设备可用性。',
+    '排查设备离线和故障率同期变化，形成待审核的运维建议。',
+    '复核指标口径和报告数据链路，确保草稿结果可追溯。',
+  ]
 
   return <div className="report-workspace">
     <aside className="report-list-panel">
       <button className="report-create" onClick={() => void generate()}>＋　新建报告</button>
       <label className="report-search">⌕<input aria-label="搜索报告名称" placeholder="搜索报告名称" /></label>
-      <div className="report-tabs"><b>全部</b><span>我创建的</span><span>我订阅的</span></div>
-      <header><h2>报告列表 <small>（18）</small></h2><button aria-label="筛选报告">▽</button></header>
+      <div className="report-tabs"><b>当前草稿</b><span aria-disabled="true">历史未实现</span><span aria-disabled="true">订阅未实现</span></div>
+      <header><h2>当前草稿 <small>（{reportRows.length}）</small></h2><button disabled aria-label="筛选报告">▽</button></header>
       <div className="report-list-items">{reportRows.map(([name, status, time], index) => <button className={index === 0 ? 'active' : ''} key={name}><i>{index === 0 ? '●' : '○'}</i><span>{name}<small><em className={status === '生成中' ? 'pending' : ''}>{index === 0 && loading ? '生成中' : status}</em>{time}</small></span><b>⋮</b></button>)}</div>
-      <button className="report-list-more">查看全部报告</button>
-      <section className="report-subscriptions"><h3>我的订阅 <small>（6）</small></h3><p>◉　新能源经营分析周报<br /><span>　　每周一 · 08:30</span></p><p>◉　场站运营分析月报<br /><span>　　每月 1 日 · 09:00</span></p><button>查看全部订阅　›</button></section>
+      <button disabled className="report-list-more">历史报告未实现</button>
+      <section className="report-subscriptions"><h3>报告订阅 <small>（未实现）</small></h3><p>当前 Alpha 只生成可审核草稿，不自动发送、发布或订阅。</p><button disabled>订阅未开放</button></section>
     </aside>
 
     <section className="report-canvas">
       <header className="report-titlebar">
-        <div><div><h2>{reportName}</h2><span>{start} ～ {endInclusive(end)}（{reportType === 'weekly' ? '周报' : '月报'}）</span><em>{isReady ? '● 已完成' : '○ 生成中'}</em></div><p>生成时间：{generatedAt || '正在生成'}　｜　生成人：系统自动生成</p></div>
-        <nav><button className="report-primary" onClick={() => void generate()}>▱　{loading ? '生成中…' : '生成报告'}</button><button disabled={!isReady} onClick={() => void download('markdown')}>▧　导出 MD</button><button disabled={!isReady} onClick={() => void download('csv')}>▧　导出 CSV</button><button>⌯　分享</button></nav>
+        <div><div><h2>{reportName}</h2><span>{start} ～ {endInclusive(end)}（{reportType === 'weekly' ? '周报' : '月报'}）</span><em>{isReady ? '● 草稿就绪' : '○ 生成中'}</em></div><p>生成时间：{generatedAt || '正在生成'}　｜　来源：报告草稿服务</p></div>
+        <nav><button className="report-primary" onClick={() => void generate()}>▱　{loading ? '生成中…' : '生成报告'}</button><button disabled={!isReady} onClick={() => void download('markdown')}>▧　导出 MD</button><button disabled={!isReady} onClick={() => void download('csv')}>▧　导出 CSV</button><button disabled title="分享能力未实现">⌯　分享未开放</button></nav>
       </header>
       {error && <div className="report-error">{error}</div>}
 
@@ -1464,19 +1443,19 @@ function ReportPage({ token, start, end, summary, stations, trend }: { token: st
       </section>
 
       <section className="report-detail-grid">
-        <article className={enabled.anomaly ? '' : 'section-off'}><header><h3>四、主要异常 <em>△ 共 {anomalyRows.length} 项</em></h3></header><table><thead><tr><th>异常类型</th><th>影响值</th><th>状态</th></tr></thead><tbody>{anomalyRows.map((item: any) => <tr key={item.driver}><td>{driverNames[item.driver] || item.driver}</td><td className={item.contribution < 0 ? 'down' : 'up'}>{formatMetric('gross_profit', item.contribution)}</td><td>{item.contribution < 0 ? '需关注' : '正向'}</td></tr>)}</tbody></table><button className="report-card-link">查看全部异常　›</button></article>
-        <article className={`report-station-card${enabled.station ? '' : ' section-off'}`}><header><h3>五、重点场站 TOP5（按毛利）</h3></header><table><thead><tr><th>排名</th><th>场站名称</th><th>毛利（元）</th><th>毛利率</th></tr></thead><tbody>{topStations.map((station, index) => <tr key={station.station_id}><td>{index + 1}</td><td>{station.station_name}</td><td>{formatMetric('gross_profit', station.metrics.gross_profit)}</td><td>{formatMetric('gross_margin', station.metrics.gross_margin)}</td></tr>)}</tbody></table><button className="report-card-link">查看全部场站　›</button></article>
-        <article className={enabled.device ? '' : 'section-off'}><header><h3>六、设备问题分布</h3></header><div className="report-device"><div className="device-ring" style={{ background: deviceDonut }}><span><b>{formatMetric('device_online_rate', metrics.device_online_rate)}</b><small>在线率</small></span></div><ul><li><i className="healthy" />正常在线 <b>{(healthyRate * 100).toFixed(1)}%</b></li><li><i className="fault" />设备故障 <b>{(faultRate * 100).toFixed(1)}%</b></li><li><i className="offline" />设备离线 <b>{(offlineRate * 100).toFixed(1)}%</b></li></ul></div><button className="report-card-link">查看设备问题详情　›</button></article>
+        <article className={enabled.anomaly ? '' : 'section-off'}><header><h3>四、主要异常 <em>△ 共 {anomalyRows.length} 项</em></h3></header><table><thead><tr><th>异常类型</th><th>影响值</th><th>状态</th></tr></thead><tbody>{anomalyRows.map((item: any) => <tr key={item.driver}><td>{driverNames[item.driver] || item.driver}</td><td className={item.contribution < 0 ? 'down' : 'up'}>{formatMetric('gross_profit', item.contribution)}</td><td>{item.contribution < 0 ? '需关注' : '正向'}</td></tr>)}</tbody></table><button disabled className="report-card-link">当前草稿全部异常　›</button></article>
+        <article className={`report-station-card${enabled.station ? '' : ' section-off'}`}><header><h3>五、重点场站 TOP5（按毛利）</h3></header><table><thead><tr><th>排名</th><th>场站名称</th><th>毛利（元）</th><th>毛利率</th></tr></thead><tbody>{topStations.map((station, index) => <tr key={station.station_id}><td>{index + 1}</td><td>{station.station_name}</td><td>{formatMetric('gross_profit', station.metrics.gross_profit)}</td><td>{formatMetric('gross_margin', station.metrics.gross_margin)}</td></tr>)}</tbody></table><button disabled className="report-card-link">当前草稿全部场站　›</button></article>
+        <article className={enabled.device ? '' : 'section-off'}><header><h3>六、设备问题分布</h3></header><div className="report-device"><div className="device-ring" style={{ background: deviceDonut }}><span><b>{formatMetric('device_online_rate', metrics.device_online_rate)}</b><small>在线率</small></span></div><ul><li><i className="healthy" />正常在线 <b>{(healthyRate * 100).toFixed(1)}%</b></li><li><i className="fault" />设备故障 <b>{(faultRate * 100).toFixed(1)}%</b></li><li><i className="offline" />设备离线 <b>{(offlineRate * 100).toFixed(1)}%</b></li></ul></div><button disabled className="report-card-link">设备详情跳转未实现　›</button></article>
       </section>
 
-      <section className={`report-actions-card${enabled.action ? '' : ' section-off'}`}><div><h3>七、建议行动</h3>{actionRows.map(([action, owner, due]) => <p key={action}><span>✓　{action}</span><b>{owner}</b><time>{due}</time></p>)}</div></section>
+      <section className={`report-actions-card${enabled.action ? '' : ' section-off'}`}><div><h3>七、建议行动草稿</h3>{actionRows.map(action => <p key={action}><span>✓　{action}</span><b>负责人待补充</b><time>期限待补充</time></p>)}</div></section>
       <footer className="report-truth">模拟数据　｜　数据时间：{start} 至 {endInclusive(end)}　｜　来源：平台数据库　｜　run_id：{metadata?.analysis_run_id || '生成中'}</footer>
     </section>
 
     <aside className="report-settings">
       <header><h2>报告设置</h2><button onClick={() => setEnabled({ summary: true, metric: true, trend: true, anomaly: true, station: true, device: true, action: true })}>恢复默认</button></header>
       <section><h3>报告类型</h3><div className="report-type-buttons four"><button disabled>日报</button><button className={reportType === 'weekly' ? 'active' : ''} onClick={() => setReportType('weekly')}>周报</button><button className={reportType === 'monthly' ? 'active' : ''} onClick={() => setReportType('monthly')}>月报</button><button disabled>专题报告</button></div></section>
-      <section><h3>时间范围</h3><div className="report-period-buttons">{[['current', '本期'], ['previous', '上期'], ['month', '本月'], ['lastMonth', '上月']].map(([key, label]) => <button className={periodPreset === key ? 'active' : ''} onClick={() => setPeriodPreset(key)} key={key}>{label}</button>)}</div><p>{start}　～　{endInclusive(end)}　▣</p></section>
+      <section><h3>时间范围</h3><div className="report-period-buttons"><button className="active">本期</button><button disabled>上期未开放</button><button disabled>本月未开放</button><button disabled>上月未开放</button></div><p>{start}　～　{endInclusive(end)}　▣</p></section>
       <section><h3>区域范围</h3><p>全部区域　⌄</p></section>
       <section className="report-switches"><h3>模块开关</h3>{([['summary', '管理摘要'], ['metric', '核心指标'], ['trend', '收入与毛利趋势'], ['anomaly', '主要异常'], ['station', '重点场站 TOP5'], ['device', '设备问题分布'], ['action', '建议行动']] as Array<[keyof typeof enabled, string]>).map(([key, label]) => <label key={key}><span>◇　{label}</span><input type="checkbox" checked={enabled[key]} onChange={() => setEnabled(value => ({ ...value, [key]: !value[key] }))} /></label>)}</section>
       <section className="report-note"><h3>说明备注 <small>（选填）</small></h3><textarea maxLength={200} placeholder="请输入报告备注信息…" /><span>0/200</span><small>报告只生成可审核草稿，不会自动发送或发布。</small></section>
@@ -1525,6 +1504,9 @@ type IntegrationWorkflow = {
   decided_at: string | null
   published_at: string | null
   rejection_reason: string | null
+  publication_scope?: string
+  semantic_activation_status?: string
+  formal_consumer_status?: string
   summary: { rules_checked?: number; rules_passed?: number; failures?: string[]; batch_id?: string }
   checks: Array<{
     rule_id: string
@@ -1557,51 +1539,43 @@ type IntegrationOverview = {
     batch_id: string | null
     data_time_range: { start: string; end_exclusive: string }
     generated_at: string
+    preview_source: string
+    semantic_activation_status: string
+    formal_consumer_status: string
   }
 }
 
-const mappingFieldsFallback = [
-  { source: 'station_id', source_type: 'varchar(50)', label: '场站编码', standard: 'station_id', target_type: 'varchar(50)', transform: '—', unit: '—' },
-  { source: 'station_name', source_type: 'varchar(200)', label: '场站名称', standard: 'station_name', target_type: 'varchar(200)', transform: '—', unit: '—' },
-  { source: 'region_id', source_type: 'varchar(50)', label: '运营区域', standard: 'region_id', target_type: 'varchar(50)', transform: '—', unit: '—' },
-  { source: 'city_id', source_type: 'varchar(50)', label: '所属城市', standard: 'city_id', target_type: 'varchar(50)', transform: '—', unit: '—' },
-  { source: 'charging_revenue', source_type: 'decimal(18,2)', label: '充电收入', standard: 'charging_revenue', target_type: 'decimal(18,2)', transform: '类型：decimal', unit: '元' },
-  { source: 'charging_volume_kwh', source_type: 'decimal(18,3)', label: '充电电量', standard: 'charging_volume_kwh', target_type: 'decimal(18,3)', transform: '精度：3 位', unit: 'kWh' },
-  { source: 'gross_profit', source_type: 'decimal(18,2)', label: '经营毛利', standard: 'gross_profit', target_type: 'decimal(18,2)', transform: '类型：decimal', unit: '元' },
-  { source: 'gross_margin', source_type: 'decimal(8,4)', label: '毛利率', standard: 'gross_margin', target_type: 'decimal(8,4)', transform: '比例：×100', unit: '%' },
-] satisfies MappingField[]
-
-function MappingPage({ token, summary, stations, start, end }: { token: string; summary: Summary | null; stations: StationRow[]; start: string; end: string }) {
+function MappingPage({ token, start, end }: { token: string; start: string; end: string }) {
   const [activeSource, setActiveSource] = useState('platform-postgresql')
   const [standardPreview, setStandardPreview] = useState(true)
   const [feedback, setFeedback] = useState('')
   const [integration, setIntegration] = useState<IntegrationOverview | null>(null)
+  const [integrationError, setIntegrationError] = useState('')
   const [integrationLoading, setIntegrationLoading] = useState(true)
   const [workflowLoading, setWorkflowLoading] = useState(false)
   const loadIntegration = async () => {
     setIntegrationLoading(true)
     try {
       setIntegration(await api<IntegrationOverview>(`/api/v1/data-integration/overview?start=${start}&end_exclusive=${end}`, token))
+      setIntegrationError('')
     } catch (reason) {
-      act(reason instanceof Error ? reason.message : '数据接入信息加载失败')
+      setIntegration(null)
+      setIntegrationError(reason instanceof Error ? reason.message : '数据接入信息加载失败')
     } finally {
       setIntegrationLoading(false)
     }
   }
   useEffect(() => { void loadIntegration() }, [token, start, end])
-  const mappingFields = integration?.dataset.mapping || mappingFieldsFallback
-  const previewRows: IntegrationPreview[] = integration?.preview || stations.slice(0, 5).map(row => ({
-    station_id: row.station_id,
-    station_name: row.station_name,
-    region_id: row.region_id,
-    city_id: row.city_id,
-    charging_revenue: row.metrics.charging_revenue,
-    charging_volume_kwh: row.metrics.charging_volume_kwh,
-    gross_profit: row.metrics.gross_profit,
-    gross_margin: row.metrics.gross_margin,
-  }))
+  if (integrationLoading && !integration) {
+    return <div className="mapping-page"><div className="notice">正在读取数据接入事实…</div><footer className="mapping-truth"><b>模拟数据</b><span>数据接入状态：加载中</span><span>未显示替代业务数据</span></footer></div>
+  }
+  if (integrationError || !integration) {
+    return <div className="mapping-page"><div className="notice error"><h2>数据接入已阻塞</h2><p>{integrationError || '数据接入事实不可用'}</p><p>未显示任何替代业务数据，请恢复接口后重试。</p><button onClick={() => void loadIntegration()}>重新加载</button></div><footer className="mapping-truth"><b>模拟数据</b><span>数据接入状态：Blocked</span><span>未显示替代业务数据</span></footer></div>
+  }
+  const mappingFields = integration.dataset.mapping
+  const previewRows: IntegrationPreview[] = integration.preview
   const sourceOrder: Record<string, number> = { postgresql: 0, excel: 1, mysql: 2, api: 3 }
-  const visibleSources = (integration?.sources || [])
+  const visibleSources = integration.sources
     .filter(source => source.source_id !== 'chatbi-postgresql')
     .sort((left, right) => sourceOrder[left.source_type] - sourceOrder[right.source_type])
   const sourceCards = visibleSources.map(source => {
@@ -1622,15 +1596,14 @@ function MappingPage({ token, summary, stations, start, end }: { token: string; 
       detail,
     }
   })
-  const activeSourceRecord = integration?.sources.find(source => source.source_id === activeSource)
-  const uniqueStations = new Set(previewRows.map(row => row.station_id)).size === previewRows.length
+  const activeSourceRecord = integration.sources.find(source => source.source_id === activeSource)
   const validations: Array<[string, boolean]> = [
-    ['映射配置', integration?.validations.mapping ?? mappingFields.every(field => field.source && field.standard)],
-    ['样例数据', integration?.validations.sample ?? previewRows.length > 0],
-    ['类型预览', integration?.validations.types ?? previewRows.every(row => typeof row.charging_revenue === 'number' || row.charging_revenue == null)],
-    ['时间范围', integration?.validations.time_range ?? Boolean(summary?.metadata.data_time_range.start)],
-    ['主键唯一性', integration?.validations.primary_key ?? uniqueStations],
-    ['溯源字段', integration?.validations.lineage ?? Boolean(summary?.metadata.analysis_run_id)],
+    ['映射配置', integration.validations.mapping],
+    ['样例数据', integration.validations.sample],
+    ['类型预览', integration.validations.types],
+    ['时间范围', integration.validations.time_range],
+    ['主键唯一性', integration.validations.primary_key],
+    ['溯源字段', integration.validations.lineage],
   ]
   const workflow = integration?.workflow
   const validationRows: Array<[string, boolean]> = workflow?.checks.length
@@ -1728,7 +1701,7 @@ function MappingPage({ token, summary, stations, start, end }: { token: string; 
         act('审批已通过，可执行受控发布。')
       } else if (workflow.workflow_status === 'approved') {
         result = await postIntegration<IntegrationWorkflow>(`/api/v1/data-integration/datasets/${datasetId}/runs/${runId}/publish`, {})
-        act(`数据集 ${result.release_version || ''} 已发布，发布记录可审计。`)
+        act(`数据集 ${result.release_version || ''} 的不可变快照已发布；尚未原子激活为全部正式消费者数据源。`)
       } else if (workflow.workflow_status === 'published') {
         act(`当前批次已发布，版本 ${workflow.release_version || '已登记'}。`)
         return
@@ -1762,30 +1735,30 @@ function MappingPage({ token, summary, stations, start, end }: { token: string; 
         const activeStep = !integration?.latest_ingestion ? 2 : workflow?.workflow_status === 'published' ? 5 : 4
         return <React.Fragment key={label}><div className={index === activeStep ? 'active' : index < activeStep ? 'done' : ''}><b>{index + 1}</b><span>{label}</span></div>{index < 4 && <i>›</i>}</React.Fragment>
       })}</div>
-      <nav><button onClick={() => void testConnection()}>⟳　测试连接</button><button onClick={() => act(`已从 PostgreSQL 数据集目录读取 ${mappingFields.length} 条已发布字段映射。`)}>▣　自动推荐映射</button><button onClick={() => void runIngestion()}>▷　试运行</button><button className="primary" disabled={workflowLoading} onClick={() => void advanceWorkflow()}>⌘　{workflowLoading ? '处理中…' : workflowButtonLabel}</button></nav>
+      <nav><button onClick={() => void testConnection()}>⟳　测试连接</button><button disabled title="自动推荐尚未实现">▣　自动推荐未开放</button><button onClick={() => void runIngestion()}>▷　试运行</button><button className="primary" disabled={workflowLoading} onClick={() => void advanceWorkflow()}>⌘　{workflowLoading ? '处理中…' : workflowButtonLabel}</button></nav>
     </section>
 
     {feedback && <div className="mapping-feedback">{feedback}</div>}
 
     <section className="mapping-workspace">
       <aside className="mapping-source-panel">
-        <header><h2>数据源列表</h2><button onClick={() => act('Alpha 当前不接入新的外部真实数据源。')}>＋ 新建数据源</button></header>
+        <header><h2>数据源列表</h2><button disabled title="Alpha 当前不接入新的外部真实数据源">＋ 新建未开放</button></header>
         <div className="mapping-source-list">{sourceCards.map(card => <button className={activeSource === card.source.source_id ? 'active' : ''} onClick={() => setActiveSource(card.source.source_id)} key={card.source.source_id}><span className={`mapping-source-icon ${card.tone}`}>{card.icon}</span><strong>{card.title}</strong><em className={card.source.status === 'configured' ? 'planned' : ''}>● {card.status}</em><i>⋯</i><small>{card.detail.map(line => <React.Fragment key={line}>{line}<br /></React.Fragment>)}</small></button>)}</div>
-        <button className="mapping-more">查看更多连接器（{Math.max((integration?.sources.length || 4) - sourceCards.length, 0)}+）</button>
+        <button disabled className="mapping-more">更多连接器未开放</button>
         <footer><b>能力边界</b><p>凭据只用于单次连接，不落库；业务数据解析校验后先写入 PostgreSQL，再由前端调用。</p></footer>
       </aside>
 
       <main className="mapping-center">
         <article className="mapping-field-panel">
-          <header><div><b>当前数据集：</b><span>{integration?.dataset.display_name || '场站经营指标视图'}（{integration?.dataset.dataset_id || 'station-operations'}）</span></div><div>来源表：{integration?.dataset.source_object || 'dashboard/stations'}　⟳</div><button onClick={() => act('数据集切换必须选择数据库内已登记并完成校验的数据集。')}>切换数据集</button></header>
+          <header><div><b>当前数据集：</b><span>{integration.dataset.display_name}（{integration.dataset.dataset_id}）</span></div><div>来源表：{integration.dataset.source_object}　⟳</div><button disabled title="数据集切换尚未实现">切换未开放</button></header>
           <div className="mapping-table-wrap"><table><thead><tr><th>源字段（平台视图）</th><th>标准业务字段（charging_ops）</th><th>数据类型转换</th><th>单位/枚举转换</th><th>状态</th></tr></thead><tbody>{mappingFields.map(field => <tr key={field.source}><td><b>▦　{field.source}</b><span>{field.source_type}</span></td><td><i>→</i><b>{field.label}</b><span>{field.standard}</span><small>{field.target_type}</small></td><td>{field.transform}</td><td>{field.unit}</td><td><em>◎　已映射</em></td></tr>)}</tbody></table></div>
-          <footer><button onClick={() => act('已添加一个未配置的自定义映射行。')}>＋　添加自定义映射</button><span>选择源字段　⌄</span><i>→</i><span>选择标准字段　⌄</span><span>选择转换方式　⌄</span><em>○　未映射</em></footer>
+          <footer><button disabled title="自定义映射尚未实现">＋　自定义映射未开放</button><span>选择源字段　⌄</span><i>→</i><span>选择标准字段　⌄</span><span>选择转换方式　⌄</span><em>○　未映射</em></footer>
         </article>
 
         <article className="mapping-preview-panel">
           <header><h2>数据预览（前 {previewRows.length || 0} 行）</h2><label>以标准字段预览 <input type="checkbox" checked={standardPreview} onChange={() => setStandardPreview(value => !value)} /></label></header>
           <div><table><thead><tr><th>#</th><th>场站编码</th><th>场站名称</th><th>运营区域</th><th>充电收入（元）</th><th>充电电量（kWh）</th><th>毛利率</th></tr></thead><tbody>{previewRows.map((row, index) => <tr key={row.station_id}><td>{index + 1}</td><td>{row.station_id}</td><td>{row.station_name}</td><td>{row.region_id}</td><td>{money(row.charging_revenue)}</td><td>{money(row.charging_volume_kwh)}</td><td>{formatMetric('gross_margin', row.gross_margin)}</td></tr>)}</tbody></table>{!previewRows.length && <p className="mapping-empty">{integrationLoading ? '正在从 PostgreSQL 读取已授权数据预览…' : '数据库暂无可预览数据'}</p>}</div>
-          <footer><span>共 {previewRows.length} 行数据库预览</span><span>截止时间：{integration?.metadata.generated_at || summary?.metadata.generated_at || endInclusive(end)}　｜　<button onClick={() => void loadIntegration()}>⟳ 重新预览</button></span></footer>
+          <footer><span>共 {previewRows.length} 行数据库预览 · 来源：{integration.metadata.preview_source}</span><span>生成时间：{integration.metadata.generated_at}　｜　<button onClick={() => void loadIntegration()}>⟳ 重新预览</button></span></footer>
         </article>
       </main>
 
@@ -1795,7 +1768,7 @@ function MappingPage({ token, summary, stations, start, end }: { token: string; 
       </aside>
     </section>
 
-    <footer className="mapping-truth"><b>模拟数据</b><span>数据时间：{integration?.metadata.data_time_range.start || summary?.metadata.data_time_range.start || start} 至 {endInclusive(integration?.metadata.data_time_range.end_exclusive || summary?.metadata.data_time_range.end_exclusive || end)}</span><span>来源：PostgreSQL 平台数据库</span><span>run_id：{integration?.latest_ingestion?.run_id || summary?.metadata.analysis_run_id || '加载中'}</span><em>治理状态：{workflowStatusLabel}</em></footer>
+    <footer className="mapping-truth"><b>模拟数据</b><span>数据时间：{integration.metadata.data_time_range.start} 至 {endInclusive(integration.metadata.data_time_range.end_exclusive)}</span><span>来源：PostgreSQL 平台数据库</span><span>run_id：{integration.latest_ingestion?.run_id || '尚未试运行'}</span><em>治理状态：{workflowStatusLabel}；语义激活：{integration.metadata.semantic_activation_status}</em></footer>
   </div>
 }
 
@@ -1810,13 +1783,13 @@ function BoundaryPage({ active, summary }: { active: ViewId; summary: Summary | 
 }
 
 function Sidebar({ active, navigate }: { active: ViewId; navigate: (id: ViewId) => void }) {
-  return <aside className="product-sidebar"><div className="brand"><img src="/figma-assets/brand-mark.svg" alt="" /><strong>新能源经营分析智能平台</strong></div><nav>{groups.map(group => <section key={group.title}><h2>{group.title}</h2>{group.items.map(item => <button key={item.id} className={active === item.id ? 'active' : ''} onClick={() => navigate(item.id)}><i>{item.icon}</i><span>{item.label}</span></button>)}</section>)}</nav><button className="collapse"><i>≡</i><span>收起菜单</span><b>«</b></button></aside>
+  return <aside className="product-sidebar"><div className="brand"><img src="/figma-assets/brand-mark.svg" alt="" /><strong>新能源经营分析智能平台</strong></div><nav>{groups.map(group => <section key={group.title}><h2>{group.title}</h2>{group.items.map(item => <button key={item.id} className={active === item.id ? 'active' : ''} onClick={() => navigate(item.id)}><i>{item.icon}</i><span>{item.label}</span></button>)}</section>)}</nav><button disabled className="collapse" title="菜单折叠未实现"><i>≡</i><span>折叠未开放</span><b>«</b></button></aside>
 }
 
 function ProductHeader({ active, start, end, setStart, setEnd, logout }: { active: ViewId; start: string; end: string; setStart: (v: string) => void; setEnd: (v: string) => void; logout: () => void }) {
   const showSearchAndDate = active === 'overview' || active === 'revenue' || active === 'margin' || active === 'stations' || active === 'devices' || active === 'alerts' || active === 'reports' || active === 'mapping' || active === 'metrics'
-  const searchPlaceholder = active === 'revenue' ? '搜索场站、订单、区域、城市…' : active === 'stations' ? '搜索场站名称、区域、城市…' : active === 'devices' ? '搜索设备编号、场站、型号…' : active === 'alerts' ? '搜索预警标题、影响对象、负责人…' : active === 'mapping' ? '搜索系统、指标、报告、问题…' : active === 'metrics' ? '搜索指标、场景、视图、规则…' : '搜索场站、指标、报告、问题…'
-  return <header className={`product-header${active === 'chat' ? ' chat-header' : ''}`}><div className="page-title">{active === 'alerts' && <i className="alert-header-icon">♧</i>}<h1>{titles[active]}</h1>{(active === 'overview' || active === 'margin') && <span>当前场景：<b>charging_ops</b>｜充电运营</span>}{active === 'dashboard' && <small>数据范围：{start} 至 {endInclusive(end)}　｜　模拟数据　｜　来源：平台数据库</small>}</div>{showSearchAndDate && <><label className="search"><i>⌕</i><input aria-label="全局搜索" placeholder={searchPlaceholder} />{(active === 'overview' || active === 'mapping') && <kbd>⌘ K</kbd>}</label><div className="date-range"><input aria-label="开始日期" type="date" value={start} onChange={e => setStart(e.target.value)} /><span>～</span><input aria-label="结束日期" type="date" value={endInclusive(end)} onChange={e => { const next = new Date(`${e.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></>}{active === 'chat' && <><button className="chat-model">分析模式　确定性链路⌄</button><div className="chat-period">2026-06-01　~　2026-06-30　▣</div></>}<button className="organization">{active === 'chat' ? '国内新能源集团' : '国际新能源集团'}　⌄</button><button className="bell" aria-label="通知">♧<b>12</b></button><button className="profile" onClick={logout}><span>张</span><div><b>张伟</b><small>运营分析师</small></div><i>⌄</i></button></header>
+  const searchPlaceholder = '全局搜索尚未实现'
+  return <header className={`product-header${active === 'chat' ? ' chat-header' : ''}`}><div className="page-title">{active === 'alerts' && <i className="alert-header-icon">♧</i>}<h1>{titles[active]}</h1>{(active === 'overview' || active === 'margin') && <span>当前场景：<b>charging_ops</b>｜充电运营</span>}{active === 'dashboard' && <small>数据范围：{start} 至 {endInclusive(end)}　｜　模拟数据　｜　来源：平台数据库</small>}</div>{showSearchAndDate && <><label className="search"><i>⌕</i><input disabled aria-label="全局搜索" placeholder={searchPlaceholder} /></label><div className="date-range"><input aria-label="开始日期" type="date" value={start} onChange={e => setStart(e.target.value)} /><span>～</span><input aria-label="结束日期" type="date" value={endInclusive(end)} onChange={e => { const next = new Date(`${e.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></>}{active === 'chat' && <><button disabled className="chat-model">分析模式　确定性链路</button><div className="chat-period">{start}　~　{endInclusive(end)}　▣</div></>}<button disabled className="organization">单客户工作区</button><button disabled className="bell" aria-label="通知未开放" title="通知未实现">♧</button><button className="profile" onClick={logout} title="点击退出当前会话"><span>会</span><div><b>当前会话</b><small>认证用户 · 点击退出</small></div><i>⌄</i></button></header>
 }
 
 function ProductShell({ token, logout }: { token: string; logout: () => void }) {
@@ -1841,7 +1814,14 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
       api<{ points: TrendPoint[] }>(`/api/v1/dashboard/trend?metric=${primary}&${query}`, token),
     ]).then(([summaryResult, stationResult, trendResult]) => {
       if (!cancelled) { setSummary(summaryResult); setStations(stationResult.rows); setTrend(trendResult.points) }
-    }).catch(reason => { if (!cancelled) setError(reason instanceof Error ? reason.message : '加载失败') }).finally(() => { if (!cancelled) setLoading(false) })
+    }).catch(reason => {
+      if (!cancelled) {
+        setSummary(null)
+        setStations([])
+        setTrend([])
+        setError(reason instanceof Error ? reason.message : '加载失败')
+      }
+    }).finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
   }, [token, start, end, primary, refreshKey])
   let content: React.ReactNode
@@ -1854,7 +1834,7 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
   else if (active === 'chat') content = <ChatPage token={token} />
   else if (active === 'alerts') content = <DiagnosticsPage token={token} start={start} end={end} />
   else if (active === 'reports') content = <ReportPage token={token} start={start} end={end} summary={summary} stations={stations} trend={trend} />
-  else if (active === 'mapping') content = <MappingPage token={token} summary={summary} stations={stations} start={start} end={end} />
+  else if (active === 'mapping') content = <MappingPage token={token} start={start} end={end} />
   else if (active === 'metrics') content = <MetricsPage token={token} summary={summary} start={start} end={end} />
   else content = <>{error && <div className="notice error">{error}</div>}<DetailPage active={active} summary={summary} stations={stations} trend={trend} /></>
   const shellMode = active === 'revenue' ? ' revenue-mode' : active === 'margin' ? ' margin-mode' : active === 'stations' ? ' station-mode' : active === 'devices' ? ' device-mode' : active === 'alerts' ? ' alert-mode' : active === 'reports' ? ' report-mode' : active === 'mapping' ? ' mapping-mode' : active === 'metrics' ? ' metrics-mode' : ''
