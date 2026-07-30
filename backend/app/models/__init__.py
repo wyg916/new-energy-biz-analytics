@@ -19,7 +19,8 @@ from app.models.semantic import (
     SemanticTable, SemanticTimeDimension,
 )
 from app.models.query_routing import (
-    QueryRouteDecisionRecord, ShadowEvaluation, SQLBotSessionBindingRecord,
+    ChatScenarioSessionBinding, QueryRouteDecisionRecord, ShadowEvaluation,
+    SQLBotSessionBindingRecord,
 )
 from app.models.sales import (
     SalesBusinessDate, SalesChannel, SalesCustomer, SalesOrder, SalesOrderItem,
@@ -38,7 +39,8 @@ __all__ = [
     "DataPolicy", "SemanticDimension", "SemanticField", "SemanticFilter",
     "SemanticMetric", "SemanticModel", "SemanticModelVersion", "SemanticRelationship",
     "SemanticTable", "SemanticTimeDimension",
-    "QueryRouteDecisionRecord", "ShadowEvaluation", "SQLBotSessionBindingRecord",
+    "ChatScenarioSessionBinding", "QueryRouteDecisionRecord",
+    "ShadowEvaluation", "SQLBotSessionBindingRecord",
     "SalesBusinessDate", "SalesChannel", "SalesCustomer", "SalesOrder",
     "SalesOrderItem", "SalesPerson", "SalesProduct", "SalesProductCategory",
     "SalesRegion",

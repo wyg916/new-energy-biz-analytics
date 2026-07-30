@@ -123,8 +123,30 @@ class QueryRouteDecisionRecord(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
 
 
+class ChatScenarioSessionBinding(Base):
+    __tablename__ = "chat_scenario_session_binding"
+    __table_args__ = (
+        Index(
+            "ix_chat_scenario_session_scope",
+            "tenant_id",
+            "workspace_id",
+            "subject_id",
+            "scenario_id",
+        ),
+    )
+
+    conversation_id: Mapped[str] = mapped_column(String(48), primary_key=True)
+    tenant_id: Mapped[str] = mapped_column(String(64))
+    workspace_id: Mapped[str] = mapped_column(String(64))
+    subject_id: Mapped[str] = mapped_column(String(96))
+    scenario_id: Mapped[str] = mapped_column(String(64))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    last_used_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+
+
 QUERY_ROUTING_TABLES = [
     SQLBotSessionBindingRecord.__table__,
     ShadowEvaluation.__table__,
     QueryRouteDecisionRecord.__table__,
+    ChatScenarioSessionBinding.__table__,
 ]

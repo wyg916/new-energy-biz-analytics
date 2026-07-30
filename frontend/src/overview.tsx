@@ -1002,6 +1002,17 @@ function DevicePage({ token, summary, start, end, setStart, setEnd, refresh }: {
 }
 
 const CHAT_INITIAL_QUESTION = '2026年6月充电收入环比变化的原因？'
+const SALES_CHAT_INITIAL_QUESTION = '2026年6月销售收入、订单数和销售毛利率是多少？'
+const CHAT_SCENARIO_DEFAULTS = [
+  { scenario_id: 'charging_ops', display_name: '充电运营', status: 'ACTIVE', scenario_version: null },
+  { scenario_id: 'sales_ops', display_name: '销售经营', status: 'NOT_ACTIVE', scenario_version: null },
+]
+type ChatScenario = {
+  scenario_id: string
+  display_name: string
+  status: string
+  scenario_version: string | null
+}
 const chatDriverNames: Record<string, string> = {
   charging_volume_effect: '充电量变化',
   revenue_per_kwh_effect: '度电收入变化',
@@ -1021,6 +1032,8 @@ function ChatTrend({ points }: { points: TrendPoint[] }) {
 
 function ChatPage({ token }: { token: string }) {
   const [question, setQuestion] = useState(CHAT_INITIAL_QUESTION)
+  const [scenarioId, setScenarioId] = useState('charging_ops')
+  const [scenarios, setScenarios] = useState<ChatScenario[]>(CHAT_SCENARIO_DEFAULTS)
   const [result, setResult] = useState<any>(null)
   const [summary, setSummary] = useState<Summary | null>(null)
   const [previous, setPrevious] = useState<Summary | null>(null)
@@ -1030,47 +1043,75 @@ function ChatPage({ token }: { token: string }) {
   const [history, setHistory] = useState<Array<{ question: string; time: string }>>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const initialized = useRef(false)
+  const [feedback, setFeedback] = useState('')
+  const initialized = useRef('')
+  const activeScenario = useRef('charging_ops')
+  const requestSequence = useRef(0)
 
-  const runQuestion = async (nextQuestion: string, currentConversation = conversationId) => {
+  const runQuestion = async (nextQuestion: string, currentConversation = conversationId, targetScenario = scenarioId) => {
     const normalized = nextQuestion.trim()
     if (!normalized) return
+    const sequence = ++requestSequence.current
     setLoading(true)
     setError('')
     try {
       const response = await fetch('/api/v1/chat/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ question: normalized, conversation_id: currentConversation }),
+        body: JSON.stringify({ question: normalized, conversation_id: currentConversation, scenario_id: targetScenario }),
       })
       const body = await response.json()
-      if (!response.ok) throw new Error(body.detail?.message || '问数失败')
+      if (sequence !== requestSequence.current || targetScenario !== activeScenario.current) return
+      if (!response.ok) throw new Error(`${body.detail?.code ? `${body.detail.code}：` : ''}${body.detail?.message || '问数失败'}`)
       setResult(body)
+      setFeedback('')
       setConversationId(body.conversation_id)
       setHistory(items => [{ question: normalized, time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }) }, ...items.filter(item => item.question !== normalized)].slice(0, 5))
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : '问数失败')
+      if (sequence === requestSequence.current && targetScenario === activeScenario.current) {
+        setError(reason instanceof Error ? reason.message : '问数失败')
+      }
     } finally {
-      setLoading(false)
+      if (sequence === requestSequence.current && targetScenario === activeScenario.current) setLoading(false)
     }
   }
 
   useEffect(() => {
-    if (initialized.current) return
-    initialized.current = true
-    Promise.all([
-      api<Summary>('/api/v1/dashboard/summary?start=2026-06-01&end_exclusive=2026-07-01', token),
-      api<Summary>('/api/v1/dashboard/summary?start=2026-05-01&end_exclusive=2026-06-01', token),
-      api<Summary>('/api/v1/dashboard/summary?start=2025-06-01&end_exclusive=2025-07-01', token),
-      api<{ points: TrendPoint[] }>('/api/v1/dashboard/trend?metric=charging_revenue&start=2026-01-01&end_exclusive=2026-07-01', token),
-    ]).then(([currentResult, previousResult, yearAgoResult, trendResult]) => {
-      setSummary(currentResult)
-      setPrevious(previousResult)
-      setYearAgo(yearAgoResult)
-      setTrend(trendResult.points)
-    }).catch(reason => setError(reason instanceof Error ? reason.message : '经营上下文加载失败'))
-    void runQuestion(CHAT_INITIAL_QUESTION, null)
+    api<{ scenarios: ChatScenario[] }>('/api/v1/chat/scenarios', token)
+      .then(body => setScenarios(body.scenarios))
+      .catch(reason => setError(reason instanceof Error ? reason.message : '场景目录加载失败'))
   }, [token])
+
+  useEffect(() => {
+    if (initialized.current === scenarioId) return
+    initialized.current = scenarioId
+    activeScenario.current = scenarioId
+    const initialQuestion = scenarioId === 'sales_ops' ? SALES_CHAT_INITIAL_QUESTION : CHAT_INITIAL_QUESTION
+    setQuestion(initialQuestion)
+    setConversationId(null)
+    setResult(null)
+    setHistory([])
+    setFeedback('')
+    if (scenarioId === 'charging_ops') {
+      Promise.all([
+        api<Summary>('/api/v1/dashboard/summary?start=2026-06-01&end_exclusive=2026-07-01', token),
+        api<Summary>('/api/v1/dashboard/summary?start=2026-05-01&end_exclusive=2026-06-01', token),
+        api<Summary>('/api/v1/dashboard/summary?start=2025-06-01&end_exclusive=2025-07-01', token),
+        api<{ points: TrendPoint[] }>('/api/v1/dashboard/trend?metric=charging_revenue&start=2026-01-01&end_exclusive=2026-07-01', token),
+      ]).then(([currentResult, previousResult, yearAgoResult, trendResult]) => {
+        setSummary(currentResult)
+        setPrevious(previousResult)
+        setYearAgo(yearAgoResult)
+        setTrend(trendResult.points)
+      }).catch(reason => setError(reason instanceof Error ? reason.message : '经营上下文加载失败'))
+    } else {
+      setSummary(null)
+      setPrevious(null)
+      setYearAgo(null)
+      setTrend([])
+    }
+    void runQuestion(initialQuestion, null, scenarioId)
+  }, [token, scenarioId])
 
   const ask = (event: React.FormEvent) => {
     event.preventDefault()
@@ -1080,10 +1121,32 @@ function ChatPage({ token }: { token: string }) {
     setConversationId(null)
     setResult(null)
     setHistory([])
-    setQuestion('')
+    setQuestion(scenarioId === 'sales_ops' ? SALES_CHAT_INITIAL_QUESTION : CHAT_INITIAL_QUESTION)
     setError('')
+    setFeedback('')
   }
 
+  const recordFeedback = async (rating: 'helpful' | 'not_helpful') => {
+    const runId = result?.query_result?.run_id
+    if (!conversationId || !runId) return
+    try {
+      const response = await fetch('/api/v1/chat/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ conversation_id: conversationId, run_id: runId, scenario_id: scenarioId, rating }),
+      })
+      const body = await response.json()
+      if (!response.ok) throw new Error(body.detail?.message || '反馈记录失败')
+      setFeedback(rating)
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : '反馈记录失败')
+    }
+  }
+
+  const isSales = scenarioId === 'sales_ops'
+  const queryResult = result?.query_result
+  const routing = result?.engine_routing
+  const salesMetrics = queryResult?.rows?.[0] ?? {}
   const diagnosis = result?.result?.diagnosis
   const metrics = summary?.metrics ?? diagnosis?.current ?? {}
   const previousMetrics = previous?.metrics ?? diagnosis?.previous ?? {}
@@ -1093,7 +1156,9 @@ function ChatPage({ token }: { token: string }) {
   const stationImpacts = diagnosis?.station_contributions ?? []
   const maxBridge = Math.max(...bridge.map((item: any) => Math.abs(item.contribution ?? 0)), 1)
   const strongestDriver = [...bridge].sort((a: any, b: any) => Math.abs(b.contribution) - Math.abs(a.contribution))[0]
-  const conclusion = diagnosis
+  const conclusion = isSales
+    ? result?.answer
+    : diagnosis
     ? `结论：全部授权区域 2026年6月充电收入为 ${money(metrics.charging_revenue)} 元，环比${revenueChange != null && revenueChange < 0 ? '下降' : '上升'} ${revenueChange == null ? '数据不足' : `${(Math.abs(revenueChange) * 100).toFixed(2)}%`}。变化拆解中贡献最大项为${chatDriverNames[strongestDriver?.driver] ?? '其他因素'}；关联线索不构成因果结论。`
     : result?.answer
   const cards = [
@@ -1102,49 +1167,75 @@ function ChatPage({ token }: { token: string }) {
     { id: 'revenue_per_kwh', label: '度电收入', icon: '价', color: 'orange' },
     { id: 'gross_margin', label: '毛利率', icon: '率', color: 'red' },
   ]
-  const suggestions = ['毛利率低于行业均值的原因？', '场站利用率下降原因', '度电成本上升原因']
+  const suggestions = isSales
+    ? ['2026年6月退款率是多少？', '2026年6月新客户数和复购客户数是多少？', '2026年6月客单价是多少？']
+    : ['毛利率低于行业均值的原因？', '场站利用率下降原因', '度电成本上升原因']
+  const salesMetricNames: Record<string, string> = {
+    sales_revenue: '销售收入',
+    order_count: '订单数',
+    customer_count: '客户数',
+    average_order_value: '客单价',
+    sales_quantity: '销售数量',
+    gross_profit: '销售毛利',
+    gross_margin: '销售毛利率',
+    refund_amount: '退款金额',
+    refund_rate: '退款率',
+    new_customer_count: '新客户数',
+    repeat_customer_count: '复购客户数',
+    channel_contribution: '最大渠道贡献率',
+  }
+  const salesValue = (metricId: string, value: number | null | undefined) => {
+    if (value == null) return '数据不足'
+    if (['gross_margin', 'refund_rate', 'channel_contribution'].includes(metricId)) return `${(value * 100).toFixed(2)}%`
+    if (['sales_revenue', 'average_order_value', 'gross_profit', 'refund_amount'].includes(metricId)) return `${value.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} 元`
+    return value.toLocaleString('zh-CN')
+  }
 
   return <div className="ai-analysis-page">
     <h2 className="chat-trust-title">可信 ChatBI</h2>
     <aside className="chat-history-panel">
       <header><h2>会话历史</h2><button onClick={newSession}>＋ 新会话</button></header>
       <div className="chat-history-list">{history.length ? history.map((item, index) => <button key={`${item.time}-${item.question}`} className={index === 0 ? 'active' : ''} onClick={() => setQuestion(item.question)}><span>{item.question}</span><small>{item.time}</small></button>) : <p>新会话尚未产生分析记录</p>}</div>
-      <section><header><h3>本次会话</h3><span>{history.length} 条</span></header><dl><div><dt>会话状态</dt><dd>{result?.status ?? '准备中'}</dd></div><div><dt>状态版本</dt><dd>v{result?.state_version ?? 0}</dd></div><div><dt>隔离范围</dt><dd>当前用户</dd></div></dl></section>
-      <section className="chat-example-list"><header><h3>分析示例</h3></header>{['全平台收入与毛利分析', '场站贡献下降定位', '设备指标关联排查'].map(item => <button key={item} onClick={() => setQuestion(item)}><span>▧</span>{item}<b>★</b></button>)}</section>
+      <section><header><h3>本次会话</h3><span>{history.length} 条</span></header><dl><div><dt>当前场景</dt><dd>{scenarioId}</dd></div><div><dt>会话状态</dt><dd>{result?.status ?? '准备中'}</dd></div><div><dt>状态版本</dt><dd>v{result?.state_version ?? 0}</dd></div><div><dt>隔离范围</dt><dd>当前用户 / 当前场景</dd></div></dl></section>
+      <section className="chat-example-list"><header><h3>分析示例</h3></header>{(isSales ? ['销售收入与毛利率', '退款与复购分析', '客户与订单分析'] : ['全平台收入与毛利分析', '场站贡献下降定位', '设备指标关联排查']).map(item => <button key={item} onClick={() => setQuestion(item)}><span>▧</span>{item}<b>★</b></button>)}</section>
       <section className="chat-chain-card"><header><h3>可信分析链路</h3><span>已启用</span></header><ol><li>自然语言结构化解析</li><li>Query Plan 合同校验</li><li>确定性参数化编译</li><li>只读执行与权限过滤</li><li>Answer Guard 证据检查</li></ol></section>
     </aside>
 
     <main className="chat-analysis-center">
-      <form className="chat-question-box" onSubmit={ask}><div><textarea aria-label="经营分析问题" maxLength={1000} value={question} onChange={event => setQuestion(event.target.value)} /><span>{question.length}/1000</span><button aria-label="发送分析问题" disabled={loading}>{loading ? '…' : '➤'}</button></div><footer><span>试试这样问：</span>{suggestions.map(item => <button type="button" key={item} onClick={() => setQuestion(item)}>{item}</button>)}</footer></form>
-      <section className="chat-recommended"><h3>推荐追问</h3><div>{['夜间电量下降的主要原因？', '低功率时段占比为何上升？', '快充占比下降的原因？', '与周边区域对比表现如何？'].map(item => <button key={item} onClick={() => setQuestion(item)}>{item}</button>)}</div><span>⟳ 换一批</span></section>
-      <section className="chat-conditions"><h3>当前条件</h3><div><span>时间范围　2026-06-01 ~ 2026-06-30</span><span>区域筛选　全部区域⌄</span><span>业务类型　充电⌄</span><span>站点类型　全部⌄</span><span>设备类型　全部⌄</span><button onClick={() => setQuestion(CHAT_INITIAL_QUESTION)}>重置条件</button></div></section>
+      <form className="chat-question-box" onSubmit={ask}><div><textarea aria-label="经营分析问题" maxLength={500} value={question} onChange={event => setQuestion(event.target.value)} /><span>{question.length}/500</span><button aria-label="发送分析问题" disabled={loading}>{loading ? '…' : '➤'}</button></div><footer><span>试试这样问：</span>{suggestions.map(item => <button type="button" key={item} onClick={() => setQuestion(item)}>{item}</button>)}</footer></form>
+      <section className="chat-recommended"><h3>推荐追问</h3><div>{(isSales ? ['退款金额和退款率是多少？', '新客户与复购客户有多少？', '最大渠道贡献率是多少？'] : ['夜间电量下降的主要原因？', '低功率时段占比为何上升？', '快充占比下降的原因？', '与周边区域对比表现如何？']).map(item => <button key={item} onClick={() => setQuestion(item)}>{item}</button>)}</div><span title="推荐问题为固定受控模板">固定模板</span></section>
+      <section className="chat-conditions"><h3>当前条件</h3><div><label>业务场景　<select aria-label="当前业务场景" value={scenarioId} onChange={event => { activeScenario.current = event.target.value; requestSequence.current += 1; setScenarioId(event.target.value) }}>{scenarios.map(scenario => <option key={scenario.scenario_id} value={scenario.scenario_id} disabled={scenario.status !== 'ACTIVE'}>{scenario.display_name} · {scenario.status}</option>)}</select></label><span>时间范围　2026-06-01 ~ 2026-06-30</span><span>数据分类　模拟数据</span><span>权限范围　全部授权区域</span><button onClick={() => setQuestion(isSales ? SALES_CHAT_INITIAL_QUESTION : CHAT_INITIAL_QUESTION)}>重置条件</button></div></section>
 
-      <article className="chat-answer-card">
+      <section className="chat-runtime-strip" aria-label="查询运行证据"><span>场景 <b>{queryResult?.scenario ?? scenarioId}</b></span><span>数据集 <b>{queryResult?.dataset_version ?? '等待 ACTIVE 版本'}</b></span><span>语义 <b>{queryResult?.semantic_version ?? '等待 ACTIVE 版本'}</b></span><span>引擎 <b>{queryResult?.engine ?? '等待执行'}</b></span><span>模式 <b>{routing?.mode ?? '等待执行'}</b></span><span>耗时 <b>{queryResult ? `${queryResult.execution_time} ms` : '—'}</b></span></section>
+
+      <article className={`chat-answer-card ${isSales ? 'sales' : ''}`}>
         <header><div><i>✦</i><h2>AI结论</h2><small>{loading ? '正在执行受控分析…' : result ? '已完成可信分析' : '等待分析'}</small></div><nav><button disabled>☆ 收藏未开放</button><button disabled>⇧ 导出未开放</button><button disabled>↗ 分享未开放</button></nav></header>
         {error && <div className="notice error">{error}</div>}
         <p className="chat-conclusion">{conclusion || '正在通过 Query Plan、确定性 SQL Compiler 与安全守卫计算结果…'}</p>
-        <section className="chat-metric-grid">{cards.map(card => <article key={card.id}><header><i className={card.color}>{card.icon}</i><span>{card.label}<small>{card.id === 'charging_volume_kwh' ? '(kWh)' : card.id.includes('revenue') ? '(元)' : ''}</small></span></header><strong>{card.id === 'charging_revenue' ? money(metrics[card.id]) : card.id === 'charging_volume_kwh' ? Math.round(metrics[card.id] ?? 0).toLocaleString('zh-CN') : formatMetric(card.id, metrics[card.id])}</strong><footer><span>环比 <b className={rate(metrics[card.id], previousMetrics[card.id]) != null && rate(metrics[card.id], previousMetrics[card.id])! < 0 ? 'down' : 'up'}>{deltaText(card.id, metrics[card.id], previousMetrics[card.id])}</b></span><span>同比 <b className={rate(metrics[card.id], yearAgoMetrics[card.id]) != null && rate(metrics[card.id], yearAgoMetrics[card.id])! < 0 ? 'down' : 'up'}>{deltaText(card.id, metrics[card.id], yearAgoMetrics[card.id])}</b></span></footer></article>)}</section>
-        <section className="chat-insight-grid">
+        {isSales ? <section className="chat-metric-grid sales">{Object.entries(salesMetrics).map(([metricId, value]) => <article key={metricId}><header><i className="teal">销</i><span>{salesMetricNames[metricId] ?? metricId}<small>{metricId}</small></span></header><strong>{salesValue(metricId, value as number)}</strong><footer><span>ACTIVE 数据集</span><span><b className="up">已验证口径</b></span></footer></article>)}</section> : <section className="chat-metric-grid">{cards.map(card => <article key={card.id}><header><i className={card.color}>{card.icon}</i><span>{card.label}<small>{card.id === 'charging_volume_kwh' ? '(kWh)' : card.id.includes('revenue') ? '(元)' : ''}</small></span></header><strong>{card.id === 'charging_revenue' ? money(metrics[card.id]) : card.id === 'charging_volume_kwh' ? Math.round(metrics[card.id] ?? 0).toLocaleString('zh-CN') : formatMetric(card.id, metrics[card.id])}</strong><footer><span>环比 <b className={rate(metrics[card.id], previousMetrics[card.id]) != null && rate(metrics[card.id], previousMetrics[card.id])! < 0 ? 'down' : 'up'}>{deltaText(card.id, metrics[card.id], previousMetrics[card.id])}</b></span><span>同比 <b className={rate(metrics[card.id], yearAgoMetrics[card.id]) != null && rate(metrics[card.id], yearAgoMetrics[card.id])! < 0 ? 'down' : 'up'}>{deltaText(card.id, metrics[card.id], yearAgoMetrics[card.id])}</b></span></footer></article>)}</section>}
+        {!isSales && <><section className="chat-insight-grid">
           <article><header><h3>近期充电收入趋势（元）</h3><span>按月⌄</span></header><ChatTrend points={trend} /></article>
           <article><header><h3>主要影响对象</h3><span>变化贡献（元）</span></header><div className="chat-impact-list">{stationImpacts.slice(0, 5).map((item: any) => <div key={item.station_id}><span>{item.station_name}</span><em className={item.contribution < 0 ? 'down' : 'up'}>{item.contribution < 0 ? '下降' : '上升'}</em><b className={item.contribution < 0 ? 'down' : 'up'}>{money(item.contribution)}</b></div>)}</div></article>
         </section>
         <section className="chat-action-grid">
           <article><header><h3>原因拆解（贡献度）</h3><span>ⓘ</span></header><div className="chat-driver-list">{bridge.slice(0, 5).map((item: any) => <div key={item.driver}><span>{chatDriverNames[item.driver] ?? item.driver}</span><b>{money(item.contribution)}</b><i><em className={item.contribution < 0 ? 'negative' : ''} style={{ width: `${Math.max(Math.abs(item.contribution) / maxBridge * 100, 5)}%` }} /></i></div>)}</div><small>对账残差：{money(diagnosis?.reconciliation?.residual)}</small></article>
           <article><header><h3>建议行动</h3></header><ul><li>复核充电量变化对应的时段与场站结构<b>高影响</b></li><li>复核度电收入变化与价格策略<b>高影响</b></li><li>关注贡献下降场站的运营条件<b>中影响</b></li><li>结合设备指标作同期关联排查<b>中影响</b></li></ul></article>
-        </section>
-        <footer className="chat-followups"><b>推荐追问</b>{['夜间电量下降的主要原因？', '低功率时段占比为何上升？', '快充占比下降的原因？'].map(item => <button key={item} onClick={() => setQuestion(item)}>{item}</button>)}</footer>
+        </section></>}
+        {isSales && <section className="chat-sales-evidence"><article><h3>结构化查询结果</h3><p>所有业务数字均来自统一 QueryResult；当前 Response Composer 未使用 SQLBot 原始回答。</p><dl><div><dt>结果字段</dt><dd>{queryResult?.columns?.join('、') || '等待执行'}</dd></div><div><dt>数据来源</dt><dd>{result?.evidence?.source || 'platform_database'}</dd></div><div><dt>版本绑定</dt><dd>{queryResult ? `${queryResult.scenario_version} / ${queryResult.semantic_version} / ${queryResult.dataset_version}` : '等待执行'}</dd></div></dl></article><article><h3>受控状态</h3><ul><li>Query Guard：{result?.evidence?.query_guard ?? 'pending'}</li><li>Answer Guard：{result?.evidence?.answer_guard?.status ?? 'pending'}</li><li>Shadow：{routing?.route_reason ?? '等待执行'}</li><li>警告：{queryResult?.warnings?.join('、') || '无'}</li></ul></article></section>}
+        <footer className="chat-followups"><b>推荐追问</b>{(isSales ? suggestions : ['夜间电量下降的主要原因？', '低功率时段占比为何上升？', '快充占比下降的原因？']).map(item => <button key={item} onClick={() => setQuestion(item)}>{item}</button>)}</footer>
+        <div className="chat-feedback"><span>这次结构化回答是否有帮助？</span><button type="button" disabled={!result || Boolean(feedback)} className={feedback === 'helpful' ? 'selected' : ''} onClick={() => void recordFeedback('helpful')}>有帮助</button><button type="button" disabled={!result || Boolean(feedback)} className={feedback === 'not_helpful' ? 'selected' : ''} onClick={() => void recordFeedback('not_helpful')}>需改进</button>{feedback && <b>反馈已记录到审计日志</b>}</div>
       </article>
     </main>
 
     <aside className="chat-evidence-panel">
       <header><h2>证据与数据来源</h2><span>×</span></header>
-      <section><h3><i>①</i>数据来源</h3><p><b>平台数据库</b><em>simulated</em></p><small>固定 seed 新能源经营分析业务库</small></section>
-      <section><h3><i>②</i>指标口径</h3><p>充电收入：完成订单的电费与服务费实收净额</p><p>毛利率：经营毛利 / 充电收入</p></section>
-      <section><h3><i>③</i>查询条件</h3><ul><li>时间范围：2026-06-01 ~ 2026-06-30</li><li>区域：全部授权区域</li><li>业务类型：充电</li><li>站点类型：全部</li><li>设备类型：全部</li></ul></section>
+      <section><h3><i>①</i>数据来源</h3><p><b>{result?.evidence?.source || '平台数据库'}</b><em>simulated</em></p><small>固定 seed {isSales ? '销售经营' : '新能源充电运营'}模拟业务库</small></section>
+      <section><h3><i>②</i>版本与引擎</h3><p>场景：{queryResult?.scenario ?? scenarioId}@{queryResult?.scenario_version ?? 'pending'}</p><p>语义 / 数据集：{queryResult?.semantic_version ?? 'pending'} / {queryResult?.dataset_version ?? 'pending'}</p><p>引擎 / 模式：{queryResult?.engine ?? 'pending'} / {routing?.mode ?? 'pending'}</p></section>
+      <section><h3><i>③</i>查询条件</h3><ul><li>时间范围：{result?.evidence?.data_time_range?.start ?? '2026-06-01'} ~ {result?.evidence?.data_time_range?.end_exclusive ?? '2026-07-01'}（右开）</li><li>区域：全部授权区域</li><li>业务场景：{scenarioId}</li><li>数据分类：模拟数据</li></ul></section>
       <section><h3><i>④</i>Query Plan 摘要</h3><p>{result?.query_plan ? `${result.query_plan.intent}；指标 ${result.query_plan.metrics.join('、')}；${result.query_plan.comparison?.type ?? '无'}比较。` : '等待结构化解析'}</p><details><summary>查看详情　›</summary><pre>{JSON.stringify(result?.query_plan, null, 2)}</pre></details></section>
-      <section><h3><i>⑤</i>SQL 证据入口</h3><details><summary>查看受控 SQL　‹/›</summary><pre>{result?.evidence?.sql || '当前结果未执行 SQL，或当前角色无权查看。'}</pre></details></section>
+      <section><h3><i>⑤</i>SQL 与警告</h3><details><summary>查看受控 SQL　‹/›</summary><pre>{queryResult?.sql || result?.evidence?.sql || '当前引擎通过受控查询构造器执行，未向该角色暴露 SQL 文本。'}</pre></details><p>警告：{queryResult?.warnings?.join('、') || '无'}</p></section>
       <section><h3><i>⑥</i>analysis_run_id</h3><code>{result?.evidence?.analysis_run_id ?? '等待生成'}</code></section>
-      <footer><span>♢</span><p><b>业务默认，证据按需查看</b><small>Query Guard：{result?.evidence?.query_guard ?? 'pending'} · Answer Guard：{result?.evidence?.answer_guard?.status ?? 'pending'}</small></p></footer>
+      <footer><span>♢</span><p><b>业务默认，证据按需查看</b><small>Query Guard：{result?.evidence?.query_guard ?? 'pending'} · Answer Guard：{result?.evidence?.answer_guard?.status ?? 'pending'} · {routing?.route_decision ?? '等待路由'}</small></p></footer>
     </aside>
   </div>
 }

@@ -71,8 +71,9 @@ QueryEngine 的情况下承载新业务域。
 base → 0011 → 0010 → 0011
 ```
 
-当前 PostgreSQL 为 `0011 (head)`。降级到 `0010` 会删除上述 sales_ops 表，
-不修改 charging_ops 事实表和 P1A 平台表。
+sales_ops Schema 在迁移 `0011` 引入；当前 PostgreSQL 已随双场景会话隔离
+工作包升级为 `0012 (head)`。降级到 `0010` 会删除上述 sales_ops 表，不修改
+charging_ops 事实表和 P1A 平台表。
 
 ## 指标与维度
 
@@ -133,10 +134,10 @@ status=passed
 - 12 项指标真实 PostgreSQL 对账：`12/12 PASS`；
 - 跨场景成功数：`0`；
 - SQLite Alembic 完整升降级：PASS；
-- PostgreSQL Alembic：`0011 (head)`。
+- PostgreSQL Alembic：`0012 (head)`。
 
-同一套 ChatBI API/UI 的 sales_ops 场景切换在后续 P1B 前端工作包完成，本文件
-不把尚未完成的 UI 接入标记为已实现。
+同一套 ChatBI API/UI 的 sales_ops 场景切换已在 P1B 前端工作包完成，证据见
+`09_FRONTEND_INTEGRATION.md`。
 
 ## 回滚
 
