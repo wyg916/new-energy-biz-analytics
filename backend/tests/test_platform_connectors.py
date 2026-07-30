@@ -11,6 +11,9 @@ from app.platform.connectors.errors import ConnectorError, ConnectorErrorCode, m
 from app.platform.connectors.security import StaticCredentialProvider, safe_config
 
 
+pytestmark = pytest.mark.no_db
+
+
 def csv_config(root: Path, **overrides) -> ConnectorConfig:
     options = {
         "root_dir": str(root),
