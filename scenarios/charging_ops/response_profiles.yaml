@@ -1,0 +1,8 @@
+{
+  "profiles": [
+    {"code": "executive", "roles": ["executive"], "detail": "summary", "show_sql": false, "show_evidence": true},
+    {"code": "regional", "roles": ["regional_manager"], "detail": "regional", "show_sql": false, "show_evidence": true},
+    {"code": "analyst", "roles": ["analyst_admin"], "detail": "full", "show_sql": true, "show_evidence": true}
+  ],
+  "truth_labels": {"data_classification": "模拟数据", "causality": "关联因素说明，不构成因果结论"}
+}

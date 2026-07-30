@@ -108,6 +108,8 @@ class ScenarioPackageRelease(Base):
     __table_args__ = (UniqueConstraint("scenario_id", "version", name="uq_scenario_package_version"),)
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    tenant_id: Mapped[str] = mapped_column(String(64), default="tenant-alpha", index=True)
+    workspace_id: Mapped[str] = mapped_column(String(64), default="workspace-alpha", index=True)
     scenario_id: Mapped[str] = mapped_column(String(64), index=True)
     version: Mapped[str] = mapped_column(String(32))
     display_name: Mapped[str] = mapped_column(String(128))
@@ -115,8 +117,14 @@ class ScenarioPackageRelease(Base):
     manifest_checksum: Mapped[str] = mapped_column(String(64))
     status: Mapped[str] = mapped_column(String(24), index=True)
     source_batch_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    package_root: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    platform_api_range: Mapped[str] = mapped_column(String(64), default="*")
+    validation_json: Mapped[str] = mapped_column(Text, default="{}")
     installed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    validated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     published_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    activated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    disabled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
 class PublishedStationSnapshot(Base):

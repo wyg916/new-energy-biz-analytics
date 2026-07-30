@@ -1,0 +1,73 @@
+{
+  "tables": [
+    {
+      "code": "session_fact",
+      "name": "充电会话事实",
+      "physical_binding": "fact_charging_session",
+      "grain": ["session_id"],
+      "lineage": {"dataset": "charging_operations", "classification": "simulated"}
+    },
+    {
+      "code": "energy_cost_fact",
+      "name": "电费成本事实",
+      "physical_binding": "fact_energy_cost",
+      "grain": ["cost_date", "station_id"],
+      "lineage": {"dataset": "charging_operations", "classification": "simulated"}
+    },
+    {
+      "code": "operation_expense_fact",
+      "name": "运营费用事实",
+      "physical_binding": "fact_operation_expense",
+      "grain": ["expense_id"],
+      "lineage": {"dataset": "charging_operations", "classification": "simulated"}
+    },
+    {
+      "code": "status_event_fact",
+      "name": "设备状态事件事实",
+      "physical_binding": "fact_device_status_event",
+      "grain": ["event_id"],
+      "lineage": {"dataset": "charging_operations", "classification": "simulated"}
+    },
+    {
+      "code": "station_dimension",
+      "name": "场站维度",
+      "physical_binding": "dim_station",
+      "grain": ["station_id"],
+      "lineage": {"dataset": "charging_operations", "classification": "simulated"}
+    }
+  ],
+  "fields": [
+    {"table": "session_fact", "code": "session_id", "name": "会话编码", "data_type": "string", "physical_field": "session_id", "nullable": false},
+    {"table": "session_fact", "code": "station_id", "name": "场站编码", "data_type": "string", "physical_field": "station_id", "nullable": false},
+    {"table": "session_fact", "code": "device_id", "name": "设备编码", "data_type": "string", "physical_field": "device_id", "nullable": false},
+    {"table": "session_fact", "code": "user_id", "name": "用户编码", "data_type": "string", "physical_field": "user_id", "nullable": false},
+    {"table": "session_fact", "code": "settlement_time", "name": "结算时间", "data_type": "datetime", "physical_field": "settlement_time", "nullable": false},
+    {"table": "session_fact", "code": "energy_kwh", "name": "充电电量", "data_type": "number", "physical_field": "energy_kwh", "nullable": false},
+    {"table": "session_fact", "code": "electricity_fee_net_amount", "name": "电费净额", "data_type": "number", "physical_field": "electricity_fee_net_amount", "nullable": false},
+    {"table": "session_fact", "code": "service_fee_net_amount", "name": "服务费净额", "data_type": "number", "physical_field": "service_fee_net_amount", "nullable": false},
+    {"table": "session_fact", "code": "charging_duration_seconds", "name": "充电时长", "data_type": "integer", "physical_field": "charging_duration_seconds", "nullable": false},
+    {"table": "energy_cost_fact", "code": "station_id", "name": "场站编码", "data_type": "string", "physical_field": "station_id", "nullable": false},
+    {"table": "energy_cost_fact", "code": "cost_date", "name": "成本日期", "data_type": "date", "physical_field": "cost_date", "nullable": false},
+    {"table": "energy_cost_fact", "code": "energy_cost", "name": "电费成本", "data_type": "number", "physical_field": "energy_cost", "nullable": false},
+    {"table": "operation_expense_fact", "code": "station_id", "name": "场站编码", "data_type": "string", "physical_field": "station_id", "nullable": false},
+    {"table": "operation_expense_fact", "code": "expense_date", "name": "费用日期", "data_type": "date", "physical_field": "expense_date", "nullable": false},
+    {"table": "operation_expense_fact", "code": "amount", "name": "费用金额", "data_type": "number", "physical_field": "amount", "nullable": false},
+    {"table": "operation_expense_fact", "code": "is_variable", "name": "是否可变", "data_type": "boolean", "physical_field": "is_variable", "nullable": false},
+    {"table": "status_event_fact", "code": "station_id", "name": "场站编码", "data_type": "string", "physical_field": "station_id", "nullable": false},
+    {"table": "status_event_fact", "code": "device_id", "name": "设备编码", "data_type": "string", "physical_field": "device_id", "nullable": false},
+    {"table": "status_event_fact", "code": "start_time", "name": "开始时间", "data_type": "datetime", "physical_field": "start_time", "nullable": false},
+    {"table": "status_event_fact", "code": "status", "name": "设备状态", "data_type": "string", "physical_field": "status", "nullable": false},
+    {"table": "station_dimension", "code": "station_id", "name": "场站编码", "data_type": "string", "physical_field": "station_id", "nullable": false},
+    {"table": "station_dimension", "code": "region_id", "name": "区域编码", "data_type": "string", "physical_field": "region_id", "nullable": false},
+    {"table": "station_dimension", "code": "city_id", "name": "城市编码", "data_type": "string", "physical_field": "city_id", "nullable": false},
+    {"table": "station_dimension", "code": "connector_count", "name": "枪口数", "data_type": "integer", "physical_field": "connector_count", "nullable": false}
+  ],
+  "time_dimensions": [
+    {"code": "settlement_time", "field_ref": "session_fact.settlement_time", "timezone": "UTC", "grains": ["day", "week", "month", "quarter", "year"]},
+    {"code": "status_start_time", "field_ref": "status_event_fact.start_time", "timezone": "UTC", "grains": ["day", "week", "month"]}
+  ],
+  "filters": [
+    {"code": "completed_sessions_only", "expression": {"field": "session_status", "operator": "eq", "value": "completed"}, "required": true},
+    {"code": "authorized_station_scope", "expression": {"field": "station_id", "source": "identity.data_scopes"}, "required": true}
+  ]
+}

@@ -33,7 +33,8 @@ def install_charging_ops(db: Session, source_batch_id: str | None = None, publis
 def published_charging_ops(db: Session) -> ScenarioPackageRelease | None:
     return db.scalar(select(ScenarioPackageRelease).where(
         ScenarioPackageRelease.scenario_id == SCENARIO_ID,
-        ScenarioPackageRelease.status == "published",
+        ScenarioPackageRelease.status.in_(("published", "PUBLISHED", "ACTIVE")),
+        ScenarioPackageRelease.source_batch_id.is_not(None),
     ).order_by(ScenarioPackageRelease.published_at.desc()))
 
 

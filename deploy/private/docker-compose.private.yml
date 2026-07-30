@@ -41,7 +41,8 @@ services:
   api:
     image: ${API_IMAGE:-renewable-operations-private-api}:${RELEASE_VERSION:?RELEASE_VERSION is required}
     build:
-      context: ../../backend
+      context: ../..
+      dockerfile: backend/Dockerfile
     command:
       - sh
       - -c
@@ -62,7 +63,7 @@ services:
       PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:?PUBLIC_BASE_URL is required}
       TRUSTED_HOSTS: ${TRUSTED_HOSTS:?TRUSTED_HOSTS is required}
       RELEASE_VERSION: ${RELEASE_VERSION:?RELEASE_VERSION is required}
-      EXPECTED_DATABASE_REVISION: ${EXPECTED_DATABASE_REVISION:-0006}
+      EXPECTED_DATABASE_REVISION: ${EXPECTED_DATABASE_REVISION:-0009}
       API_SOURCE_ALLOWLIST: ${API_SOURCE_ALLOWLIST:-localhost,127.0.0.1}
     depends_on:
       db:

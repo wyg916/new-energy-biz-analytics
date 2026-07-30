@@ -1,0 +1,12 @@
+{
+  "terms": [
+    {"term": "充电收入", "aliases": ["收入", "营收"], "metric": "charging_revenue"},
+    {"term": "经营毛利", "aliases": ["毛利"], "metric": "gross_profit"},
+    {"term": "场站利用率", "aliases": ["利用率"], "metric": "station_utilization_rate"},
+    {"term": "设备在线率", "aliases": ["在线率"], "metric": "device_online_rate"},
+    {"term": "本期", "resolution": "current_period_from_request"},
+    {"term": "环比", "resolution": "previous_equal_duration_period"},
+    {"term": "同比", "resolution": "same_period_previous_year"}
+  ],
+  "ambiguity_policy": "clarify_before_query"
+}

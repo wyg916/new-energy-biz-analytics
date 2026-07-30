@@ -1,0 +1,7 @@
+{
+  "rules": [
+    {"code": "revenue_change", "metric": "charging_revenue", "comparison": "mom", "threshold": 0.15, "statement_boundary": "association_not_causation"},
+    {"code": "gross_profit_bridge", "metric": "gross_profit", "drivers": ["charging_revenue_change", "energy_cost_change", "variable_operating_cost_change"], "reconciliation_required": true},
+    {"code": "device_correlation", "metrics": ["device_online_rate", "device_fault_rate"], "statement_boundary": "association_not_causation"}
+  ]
+}

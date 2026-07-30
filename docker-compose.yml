@@ -15,7 +15,9 @@ services:
     volumes: [alpha_redisdata:/data]
     healthcheck: {test: ["CMD", "redis-cli", "ping"], interval: 5s, timeout: 3s, retries: 20}
   api:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     volumes: [alpha_imports:/app/data/imports]
     environment:
       APP_ENV: development

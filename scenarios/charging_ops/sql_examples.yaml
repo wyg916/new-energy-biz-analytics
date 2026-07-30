@@ -1,0 +1,9 @@
+{
+  "examples": [
+    {"question": "2026年上半年充电收入是多少", "intent": "metric_lookup", "metrics": ["charging_revenue"], "time_range": {"start": "2026-01-01", "end_exclusive": "2026-07-01"}},
+    {"question": "2026年上半年毛利按场站排名", "intent": "ranking", "metrics": ["gross_profit"], "dimensions": ["station"], "time_range": {"start": "2026-01-01", "end_exclusive": "2026-07-01"}},
+    {"question": "2026年上半年收入为什么变化", "intent": "diagnose_revenue_change", "metrics": ["charging_revenue"], "comparison": {"type": "mom"}, "time_range": {"start": "2026-01-01", "end_exclusive": "2026-07-01"}}
+  ],
+  "free_sql_allowed": false,
+  "compiler": "deterministic"
+}

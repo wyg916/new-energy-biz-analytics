@@ -1,0 +1,8 @@
+{
+  "version": "1.0.0",
+  "sources": ["terminology.yaml", "metrics.yaml", "dimensions.yaml", "diagnostics.yaml"],
+  "retrieval_provider": "NOT_CONFIGURED",
+  "vector_store": "NOT_CONFIGURED",
+  "long_term_memory": "NOT_CONFIGURED",
+  "status": "DISABLED"
+}

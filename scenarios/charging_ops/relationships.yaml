@@ -1,0 +1,8 @@
+{
+  "relationships": [
+    {"code": "session_to_station", "source_table": "session_fact", "source_fields": ["station_id"], "target_table": "station_dimension", "target_fields": ["station_id"], "cardinality": "many_to_one", "join_type": "inner", "status": "PUBLISHED"},
+    {"code": "cost_to_station", "source_table": "energy_cost_fact", "source_fields": ["station_id"], "target_table": "station_dimension", "target_fields": ["station_id"], "cardinality": "many_to_one", "join_type": "inner", "status": "PUBLISHED"},
+    {"code": "expense_to_station", "source_table": "operation_expense_fact", "source_fields": ["station_id"], "target_table": "station_dimension", "target_fields": ["station_id"], "cardinality": "many_to_one", "join_type": "inner", "status": "PUBLISHED"},
+    {"code": "status_to_station", "source_table": "status_event_fact", "source_fields": ["station_id"], "target_table": "station_dimension", "target_fields": ["station_id"], "cardinality": "many_to_one", "join_type": "inner", "status": "PUBLISHED"}
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "dimensions": [
+    {"code": "date", "name": "日期", "aliases": ["日"], "field_ref": "session_fact.settlement_time", "data_type": "date", "hierarchy": ["year", "quarter", "month", "date"]},
+    {"code": "week", "name": "周", "aliases": ["星期"], "field_ref": "session_fact.settlement_time", "data_type": "date", "hierarchy": ["year", "week"]},
+    {"code": "month", "name": "月", "aliases": ["月份"], "field_ref": "session_fact.settlement_time", "data_type": "date", "hierarchy": ["year", "quarter", "month"]},
+    {"code": "quarter", "name": "季度", "aliases": ["季"], "field_ref": "session_fact.settlement_time", "data_type": "date", "hierarchy": ["year", "quarter"]},
+    {"code": "region", "name": "运营区域", "aliases": ["区域"], "field_ref": "station_dimension.region_id", "data_type": "string", "hierarchy": ["region", "city", "station"]},
+    {"code": "city", "name": "城市", "aliases": ["所在城市"], "field_ref": "station_dimension.city_id", "data_type": "string", "hierarchy": ["region", "city", "station"]},
+    {"code": "station", "name": "场站", "aliases": ["充电站"], "field_ref": "station_dimension.station_id", "data_type": "string", "hierarchy": ["region", "city", "station"]},
+    {"code": "station_type", "name": "场站类型", "aliases": [], "field_ref": "station_dimension.station_type", "data_type": "string", "hierarchy": []},
+    {"code": "operator", "name": "运营商", "aliases": [], "field_ref": "station_dimension.operator", "data_type": "string", "hierarchy": []},
+    {"code": "device", "name": "设备", "aliases": ["充电设备"], "field_ref": "status_event_fact.device_id", "data_type": "string", "hierarchy": ["station", "device"]},
+    {"code": "user_segment", "name": "用户分群", "aliases": ["用户类型"], "field_ref": "session_fact.user_segment", "data_type": "string", "hierarchy": []},
+    {"code": "expense_type", "name": "费用类型", "aliases": ["成本类型"], "field_ref": "operation_expense_fact.expense_type", "data_type": "string", "hierarchy": []}
+  ]
+}

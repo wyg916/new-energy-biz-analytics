@@ -1,0 +1,16 @@
+.git
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.coverage*
+**/data
+backend/tests
+frontend/node_modules
+frontend/dist
+frontend/playwright-report
+frontend/test-results
+*.docx
+*.xlsx
+*.db
+*.log
+deploy/private/runtime
