@@ -599,7 +599,7 @@ function MarginPage({ token, summary, stations, start, end, setStart, setEnd, re
         const risk = margin < .1 ? '高' : margin < .2 ? '中' : '低'
         return <tr key={row.station_id}><td>{index + 1}</td><td>{row.station_name}</td><td>{row.region_id}</td><td>{money(revenue)}</td><td>{money(profit)}</td><td><span className="margin-rate"><i style={{ width: `${Math.max(margin * 100, 3)}%`, background: margin < .1 ? '#ef4444' : margin < .2 ? '#f59e0b' : '#0fa678' }} />{formatMetric('gross_margin', margin)}</span></td><td>{revenuePerKwh.toFixed(2)}</td><td>{costPerKwh.toFixed(2)}</td><td>{(revenuePerKwh - costPerKwh).toFixed(2)}</td><td><em className={`risk-${risk === '高' ? 'high' : risk === '中' ? 'medium' : 'low'}`}>{risk}</em></td><td><button disabled title="场站详情跳转未实现">未开放</button></td></tr>
       })}</tbody></table></div><footer><span>共 {stations.length} 条</span><select disabled defaultValue="10"><option value="10">10 条/页</option></select><button disabled>‹</button><b>1</b><button disabled>›</button><span>当前页</span></footer></article>
-      <article className="margin-panel margin-suggestion-panel"><header><h2>人工核查建议</h2><button disabled title="方案库尚未实现">方案库未开放</button></header><div>{suggestions.map(item => <section key={item.title}><i className={item.tone}>{item.icon}</i><div><b>{item.title}</b><p>{item.copy}</p></div><span><small>结果边界</small><strong>未估算收益</strong></span><button disabled title="当前仅生成建议草稿">需人工审核</button></section>)}</div></article>
+      <article className="margin-panel margin-suggestion-panel"><header><h2>优化建议</h2><button disabled title="方案库尚未实现">方案库未开放</button></header><div>{suggestions.map(item => <section key={item.title}><i className={item.tone}>{item.icon}</i><div><b>{item.title}</b><p>{item.copy}</p></div><span><small>结果边界</small><strong>未估算收益</strong></span><button disabled title="当前仅生成建议草稿">需人工审核</button></section>)}</div></article>
     </section>
 
     {error && <div className="margin-error">{error}</div>}
@@ -1260,7 +1260,7 @@ function DiagnosticsPage({ token, start, end }: { token: string; start: string; 
       </article>
 
       <article className="alert-detail-panel alert-panel">
-        <header className="alert-detail-head"><div><h2><i>◆</i>{selected?.title || '经营规则诊断'}<em className={`risk ${selected?.risk || 'low'}`}>{riskNames[selected?.risk || 'low']}</em></h2><p>run_id：{data.metadata.analysis_run_id}　　数据周期：{start} 至 {endInclusive(end)}　　类型：规则诊断</p></div><button disabled className="status processing">◎ 非预警工单</button></header>
+        <header className="alert-detail-head"><div><h2><i>◆</i>{selected?.title || '经营规则诊断'}<em className={`risk ${selected?.risk || 'low'}`}>{riskNames[selected?.risk || 'low']}</em></h2><p>分析运行：{data.metadata.analysis_run_id}　　数据周期：{start} 至 {endInclusive(end)}　　类型：规则诊断</p></div><button disabled className="status processing">◎ 非预警工单</button></header>
 
         <section className="alert-summary"><h3>业务摘要</h3><p>{start} 至 {endInclusive(end)}，{selected?.station_name || '当前对象'}毛利贡献为 <b>{compactWan(selected?.contribution || 0)}</b>；充电收入环比{anomaly?.change_rate == null ? '数据不足' : `变化 ${(anomaly.change_rate * 100).toFixed(1)}%`}。该结果用于经营关注与后续核查，不构成因果结论。</p></section>
 
@@ -1274,7 +1274,7 @@ function DiagnosticsPage({ token, start, end }: { token: string; start: string; 
           <section className="alert-actions"><h3>人工核查建议</h3><p><i>✓</i><span>复核低贡献场站的充电量与时段结构</span><em>建议</em></p><p><i>✓</i><span>检查价格策略与活动执行记录</span><em>建议</em></p><p><i>✓</i><span>结合设备在线率与故障率同步核查</span><em>建议</em></p><button disabled title="行动方案库未实现">方案库未开放</button></section>
         </div>
 
-        <section className="alert-timeline"><header><h3>本轮诊断证据</h3><button disabled>无虚构处理记录</button></header><div><time>运行</time><i className="active" /><span>结构化结果 run_id：{data.metadata.analysis_run_id}</span></div><div><time>规则</time><i /><span>{anomaly?.triggered ? '异常规则已触发' : '异常规则未触发'}，阈值来自已发布规则</span></div><div><time>对账</time><i /><span>贡献拆解状态：{data.reconciliation.status}；残差 {compactWan(data.reconciliation.residual)}</span></div></section>
+        <section className="alert-timeline"><header><h3>本轮诊断证据</h3><button disabled>无虚构处理记录</button></header><div><time>运行</time><i className="active" /><span>结构化结果：{data.metadata.analysis_run_id}</span></div><div><time>规则</time><i /><span>{anomaly?.triggered ? '异常规则已触发' : '异常规则未触发'}，阈值来自已发布规则</span></div><div><time>对账</time><i /><span>贡献拆解状态：{data.reconciliation.status}；残差 {compactWan(data.reconciliation.residual)}</span></div></section>
       </article>
     </section>
 
@@ -1419,7 +1419,7 @@ function ReportPage({ token, start, end, summary, stations, trend }: { token: st
 
     <section className="report-canvas">
       <header className="report-titlebar">
-        <div><div><h2>{reportName}</h2><span>{start} ～ {endInclusive(end)}（{reportType === 'weekly' ? '周报' : '月报'}）</span><em>{isReady ? '● 草稿就绪' : '○ 生成中'}</em></div><p>生成时间：{generatedAt || '正在生成'}　｜　来源：报告草稿服务</p></div>
+        <div><div><h2>{reportName}</h2><span>{start} ～ {endInclusive(end)}（{reportType === 'weekly' ? '周报' : '月报'}）</span><em>{isReady ? '● 已完成' : '○ 生成中'}</em></div><p>生成时间：{generatedAt || '正在生成'}　｜　来源：报告草稿服务</p></div>
         <nav><button className="report-primary" onClick={() => void generate()}>▱　{loading ? '生成中…' : '生成报告'}</button><button disabled={!isReady} onClick={() => void download('markdown')}>▧　导出 MD</button><button disabled={!isReady} onClick={() => void download('csv')}>▧　导出 CSV</button><button disabled title="分享能力未实现">⌯　分享未开放</button></nav>
       </header>
       {error && <div className="report-error">{error}</div>}
