@@ -271,6 +271,11 @@ def test_postgresql_schema_and_column_discovery(monkeypatch) -> None:
                     ("id", "bigint", "NO", 1),
                     ("amount", "numeric", "YES", 2),
                 ]
+            elif "pg_catalog.pg_constraint" in query_text:
+                assert params == ("analytics", "records")
+                self.result = [
+                    ("records_parent_id_fkey", "parent_id", "parents", "id"),
+                ]
 
         def fetchall(self):
             return self.result
@@ -292,6 +297,10 @@ def test_postgresql_schema_and_column_discovery(monkeypatch) -> None:
         ("id", "integer"),
         ("amount", "number"),
     ]
+    relationships = connector.discover_relationships(
+        Selection(schema="analytics", table="records")
+    )
+    assert relationships[0].target_table == "parents"
 
 
 def test_postgresql_schema_allowlist_is_fail_closed() -> None:

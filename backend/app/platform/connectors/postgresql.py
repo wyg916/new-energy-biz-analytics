@@ -172,14 +172,30 @@ class PostgreSqlConnector(Connector):
         self._check(cancellation)
         selected_schema, selected_table = self._schema(selection), self._table(selection)
         query = """
-            SELECT tc.constraint_name, kcu.column_name, ccu.table_name, ccu.column_name
-            FROM information_schema.table_constraints tc
-            JOIN information_schema.key_column_usage kcu
-              ON tc.constraint_name = kcu.constraint_name AND tc.constraint_schema = kcu.constraint_schema
-            JOIN information_schema.constraint_column_usage ccu
-              ON ccu.constraint_name = tc.constraint_name AND ccu.constraint_schema = tc.constraint_schema
-            WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_schema = %s AND tc.table_name = %s
-            ORDER BY tc.constraint_name, kcu.ordinal_position
+            SELECT constraint_record.conname, source_attribute.attname,
+                   target_table.relname, target_attribute.attname
+            FROM pg_catalog.pg_constraint AS constraint_record
+            JOIN pg_catalog.pg_class AS source_table
+              ON source_table.oid = constraint_record.conrelid
+            JOIN pg_catalog.pg_namespace AS source_namespace
+              ON source_namespace.oid = source_table.relnamespace
+            JOIN pg_catalog.pg_class AS target_table
+              ON target_table.oid = constraint_record.confrelid
+            JOIN LATERAL unnest(constraint_record.conkey)
+              WITH ORDINALITY AS source_key(attnum, ordinal) ON TRUE
+            JOIN LATERAL unnest(constraint_record.confkey)
+              WITH ORDINALITY AS target_key(attnum, ordinal)
+              ON target_key.ordinal = source_key.ordinal
+            JOIN pg_catalog.pg_attribute AS source_attribute
+              ON source_attribute.attrelid = source_table.oid
+             AND source_attribute.attnum = source_key.attnum
+            JOIN pg_catalog.pg_attribute AS target_attribute
+              ON target_attribute.attrelid = target_table.oid
+             AND target_attribute.attnum = target_key.attnum
+            WHERE constraint_record.contype = 'f'
+              AND source_namespace.nspname = %s
+              AND source_table.relname = %s
+            ORDER BY constraint_record.conname, source_key.ordinal
         """
         with self._connect() as connection:
             with connection.cursor() as cursor:
@@ -288,4 +304,3 @@ class PostgreSqlConnector(Connector):
 
     def close(self) -> None:
         self._closed = True
-
