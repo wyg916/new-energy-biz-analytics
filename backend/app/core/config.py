@@ -28,6 +28,13 @@ class Settings(BaseSettings):
     expected_database_revision: str = "0009"
     platform_version_routing_enabled: bool = False
     sqlbot_engine_enabled: bool = False
+    sqlbot_runtime_verified: bool = False
+    sqlbot_base_url: str = "http://sqlbot:8000/api/v1"
+    sqlbot_username_env_key: str = "SQLBOT_SERVICE_USERNAME"
+    sqlbot_password_env_key: str = "SQLBOT_SERVICE_PASSWORD"
+    sqlbot_timeout_seconds: float = 20.0
+    sqlbot_circuit_failure_threshold: int = 3
+    sqlbot_circuit_recovery_seconds: int = 30
     chatbi_readonly_execution_enabled: bool = False
     chatbi_readonly_database_url: str | None = None
     chatbi_statement_timeout_ms: int = 5000
@@ -73,6 +80,15 @@ class Settings(BaseSettings):
                 failures.append(
                     "CHATBI_READONLY_DATABASE_URL must use PostgreSQL when the independent readonly boundary is enabled"
                 )
+            if self.sqlbot_engine_enabled:
+                if not self.sqlbot_runtime_verified:
+                    failures.append(
+                        "SQLBOT_RUNTIME_VERIFIED must be true before enabling SQLBot in production"
+                    )
+                if not self.chatbi_readonly_execution_enabled:
+                    failures.append(
+                        "CHATBI_READONLY_EXECUTION_ENABLED must be true before enabling SQLBot in production"
+                    )
             if failures:
                 raise ValueError("production configuration rejected: " + "; ".join(failures))
         return self

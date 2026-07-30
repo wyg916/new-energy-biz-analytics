@@ -6,6 +6,7 @@ from app.data.seed import generate_simulated_data
 from app.models.auth import User
 from app.platform.identity import IdentityContextFactory
 from app.platform.query_engine import QueryRequest, SQLBotEngine
+from app.query_engines.sqlbot.error_mapper import SQLBotEngineError
 from app.platform.scenario_packages import ScenarioRegistry
 from app.platform.semantic_registry import ActiveSemanticResolver, SemanticRegistryError
 from app.scenarios.charging_ops.package_adapter import install_platform_foundation
@@ -95,15 +96,17 @@ def test_active_versions_route_all_formal_consumers_and_fail_closed(client, logi
     assert blocked.json()["detail"]["code"] == "SCENARIO_NOT_ACTIVE"
 
 
-def test_sqlbot_placeholder_is_disabled_and_not_configured() -> None:
+@pytest.mark.no_db
+def test_sqlbot_adapter_is_disabled_and_runtime_unverified_by_default() -> None:
     engine = SQLBotEngine(enabled=False)
     assert engine.health_check() == {
         "engine": "sqlbot",
-        "version": "placeholder-0.1",
+        "version": "adapter-1.0.0/sqlbot-v1.8.0",
         "enabled": False,
-        "status": "NOT_CONFIGURED",
+        "runtime_verified": False,
+        "status": "DISABLED",
     }
-    with pytest.raises(RuntimeError, match="NOT_CONFIGURED"):
+    with pytest.raises(SQLBotEngineError, match="未启用"):
         engine.execute(QueryRequest(
             question="not executed",
             identity_context=None,  # type: ignore[arg-type]

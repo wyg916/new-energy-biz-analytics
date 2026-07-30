@@ -1,7 +1,7 @@
 from collections.abc import Callable
 from time import perf_counter
 
-from app.platform.query_engine import QueryEngine, QueryRequest, QueryResult
+from app.platform.query_engine import QueryContext, QueryEngine, QueryRequest, QueryResult
 from app.platform.semantic_registry import ActiveSemanticContext
 
 
@@ -35,7 +35,12 @@ class DeterministicEngine(QueryEngine):
         self.context = context
         self.legacy_response: dict | None = None
 
-    def execute(self, request: QueryRequest) -> QueryResult:
+    def execute(
+        self,
+        request: QueryRequest,
+        context: QueryContext | None = None,
+    ) -> QueryResult:
+        del context
         started = perf_counter()
         response = self.handler(request.question)
         self.legacy_response = response
@@ -69,4 +74,3 @@ class DeterministicEngine(QueryEngine):
             "enabled": True,
             "status": "ok",
         }
-

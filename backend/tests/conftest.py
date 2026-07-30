@@ -3,7 +3,10 @@ from pathlib import Path
 
 os.environ.update({
     "APP_ENV": "test",
-    "DATABASE_URL": "sqlite:///./data/test.db",
+    "DATABASE_URL": os.environ.get(
+        "TEST_DATABASE_URL",
+        "sqlite:///./data/test.db",
+    ),
     "SECRET_KEY": "test-secret-key-not-for-production",
     "AUTO_BOOTSTRAP_DEMO_USERS": "true",
 })
@@ -17,7 +20,10 @@ from app.main import app
 
 
 @pytest.fixture(autouse=True)
-def clean_database():
+def clean_database(request):
+    if request.node.get_closest_marker("no_db"):
+        yield
+        return
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
     yield

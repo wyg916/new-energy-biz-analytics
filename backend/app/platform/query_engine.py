@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass, field
-from typing import Any
+from typing import Any, Callable
 
 from app.platform.identity import IdentityContext
 
@@ -13,6 +13,24 @@ class QueryRequest:
     conversation_state: dict[str, Any] = field(default_factory=dict)
     locale: str = "zh-CN"
     limits: dict[str, int] = field(default_factory=lambda: {"rows": 5000})
+
+
+@dataclass(frozen=True)
+class QueryContext:
+    conversation_id: str
+    scenario_version: str
+    semantic_version: str
+    semantic_model_version_id: str
+    dataset_version: str
+    dataset_version_id: str
+    datasource_id: str | None
+    allowed_relations: dict[str, tuple[str, ...]]
+    execution_mode: str = "upstream_readonly"
+    run_id: str | None = None
+    max_rows: int = 500
+    cancelled: Callable[[], bool] | None = field(
+        default=None, repr=False, compare=False
+    )
 
 
 @dataclass(frozen=True)
@@ -43,7 +61,11 @@ class QueryEngine(ABC):
     version: str
 
     @abstractmethod
-    def execute(self, request: QueryRequest) -> QueryResult:
+    def execute(
+        self,
+        request: QueryRequest,
+        context: QueryContext | None = None,
+    ) -> QueryResult:
         raise NotImplementedError
 
     @abstractmethod
@@ -51,22 +73,6 @@ class QueryEngine(ABC):
         raise NotImplementedError
 
 
-class SQLBotEngine(QueryEngine):
-    name = "sqlbot"
-    version = "placeholder-0.1"
-
-    def __init__(self, enabled: bool = False):
-        self.enabled = enabled
-
-    def execute(self, request: QueryRequest) -> QueryResult:
-        del request
-        raise RuntimeError("NOT_CONFIGURED")
-
-    def health_check(self) -> dict:
-        return {
-            "engine": self.name,
-            "version": self.version,
-            "enabled": False,
-            "status": "NOT_CONFIGURED",
-        }
-
+# Backward-compatible import surface for callers that imported the P1A
+# placeholder from this module. The implementation remains isolated.
+from app.query_engines.sqlbot.engine import SQLBotEngine  # noqa: E402

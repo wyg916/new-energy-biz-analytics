@@ -22,6 +22,7 @@ ATTACKS = [
 
 
 @pytest.mark.parametrize("attack", ATTACKS)
+@pytest.mark.no_db
 def test_arbitrary_and_dangerous_sql_is_always_rejected(attack):
     with pytest.raises(QueryRejected):
         reject_arbitrary_sql(attack)
@@ -53,6 +54,7 @@ def test_scope_intersection_fails_closed():
             compile_query(db, plan, allowed_station_ids(db, user))
 
 
+@pytest.mark.no_db
 def test_compiled_query_tamper_is_rejected():
     bad = CompiledQuery(sql="SELECT * FROM app_user", parameters={"start_ts": 1, "end_ts": 2, "start_date": date.today(), "end_date": date.today(), "period_seconds": 1, "limit": 1}, metric_ids=[], station_ids=["S001"])
     with pytest.raises(QueryRejected):
