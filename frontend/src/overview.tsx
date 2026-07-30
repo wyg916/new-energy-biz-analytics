@@ -1545,6 +1545,36 @@ type IntegrationOverview = {
   }
 }
 
+type PlatformFoundationState = {
+  installed: boolean
+  scenario: { scenario_id: string; version: string | null; status: string } | null
+  dataset: { dataset_id: string; code: string; name: string; source_id: string; status: string } | null
+  versions: Array<{
+    dataset_version_id: string
+    version: number
+    status: string
+    checksum: string
+    row_count: number
+    review_status: string | null
+  }>
+  activation: {
+    activation_id: string
+    dataset_version_id: string
+    semantic_model_version_id: string
+    semantic_version: string
+    scenario_version: string
+    lock_version: number
+  } | null
+  rollbacks: Array<{
+    rollback_record_id: string
+    from_dataset_version_id: string
+    to_dataset_version_id: string
+    reason: string
+    run_id: string
+  }>
+  data_classification: 'simulated'
+}
+
 function MappingPage({ token, start, end }: { token: string; start: string; end: string }) {
   const [activeSource, setActiveSource] = useState('platform-postgresql')
   const [standardPreview, setStandardPreview] = useState(true)
@@ -1553,6 +1583,10 @@ function MappingPage({ token, start, end }: { token: string; start: string; end:
   const [integrationError, setIntegrationError] = useState('')
   const [integrationLoading, setIntegrationLoading] = useState(true)
   const [workflowLoading, setWorkflowLoading] = useState(false)
+  const [platform, setPlatform] = useState<PlatformFoundationState | null>(null)
+  const [platformLoading, setPlatformLoading] = useState(false)
+  const [platformError, setPlatformError] = useState('')
+  const [discoveredTables, setDiscoveredTables] = useState<number | null>(null)
   const loadIntegration = async () => {
     setIntegrationLoading(true)
     try {
@@ -1565,7 +1599,25 @@ function MappingPage({ token, start, end }: { token: string; start: string; end:
       setIntegrationLoading(false)
     }
   }
-  useEffect(() => { void loadIntegration() }, [token, start, end])
+  const loadPlatform = async () => {
+    setPlatformLoading(true)
+    try {
+      const result = await api<PlatformFoundationState>('/api/v1/platform/foundation', token)
+      setPlatform(result)
+      setPlatformError('')
+      return result
+    } catch (reason) {
+      setPlatform(null)
+      setPlatformError(reason instanceof Error ? reason.message : '平台版本状态加载失败')
+      return null
+    } finally {
+      setPlatformLoading(false)
+    }
+  }
+  useEffect(() => {
+    void loadIntegration()
+    void loadPlatform()
+  }, [token, start, end])
   if (integrationLoading && !integration) {
     return <div className="mapping-page"><div className="notice">正在读取数据接入事实…</div><footer className="mapping-truth"><b>模拟数据</b><span>数据接入状态：加载中</span><span>未显示替代业务数据</span></footer></div>
   }
@@ -1720,6 +1772,179 @@ function MappingPage({ token, start, end }: { token: string; start: string; end:
       setWorkflowLoading(false)
     }
   }
+  const platformAction = async <T extends Record<string, unknown>>(
+    path: string,
+    payload: object,
+    success: (result: T) => string,
+  ) => {
+    if (platformLoading) return
+    setPlatformLoading(true)
+    try {
+      const result = await postIntegration<T>(path, payload)
+      const nextState = (result as { state?: PlatformFoundationState }).state
+      if (nextState) setPlatform(nextState)
+      else await loadPlatform()
+      setPlatformError('')
+      act(success(result))
+    } catch (reason) {
+      const message = reason instanceof Error ? reason.message : '平台版本治理操作失败'
+      setPlatformError(message)
+      act(message)
+      await loadPlatform()
+    } finally {
+      setPlatformLoading(false)
+    }
+  }
+  const runQualityCheck = async () => {
+    if (!integration.latest_ingestion) {
+      await runIngestion()
+      return
+    }
+    if (!workflow) {
+      await advanceWorkflow()
+      return
+    }
+    act(`质量检查状态：${workflow.quality_status}；失败规则：${workflow.summary.failures?.join('、') || '无'}。`)
+  }
+  const registerManagedSource = async () => {
+    await platformAction<{ source_id: string; created: boolean }>(
+      '/api/v1/platform/foundation/sources',
+      {
+        source_id: 'platform-postgresql',
+        display_name: 'PostgreSQL 平台模拟数据源',
+        source_type: 'postgresql',
+      },
+      result => result.created ? `数据源 ${result.source_id} 已创建。` : `数据源 ${result.source_id} 已存在，幂等登记通过。`,
+    )
+    await loadIntegration()
+  }
+  const discoverSource = async () => {
+    setPlatformLoading(true)
+    try {
+      const discovery = await api<{ table_count: number; schemas: Array<{ name: string }> }>(
+        '/api/v1/platform/foundation/sources/platform-postgresql/discover',
+        token,
+      )
+      setDiscoveredTables(discovery.table_count)
+      setPlatformError('')
+      act(`元数据发现完成：${discovery.schemas.length} 个 Schema，${discovery.table_count} 张受控表。`)
+    } catch (reason) {
+      const message = reason instanceof Error ? reason.message : '元数据发现失败'
+      setDiscoveredTables(null)
+      setPlatformError(message)
+      act(message)
+    } finally {
+      setPlatformLoading(false)
+    }
+  }
+  const installFoundation = async () => {
+    await platformAction<{ state: PlatformFoundationState }>(
+      '/api/v1/platform/foundation/install',
+      {},
+      result => `场景包 ${result.state.scenario?.version || ''}、语义模型和基础数据集版本已安装并激活。`,
+    )
+  }
+  const createPlatformVersion = async () => {
+    let current = platform
+    if (!current?.installed) {
+      setPlatformLoading(true)
+      try {
+        const installed = await postIntegration<{ state: PlatformFoundationState }>(
+          '/api/v1/platform/foundation/install',
+          {},
+        )
+        current = installed.state
+        setPlatform(current)
+      } catch (reason) {
+        const message = reason instanceof Error ? reason.message : '场景底座安装失败'
+        setPlatformError(message)
+        act(message)
+        setPlatformLoading(false)
+        return
+      } finally {
+        setPlatformLoading(false)
+      }
+    }
+    if (!current.dataset) return act('平台数据集尚未安装。')
+    await platformAction<{ dataset_version_id: string; state: PlatformFoundationState }>(
+      `/api/v1/platform/foundation/datasets/${current.dataset.dataset_id}/versions`,
+      {
+        period_start: start,
+        period_end_exclusive: end,
+        idempotency_key: `ui-dataset-${Date.now()}`,
+      },
+      result => `不可变 DatasetVersion 已创建：${result.dataset_version_id}；状态为 QUALITY_PASSED，尚未生效。`,
+    )
+  }
+  const submitPlatformVersion = async () => {
+    const version = platform?.versions.find(item => item.status === 'QUALITY_PASSED')
+    if (!version) return act('没有可提交的 QUALITY_PASSED 版本。')
+    await platformAction(
+      `/api/v1/platform/foundation/versions/${version.dataset_version_id}/submit`,
+      {},
+      () => `版本 v${version.version} 已提交审核。`,
+    )
+  }
+  const approvePlatformVersion = async () => {
+    const version = platform?.versions.find(item => item.status === 'PENDING_APPROVAL')
+    if (!version) return act('没有待批准版本。')
+    if (!window.confirm(`确认批准模拟数据集版本 v${version.version}？批准不等于激活。`)) return
+    await platformAction(
+      `/api/v1/platform/foundation/versions/${version.dataset_version_id}/approve`,
+      { idempotency_key: `ui-approve-${version.dataset_version_id}`, reason: '前端受控审批' },
+      () => `版本 v${version.version} 已批准，仍未发布或激活。`,
+    )
+  }
+  const rejectPlatformVersion = async () => {
+    const version = platform?.versions.find(item => item.status === 'PENDING_APPROVAL')
+    if (!version) return act('没有待驳回版本。')
+    if (!window.confirm(`确认驳回模拟数据集版本 v${version.version}？`)) return
+    await platformAction(
+      `/api/v1/platform/foundation/versions/${version.dataset_version_id}/reject`,
+      { idempotency_key: `ui-reject-${version.dataset_version_id}`, reason: '前端受控驳回' },
+      () => `版本 v${version.version} 已驳回，不能发布或激活。`,
+    )
+  }
+  const publishPlatformVersion = async () => {
+    const version = platform?.versions.find(item => item.status === 'APPROVED')
+    if (!version) return act('没有可发布的 APPROVED 版本。')
+    await platformAction(
+      `/api/v1/platform/foundation/versions/${version.dataset_version_id}/publish`,
+      { idempotency_key: `ui-publish-${version.dataset_version_id}` },
+      () => `版本 v${version.version} 已发布，仍未替换 ACTIVE 版本。`,
+    )
+  }
+  const activatePlatformVersion = async () => {
+    const version = platform?.versions.find(item => item.status === 'PUBLISHED')
+    if (!version) return act('没有可激活的 PUBLISHED 版本。')
+    await platformAction(
+      `/api/v1/platform/foundation/versions/${version.dataset_version_id}/activate`,
+      { idempotency_key: `ui-activate-${version.dataset_version_id}`, reason: '前端原子激活' },
+      () => `版本 v${version.version} 已原子激活，原 ACTIVE 已转为 SUPERSEDED。`,
+    )
+  }
+  const showActiveVersion = async () => {
+    const refreshed = await loadPlatform()
+    const active = refreshed?.versions.find(item => item.dataset_version_id === refreshed.activation?.dataset_version_id)
+    act(active ? `当前 ACTIVE：v${active.version} / ${active.dataset_version_id}` : '当前没有 ACTIVE 版本，正式查询将 fail-closed。')
+  }
+  const rollbackPlatformVersion = async () => {
+    const currentId = platform?.activation?.dataset_version_id
+    const target = platform?.versions.find(
+      item => item.dataset_version_id !== currentId && ['SUPERSEDED', 'PUBLISHED'].includes(item.status),
+    )
+    if (!platform?.dataset || !target) return act('没有可用的已发布回滚目标。')
+    if (!window.confirm(`确认回滚到 DatasetVersion v${target.version}？操作会写入 rollback_record。`)) return
+    await platformAction(
+      `/api/v1/platform/foundation/datasets/${platform.dataset.dataset_id}/rollback`,
+      {
+        target_dataset_version_id: target.dataset_version_id,
+        idempotency_key: `ui-rollback-${Date.now()}`,
+        reason: `前端回滚到 v${target.version}`,
+      },
+      () => `已回滚到 v${target.version}，审计与 rollback_record 已落库。`,
+    )
+  }
   const mappingSections = [
     ['数据类型转换', ['数字：decimal(18,2)', '字符串：varchar(100) → 标准文本']],
     ['单位转换', ['金额：元 → 元', '电量：kWh → kWh', '比例：小数 → %']],
@@ -1739,10 +1964,48 @@ function MappingPage({ token, start, end }: { token: string; start: string; end:
     </section>
 
     {feedback && <div className="mapping-feedback">{feedback}</div>}
+    {platformError && <div className="mapping-platform-error">Blocked / Error：{platformError}。未使用 fallback 数据。</div>}
+
+    <section className="platform-release-flow">
+      <header>
+        <div>
+          <h2>P1A 数据源 → ACTIVE DatasetVersion 真实闭环</h2>
+          <p>所有操作调用后端服务并刷新数据库状态；批准、发布、激活是三个独立状态。</p>
+        </div>
+        <div className="platform-release-actions">
+          <button disabled={!platform?.versions.some(item => item.status === 'PENDING_APPROVAL')} onClick={() => void rejectPlatformVersion()}>驳回待审版本</button>
+          <button disabled={platformLoading} onClick={() => void installFoundation()}>
+            {platformLoading ? '处理中…' : platform?.installed ? '重新校验场景底座' : '安装 charging_ops 场景底座'}
+          </button>
+        </div>
+      </header>
+      <div className="platform-release-steps">
+        <button onClick={() => void registerManagedSource()}><b>1</b><span>创建数据源</span><small>幂等登记，无明文凭据</small></button>
+        <button onClick={() => void testConnection()}><b>2</b><span>测试连接</span><small>{activeSourceRecord?.status || '待测试'}</small></button>
+        <button onClick={() => void discoverSource()}><b>3</b><span>发现元数据</span><small>{discoveredTables == null ? 'Schema / Table / Column' : `${discoveredTables} 张受控表`}</small></button>
+        <button onClick={() => void loadIntegration()}><b>4</b><span>数据预览</span><small>{previewRows.length ? `${previewRows.length} 行源投影` : 'Empty'}</small></button>
+        <button onClick={() => act(`字段映射已从数据库读取：${mappingFields.length} 个字段；可在下方逐项核验。`)}><b>5</b><span>字段映射</span><small>{integration.validations.mapping ? '已验证' : 'Blocked'}</small></button>
+        <button onClick={() => void runQualityCheck()}><b>6</b><span>质量检查</span><small>{workflow?.quality_status || '待运行'}</small></button>
+        <button onClick={() => void createPlatformVersion()}><b>7</b><span>创建 DatasetVersion</span><small>不可变，默认非 ACTIVE</small></button>
+        <button onClick={() => void submitPlatformVersion()}><b>8</b><span>提交审核</span><small>PENDING_APPROVAL</small></button>
+        <button onClick={() => void approvePlatformVersion()}><b>9</b><span>批准</span><small>APPROVED ≠ ACTIVE</small></button>
+        <button onClick={() => void publishPlatformVersion()}><b>10</b><span>发布</span><small>PUBLISHED ≠ ACTIVE</small></button>
+        <button onClick={() => void activatePlatformVersion()}><b>11</b><span>激活</span><small>事务切换 ACTIVE</small></button>
+        <button onClick={() => void showActiveVersion()}><b>12</b><span>当前 ACTIVE</span><small>{platform?.activation?.dataset_version_id || 'Empty / fail-closed'}</small></button>
+        <button onClick={() => void rollbackPlatformVersion()}><b>13</b><span>回滚</span><small>{platform?.rollbacks.length || 0} 条记录</small></button>
+      </div>
+      <footer>
+        <b>模拟数据</b>
+        <span>场景：{platform?.scenario ? `${platform.scenario.scenario_id}@${platform.scenario.version} / ${platform.scenario.status}` : '未安装'}</span>
+        <span>版本数：{platform?.versions.length || 0}</span>
+        <span>语义：{platform?.activation?.semantic_version || '未激活'}</span>
+        <span>状态：{platformLoading ? 'Loading' : platformError ? 'Blocked' : platform?.installed ? 'Success' : 'Empty'}</span>
+      </footer>
+    </section>
 
     <section className="mapping-workspace">
       <aside className="mapping-source-panel">
-        <header><h2>数据源列表</h2><button disabled title="Alpha 当前不接入新的外部真实数据源">＋ 新建未开放</button></header>
+        <header><h2>数据源列表</h2><button onClick={() => void registerManagedSource()}>＋ 登记平台源</button></header>
         <div className="mapping-source-list">{sourceCards.map(card => <button className={activeSource === card.source.source_id ? 'active' : ''} onClick={() => setActiveSource(card.source.source_id)} key={card.source.source_id}><span className={`mapping-source-icon ${card.tone}`}>{card.icon}</span><strong>{card.title}</strong><em className={card.source.status === 'configured' ? 'planned' : ''}>● {card.status}</em><i>⋯</i><small>{card.detail.map(line => <React.Fragment key={line}>{line}<br /></React.Fragment>)}</small></button>)}</div>
         <button disabled className="mapping-more">更多连接器未开放</button>
         <footer><b>能力边界</b><p>凭据只用于单次连接，不落库；业务数据解析校验后先写入 PostgreSQL，再由前端调用。</p></footer>

@@ -35,7 +35,7 @@ def test_overview_and_platform_ingestion_are_database_backed(client, login):
     assert len(body["dataset"]["mapping"]) == 8
     assert len(body["preview"]) == 5
     assert body["metadata"]["source"] == "platform_database"
-    assert body["metadata"]["preview_source"] == "managed_platform_source_preview"
+    assert body["metadata"]["preview_source"] == "managed_platform_source_projection"
     assert body["metadata"]["semantic_activation_status"] == "not_implemented"
     assert body["metadata"]["batch_id"].startswith("SIM-")
     assert all(body["validations"].values())

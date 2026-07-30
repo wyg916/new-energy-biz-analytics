@@ -19,6 +19,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
 from app.models.auth import User
+from app.models.business import DataGenerationRun, Station
 from app.models.integration import (
     DataIngestionQualityCheck, DataIngestionReview, DataIngestionRun,
     DataSetDefinition, DataSourceConnection, IngestedStationPreview,
@@ -26,7 +27,7 @@ from app.models.integration import (
 )
 from app.scenarios.charging_ops.manifest import METRICS, SCENARIO_ID, VERSION
 from app.scenarios.registry import published_charging_ops
-from app.services.dashboard import DashboardService
+from app.services.dashboard import allowed_station_ids
 from app.services.metrics import MetricService
 
 IDENTIFIER = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
@@ -88,25 +89,12 @@ class DataIntegrationService:
         else:
             if self.user is None:
                 raise DataIntegrationError("USER_CONTEXT_REQUIRED", "读取业务预览需要用户权限上下文")
-            station_rows = DashboardService(self.db, self.user).station_analysis(
-                ["charging_revenue", "charging_volume_kwh", "gross_profit", "gross_margin"],
-                start, end_exclusive, 5,
-            )
-            preview = [
-                {
-                    "station_id": row["station_id"],
-                    "station_name": row["station_name"],
-                    "region_id": row["region_id"],
-                    "city_id": row["city_id"],
-                    "charging_revenue": row["metrics"]["charging_revenue"],
-                    "charging_volume_kwh": row["metrics"]["charging_volume_kwh"],
-                    "gross_profit": row["metrics"]["gross_profit"],
-                    "gross_margin": row["metrics"]["gross_margin"],
-                }
-                for row in station_rows["rows"]
-            ]
-            preview_batch_id = station_rows["metadata"]["batch_id"]
-            preview_source = "managed_platform_source_preview"
+            preview = self._managed_source_records(start, end_exclusive, 5)
+            latest_batch = self.db.scalar(select(DataGenerationRun).where(
+                DataGenerationRun.quality_status == "passed"
+            ).order_by(DataGenerationRun.finished_at.desc()))
+            preview_batch_id = latest_batch.batch_id if latest_batch else None
+            preview_source = "managed_platform_source_projection"
         latest_run = self.db.scalar(
             select(DataIngestionRun)
             .where(DataIngestionRun.dataset_id == dataset.dataset_id)
@@ -542,18 +530,7 @@ class DataIntegrationService:
         if source.source_id == "platform-postgresql":
             if self.user is None:
                 raise DataIntegrationError("USER_CONTEXT_REQUIRED", "平台数据接入需要用户权限上下文")
-            result = DashboardService(self.db, self.user).station_analysis(
-                ["charging_revenue", "charging_volume_kwh", "gross_profit", "gross_margin"],
-                start, end_exclusive, min(limit, 30),
-            )
-            return [
-                {
-                    "station_id": row["station_id"], "station_name": row["station_name"],
-                    "region_id": row["region_id"], "city_id": row["city_id"],
-                    **row["metrics"],
-                }
-                for row in result["rows"]
-            ]
+            return self._managed_source_records(start, end_exclusive, min(limit, 30))
         if source.source_type == "excel":
             return self._spreadsheet_rows(self._import_path(source.resource_locator), limit)
         if source.source_type == "api":
@@ -567,6 +544,38 @@ class DataIntegrationService:
                 raise DataIntegrationError("API_INVALID_PAYLOAD", "API 数据行格式不合法")
             return rows[:limit]
         return self._database_rows(source, dataset, password, limit)
+
+    def _managed_source_records(
+        self, start: date, end_exclusive: date, limit: int
+    ) -> list[dict]:
+        if self.user is None:
+            raise DataIntegrationError(
+                "USER_CONTEXT_REQUIRED", "平台数据预览需要用户权限上下文"
+            )
+        station_ids = allowed_station_ids(self.db, self.user)
+        stations = list(self.db.scalars(
+            select(Station)
+            .where(Station.station_id.in_(station_ids))
+            .order_by(Station.station_id)
+            .limit(limit)
+        ))
+        metric_service = MetricService(self.db)
+        records = []
+        for station in stations:
+            metrics = metric_service.compute(
+                ["charging_revenue", "charging_volume_kwh", "gross_profit", "gross_margin"],
+                start,
+                end_exclusive,
+                [station.station_id],
+            )
+            records.append({
+                "station_id": station.station_id,
+                "station_name": station.station_name,
+                "region_id": station.region_id,
+                "city_id": station.city_id,
+                **metrics,
+            })
+        return records
 
     def _database_rows(self, source: DataSourceConnection, dataset: DataSetDefinition, password: str | None, limit: int) -> list[dict]:
         mapping = json.loads(dataset.mapping_json)
