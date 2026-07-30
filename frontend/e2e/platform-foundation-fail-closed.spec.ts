@@ -85,13 +85,15 @@ test('空 Schema、字段发现失败、连接失败和 DQ 失败均显式呈现
     body: JSON.stringify({ detail: { code: 'DISCOVERY_FAILED', message: '字段发现失败且无 fallback' } }),
   }))
   await page.getByRole('button', { name: /发现元数据/ }).click()
-  await expect(page.getByText(/字段发现失败且无 fallback/)).toBeVisible()
+  await expect(page.locator('.mapping-platform-error')).toContainText('字段发现失败且无 fallback')
 
   await page.getByRole('button', { name: /测试连接/ }).first().click()
   await expect(page.getByText(/连接失败且无 fallback/)).toBeVisible()
 
   await page.getByRole('button', { name: /质量检查/ }).click()
   await expect(page.getByText(/DQ 阻断：主键不唯一/)).toBeVisible()
+  await page.waitForTimeout(2_000)
+  await page.unrouteAll({ behavior: 'wait' })
 })
 
 test('审批驳回、激活失败与回滚均以数据库响应为准', async ({ page }) => {
