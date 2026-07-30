@@ -1,0 +1,57 @@
+name: renewable-sqlbot
+
+services:
+  sqlbot:
+    image: dataease/sqlbot:v1.8.0
+    container_name: renewable-sqlbot-v1-8-0
+    restart: unless-stopped
+    privileged: true
+    environment:
+      POSTGRES_SERVER: localhost
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: sqlbot
+      POSTGRES_USER: ${SQLBOT_POSTGRES_USER:-sqlbot}
+      POSTGRES_PASSWORD: ${SQLBOT_POSTGRES_PASSWORD:?set SQLBOT_POSTGRES_PASSWORD in an untracked local environment file}
+      PROJECT_NAME: SQLBot
+      DEFAULT_PWD: ${SQLBOT_ADMIN_BOOTSTRAP_PASSWORD:?set SQLBOT_ADMIN_BOOTSTRAP_PASSWORD in an untracked local environment file}
+      SECRET_KEY: ${SQLBOT_SECRET_KEY:?set SQLBOT_SECRET_KEY in an untracked local environment file}
+      BACKEND_CORS_ORIGINS: http://127.0.0.1:18080
+      LOG_LEVEL: INFO
+      SQL_DEBUG: "false"
+    volumes:
+      - sqlbot_excel:/opt/sqlbot/data/excel
+      - sqlbot_file:/opt/sqlbot/data/file
+      - sqlbot_images:/opt/sqlbot/data/images
+      - sqlbot_logs:/opt/sqlbot/app/logs
+      - sqlbot_postgresql:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:18080:8000"
+    expose:
+      - "8000"
+    networks:
+      - sqlbot_internal
+      - platform_proxy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/openapi.json', timeout=3)
+      interval: 15s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+
+networks:
+  sqlbot_internal:
+    internal: true
+  platform_proxy:
+    name: renewable-sqlbot-proxy
+    external: true
+
+volumes:
+  sqlbot_excel:
+  sqlbot_file:
+  sqlbot_images:
+  sqlbot_logs:
+  sqlbot_postgresql:
