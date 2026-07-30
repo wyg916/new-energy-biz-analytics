@@ -30,6 +30,9 @@ services:
     depends_on:
       db: {condition: service_healthy}
       redis: {condition: service_healthy}
+    networks:
+      - default
+      - platform_proxy
     ports: ["18000:8000"]
     healthcheck: {test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')"], interval: 10s, timeout: 3s, retries: 20}
   web:
@@ -41,3 +44,6 @@ volumes:
   alpha_pgdata:
   alpha_redisdata:
   alpha_imports:
+networks:
+  platform_proxy:
+    name: renewable-sqlbot-proxy

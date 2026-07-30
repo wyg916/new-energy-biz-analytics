@@ -9,6 +9,7 @@ os.environ.update({
     ),
     "SECRET_KEY": "test-secret-key-not-for-production",
     "AUTO_BOOTSTRAP_DEMO_USERS": "true",
+    "PLATFORM_VERSION_ROUTING_ENABLED": "false",
 })
 Path("data").mkdir(exist_ok=True)
 

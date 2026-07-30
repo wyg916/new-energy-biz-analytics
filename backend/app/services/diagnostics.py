@@ -35,7 +35,7 @@ class DiagnosticService:
         self.db = db; self.user = user; self.station_ids = allowed_station_ids(db, user)
         self.platform_context = (
             resolve_charging_ops_context(db, user)[1]
-            if get_settings().platform_version_routing_enabled
+            if get_settings().effective_platform_version_routing_enabled
             else None
         )
 

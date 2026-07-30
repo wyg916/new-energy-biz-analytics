@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     trusted_hosts: str = "localhost,127.0.0.1,testserver"
     release_version: str = "0.1.0-dev"
     expected_database_revision: str = "0011"
-    platform_version_routing_enabled: bool = False
+    platform_version_routing_enabled: bool | None = None
     sqlbot_engine_enabled: bool = False
     sqlbot_runtime_verified: bool = False
     sqlbot_base_url: str = "http://sqlbot:8000/api/v1"
@@ -106,6 +106,10 @@ class Settings(BaseSettings):
                 failures.append(
                     "production QUERY_ENGINE_MODE must be DETERMINISTIC_ONLY"
                 )
+            if self.effective_platform_version_routing_enabled:
+                failures.append(
+                    "production PLATFORM_VERSION_ROUTING_ENABLED must be false"
+                )
             if failures:
                 raise ValueError("production configuration rejected: " + "; ".join(failures))
         return self
@@ -132,6 +136,12 @@ class Settings(BaseSettings):
         if self.query_engine_mode:
             return self.query_engine_mode
         return "DETERMINISTIC_ONLY" if self.app_env == "production" else "SHADOW"
+
+    @property
+    def effective_platform_version_routing_enabled(self) -> bool:
+        if self.platform_version_routing_enabled is not None:
+            return self.platform_version_routing_enabled
+        return self.app_env != "production"
 
     @staticmethod
     def _csv_set(value: str) -> frozenset[str]:

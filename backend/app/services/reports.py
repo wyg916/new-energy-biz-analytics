@@ -39,7 +39,7 @@ class ReportService:
         self.db = db; self.user = user
         self.platform_context = (
             resolve_charging_ops_context(db, user)[1]
-            if get_settings().platform_version_routing_enabled
+            if get_settings().effective_platform_version_routing_enabled
             else None
         )
 

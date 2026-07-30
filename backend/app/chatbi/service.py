@@ -60,7 +60,7 @@ class ChatBIService:
     def ask(self, question: str) -> dict:
         settings = get_settings()
         identity = IdentityContextFactory.from_user(self.user)
-        if settings.platform_version_routing_enabled:
+        if settings.effective_platform_version_routing_enabled:
             identity, self.platform_context = resolve_charging_ops_context(
                 self.db, self.user, request_id=identity.request_id
             )
