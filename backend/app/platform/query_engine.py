@@ -73,6 +73,10 @@ class QueryEngine(ABC):
         raise NotImplementedError
 
 
-# Backward-compatible import surface for callers that imported the P1A
-# placeholder from this module. The implementation remains isolated.
-from app.query_engines.sqlbot.engine import SQLBotEngine  # noqa: E402
+def __getattr__(name: str):
+    """Keep the P1A compatibility export without creating an import cycle."""
+    if name == "SQLBotEngine":
+        from app.query_engines.sqlbot.engine import SQLBotEngine
+
+        return SQLBotEngine
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

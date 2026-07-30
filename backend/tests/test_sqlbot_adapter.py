@@ -1,4 +1,6 @@
 import json
+import subprocess
+import sys
 from datetime import UTC, datetime
 
 import httpx
@@ -15,6 +17,26 @@ from app.query_engines.sqlbot.error_mapper import (
 from app.query_engines.sqlbot.health import CircuitBreaker
 
 pytestmark = pytest.mark.no_db
+
+
+def test_sqlbot_engine_direct_import_and_health_check_are_order_independent():
+    process = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            (
+                "from app.query_engines.sqlbot.engine import SQLBotEngine; "
+                "result = SQLBotEngine(enabled=False).health_check(); "
+                "assert result['status'] == 'DISABLED'"
+            ),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert process.returncode == 0, process.stderr
 
 
 def _identity(
