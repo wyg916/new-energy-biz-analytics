@@ -146,6 +146,7 @@ def build_blocked_runtime_report(
     golden_source: dict[str, Any],
     *,
     model_contract: ModelContractPresence,
+    runtime_blocker: str | None = None,
     charging_min_date: str,
     charging_max_date: str,
     sales_min_date: str,
@@ -156,11 +157,18 @@ def build_blocked_runtime_report(
     if not isinstance(cases, list) or len(cases) != 100:
         raise ValueError("runtime Golden Set must contain exactly 100 cases")
 
-    blocker = (
+    allowed_blockers = {
+        "HUMAN_MODEL_CONFIG_REQUIRED",
+        "LIVE_EXECUTION_REQUIRED",
+        "PROVIDER_AUTHENTICATION_FAILED",
+    }
+    blocker = runtime_blocker or (
         "HUMAN_MODEL_CONFIG_REQUIRED"
         if not model_contract.complete
         else "LIVE_EXECUTION_REQUIRED"
     )
+    if blocker not in allowed_blockers:
+        raise ValueError("runtime blocker is not allowlisted")
     smoke = runtime_smoke_cases(
         charging_min_date=charging_min_date,
         charging_max_date=charging_max_date,

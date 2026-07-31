@@ -31,6 +31,14 @@ def main() -> None:
     parser.add_argument("--base-url-present", action="store_true")
     parser.add_argument("--model-name-present", action="store_true")
     parser.add_argument("--credential-ref-present", action="store_true")
+    parser.add_argument(
+        "--runtime-blocker",
+        choices=(
+            "HUMAN_MODEL_CONFIG_REQUIRED",
+            "LIVE_EXECUTION_REQUIRED",
+            "PROVIDER_AUTHENTICATION_FAILED",
+        ),
+    )
     parser.add_argument("--charging-min-date", default="2025-01-01")
     parser.add_argument("--charging-max-date", default="2026-06-30")
     parser.add_argument("--sales-min-date", default="2025-01-01")
@@ -47,6 +55,7 @@ def main() -> None:
     report = build_blocked_runtime_report(
         source,
         model_contract=contract,
+        runtime_blocker=args.runtime_blocker,
         charging_min_date=args.charging_min_date,
         charging_max_date=args.charging_max_date,
         sales_min_date=args.sales_min_date,

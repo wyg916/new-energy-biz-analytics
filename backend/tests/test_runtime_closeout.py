@@ -86,3 +86,33 @@ def test_complete_contract_still_requires_real_live_execution() -> None:
     assert report["runtime_status"] == "LIVE_EXECUTION_REQUIRED"
     assert report["model_called"] is False
     assert report["golden"]["status"] == "NOT_EXECUTED"
+
+
+def test_provider_authentication_blocker_replaces_human_config_blocker() -> None:
+    source = {"name": "test", "version": "1", "cases": [
+        {"case_id": f"case-{index}", "scenario_id": "charging_ops"}
+        for index in range(100)
+    ]}
+
+    report = build_blocked_runtime_report(
+        source,
+        model_contract=ModelContractPresence(
+            provider=True,
+            base_url=True,
+            model_name=True,
+            credential_ref=True,
+        ),
+        runtime_blocker="PROVIDER_AUTHENTICATION_FAILED",
+        charging_min_date="2025-01-01",
+        charging_max_date="2026-06-30",
+        sales_min_date="2025-01-01",
+        sales_max_date="2026-06-30",
+    )
+
+    assert report["runtime_status"] == "PROVIDER_AUTHENTICATION_FAILED"
+    assert {item["error"] for item in report["smoke"]["results"]} == {
+        "PROVIDER_AUTHENTICATION_FAILED"
+    }
+    assert {item["error"] for item in report["golden"]["results"]} == {
+        "PROVIDER_AUTHENTICATION_FAILED"
+    }
