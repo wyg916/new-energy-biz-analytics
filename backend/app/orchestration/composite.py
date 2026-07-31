@@ -5,6 +5,7 @@ from uuid import uuid4
 
 from sqlalchemy.orm import Session
 
+from app.ai.model_gateway.runtime import runtime_model_status
 from app.chatbi.scenario_services import get_scenario_chat_registry
 from app.knowledge.models import RetrievalIdentity
 from app.knowledge.retrieval import KnowledgeRetrievalService
@@ -122,7 +123,7 @@ class CompositeQueryOrchestrator:
             knowledge_retrieval_evidence=self._safe_knowledge_evidence(knowledge_result),
             model_call={
                 "status": "NOT_REQUIRED_DETERMINISTIC_COMPOSITION",
-                "runtime_model_status": "MODEL_RUNTIME_PENDING",
+                "runtime_model_status": runtime_model_status()["status"],
             },
             trace_id=trace_id,
             run_id=run_id,

@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { formatMetric, metricNames } from './format'
 import { MetricsPage } from './metrics'
 import { RevenuePage } from './revenue'
+import { KnowledgePage } from './knowledge'
 import './overview.css'
 import './report.css'
 import './mapping.css'
@@ -70,20 +71,20 @@ type DeviceAnalysis = {
   reason_summary: Array<{ reason_code: string; count: number }>
   metadata: Metadata
 }
-type ViewId = 'overview' | 'dashboard' | 'revenue' | 'margin' | 'stations' | 'devices' | 'alerts' | 'chat' | 'reports' | 'mapping' | 'metrics'
+type ViewId = 'overview' | 'dashboard' | 'revenue' | 'margin' | 'stations' | 'devices' | 'alerts' | 'chat' | 'reports' | 'knowledge' | 'mapping' | 'metrics'
 
 const groups: Array<{ title: string; items: Array<{ id: ViewId; label: string; icon: string }> }> = [
   { title: '基础入口', items: [{ id: 'overview', label: '功能总览', icon: '⌂' }, { id: 'dashboard', label: '经营工作台', icon: '◫' }] },
   { title: '经营分析', items: [{ id: 'revenue', label: '收入与订单', icon: '▤' }, { id: 'margin', label: '毛利与成本', icon: '◴' }, { id: 'stations', label: '场站经营', icon: '♙' }, { id: 'devices', label: '设备健康', icon: '◇' }, { id: 'alerts', label: '经营预警', icon: '♧' }] },
   { title: '智能分析', items: [{ id: 'chat', label: 'AI经营分析', icon: 'AI' }] },
-  { title: '内容管理', items: [{ id: 'reports', label: '经营报告', icon: '▱' }] },
+  { title: '内容管理', items: [{ id: 'reports', label: '经营报告', icon: '▱' }, { id: 'knowledge', label: '企业知识库', icon: '知' }] },
   { title: '数据管理', items: [{ id: 'mapping', label: '数据接入与字段映射', icon: '◎' }, { id: 'metrics', label: '指标与场景管理', icon: '▧' }] },
 ]
 
 const titles: Record<ViewId, string> = {
   overview: '功能总览', dashboard: '经营工作台', revenue: '收入与订单', margin: '毛利与成本',
   stations: '场站经营', devices: '设备健康', alerts: '经营预警', chat: 'AI经营分析',
-  reports: '经营报告', mapping: '数据接入与字段映射', metrics: '指标与场景管理',
+  reports: '经营报告', knowledge: '企业知识库', mapping: '数据接入与字段映射', metrics: '指标与场景管理',
 }
 const pageMetrics: Record<string, string[]> = {
   dashboard: ['charging_revenue', 'gross_profit', 'gross_margin', 'charging_volume_kwh', 'completed_order_count', 'active_user_count'],
@@ -1044,6 +1045,9 @@ function ChatPage({ token }: { token: string }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [feedback, setFeedback] = useState('')
+  const [responseProfile, setResponseProfile] = useState('executive_brief')
+  const [compositeResult, setCompositeResult] = useState<any>(null)
+  const [runtimeStatus, setRuntimeStatus] = useState<any>(null)
   const initialized = useRef('')
   const activeScenario = useRef('charging_ops')
   const requestSequence = useRef(0)
@@ -1055,15 +1059,54 @@ function ChatPage({ token }: { token: string }) {
     setLoading(true)
     setError('')
     try {
-      const response = await fetch('/api/v1/chat/query', {
+      const response = await fetch('/api/v1/assistant/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ question: normalized, conversation_id: currentConversation, scenario_id: targetScenario }),
+        body: JSON.stringify({ question: normalized, conversation_id: currentConversation, scenario_id: targetScenario, profile: responseProfile }),
       })
       const body = await response.json()
       if (sequence !== requestSequence.current || targetScenario !== activeScenario.current) return
       if (!response.ok) throw new Error(`${body.detail?.code ? `${body.detail.code}：` : ''}${body.detail?.message || '问数失败'}`)
-      setResult(body)
+      const metricRow = Object.fromEntries((body.response?.key_metrics || []).map((item: any) => [item.metric_code, item.value]))
+      const dataEvidence = body.data_query_evidence
+      setCompositeResult(body)
+      setResult({
+        status: body.response?.refused ? 'rejected' : 'completed',
+        answer: body.response?.conclusion,
+        conversation_id: body.conversation_id,
+        state_version: 0,
+        result: { metrics: metricRow },
+        query_plan: { intent: body.route, metrics: Object.keys(metricRow), comparison: null },
+        evidence: {
+          source: body.response?.data_source?.join('；') || '已发布企业知识',
+          data_classification: 'simulated',
+          analysis_run_id: body.run_id,
+          state_version: 0,
+          query_guard: dataEvidence ? 'passed' : 'not_required',
+          answer_guard: { status: body.response?.refused ? 'rejected' : 'passed' },
+          explanation_mode: 'unified_response_composer',
+          sql: body.response?.sql,
+        },
+        query_result: {
+          engine: dataEvidence?.engine || 'knowledge_service',
+          scenario: targetScenario,
+          scenario_version: null,
+          semantic_version: null,
+          dataset_version: null,
+          rows: [metricRow],
+          columns: Object.keys(metricRow),
+          warnings: body.response?.warnings || [],
+          execution_time: 0,
+          run_id: body.run_id,
+          status: body.response?.refused ? 'rejected' : 'completed',
+          sql: body.response?.sql,
+        },
+        engine_routing: {
+          mode: body.route,
+          route_decision: body.route,
+          route_reason: 'composite_orchestration',
+        },
+      })
       setFeedback('')
       setConversationId(body.conversation_id)
       setHistory(items => [{ question: normalized, time: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }) }, ...items.filter(item => item.question !== normalized)].slice(0, 5))
@@ -1083,6 +1126,12 @@ function ChatPage({ token }: { token: string }) {
   }, [token])
 
   useEffect(() => {
+    api<any>('/api/v1/knowledge/runtime', token)
+      .then(setRuntimeStatus)
+      .catch(() => setRuntimeStatus(null))
+  }, [token])
+
+  useEffect(() => {
     if (initialized.current === scenarioId) return
     initialized.current = scenarioId
     activeScenario.current = scenarioId
@@ -1090,6 +1139,7 @@ function ChatPage({ token }: { token: string }) {
     setQuestion(initialQuestion)
     setConversationId(null)
     setResult(null)
+    setCompositeResult(null)
     setHistory([])
     setFeedback('')
     if (scenarioId === 'charging_ops') {
@@ -1127,13 +1177,13 @@ function ChatPage({ token }: { token: string }) {
   }
 
   const recordFeedback = async (rating: 'helpful' | 'not_helpful') => {
-    const runId = result?.query_result?.run_id
-    if (!conversationId || !runId) return
+    const runId = compositeResult?.run_id
+    if (!runId) return
     try {
-      const response = await fetch('/api/v1/chat/feedback', {
+      const response = await fetch('/api/v1/assistant/feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ conversation_id: conversationId, run_id: runId, scenario_id: scenarioId, rating }),
+        body: JSON.stringify({ run_id: runId, trace_id: compositeResult.trace_id, rating }),
       })
       const body = await response.json()
       if (!response.ok) throw new Error(body.detail?.message || '反馈记录失败')
@@ -1146,6 +1196,8 @@ function ChatPage({ token }: { token: string }) {
   const isSales = scenarioId === 'sales_ops'
   const queryResult = result?.query_result
   const routing = result?.engine_routing
+  const knowledgeOnly = compositeResult?.route === 'knowledge'
+  const composedResponse = compositeResult?.response
   const salesMetrics = queryResult?.rows?.[0] ?? {}
   const diagnosis = result?.result?.diagnosis
   const metrics = summary?.metrics ?? diagnosis?.current ?? {}
@@ -1208,10 +1260,13 @@ function ChatPage({ token }: { token: string }) {
 
       <section className="chat-runtime-strip" aria-label="查询运行证据"><span>场景 <b>{queryResult?.scenario ?? scenarioId}</b></span><span>数据集 <b>{queryResult?.dataset_version ?? '等待 ACTIVE 版本'}</b></span><span>语义 <b>{queryResult?.semantic_version ?? '等待 ACTIVE 版本'}</b></span><span>引擎 <b>{queryResult?.engine ?? '等待执行'}</b></span><span>模式 <b>{routing?.mode ?? '等待执行'}</b></span><span>耗时 <b>{queryResult ? `${queryResult.execution_time} ms` : '—'}</b></span></section>
 
-      <article className={`chat-answer-card ${isSales ? 'sales' : ''}`}>
+      <section className="chat-profile-strip"><label>回答风格<select aria-label="回答风格" value={responseProfile} onChange={event => setResponseProfile(event.target.value)}><option value="executive_brief">经营摘要</option><option value="analyst_detailed">分析师详版</option><option value="operation_action">运营行动</option><option value="concise_query">简洁问答</option></select></label><span>编排路由 <b>{compositeResult?.route || '等待执行'}</b></span><span>模型 <b>{runtimeStatus?.model_gateway?.status || 'MODEL_RUNTIME_PENDING'}</b></span><span>SQLBot <b>{runtimeStatus?.sqlbot_runtime || 'RUNTIME_PENDING'}</b></span><span>RAG <b>{runtimeStatus?.retrieval_mode || '检查中'} / {runtimeStatus?.vector_status || 'VECTOR_PENDING'}</b></span></section>
+
+      <article className={`chat-answer-card ${isSales ? 'sales' : ''} ${knowledgeOnly ? 'knowledge-only' : ''}`}>
         <header><div><i>✦</i><h2>AI结论</h2><small>{loading ? '正在执行受控分析…' : result ? '已完成可信分析' : '等待分析'}</small></div><nav><button disabled>☆ 收藏未开放</button><button disabled>⇧ 导出未开放</button><button disabled>↗ 分享未开放</button></nav></header>
         {error && <div className="notice error">{error}</div>}
         <p className="chat-conclusion">{conclusion || '正在通过 Query Plan、确定性 SQL Compiler 与安全守卫计算结果…'}</p>
+        {composedResponse && <section className="chat-composer-evidence"><header><h3>统一回答证据</h3><span>{composedResponse.profile} · 置信度 {Number(composedResponse.confidence || 0).toFixed(2)}</span></header>{composedResponse.warnings?.map((item: string) => <p className="warning" key={item}>{item}</p>)}{composedResponse.citations?.map((item: any) => <details key={item.chunk_id}><summary>{item.title} · {item.section || '未标注章节'} · {Number(item.retrieval_score).toFixed(3)}</summary><p>{item.citation_text}</p><code>{item.document_version_id} / {item.chunk_id}</code></details>)}{knowledgeOnly && !composedResponse.citations?.length && <p>未检索到当前身份与场景可用的已发布知识证据，系统已拒绝无依据回答。</p>}</section>}
         {isSales ? <section className="chat-metric-grid sales">{Object.entries(salesMetrics).map(([metricId, value]) => <article key={metricId}><header><i className="teal">销</i><span>{salesMetricNames[metricId] ?? metricId}<small>{metricId}</small></span></header><strong>{salesValue(metricId, value as number)}</strong><footer><span>ACTIVE 数据集</span><span><b className="up">已验证口径</b></span></footer></article>)}</section> : <section className="chat-metric-grid">{cards.map(card => <article key={card.id}><header><i className={card.color}>{card.icon}</i><span>{card.label}<small>{card.id === 'charging_volume_kwh' ? '(kWh)' : card.id.includes('revenue') ? '(元)' : ''}</small></span></header><strong>{card.id === 'charging_revenue' ? money(metrics[card.id]) : card.id === 'charging_volume_kwh' ? Math.round(metrics[card.id] ?? 0).toLocaleString('zh-CN') : formatMetric(card.id, metrics[card.id])}</strong><footer><span>环比 <b className={rate(metrics[card.id], previousMetrics[card.id]) != null && rate(metrics[card.id], previousMetrics[card.id])! < 0 ? 'down' : 'up'}>{deltaText(card.id, metrics[card.id], previousMetrics[card.id])}</b></span><span>同比 <b className={rate(metrics[card.id], yearAgoMetrics[card.id]) != null && rate(metrics[card.id], yearAgoMetrics[card.id])! < 0 ? 'down' : 'up'}>{deltaText(card.id, metrics[card.id], yearAgoMetrics[card.id])}</b></span></footer></article>)}</section>}
         {!isSales && <><section className="chat-insight-grid">
           <article><header><h3>近期充电收入趋势（元）</h3><span>按月⌄</span></header><ChatTrend points={trend} /></article>
@@ -2188,11 +2243,12 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
   else if (active === 'chat') content = <ChatPage token={token} />
   else if (active === 'alerts') content = <DiagnosticsPage token={token} start={start} end={end} />
   else if (active === 'reports') content = <ReportPage token={token} start={start} end={end} summary={summary} stations={stations} trend={trend} />
+  else if (active === 'knowledge') content = <KnowledgePage token={token} />
   else if (active === 'mapping') content = <MappingPage token={token} start={start} end={end} />
   else if (active === 'metrics') content = <MetricsPage token={token} summary={summary} start={start} end={end} />
   else content = <>{error && <div className="notice error">{error}</div>}<DetailPage active={active} summary={summary} stations={stations} trend={trend} /></>
-  const shellMode = active === 'revenue' ? ' revenue-mode' : active === 'margin' ? ' margin-mode' : active === 'stations' ? ' station-mode' : active === 'devices' ? ' device-mode' : active === 'alerts' ? ' alert-mode' : active === 'reports' ? ' report-mode' : active === 'mapping' ? ' mapping-mode' : active === 'metrics' ? ' metrics-mode' : ''
-  const mainMode = active === 'revenue' ? ' revenue-main' : active === 'margin' ? ' margin-main' : active === 'stations' ? ' station-main' : active === 'devices' ? ' device-main' : active === 'alerts' ? ' alert-main' : active === 'reports' ? ' report-main' : active === 'mapping' ? ' mapping-main' : active === 'metrics' ? ' metrics-main' : ''
+  const shellMode = active === 'revenue' ? ' revenue-mode' : active === 'margin' ? ' margin-mode' : active === 'stations' ? ' station-mode' : active === 'devices' ? ' device-mode' : active === 'alerts' ? ' alert-mode' : active === 'reports' ? ' report-mode' : active === 'knowledge' ? ' knowledge-mode' : active === 'mapping' ? ' mapping-mode' : active === 'metrics' ? ' metrics-mode' : ''
+  const mainMode = active === 'revenue' ? ' revenue-main' : active === 'margin' ? ' margin-main' : active === 'stations' ? ' station-main' : active === 'devices' ? ' device-main' : active === 'alerts' ? ' alert-main' : active === 'reports' ? ' report-main' : active === 'knowledge' ? ' knowledge-main' : active === 'mapping' ? ' mapping-main' : active === 'metrics' ? ' metrics-main' : ''
   return <div className={`product-shell${shellMode}`}><Sidebar active={active} navigate={setActive} /><div className="workspace"><ProductHeader active={active} start={start} end={end} setStart={setStart} setEnd={setEnd} logout={logout} /><main className={`product-main${mainMode}`}>{content}</main></div></div>
 }
 

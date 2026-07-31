@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, ConfigDict, Field
+import json
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import current_user
 from app.core.database import get_db
 from app.models.auth import User
+from app.models.auth import AuditLog
 from app.orchestration.composite import CompositeQueryOrchestrator, CompositeRoute
 from app.response.contracts import ResponseProfileName
 
@@ -19,6 +21,15 @@ class AssistantQueryRequest(BaseModel):
     profile: ResponseProfileName = ResponseProfileName.EXECUTIVE_BRIEF
     conversation_id: str | None = Field(default=None, max_length=48)
     route: CompositeRoute | None = None
+
+
+class AssistantFeedbackRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    run_id: str = Field(min_length=8, max_length=96)
+    trace_id: str = Field(min_length=8, max_length=96)
+    rating: str = Field(pattern=r"^(helpful|not_helpful)$")
+    comment: str | None = Field(default=None, max_length=500)
 
 
 @router.post("/query")
@@ -45,3 +56,34 @@ def assistant_query(
         "conversation_id": result.conversation_id,
         "data_classification": "simulated",
     }
+
+
+@router.post("/feedback")
+def assistant_feedback(
+    payload: AssistantFeedbackRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(current_user),
+) -> dict:
+    source = db.query(AuditLog).filter(
+        AuditLog.actor_user_id == user.id,
+        AuditLog.resource == f"composite_query:{payload.run_id}",
+    ).first()
+    if source is None:
+        from fastapi import HTTPException
+
+        raise HTTPException(
+            status_code=404,
+            detail={"code": "COMPOSITE_RUN_NOT_FOUND", "message": "未找到当前身份范围内的复合查询运行记录"},
+        )
+    db.add(AuditLog(
+        actor_user_id=user.id,
+        action="assistant.feedback",
+        resource=f"composite_query:{payload.run_id}",
+        outcome=payload.rating,
+        detail_json=json.dumps({
+            "trace_id": payload.trace_id,
+            "comment": payload.comment,
+        }, ensure_ascii=False),
+    ))
+    db.commit()
+    return {"status": "recorded", "rating": payload.rating, "run_id": payload.run_id}
