@@ -49,8 +49,9 @@ protocol 或端点，不使用 Mock 冒充。
 ```
 
 原客户端对 MCP 使用绝对路径，实际会丢失 `/api/v1`。本轮改为保留 API 前缀
-的相对路径，并把根 OpenAPI health URL 独立解析；专项测试同时断言三个实际
-路径。
+的相对路径。固定镜像的根路径 `/` 返回 200，并由容器 Healthcheck 使用；
+`/openapi.json` 实际返回 401，因此 Adapter 健康探针改为独立解析根路径，
+避免将健康实例误报为 unavailable。专项测试同时断言三个实际路径。
 
 ## 4. 安全与回滚
 
@@ -62,4 +63,3 @@ protocol 或端点，不使用 Mock 冒充。
   `SQLBOT_RUNTIME_VERIFIED=false`。
 
 `SQLBOT_MODEL_CONFIGURATION = PENDING`
-

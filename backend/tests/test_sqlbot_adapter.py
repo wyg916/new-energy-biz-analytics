@@ -155,17 +155,17 @@ def test_adapter_normalizes_result_and_never_exposes_session_secret(monkeypatch)
     ]
 
 
-def test_health_probe_uses_upstream_root_openapi(monkeypatch) -> None:
+def test_health_probe_uses_upstream_root_health_endpoint(monkeypatch) -> None:
     paths: list[str] = []
 
     def handler(request: httpx.Request) -> httpx.Response:
         paths.append(request.url.path)
-        return httpx.Response(200, json={"openapi": "3.1.0"})
+        return httpx.Response(200, text="SQLBot")
 
     client = _client(monkeypatch, handler)
 
     assert client.health_check().status == "ok"
-    assert paths == ["/openapi.json"]
+    assert paths == ["/"]
 
 
 def test_sessions_are_isolated_by_user_workspace_scenario_and_versions(monkeypatch) -> None:

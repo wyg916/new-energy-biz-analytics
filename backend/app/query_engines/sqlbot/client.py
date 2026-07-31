@@ -32,7 +32,7 @@ class SQLBotClient:
         self.health_url = urlunsplit((
             parsed_base_url.scheme,
             parsed_base_url.netloc,
-            "/openapi.json",
+            "/",
             "",
             "",
         ))
