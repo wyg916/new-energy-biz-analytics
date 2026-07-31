@@ -98,8 +98,10 @@ def _client(monkeypatch, handler, *, threshold: int = 3) -> SQLBotClient:
 
 def test_adapter_normalizes_result_and_never_exposes_session_secret(monkeypatch) -> None:
     requests: list[dict] = []
+    paths: list[str] = []
 
     def handler(request: httpx.Request) -> httpx.Response:
+        paths.append(request.url.path)
         payload = json.loads(request.content)
         requests.append(payload)
         if request.url.path.endswith("/mcp_start"):
@@ -147,6 +149,23 @@ def test_adapter_normalizes_result_and_never_exposes_session_secret(monkeypatch)
     assert requests[1]["token"] == "runtime-only-token"
     assert requests[1]["chat_id"] == 101
     assert requests[1]["return_img"] is False
+    assert paths == [
+        "/api/v1/mcp/mcp_start",
+        "/api/v1/mcp/mcp_question",
+    ]
+
+
+def test_health_probe_uses_upstream_root_openapi(monkeypatch) -> None:
+    paths: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        paths.append(request.url.path)
+        return httpx.Response(200, json={"openapi": "3.1.0"})
+
+    client = _client(monkeypatch, handler)
+
+    assert client.health_check().status == "ok"
+    assert paths == ["/openapi.json"]
 
 
 def test_sessions_are_isolated_by_user_workspace_scenario_and_versions(monkeypatch) -> None:

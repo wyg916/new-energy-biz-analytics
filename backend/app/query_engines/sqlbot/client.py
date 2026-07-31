@@ -1,6 +1,7 @@
 import os
 from time import perf_counter
 from typing import Callable
+from urllib.parse import urlsplit, urlunsplit
 
 import httpx
 
@@ -27,8 +28,16 @@ class SQLBotClient:
         self.username_env_key = username_env_key
         self.password_env_key = password_env_key
         self.breaker = breaker
+        parsed_base_url = urlsplit(base_url)
+        self.health_url = urlunsplit((
+            parsed_base_url.scheme,
+            parsed_base_url.netloc,
+            "/openapi.json",
+            "",
+            "",
+        ))
         self.http = httpx.Client(
-            base_url=base_url.rstrip("/"),
+            base_url=f"{base_url.rstrip('/')}/",
             timeout=httpx.Timeout(timeout_seconds),
             transport=transport,
         )
@@ -67,7 +76,7 @@ class SQLBotClient:
         username, password = self._credentials()
         payload = self._call(
             lambda: self.http.post(
-                "/mcp/mcp_start",
+                "mcp/mcp_start",
                 json={"username": username, "password": password},
             )
         )
@@ -83,7 +92,7 @@ class SQLBotClient:
 
     def ask(self, payload: dict) -> dict:
         return self._call(
-            lambda: self.http.post("/mcp/mcp_question", json=payload)
+            lambda: self.http.post("mcp/mcp_question", json=payload)
         )
 
     def health_check(self) -> SQLBotHealth:
@@ -91,7 +100,7 @@ class SQLBotClient:
             return SQLBotHealth(status="circuit_open")
         started = perf_counter()
         try:
-            response = self.http.get("/openapi.json")
+            response = self.http.get(self.health_url)
             response.raise_for_status()
         except Exception:
             return SQLBotHealth(status="unavailable")
