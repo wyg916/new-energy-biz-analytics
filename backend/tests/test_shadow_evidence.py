@@ -7,9 +7,19 @@ from app.models.query_routing import (
     SQLBotSessionBindingRecord,
 )
 from app.platform.identity import IdentityContext
-from app.platform.query_engine import QueryContext, QueryRequest, QueryResult
+from app.platform.query_engine import (
+    QueryContext,
+    QueryEngine,
+    QueryRequest,
+    QueryResult,
+)
+from app.query_engines.router import EngineMode, EngineRouter
 from app.query_engines.shadow import RoutingEvidenceRepository
 from app.query_engines.sqlbot.contracts import SQLBotSession, SQLBotSessionKey
+from app.query_engines.sqlbot.error_mapper import (
+    SQLBotEngineError,
+    SQLBotErrorCode,
+)
 
 
 def _identity() -> IdentityContext:
@@ -116,3 +126,65 @@ def test_shadow_route_and_session_evidence_never_persist_access_token() -> None:
         assert shadow.execution_accuracy == 1.0
         assert shadow.metric_value_match == 1
         assert shadow.permission_result == "PASS"
+
+
+class _StaticEngine(QueryEngine):
+    name = "deterministic"
+    version = "test"
+
+    def execute(self, request, context=None):
+        del request, context
+        return _result("deterministic")
+
+    def health_check(self):
+        return {"status": "ok"}
+
+
+class _RuntimePendingEngine(QueryEngine):
+    name = "sqlbot"
+    version = "test"
+
+    def execute(self, request, context=None):
+        del request, context
+        raise SQLBotEngineError(
+            SQLBotErrorCode.RUNTIME_PENDING,
+            "runtime pending",
+        )
+
+    def health_check(self):
+        return {"status": "RUNTIME_PENDING"}
+
+
+def test_shadow_runtime_pending_preserves_main_result_and_error_evidence() -> None:
+    request = QueryRequest(
+        question="2026 年 6 月销售收入",
+        identity_context=_identity(),
+        scenario_id="sales_ops",
+    )
+    context = _context()
+    with SessionLocal() as db:
+        routed = EngineRouter(
+            _StaticEngine(),
+            _RuntimePendingEngine(),
+            mode=EngineMode.SHADOW,
+            evidence=RoutingEvidenceRepository(db),
+            feature_flag_version="p2a-runtime-test",
+        ).execute(request, context, deterministic_supported=True)
+
+        assert routed.result.engine == "deterministic"
+        assert routed.result.warnings == ("SQLBOT_RUNTIME_PENDING",)
+        assert routed.route_decision == "DETERMINISTIC_WITH_SHADOW"
+        assert routed.route_reason == "SQLBOT_RUNTIME_PENDING"
+
+        shadow = db.query(ShadowEvaluation).one()
+        route = db.query(QueryRouteDecisionRecord).one()
+        assert shadow.error_code == "SQLBOT_RUNTIME_PENDING"
+        assert shadow.permission_result == "NOT_EXECUTED"
+        assert shadow.sqlbot_sql is None
+        assert shadow.sqlbot_result_hash is None
+        assert shadow.execution_accuracy is None
+        assert shadow.run_id == routed.result.run_id
+        assert shadow.trace_id == routed.result.trace_id
+        assert route.run_id == shadow.run_id
+        assert route.trace_id == shadow.trace_id
+        assert route.route_reason == shadow.error_code
