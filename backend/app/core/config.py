@@ -21,11 +21,12 @@ class Settings(BaseSettings):
     auto_bootstrap_demo_users: bool = True
     simulated_data_only: bool = True
     data_import_root: str = "data/imports"
+    knowledge_source_root: str = "/app/knowledge_sources"
     api_source_allowlist: str = "localhost,127.0.0.1,host.docker.internal"
     public_base_url: str = "http://localhost:8080"
     trusted_hosts: str = "localhost,127.0.0.1,testserver"
     release_version: str = "0.1.0-dev"
-    expected_database_revision: str = "0012"
+    expected_database_revision: str = "0013"
     platform_version_routing_enabled: bool | None = None
     sqlbot_engine_enabled: bool = False
     sqlbot_runtime_verified: bool = False

@@ -5,4 +5,5 @@ COPY backend/requirements.lock .
 RUN pip install --no-cache-dir -r requirements.lock
 COPY backend/ .
 COPY scenarios/ /app/scenarios/
+COPY docs/ /app/knowledge_sources/docs/
 CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]

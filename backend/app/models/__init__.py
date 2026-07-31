@@ -26,6 +26,14 @@ from app.models.sales import (
     SalesBusinessDate, SalesChannel, SalesCustomer, SalesOrder, SalesOrderItem,
     SalesPerson, SalesProduct, SalesProductCategory, SalesRegion,
 )
+from app.models.knowledge import (
+    KnowledgeChunk,
+    KnowledgeDocument,
+    KnowledgeDocumentAcl,
+    KnowledgeDocumentVersion,
+    KnowledgePublicationEvent,
+    KnowledgeRetrievalEvent,
+)
 
 __all__ = [
     "AuditLog", "User", "AnalysisRun", "ChargingSession", "City", "DataGenerationRun",
@@ -44,4 +52,7 @@ __all__ = [
     "SalesBusinessDate", "SalesChannel", "SalesCustomer", "SalesOrder",
     "SalesOrderItem", "SalesPerson", "SalesProduct", "SalesProductCategory",
     "SalesRegion",
+    "KnowledgeChunk", "KnowledgeDocument", "KnowledgeDocumentAcl",
+    "KnowledgeDocumentVersion", "KnowledgePublicationEvent",
+    "KnowledgeRetrievalEvent",
 ]
