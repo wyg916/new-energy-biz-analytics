@@ -202,6 +202,30 @@ def retire(
     return {"document_version_id": version.document_version_id, "status": version.status}
 
 
+@router.post("/versions/{version_id}/delete")
+def soft_delete(
+    version_id: str,
+    payload: PublishRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_roles("analyst_admin")),
+) -> dict:
+    try:
+        version = KnowledgePublicationService(
+            db,
+            IdentityContextFactory.from_user(user),
+        ).soft_delete(
+            version_id,
+            reason=payload.reason or "governed logical deletion",
+        )
+    except KnowledgePublicationError as exc:
+        raise _http_error(exc) from exc
+    return {
+        "document_version_id": version.document_version_id,
+        "status": version.status,
+        "deletion_mode": "logical_audit_preserving",
+    }
+
+
 @router.post("/versions/{version_id}/rollback")
 def rollback(
     version_id: str,

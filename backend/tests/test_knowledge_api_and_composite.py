@@ -93,6 +93,13 @@ def test_knowledge_api_governed_flow_and_composed_answer(client, login) -> None:
     )
     assert retired.status_code == 200
     assert retired.json()["status"] == "RETIRED"
+    deleted = client.post(
+        f"/api/v1/knowledge/versions/{version_id}/delete",
+        headers=headers,
+        json={"reason": "API logical deletion acceptance"},
+    )
+    assert deleted.status_code == 200
+    assert deleted.json()["deletion_mode"] == "logical_audit_preserving"
 
     after_retire = client.post(
         "/api/v1/knowledge/retrieval/test",

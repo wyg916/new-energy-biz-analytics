@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 from sqlalchemy import select
 
+from app.core.config import get_settings
 from app.core.database import SessionLocal
 from app.knowledge.ingestion import KnowledgeIngestionService, KnowledgeSourceDenied
 from app.knowledge.models import (
@@ -23,7 +24,10 @@ from app.models.knowledge import (
 )
 from app.platform.identity import IdentityContext
 
-REPO_ROOT = Path(os.getenv("TEST_REPO_ROOT", Path(__file__).resolve().parents[2]))
+_default_repo_root = Path(__file__).resolve().parents[2]
+if not (_default_repo_root / "docs").is_dir():
+    _default_repo_root = Path(get_settings().knowledge_source_root)
+REPO_ROOT = Path(os.getenv("TEST_REPO_ROOT", _default_repo_root))
 SOURCE = "docs/metric_dictionary_v0.1.md"
 
 

@@ -50,6 +50,29 @@ class KnowledgePublicationService:
         self.db.commit()
         return target
 
+    def soft_delete(
+        self,
+        version_id: str,
+        *,
+        reason: str,
+    ) -> KnowledgeDocumentVersion:
+        """Governed logical deletion that preserves the immutable audit evidence."""
+
+        target = self._scoped_version(version_id)
+        if target.status not in {
+            DocumentStatus.READY,
+            DocumentStatus.PUBLISHED,
+            DocumentStatus.SUPERSEDED,
+            DocumentStatus.RETIRED,
+            DocumentStatus.FAILED,
+        }:
+            raise KnowledgePublicationError("knowledge version cannot be deleted from its current state")
+        target.status = DocumentStatus.RETIRED
+        target.retired_at = datetime.now(UTC)
+        self._event(target, None, "DELETE", reason)
+        self.db.commit()
+        return target
+
     def rollback(
         self,
         current_version_id: str,
