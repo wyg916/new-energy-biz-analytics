@@ -4,7 +4,7 @@
 
 - 离线合同：`PASS`，100/100
 - 真实运行评测：`NOT_EXECUTED`，0/100
-- 阻断码：`HUMAN_MODEL_CONFIG_REQUIRED`
+- 阻断码：`PROVIDER_AUTHENTICATION_FAILED`
 - `SQLBOT_GOLDEN_RUNTIME`：`NOT_PASS`
 - Canary：`NOT_ELIGIBLE`
 
@@ -45,7 +45,7 @@ Guard 负向候选，不是 SQLBot 执行准确率。
 | `result_match` | `null` |
 | `permission_pass` | `null` |
 | `final_status` | `NOT_EXECUTED` |
-| `error` | `HUMAN_MODEL_CONFIG_REQUIRED` |
+| `error` | `PROVIDER_AUTHENTICATION_FAILED` |
 
 没有跳过失败后只统计成功项，也没有人工修 SQL 后重新归入模型成功。
 
@@ -81,7 +81,8 @@ Guard 负向候选，不是 SQLBot 执行准确率。
 
 ## 门禁与后续
 
-10 条真实 Smoke 尚未全部完成，因此按门禁不启动 100 条真实运行。
+三家真实 `/models` 均认证失败，10 条真实 Smoke 尚未开始，因此按门禁不启动
+100 条真实运行。
 `QUERY_ENGINE_MODE` 保持 `SHADOW`，`SQLBOT_CANARY_ELIGIBLE=false`。
-配置完整模型合同后必须先执行 10 条 Smoke，再以最大并发 2、单题超时、
+修复至少一家 Provider 认证后必须先执行 10 条 Smoke，再以最大并发 2、单题超时、
 总预算和每题最多一次受控重试执行完整 100 条，并保留全部 Bad Case。

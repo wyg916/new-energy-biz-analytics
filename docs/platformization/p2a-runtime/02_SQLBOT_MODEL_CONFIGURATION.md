@@ -21,15 +21,16 @@ PostgreSQL 就绪；稳定后容器 running、HTTP 200、restart_count=0。
 
 ## 2. 模型配置事实
 
-当前没有完整 live 模型合同，因此没有向 SQLBot 提交模型配置：
+三家合同字段和运行时引用已完整，但真实 `/models` 均返回 HTTP 401，因此没有
+可用 live Provider，未向 SQLBot 提交无效模型配置：
 
 | 项目 | 结果 |
 |---|---|
-| provider | 无可用 live Provider |
+| provider | kimi/mimo/deepseek 均认证失败 |
 | model_name | 未配置 |
 | model configuration id | 未产生 |
 | configuration method | 未执行 |
-| provider health | 未执行 |
+| provider health | DNS PASS；`/models` 3/3 HTTP 401 |
 | configured_at | 无 |
 | live non-Mock response | 无 |
 | token/latency | 无 |
@@ -40,9 +41,9 @@ PostgreSQL 就绪；稳定后容器 running、HTTP 200、restart_count=0。
 Datasource configuration。这证明当前并非“平台未发现 SQLBot 内已有模型”，
 而是固定验收实例确实尚未配置模型。
 
-SQLBot 的 `/system/aimodel` 正式接口和实际数据模型已从固定容器源码核验；在
-缺少 `base_url`、`model_name` 和运行时凭据时不调用接口、不猜测 supplier、
-protocol 或端点，不使用 Mock 冒充。
+SQLBot 的 `/system/aimodel` 正式接口和实际数据模型已从固定容器源码核验。
+本轮不是缺少人工配置，而是实际认证失败；不把 preferred model 当作已发现
+model ID，不向 SQLBot 写入无法验证的 supplier/protocol，也不使用 Mock 冒充。
 
 ## 3. Adapter 兼容修复
 
@@ -68,4 +69,4 @@ protocol 或端点，不使用 Mock 冒充。
 - 应用保持 `SQLBOT_ENGINE_ENABLED=false`、
   `SQLBOT_RUNTIME_VERIFIED=false`。
 
-`SQLBOT_MODEL_CONFIGURATION = PENDING`
+`SQLBOT_MODEL_CONFIGURATION = BLOCKED_BY_PROVIDER_AUTHENTICATION`

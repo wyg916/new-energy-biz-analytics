@@ -7,13 +7,15 @@
 | 项目 | 当前执行结果 | 判定 |
 |---|---|---|
 | SQLBot 固定镜像 | v1.8.0，根路径 HTTP 200，healthy，restart=0 | PASS |
-| Model Gateway 发现 | kimi/mimo/deepseek 均未配置且 disabled | NOT_PASS |
+| Provider 官方文档 | 8 个指定页面 HTTP 200；Kimi 端点/Auth 正文匹配 | PASS |
+| Provider 真实直连 | 三家 DNS PASS；`/models` 均 HTTP 401；MiMo 两种 Header 均 401 | NOT_PASS |
+| Model Gateway 发现 | 配置完整，但实际发现模型 0、可用 Provider 0 | NOT_PASS |
 | SQLBot 模型列表 | 正式 API HTTP 200，配置数量 0 | PENDING |
 | Datasource | charging_ops ID 1、sales_ops ID 2，正式 API HTTP 200 | PASS |
 | 只读连接 | 2/2，Schema/View/字段/预览通过 | PASS |
 | 负向安全 | dangerous/cross-scenario/public-base 成功数均为 0 | PASS |
 | statement timeout | 2/2 在约 3000 ms 取消 | PASS |
-| 10 条 live Smoke | 0/10，HUMAN_MODEL_CONFIG_REQUIRED | NOT_EXECUTED |
+| 10 条 live Smoke | 0/10，PROVIDER_AUTHENTICATION_FAILED | NOT_EXECUTED |
 | 100 条 live Golden | 0/100，未把离线结果计入 | NOT_EXECUTED |
 | 20 条真实 Shadow | 0/20 | NOT_EXECUTED |
 | 故障降级 Shadow | 确定性主答案 20/20，错误证据 20/20 | PASS |
@@ -24,8 +26,8 @@
 
 | 测试 | 命令/边界 | 结果 |
 |---|---|---|
-| 后端全量 | 34 文件、8 个独立共享内存 SQLite 分组 | 168/168 PASS |
-| Runtime + SQLBot Adapter 专项 | 当前补丁镜像 | 23/23 PASS |
+| 后端全量 | 35 文件、单进程共享内存 SQLite、源码只读挂载 | 174/174 PASS |
+| Runtime blocker + Live Provider validator 专项 | 当前补丁与脱敏分支 | 9/9 PASS |
 | Deterministic 固定评测 | `run_chatbi_eval.py` | 40/40 PASS |
 | 双引擎离线合同 | `run_dual_engine_eval.py` | 100/100 PASS；runtime 指标仍为 null |
 | charging_ops 指标对账 | `verify_p0_5_metric_reconciliation.py` | 15/15，differences={} |
@@ -37,13 +39,13 @@
 | Docker smoke | 隔离 API，受信 Host Header | 6/6 PASS |
 | Vitest | `npm.cmd test` | 3/3 PASS |
 | 生产构建 | `npm.cmd run build` | PASS |
-| Playwright | 隔离 URL `127.0.0.1:18083`，单 worker | 20/20 PASS，4.4 min |
+| Playwright | 隔离 URL `127.0.0.1:18083`，单 worker | 20/20 PASS，3.2 min |
 | npm audit | `--audit-level=high` | 0 vulnerabilities |
+| Live Provider validator | 脱敏、成功/失败、MiMo 双 Header、模型选择 | 5/5 PASS |
 
-后端第一次使用 Windows 只读 bind mount 的分片因 SQLite I/O 达到执行上限，
-第二次磁盘 SQLite 分片因 VHD fsync 争用停止；两次部分进度均未计入结果。最终
-168/168 使用每组独立命名的共享内存 SQLite，仍执行相同 schema、固定数据、
-权限和业务断言，不跳过或弱化任何测试。
+本轮最终全量通过一次性容器读取当前 worktree，使用单进程共享内存 SQLite；
+174/174 覆盖原 168 项及本轮新增的 6 项 Provider/阻断证据测试，不跳过或弱化
+任何断言。只读挂载导致 pytest cache 写入警告，不影响测试、业务数据或退出码。
 
 Docker smoke 首次以容器 DNS 名作为 Host 时由 TrustedHostMiddleware 正确返回
 400；按脚本已支持的 `DOCKER_SMOKE_HOST_HEADER=127.0.0.1` 设置受信 Host 后
@@ -51,7 +53,9 @@ Docker smoke 首次以容器 DNS 名作为 Host 时由 TrustedHostMiddleware 正
 
 ## 3. 真实性与秘密检查
 
-- live 模型调用数：0；Mock Provider 计入 live 指标数：0；
+- live `/models` 在探索、凭据文件更新复核和固化脚本阶段进行了有界重试；三家
+  最终状态一致为 HTTP 401，MiMo 同时复核 Bearer 与 `api-key`。live completion
+  调用数 0；Mock Provider 计入 live 指标数 0；
 - live SQL 生成数：0；live SQLBot 查询数：0；
 - 未授权模型上下文发送数：0；
 - 新增明文秘密数：0；
@@ -61,10 +65,11 @@ Docker smoke 首次以容器 DNS 名作为 Host 时由 TrustedHostMiddleware 正
 ## 4. 运行命令摘要
 
 ```text
-pytest（34 文件，8 个隔离共享内存分组）
+pytest（35 文件，单进程共享内存 SQLite）
 python /scripts/run_chatbi_eval.py
 python /scripts/run_dual_engine_eval.py
 python /scripts/record_blocked_runtime_evaluation.py ...
+python scripts/validate_live_model_providers.py --output .cache/p2a-runtime/live-provider-validation.json
 python /scripts/verify_p0_5_metric_reconciliation.py
 python /scripts/verify_sales_ops_metric_reconciliation.py
 validate_published_batch(SessionLocal())
@@ -84,6 +89,7 @@ docker scout cves ...
 
 ```text
 MODEL_RUNTIME=NOT_PASS
+MODEL_RUNTIME_BLOCKER=PROVIDER_AUTHENTICATION_FAILED
 SQLBOT_DATASOURCE_RUNTIME=CONDITIONAL
 SQLBOT_QUERY_RUNTIME=NOT_PASS
 SQLBOT_GOLDEN_RUNTIME=NOT_PASS
@@ -94,5 +100,6 @@ SBOM_SCAN=CONDITIONAL
 P2A_RUNTIME_CLOSEOUT=NOT_PASS
 ```
 
-唯一能解除 live 模型前置阻塞的最小人工输入仍为 `provider`、`base_url`、
-`model_name`、`credential_ref`，Secret 只可注入不跟踪运行环境。
+Provider、base URL、preferred model 和凭据引用已经齐全。解除阻塞需要修复或
+更换至少一家能通过官方认证的仓库外凭据/账户授权；Secret 仍只可注入不跟踪
+运行环境。

@@ -92,5 +92,6 @@ SQLBot 查询伪装成 Shadow 成功。20 条 `error_code` 说明错误已进入
 - SQLBot 结果哈希、时延和 Token；
 - 真实 SQLBot session binding。
 
-只有提供完整模型合同、10 条 Smoke 全部执行完成并继续跑满 20 条双跑
-后，才可重新判定 `SQLBOT_SHADOW`。
+只有至少一家 Provider 通过真实认证和三类 Smoke、10 条 SQLBot Smoke 全部
+执行完成并继续跑满 20 条双跑后，才可重新判定 `SQLBOT_SHADOW`。本轮三家
+`/models` 均为 HTTP 401，因此没有资格把既有降级证据改写为真实 Shadow。

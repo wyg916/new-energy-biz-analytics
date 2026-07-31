@@ -3,16 +3,17 @@
 ## 结论
 
 - 状态：`NOT_EXECUTED`
-- 阻断码：`HUMAN_MODEL_CONFIG_REQUIRED`
+- 阻断码：`PROVIDER_AUTHENTICATION_FAILED`
 - 真实模型调用：0
 - Mock Provider 调用：0
 - 外部请求：0
 - 10 条目标问题执行：0/10
 - `SQLBOT_QUERY_RUNTIME`：`NOT_PASS`
 
-缺少可验证的 `provider`、`base_url`、`model_name` 和运行时凭据，
-因此没有调用未知端点，也没有用 Mock 冒充真实运行。此状态不是 Smoke
-失败用例统计，而是 Smoke 前置门禁未满足。
+三家 `provider`、`base_url`、preferred `model_name` 和运行时凭据均已注入，
+但真实 `/models` 全部 HTTP 401，无法发现可调用模型。已按指令继续验证其余
+Provider，并对 MiMo 同时复核 Bearer 与 `api-key`；三家均失败后停止 SQLBot
+主线。此状态不是 10 条问题失败统计，而是 Provider 认证前置门禁未满足。
 
 ## ACTIVE 数据范围
 
@@ -54,7 +55,11 @@ charging 时间按 `Asia/Shanghai` 将 `start_time` 转成本地日期。两个�
 
 ```powershell
 python scripts/record_blocked_runtime_evaluation.py `
+  --provider-present `
+  --base-url-present `
+  --model-name-present `
   --credential-ref-present `
+  --runtime-blocker PROVIDER_AUTHENTICATION_FAILED `
   --charging-min-date 2025-01-01 `
   --charging-max-date 2026-06-30 `
   --sales-min-date 2025-01-01 `
@@ -65,7 +70,7 @@ python scripts/record_blocked_runtime_evaluation.py `
 预期退出码为 2，摘要为：
 
 ```text
-runtime_status=HUMAN_MODEL_CONFIG_REQUIRED
+runtime_status=PROVIDER_AUTHENTICATION_FAILED
 smoke: total=10, executed=0, not_executed=10
 model_called=false
 external_request_count=0
@@ -73,13 +78,9 @@ external_request_count=0
 
 `.cache` 中的运行产物不提交 Git；提交的是可审计脚本、测试和本结论。
 
-## 最小人工输入
+## 解除条件
 
-需要提供以下四项运行时引用后，才能执行真实 Smoke：
-
-1. `provider`
-2. `base_url`
-3. `model_name`
-4. `credential_ref`
-
-不得在工单、日志、命令输出或 Git 中提供凭据明文。
+不再返回 `HUMAN_MODEL_CONFIG_REQUIRED`。当前需要在同一仓库外文件中更换或
+修复至少一家可通过官方 `/models` 和三类 Smoke 的凭据/账户授权；不得在工单、
+日志、命令输出或 Git 中提供凭据明文。认证成功后仍必须从 10 条 Smoke 开始，
+不能直接复用本次未执行记录。

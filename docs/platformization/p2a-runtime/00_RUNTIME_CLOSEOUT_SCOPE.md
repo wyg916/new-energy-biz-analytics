@@ -45,18 +45,18 @@
 | SQLBot 容器 | v1.8.0，healthy，restart_count=0，HTTP 200 | PASS |
 | 原运行数据库 | `0015 (head)`，来自原工作区并发链路 | 与基线 `0014` 冲突，隔离处理 |
 | 独立验收数据库 | `0014 (head)`，`alembic check` 无新增操作 | PASS |
-| Kimi 候选 | CredentialReference 存在；base URL、model、凭据值均未注入；disabled | HUMAN_MODEL_CONFIG_REQUIRED |
-| Mimo 候选 | CredentialReference 存在；base URL、model、凭据值均未注入；disabled | HUMAN_MODEL_CONFIG_REQUIRED |
-| DeepSeek 候选 | CredentialReference 存在；base URL、model、凭据值均未注入；disabled | HUMAN_MODEL_CONFIG_REQUIRED |
+| Kimi 候选 | 合同和运行时引用完整；DNS PASS；`/models` HTTP 401 | PROVIDER_AUTHENTICATION_FAILED |
+| Mimo 候选 | 合同和运行时引用完整；DNS PASS；Bearer/`api-key` 均 HTTP 401 | PROVIDER_AUTHENTICATION_FAILED |
+| DeepSeek 候选 | 合同和运行时引用完整；DNS PASS；`/models` HTTP 401 | PROVIDER_AUTHENTICATION_FAILED |
 | SQLBot live 查询 | 尚无 live provider，不能执行真实 NL2SQL | PENDING |
 | 真实 Shadow | 尚无 live SQLBot 结果 | NOT_PASS |
 | pgvector | 历史证据为当前 PostgreSQL 镜像不可用 | 待本轮有界复核 |
 | SBOM/漏洞扫描 | 历史扫描超时 | 待本轮有界复核 |
 
-模型发现只输出 Provider 名称、合同字段是否存在、启用状态、任务类型和数据
-分类；禁止输出任何 Key、Token、密码或内部认证值。最小人工输入为：
-`provider`、`base_url`、`model_name`、`credential_ref`，具体 Secret 只能在不跟踪
-运行时环境中注入。
+模型验证只输出 Provider、非秘密合同字段、模型列表、状态码、错误码、时延和
+usage；禁止输出任何完整 Key、Token、密码、响应正文或内部认证值。四类运行时
+引用已经完整，当前阻断来自官方接口认证失败，不再要求重复提供配置字段。具体
+Secret 只能在不跟踪运行时环境中注入。
 
 ## 5. 安全与真实性门禁
 

@@ -38,7 +38,8 @@ Shadow 均没有可验证证据。
 - 平台主回答继续由 DeterministicEngine 产生；
 - SQLBot 开关保持 fail-closed；
 - 完整模型合同注入后，必须依次重新执行 10 条 Smoke、100 条运行 Golden 和
-  20 条真实 Shadow，再重新作出 Canary 决策。
+  20 条真实 Shadow，再重新作出 Canary 决策；本轮真实阻断码为
+  `PROVIDER_AUTHENTICATION_FAILED`，不是缺少配置。
 
 ## 4. 回滚
 
