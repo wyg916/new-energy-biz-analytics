@@ -73,6 +73,9 @@ public_base_table_successes=0
 secret_values_exposed=false
 ```
 
+2026-07-31 关闭复核再次执行同一实际负向脚本，两个场景的 relation/field 数、
+只读事务、连接上限和约 3000 ms 超时均保持 PASS，所有禁止操作成功数仍为 0。
+
 ## 5. 限制与结论
 
 SQLBot Datasource 已真实连接并读取固定种子模拟数据，但缺少 live 模型，尚未
@@ -84,4 +87,3 @@ SQLBot Datasource 已真实连接并读取固定种子模拟数据，但缺少 l
 
 回滚为停止独立验收容器并保留卷；隔离数据库角色可在独立数据库内撤销，不能
 删除主平台或 SQLBot 原卷。
-

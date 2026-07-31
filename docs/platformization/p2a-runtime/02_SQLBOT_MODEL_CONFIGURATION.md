@@ -34,6 +34,12 @@ PostgreSQL 就绪；稳定后容器 running、HTTP 200、restart_count=0。
 | live non-Mock response | 无 |
 | token/latency | 无 |
 
+使用运行时管理员引用完成认证后，通过 v1.8.0 正式
+`GET /api/v1/system/aimodel` 接口只读取安全摘要：认证 HTTP 200、列表 HTTP
+200、模型配置数量 0。查询过程没有输出管理员密码、访问 Token、模型响应或
+Datasource configuration。这证明当前并非“平台未发现 SQLBot 内已有模型”，
+而是固定验收实例确实尚未配置模型。
+
 SQLBot 的 `/system/aimodel` 正式接口和实际数据模型已从固定容器源码核验；在
 缺少 `base_url`、`model_name` 和运行时凭据时不调用接口、不猜测 supplier、
 protocol 或端点，不使用 Mock 冒充。

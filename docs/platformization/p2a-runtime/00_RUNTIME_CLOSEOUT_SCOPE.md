@@ -11,8 +11,8 @@
 - 数据性质：固定随机种子的模拟数据，时间范围 `2025-01-01` 至
   `2026-06-30`
 - `P0_EXTERNAL_SECURITY = PENDING`
-- `REMOTE_RUNTIME_UNVERIFIED`：本轮 `git fetch origin --prune` 因连接被重置
-  失败，不使用陈旧远端引用宣称已同步
+- 远端核验：2026-07-31 再次执行 `git fetch origin --prune` 成功；关闭分支以
+  远端基线 `2117a875713b735d414d821bdb63b033870d9d56` 为起点，未改写历史
 
 原工作区的 Dashboard、指标、前端、E2E、未跟踪 `0015` 和四份用户源文档
 不属于本工作包。本工作包不读取、不修改、不删除、不暂存、不提交这些内容，
@@ -44,6 +44,7 @@
 |---|---|---|
 | SQLBot 容器 | v1.8.0，healthy，restart_count=0，HTTP 200 | PASS |
 | 原运行数据库 | `0015 (head)`，来自原工作区并发链路 | 与基线 `0014` 冲突，隔离处理 |
+| 独立验收数据库 | `0014 (head)`，`alembic check` 无新增操作 | PASS |
 | Kimi 候选 | CredentialReference 存在；base URL、model、凭据值均未注入；disabled | HUMAN_MODEL_CONFIG_REQUIRED |
 | Mimo 候选 | CredentialReference 存在；base URL、model、凭据值均未注入；disabled | HUMAN_MODEL_CONFIG_REQUIRED |
 | DeepSeek 候选 | CredentialReference 存在；base URL、model、凭据值均未注入；disabled | HUMAN_MODEL_CONFIG_REQUIRED |
