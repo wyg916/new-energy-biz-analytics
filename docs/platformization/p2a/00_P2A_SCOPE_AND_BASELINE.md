@@ -123,3 +123,16 @@ SQLBOT_ENGINE_ENABLED=false
 ```
 
 每个工作包独立提交并可使用 `git revert` 回滚。
+
+## 收口时事实校正
+
+本轮执行后段重新 `git fetch origin --prune` 成功；远端仍无
+`feat/p2a-sqlbot-runtime-rag-response`，P1B 基线远端引用保持可用。固定
+SQLBot 镜像在早期拉取命令超时后最终出现在本机，因此“镜像不存在”只作为
+开始时快照，不再作为收口结论。当前固定镜像和容器证据见
+`01_SQLBOT_RUNTIME_DEPLOYMENT.md`。
+
+收口时项目数据库仍为 `0014 (head)`。工作区另有一个在本轮后段并发出现的
+未跟踪 `0015_frontend_data_lineage.py` 及相关未提交修改；它们不属于本工作
+包、未进入当前数据库，也未被 P2A 提交。四份用户源文档仍未跟踪、未修改、
+未删除、未提交且未进入知识库。
