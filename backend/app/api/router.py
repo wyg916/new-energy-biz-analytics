@@ -9,6 +9,8 @@ from app.api.reports import router as reports_router
 from app.api.revenue import router as revenue_router
 from app.api.data_integration import router as data_integration_router
 from app.api.platform_foundation import router as platform_foundation_router
+from app.api.assistant import router as assistant_router
+from app.knowledge.api import router as knowledge_router
 from app.core.config import get_settings
 from app.core.observability import readiness_snapshot, request_metrics
 
@@ -21,6 +23,8 @@ api_router.include_router(reports_router)
 api_router.include_router(revenue_router)
 api_router.include_router(data_integration_router)
 api_router.include_router(platform_foundation_router)
+api_router.include_router(knowledge_router)
+api_router.include_router(assistant_router)
 
 
 @api_router.get("/health", tags=["system"])

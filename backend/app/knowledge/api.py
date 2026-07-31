@@ -1,0 +1,250 @@
+from datetime import datetime
+from pathlib import Path
+
+from fastapi import APIRouter, Depends, HTTPException, Query
+from pydantic import BaseModel, ConfigDict, Field
+from sqlalchemy import func, select
+from sqlalchemy.orm import Session
+
+from app.ai.model_gateway.runtime import runtime_model_status
+from app.api.dependencies import current_user, require_roles
+from app.core.config import get_settings
+from app.core.database import get_db
+from app.knowledge.approved_sources import APPROVED_SOURCE_PATHS
+from app.knowledge.ingestion import (
+    KnowledgeIngestionError,
+    KnowledgeIngestionService,
+    KnowledgeSourceDenied,
+)
+from app.knowledge.models import (
+    IngestionRequest,
+    KnowledgeDomain,
+    RetrievalIdentity,
+)
+from app.knowledge.publication import (
+    KnowledgePublicationError,
+    KnowledgePublicationService,
+)
+from app.knowledge.retrieval import KnowledgeRetrievalService
+from app.models.auth import User
+from app.models.knowledge import (
+    KnowledgeChunk,
+    KnowledgeDocument,
+    KnowledgeDocumentVersion,
+)
+from app.platform.identity import IdentityContextFactory
+
+router = APIRouter(prefix="/knowledge", tags=["knowledge"])
+
+
+class IngestRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    source_path: str = Field(max_length=1024)
+    title: str = Field(min_length=2, max_length=256)
+    scenario_id: str = Field(pattern=r"^(charging_ops|sales_ops)$")
+    knowledge_domain: KnowledgeDomain
+    roles: tuple[str, ...] = Field(min_length=1)
+    data_scopes: tuple[str, ...] = ("workspace:all",)
+    valid_from: datetime | None = None
+    valid_to: datetime | None = None
+    document_id: str | None = Field(default=None, max_length=64)
+
+
+class PublishRequest(BaseModel):
+    reason: str | None = Field(default=None, max_length=500)
+
+
+class RollbackRequest(BaseModel):
+    target_version_id: str = Field(min_length=8, max_length=64)
+    reason: str = Field(min_length=3, max_length=500)
+
+
+class RetrievalTestRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    query: str = Field(min_length=1, max_length=1000)
+    scenario_id: str = Field(pattern=r"^(charging_ops|sales_ops)$")
+    limit: int = Field(default=5, ge=1, le=10)
+    trace_id: str = Field(min_length=8, max_length=96)
+    run_id: str | None = Field(default=None, max_length=96)
+
+
+def _http_error(exc: Exception) -> HTTPException:
+    code = getattr(exc, "code", type(exc).__name__.upper())
+    status_code = 403 if isinstance(exc, KnowledgeSourceDenied) else 409
+    return HTTPException(
+        status_code=status_code,
+        detail={"code": code, "message": str(exc)},
+    )
+
+
+@router.get("/runtime")
+def runtime(_: User = Depends(current_user)) -> dict:
+    settings = get_settings()
+    return {
+        "knowledge_service": "READY",
+        "retrieval_mode": "keyword_full_text_only",
+        "vector_status": "VECTOR_PENDING",
+        "sqlbot_runtime": (
+            "READY" if settings.sqlbot_runtime_verified else "RUNTIME_PENDING"
+        ),
+        "model_gateway": runtime_model_status(),
+        "data_classification": "simulated",
+    }
+
+
+@router.get("/source-catalog")
+def source_catalog(_: User = Depends(require_roles("analyst_admin"))) -> dict:
+    return {
+        "sources": sorted(APPROVED_SOURCE_PATHS),
+        "policy": "explicit_reviewed_tracked_sources_only",
+        "automatic_workspace_scan": False,
+    }
+
+
+@router.get("/documents")
+def documents(
+    scenario_id: str | None = Query(default=None, pattern=r"^(charging_ops|sales_ops)$"),
+    db: Session = Depends(get_db),
+    user: User = Depends(current_user),
+) -> dict:
+    identity = IdentityContextFactory.from_user(user)
+    query = (
+        select(KnowledgeDocument, KnowledgeDocumentVersion)
+        .join(KnowledgeDocumentVersion)
+        .where(
+            KnowledgeDocument.tenant_id == identity.tenant_id,
+            KnowledgeDocument.workspace_id == identity.workspace_id,
+        )
+        .order_by(KnowledgeDocument.created_at.desc(), KnowledgeDocumentVersion.version.desc())
+    )
+    if scenario_id:
+        query = query.where(KnowledgeDocument.scenario_id == scenario_id)
+    rows = db.execute(query).all()
+    return {
+        "documents": [{
+            "document_id": document.document_id,
+            "document_version_id": version.document_version_id,
+            "version": version.version,
+            "title": document.title,
+            "scenario_id": document.scenario_id,
+            "knowledge_domain": document.knowledge_domain,
+            "source": document.source_path,
+            "status": version.status,
+            "content_sha256": version.content_sha256,
+            "valid_from": version.valid_from,
+            "valid_to": version.valid_to,
+            "published_at": version.published_at,
+            "chunk_count": db.scalar(select(func.count()).select_from(KnowledgeChunk).where(
+                KnowledgeChunk.document_version_id == version.document_version_id
+            )),
+        } for document, version in rows],
+        "data_classification": "simulated",
+    }
+
+
+@router.post("/documents/ingest")
+def ingest(
+    payload: IngestRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_roles("analyst_admin")),
+) -> dict:
+    identity = IdentityContextFactory.from_user(user)
+    try:
+        version = KnowledgeIngestionService(
+            db,
+            identity,
+            Path(get_settings().knowledge_source_root),
+        ).ingest(IngestionRequest(**payload.model_dump()))
+    except KnowledgeIngestionError as exc:
+        raise _http_error(exc) from exc
+    return {
+        "document_id": version.document_id,
+        "document_version_id": version.document_version_id,
+        "version": version.version,
+        "status": version.status,
+        "content_sha256": version.content_sha256,
+    }
+
+
+@router.post("/versions/{version_id}/publish")
+def publish(
+    version_id: str,
+    payload: PublishRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_roles("analyst_admin")),
+) -> dict:
+    try:
+        version = KnowledgePublicationService(
+            db,
+            IdentityContextFactory.from_user(user),
+        ).publish(version_id, reason=payload.reason)
+    except KnowledgePublicationError as exc:
+        raise _http_error(exc) from exc
+    return {"document_version_id": version.document_version_id, "status": version.status}
+
+
+@router.post("/versions/{version_id}/retire")
+def retire(
+    version_id: str,
+    payload: PublishRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_roles("analyst_admin")),
+) -> dict:
+    try:
+        version = KnowledgePublicationService(
+            db,
+            IdentityContextFactory.from_user(user),
+        ).retire(version_id, reason=payload.reason)
+    except KnowledgePublicationError as exc:
+        raise _http_error(exc) from exc
+    return {"document_version_id": version.document_version_id, "status": version.status}
+
+
+@router.post("/versions/{version_id}/rollback")
+def rollback(
+    version_id: str,
+    payload: RollbackRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(require_roles("analyst_admin")),
+) -> dict:
+    try:
+        version = KnowledgePublicationService(
+            db,
+            IdentityContextFactory.from_user(user),
+        ).rollback(version_id, payload.target_version_id, reason=payload.reason)
+    except KnowledgePublicationError as exc:
+        raise _http_error(exc) from exc
+    return {"document_version_id": version.document_version_id, "status": version.status}
+
+
+@router.post("/retrieval/test")
+def retrieval_test(
+    payload: RetrievalTestRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(current_user),
+) -> dict:
+    identity = IdentityContextFactory.from_user(user)
+    result = KnowledgeRetrievalService(db).retrieve(
+        payload.query,
+        RetrievalIdentity(
+            subject_id=identity.subject_id,
+            tenant_id=identity.tenant_id,
+            workspace_id=identity.workspace_id,
+            roles=identity.roles,
+            data_scopes=identity.data_scopes,
+        ),
+        scenario_id=payload.scenario_id,
+        trace_id=payload.trace_id,
+        run_id=payload.run_id,
+        limit=payload.limit,
+    )
+    return {
+        "retrieval_mode": result.retrieval_mode,
+        "vector_status": result.vector_status,
+        "citations": [item.__dict__ for item in result.citations],
+        "warnings": result.warnings,
+        "trace_id": result.trace_id,
+        "run_id": result.run_id,
+    }
