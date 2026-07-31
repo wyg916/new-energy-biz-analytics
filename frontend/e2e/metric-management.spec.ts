@@ -29,6 +29,8 @@ test('指标与场景管理页在100%缩放下一屏完整展示', async ({ page
   await expect(page.getByText('充电收入', { exact: true }).first()).toBeVisible()
   await expect(page.getByText('模拟数据', { exact: true })).toBeVisible()
   await expect(page.getByText(/run_id：DASH-/)).toBeVisible()
+  await expect(page.getByText('已完成充电订单中，电费净额与服务费净额之和。')).toBeVisible()
+  await expect(page.locator('.metric-spark')).toHaveCount(0)
 
   await page.getByPlaceholder('搜索指标名称/编码').fill('device_online_rate')
   await expect(page.getByText('设备在线率', { exact: true }).first()).toBeVisible()

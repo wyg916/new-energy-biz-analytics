@@ -43,6 +43,14 @@ def test_chatbi_uses_registry_for_two_isolated_scenarios(
         ("charging_ops", "ACTIVE"),
         ("sales_ops", "ACTIVE"),
     }
+    scenario_rows = {
+        item["scenario_id"]: item
+        for item in catalog.json()["scenarios"]
+    }
+    assert scenario_rows["charging_ops"]["initial_question"]
+    assert len(scenario_rows["charging_ops"]["suggested_questions"]) == 3
+    assert scenario_rows["sales_ops"]["initial_question"]
+    assert len(scenario_rows["sales_ops"]["suggested_questions"]) == 3
 
     sales = client.post(
         "/api/v1/chat/query",

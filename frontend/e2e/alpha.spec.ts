@@ -21,7 +21,7 @@ test('product alpha core journey uses live backend data', async ({ page }) => {
 
   await page.getByRole('button', { name: '经营预警' }).click()
   await expect(page.getByRole('heading', { name: '经营预警', exact: true })).toBeVisible()
-  await expect(page.getByText(/run_id：DIAG-/)).toBeVisible({ timeout: 90_000 })
+  await expect(page.locator('.global-data-status')).toContainText(/run_id：DASH-/, { timeout: 90_000 })
   await expect(page.getByText('关联因素说明，不构成因果结论')).toBeVisible()
   await page.screenshot({ fullPage: true })
 
@@ -31,7 +31,7 @@ test('product alpha core journey uses live backend data', async ({ page }) => {
   await page.getByRole('button', { name: '经营报告' }).click()
   await reportResponse
   await expect(page.getByRole('heading', { name: '经营报告', exact: true })).toBeVisible()
-  await expect(page.locator('.report-truth')).toContainText('run_id：', { timeout: 90_000 })
+  await expect(page.locator('.global-data-status')).toContainText('run_id：', { timeout: 90_000 })
   await expect(page.getByText(/报告只生成可审核草稿/)).toBeVisible()
   await page.screenshot({ fullPage: true })
   expect(consoleErrors).toEqual([])

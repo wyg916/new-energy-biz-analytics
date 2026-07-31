@@ -20,7 +20,7 @@ test('场站经营复刻页在100%缩放下一屏完整展示', async ({ page })
   await expect(page.getByRole('heading', { name: '场站综合排名' })).toBeVisible()
   await expect(page.getByRole('heading', { name: /场站详情/ })).toBeVisible()
   await expect(page.getByText('模拟数据', { exact: true })).toBeVisible()
-  await expect(page.getByText(/run：DASH-/)).toBeVisible()
+  await expect(page.locator('.global-data-status')).toContainText(/run_id：DASH-/)
 
   const fit = await page.evaluate(() => {
     const panels = [...document.querySelectorAll<HTMLElement>('.station-panel')]

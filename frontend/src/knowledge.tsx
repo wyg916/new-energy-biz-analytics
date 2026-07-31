@@ -173,7 +173,7 @@ export function KnowledgePage({ token }: { token: string }) {
 
     <section className="knowledge-grid">
       <article className="knowledge-card ingest">
-        <header><div><h2>知识源接入</h2><p>仅允许审核清单中的已跟踪、无秘密正式文档。</p></div><span>模拟数据环境</span></header>
+        <header><div><h2>知识源接入</h2><p>仅允许审核清单中的已跟踪、无秘密正式文档。</p></div><span>受控接入</span></header>
         <label>业务场景<select value={scenario} onChange={event => setScenario(event.target.value)}><option value="charging_ops">charging_ops</option><option value="sales_ops">sales_ops</option></select></label>
         <label>知识域<select value={domain} onChange={event => setDomain(event.target.value)}><option value="metric_definition">metric_definition</option><option value="data_dictionary">data_dictionary</option><option value="business_rule">business_rule</option><option value="analysis_method">analysis_method</option><option value="scenario_guide">scenario_guide</option><option value="security_rule">security_rule</option><option value="system_help">system_help</option></select></label>
         <label>审核来源<select value={source} onChange={event => setSource(event.target.value)}>{sources.map(item => <option key={item}>{item}</option>)}</select></label>
@@ -198,7 +198,5 @@ export function KnowledgePage({ token }: { token: string }) {
       })}</tbody></table>
       {!documents.length && <div className="knowledge-empty">当前场景尚无知识文档版本。</div>}
     </section>
-
-    <footer className="knowledge-truth"><b>模拟数据</b><span>检索模式：{runtime?.retrieval_mode || '加载中'}</span><span>向量状态：{runtime?.vector_status || '加载中'}</span><span>模型状态：{runtime?.model_gateway.status || '加载中'}</span><span>秘密值暴露：{runtime?.model_gateway.secret_values_exposed ? '异常' : '0'}</span></footer>
   </div>
 }

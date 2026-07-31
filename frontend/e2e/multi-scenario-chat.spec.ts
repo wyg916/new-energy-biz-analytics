@@ -30,7 +30,7 @@ test('自有 ChatBI UI 切换双场景并展示版本引擎证据', async ({ pag
   )
   await expect(page.locator('.chat-runtime-strip')).toContainText('SHADOW')
   await expect(page.locator('.chat-metric-grid.sales>article')).toHaveCount(3)
-  await expect(page.locator('.chat-conclusion')).toContainText('模拟数据')
+  await expect(page.locator('.chat-conclusion')).not.toContainText('模拟数据')
   await expect(page.locator('.chat-evidence-panel')).toContainText(
     'SQLBOT_DISABLED',
   )

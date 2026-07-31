@@ -27,7 +27,7 @@ test('毛利与成本复刻页在100%缩放下一屏完整展示', async ({ page
   await expect(page.getByRole('heading', { name: /毛利率.*场站/ })).toBeVisible()
   await expect(page.getByRole('heading', { name: '优化建议' })).toBeVisible()
   await expect(page.getByText('模拟数据', { exact: true })).toBeVisible()
-  await expect(page.getByText(/run_id：DIAG-/)).toBeVisible()
+  await expect(page.locator('.global-data-status')).toContainText(/run_id：DASH-/)
 
   const fit = await page.evaluate(() => {
     const panels = [...document.querySelectorAll<HTMLElement>('.margin-panel')]

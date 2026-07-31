@@ -17,7 +17,7 @@ test('功能总览复刻页使用后端指标并支持核心入口', async ({ pa
   await expect(page.getByText('35.1%', { exact: true }).first()).toBeVisible()
   await expect(page.getByText('95.5%', { exact: true }).first()).toBeVisible()
   await expect(page.getByText('来源：平台数据库', { exact: true }).first()).toBeVisible()
-  await expect(page.getByText(/^run：DASH-/)).toBeVisible()
+  await expect(page.locator('.global-data-status')).toContainText(/run_id：DASH-/)
   const viewportFit = await page.evaluate(() => ({
     scrollHeight: document.documentElement.scrollHeight,
     viewportHeight: window.innerHeight,
