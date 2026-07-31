@@ -36,7 +36,7 @@ services:
         - CMD
         - python
         - -c
-        - import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/openapi.json', timeout=3)
+        - import urllib.request; urllib.request.urlopen('http://localhost:8000/', timeout=3)
       interval: 15s
       timeout: 5s
       retries: 20

@@ -1069,25 +1069,28 @@ function ChatPage({ token }: { token: string }) {
       if (!response.ok) throw new Error(`${body.detail?.code ? `${body.detail.code}：` : ''}${body.detail?.message || '问数失败'}`)
       const metricRow = Object.fromEntries((body.response?.key_metrics || []).map((item: any) => [item.metric_code, item.value]))
       const dataEvidence = body.data_query_evidence
+      const originalEvidence = dataEvidence?.evidence || {}
+      const originalQueryResult = dataEvidence?.query_result
       setCompositeResult(body)
       setResult({
         status: body.response?.refused ? 'rejected' : 'completed',
         answer: body.response?.conclusion,
         conversation_id: body.conversation_id,
-        state_version: 0,
-        result: { metrics: metricRow },
-        query_plan: { intent: body.route, metrics: Object.keys(metricRow), comparison: null },
+        state_version: dataEvidence?.state_version ?? 0,
+        result: dataEvidence?.result ?? { metrics: metricRow },
+        query_plan: dataEvidence?.query_plan ?? { intent: body.route, metrics: Object.keys(metricRow), comparison: null },
         evidence: {
+          ...originalEvidence,
           source: body.response?.data_source?.join('；') || '已发布企业知识',
           data_classification: 'simulated',
-          analysis_run_id: body.run_id,
-          state_version: 0,
-          query_guard: dataEvidence ? 'passed' : 'not_required',
-          answer_guard: { status: body.response?.refused ? 'rejected' : 'passed' },
+          analysis_run_id: originalEvidence.analysis_run_id ?? dataEvidence?.run_id ?? body.run_id,
+          state_version: dataEvidence?.state_version ?? 0,
+          query_guard: originalEvidence.query_guard ?? (dataEvidence ? 'passed' : 'not_required'),
+          answer_guard: originalEvidence.answer_guard ?? { status: body.response?.refused ? 'rejected' : 'passed' },
           explanation_mode: 'unified_response_composer',
-          sql: body.response?.sql,
+          sql: originalEvidence.sql ?? body.response?.sql,
         },
-        query_result: {
+        query_result: originalQueryResult ?? {
           engine: dataEvidence?.engine || 'knowledge_service',
           scenario: targetScenario,
           scenario_version: null,
@@ -1101,7 +1104,7 @@ function ChatPage({ token }: { token: string }) {
           status: body.response?.refused ? 'rejected' : 'completed',
           sql: body.response?.sql,
         },
-        engine_routing: {
+        engine_routing: dataEvidence?.engine_routing ?? {
           mode: body.route,
           route_decision: body.route,
           route_reason: 'composite_orchestration',

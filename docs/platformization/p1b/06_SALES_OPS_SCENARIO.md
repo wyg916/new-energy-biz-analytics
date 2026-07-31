@@ -96,6 +96,15 @@ charging_ops 事实表和 P1A 平台表。
 customer_segment、salesperson 和 organization。受限字段
 `sales_customer.customer_name` 不进入查询上下文白名单。
 
+### 有效订单口径
+
+`sales_ops` 的有效订单指订单日期位于查询左闭右开区间内、状态为
+`completed` 或 `refunded`，且位于当前身份授权销售区域/渠道范围内的模拟
+销售订单。`order_count` 对这些订单的 `order_id` 去重计数；取消或其他状态
+不进入订单数、销售收入、客户数、销量、销售毛利和退款指标计算。退款订单
+继续作为有效订单参与经营统计，退款金额通过独立字段进入净收入与退款率
+口径。该定义与 `SalesOpsMetricService` 的查询条件一致。
+
 基线由 `tests/evaluation/sales_ops_metric_baseline_v1.json` 固化。对账脚本
 `scripts/verify_sales_ops_metric_reconciliation.py` 解析 ACTIVE 场景、数据集和
 语义版本后逐项比较，结果为：

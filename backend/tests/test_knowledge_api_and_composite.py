@@ -1,6 +1,8 @@
 import pytest
+from types import SimpleNamespace
 
 from app.orchestration.composite import CompositeQueryOrchestrator, CompositeRoute
+from app.scenarios.sales_ops.engine import SalesOpsQueryError
 
 
 def test_composite_route_classifier_supports_three_routes() -> None:
@@ -14,11 +16,86 @@ def test_composite_route_classifier_supports_three_routes() -> None:
     )
 
 
+def test_data_route_preserves_and_role_redacts_governed_engine_evidence() -> None:
+    payload = {
+        "status": "completed",
+        "state_version": 2,
+        "result": {"metrics": {"charging_revenue": 100}},
+        "query_plan": {"intent": "metric_lookup"},
+        "query_result": {
+            "engine": "deterministic",
+            "run_id": "CHAT-evidence",
+            "status": "completed",
+            "scenario": "charging_ops",
+            "dataset_version": "2",
+            "semantic_version": "1.0.0",
+            "sql": "SELECT governed_metric",
+        },
+        "evidence": {
+            "analysis_run_id": "CHAT-evidence",
+            "query_guard": "passed",
+            "answer_guard": {"status": "passed"},
+            "sql": "SELECT governed_metric",
+        },
+        "engine_routing": {"mode": "SHADOW"},
+    }
+    orchestrator = object.__new__(CompositeQueryOrchestrator)
+    orchestrator.user = SimpleNamespace(role="analyst_admin")
+    evidence = orchestrator._safe_data_evidence(payload)
+
+    assert evidence["run_id"].startswith("CHAT-")
+    assert evidence["evidence"]["analysis_run_id"] == evidence["run_id"]
+    assert evidence["evidence"]["query_guard"] == "passed"
+    assert evidence["evidence"]["answer_guard"]["status"] == "passed"
+    assert evidence["query_result"]["scenario"] == "charging_ops"
+    assert evidence["query_result"]["dataset_version"]
+    assert evidence["query_result"]["semantic_version"]
+    assert evidence["engine_routing"]["mode"] == "SHADOW"
+    assert evidence["query_result"]["sql"] == "SELECT governed_metric"
+
+    orchestrator.user = SimpleNamespace(role="executive")
+    redacted = orchestrator._safe_data_evidence(payload)
+    assert redacted["query_result"]["sql"] is None
+    assert redacted["evidence"]["sql"] is None
+
+
+def test_assistant_maps_scenario_query_errors_to_safe_contract(
+    client,
+    login,
+    monkeypatch,
+) -> None:
+    def reject(*args, **kwargs):
+        raise SalesOpsQueryError("METRIC_AMBIGUOUS", "请明确销售指标")
+
+    monkeypatch.setattr(CompositeQueryOrchestrator, "execute", reject)
+    response = client.post(
+        "/api/v1/assistant/query",
+        headers=login(),
+        json={
+            "question": "2026年6月表现如何？",
+            "scenario_id": "sales_ops",
+            "profile": "analyst_detailed",
+        },
+    )
+
+    assert response.status_code == 422
+    assert response.json()["detail"] == {
+        "code": "METRIC_AMBIGUOUS",
+        "message": "请明确销售指标",
+    }
+
+
 def test_knowledge_api_governed_flow_and_composed_answer(client, login) -> None:
     headers = login()
     catalog = client.get("/api/v1/knowledge/source-catalog", headers=headers)
     assert catalog.status_code == 200
     assert catalog.json()["automatic_workspace_scan"] is False
+    assert "docs/platformization/p1b/06_SALES_OPS_SCENARIO.md" in (
+        catalog.json()["sources"]
+    )
+    assert "docs/v2/V2_business_alerts_UI_acceptance.md" in (
+        catalog.json()["sources"]
+    )
 
     created = client.post(
         "/api/v1/knowledge/documents/ingest",

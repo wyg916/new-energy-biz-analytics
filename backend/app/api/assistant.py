@@ -1,14 +1,22 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, ConfigDict, Field
 import json
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import current_user
+from app.chatbi.compiler import ScopeDenied
+from app.chatbi.guard import QueryRejected
+from app.chatbi.memory import MemoryAccessDenied
+from app.chatbi.scenario_services import ScenarioChatServiceError
 from app.core.database import get_db
 from app.models.auth import User
 from app.models.auth import AuditLog
 from app.orchestration.composite import CompositeQueryOrchestrator, CompositeRoute
+from app.platform.scenario_packages import ScenarioPackageError
+from app.platform.semantic_registry import SemanticRegistryError
+from app.query_engines.router import QueryRoutingError
 from app.response.contracts import ResponseProfileName
+from app.scenarios.sales_ops.engine import SalesOpsQueryError
 
 router = APIRouter(prefix="/assistant", tags=["assistant"])
 
@@ -38,13 +46,52 @@ def assistant_query(
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ) -> dict:
-    result = CompositeQueryOrchestrator(db, user).execute(
-        payload.question,
-        scenario_id=payload.scenario_id,
-        profile=payload.profile,
-        conversation_id=payload.conversation_id,
-        requested_route=payload.route,
-    )
+    try:
+        result = CompositeQueryOrchestrator(db, user).execute(
+            payload.question,
+            scenario_id=payload.scenario_id,
+            profile=payload.profile,
+            conversation_id=payload.conversation_id,
+            requested_route=payload.route,
+        )
+    except (ScopeDenied, MemoryAccessDenied):
+        raise HTTPException(
+            status_code=403,
+            detail={
+                "code": "AUTH_SCOPE_DENIED",
+                "message": "请求范围不在当前授权范围内",
+            },
+        )
+    except ScenarioChatServiceError as exc:
+        status_code = 403 if exc.code in {
+            "CONVERSATION_SCOPE_DENIED",
+            "CONVERSATION_SCENARIO_MISMATCH",
+        } else 404
+        raise HTTPException(
+            status_code=status_code,
+            detail={"code": exc.code, "message": exc.message},
+        ) from exc
+    except SalesOpsQueryError as exc:
+        status_code = 403 if exc.code == "AUTH_SCOPE_DENIED" else 422
+        raise HTTPException(
+            status_code=status_code,
+            detail={"code": exc.code, "message": exc.message},
+        ) from exc
+    except QueryRoutingError as exc:
+        raise HTTPException(
+            status_code=409,
+            detail={"code": exc.code, "message": exc.message},
+        ) from exc
+    except QueryRejected:
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "QUERY_REJECTED", "message": "查询未通过安全校验"},
+        )
+    except (ScenarioPackageError, SemanticRegistryError) as exc:
+        raise HTTPException(
+            status_code=409,
+            detail={"code": exc.code, "message": exc.message},
+        ) from exc
     return {
         "route": result.route,
         "response": result.response,
@@ -69,8 +116,6 @@ def assistant_feedback(
         AuditLog.resource == f"composite_query:{payload.run_id}",
     ).first()
     if source is None:
-        from fastapi import HTTPException
-
         raise HTTPException(
             status_code=404,
             detail={"code": "COMPOSITE_RUN_NOT_FOUND", "message": "未找到当前身份范围内的复合查询运行记录"},

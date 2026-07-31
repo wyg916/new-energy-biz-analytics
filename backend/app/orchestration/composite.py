@@ -159,7 +159,10 @@ class CompositeQueryOrchestrator:
             scenario_id=scenario_id,
             structured_result=payload.get("result") or {"rows": rows},
             key_metrics=metrics,
-            conclusion="受控数据查询已完成，关键指标见结构化结果。",
+            conclusion=str(
+                payload.get("answer")
+                or "受控数据查询已完成，关键指标见结构化结果。"
+            ),
             analysis=("查询结果已通过现有 Query Guard 与 Answer Guard 边界。",),
             drivers=(),
             risks=(),
@@ -223,16 +226,25 @@ class CompositeQueryOrchestrator:
         )
         return f"依据已发布文档：{selected[:360]}"
 
-    @staticmethod
-    def _safe_data_evidence(payload: dict | None) -> dict | None:
+    def _safe_data_evidence(self, payload: dict | None) -> dict | None:
         if payload is None:
             return None
         result = payload.get("query_result") or {}
+        safe_query_result = dict(result)
+        safe_evidence = dict(payload.get("evidence") or {})
+        if self.user.role != "analyst_admin":
+            safe_query_result["sql"] = None
+            safe_evidence["sql"] = None
         return {
             "engine": result.get("engine"),
             "run_id": result.get("run_id") or (payload.get("evidence") or {}).get("analysis_run_id"),
             "status": result.get("status") or payload.get("status"),
             "result": payload.get("result"),
+            "state_version": payload.get("state_version"),
+            "query_plan": payload.get("query_plan"),
+            "query_result": safe_query_result,
+            "evidence": safe_evidence,
+            "engine_routing": payload.get("engine_routing"),
         }
 
     @staticmethod

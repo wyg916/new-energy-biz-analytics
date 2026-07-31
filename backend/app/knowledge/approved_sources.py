@@ -10,6 +10,8 @@ APPROVED_SOURCE_PATHS = frozenset({
     "docs/metric_dictionary_v0.1.md",
     "docs/query_plan_contract_v0.1.md",
     "docs/rbac_and_sql_security_contract_v0.1.md",
+    "docs/platformization/p1b/06_SALES_OPS_SCENARIO.md",
+    "docs/v2/V2_business_alerts_UI_acceptance.md",
     "docs/adr/ADR-002-SCENARIO-PACKAGE-BOUNDARY.md",
     "docs/adr/ADR-003-DETERMINISTIC-QUERY-ENGINE.md",
     "docs/adr/ADR-005-IDENTITY-AND-PERMISSION-BEFORE-RETRIEVAL.md",
