@@ -1,5 +1,36 @@
 # P2A Runtime Closeout 最终报告
 
+> 当前有效报告：2026-08-01。下方 2026-07-31 报告为 Provider 调用修正前的历史快照。
+
+## 当前最终结论
+
+```text
+MODEL_RUNTIME=PASS
+SQLBOT_QUERY_RUNTIME=COMPLETED_WITH_FAILURES
+SQLBOT_GOLDEN_RUNTIME=NOT_PASS
+SQLBOT_SHADOW=CONDITIONAL
+SQLBOT_CANARY_ELIGIBLE=false
+CANARY_DECISION=NO_GO
+P2A_RUNTIME_CLOSEOUT=CONDITIONAL
+P2B_ENTRY=ALLOWED_WITH_SQLBOT_REMAINING_SHADOW
+```
+
+Kimi 与 DeepSeek 官方调用真实通过；MiMo `api-key` 鉴权、文本和 JSON 通过但 SQL 合同失败。DeepSeek `deepseek-v4-flash` 依据延迟与遵循性选为主模型，Kimi `kimi-k2.6` 为第一备用。SQLBot v1.8.0 当前 3 个模型配置、唯一默认配置 ID `7489006022829281280`，重启后合同与凭据指纹一致。
+
+真实运行不是 Mock：Smoke 10 次外部请求、Golden 100 次、Shadow 20 次。Smoke 仅 1/10 全链路成功；Golden 5/100 PASS、25% SQL 生成、2% Guard 通过；Shadow 确定性主答案 20/20 成功，真实 SQLBot 生成 SQL 8/20，但全部被 Guard 拒绝，另外 12 条上游失败。SQLBot 只读边界保持危险、DDL、系统表、public 原表和跨场景成功数为 0。
+
+本轮修复三处真实集成问题：按三家官方差异化认证与探测；Datasource 已绑定时不发送字符串 `oid`；成功响应缺 token 时从 SQLBot record usage API补取。新增模型配置、Smoke/Golden/Shadow 验收与 ChatRecord 恢复脚本；未新增迁移、未修改产品 UI/RAG/场景包/数据库结构。
+
+回归通过：定向 pytest 29/29、Query Security 13/13、Deterministic 40/40、离线合同 100/100、charging 15/15、sales 12/12、DQ 20/20、只读角色安全、Docker smoke 6/6、Alembic 0014/check、Vitest 3/3、构建、Playwright 20/20、npm audit 0。后端全量 pytest 因 Docker SQLite 重种在两次 10 分钟和一次 20 分钟上限内未完成，不能标记本轮 PASS。
+
+核心模拟事实恢复后复核：charging sessions 300000、sales orders 50000、sales order items 82514；日期范围 2025-01-01 至 2026-06-30。Secret 仅从仓库外文件注入，完整 Key 不进入 Git、Markdown、前端或验收 JSON。
+
+P2A 以 `CONDITIONAL` 关闭的含义仅是完成真实运行链路与安全降级取证。SQLBot 必须保持 Shadow；修复 source binding、输出格式、Guard policy 对齐和结果值 oracle，并补齐本轮后端全量测试后，才可重新申请 Canary。P2B 可进入，但不得把该结论解释为 SQLBot 生产准入。
+
+---
+
+## 历史报告（已取代）
+
 更新时间：2026-07-31
 
 ## 最终结论

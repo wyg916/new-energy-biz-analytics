@@ -1,5 +1,23 @@
 # Model Provider 运行验证
 
+> 当前有效结果：2026-08-01。下方 2026-07-31 的 401 内容为修正官方调用方式之前的预运行快照，已由本节和 `12_OFFICIAL_PROVIDER_INTEGRATION_RESULT.md` 取代。
+
+## 当前运行结论
+
+| Provider | 官方认证方式 | 模型发现 | 实际模型 | 文本/JSON/SQL | 最终状态 |
+|---|---|---|---|---|---|
+| Kimi | `Authorization: Bearer` | `/v1/models` 200 | `kimi-k2.6` | 3/3 PASS | PASS |
+| DeepSeek | `Authorization: Bearer` | `/models` 200 | `deepseek-v4-flash` | 3/3 PASS | PASS |
+| MiMo | `api-key` | 直接 chat/completions 200 | `mimo-v2.5-pro` | 文本、JSON 通过；SQL 因 256 token 截断未通过 | FAIL |
+
+凭据解析采用 `UTF-8-sig`，重复变量、空值、内部换行和不可见字符均为 0。文件值与请求值指纹一致：Kimi `8de8aeb2b724`、MiMo `a3176a0ce95f`、DeepSeek `e1bf1d4615e9`。完整 Key 输出数为 0。
+
+DeepSeek 三项延迟为 1431/1986/2226 ms，Kimi 为 3271/4743/14237 ms，因此选择 DeepSeek 为 SQLBot 主模型、Kimi 为第一备用。MiMo Bearer 未执行：官方 `api-key` 首次即返回 200，按验收合同不应继续发送第二种认证。
+
+---
+
+## 预运行快照（已取代）
+
 更新时间：2026-07-31
 
 ## 1. 配置与安全边界

@@ -1,5 +1,27 @@
 # P2A SQLBot Canary 决策
 
+> 当前有效决策：2026-08-01。下方旧决策中的 Provider 401 原因已失效，但 `NO_GO` 结论仍成立。
+
+## 当前决策：NO_GO
+
+```text
+SQLBOT_CANARY_ELIGIBLE=false
+QUERY_ENGINE_MODE=SHADOW
+CANARY_DECISION=NO_GO
+P2A_RUNTIME_CLOSEOUT=CONDITIONAL
+P2B_ENTRY=ALLOWED_WITH_SQLBOT_REMAINING_SHADOW
+```
+
+安全门禁满足：只读角色写入、DDL、系统表、public 原表和跨场景成功数均为 0；运行 Golden 的 permission violation rate 为 0%。但质量门禁明显未满足：Smoke 全链路 1/10，Golden Guard pass 2%、拒答准确率 15%、幻觉字段率 8%，Execution Accuracy 与 Metric Value Accuracy 因缺少值 oracle 不能判定，Shadow 无 SQLBot result hash 可比较，且 Golden/Shadow trace 均包含恢复标记。
+
+另有产品接入阻断：ACTIVE source binding 尚未发布 `sqlbot_datasource_id`，本轮运行器仅在验收时显式绑定已批准的 Datasource 1/2。修复前不得开启产品 Canary。
+
+依据任务门槛，真实 Provider、真实 SQL、真实只读上游执行、20 条真实 Shadow 和安全成功数 0 已成立，因此允许以 `CONDITIONAL` 关闭 P2A 并进入 P2B；P2B 不得借此开启 Canary、替换确定性主路径或宣称生产可用。
+
+---
+
+## 旧决策快照（原因已取代）
+
 更新时间：2026-07-31
 
 ## 1. 决策

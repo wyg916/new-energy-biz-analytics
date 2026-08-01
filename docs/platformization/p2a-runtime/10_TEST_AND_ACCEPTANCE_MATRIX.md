@@ -1,5 +1,40 @@
 # P2A Runtime 测试与验收矩阵
 
+> 当前有效矩阵：2026-08-01。下方 2026-07-31 矩阵保留为 Provider 修复前基线。
+
+## 当前 Runtime 与回归矩阵
+
+| 项目 | 本轮结果 | 状态 |
+|---|---|---|
+| Provider 官方直连 | Kimi 3/3；DeepSeek 3/3；MiMo 2/3 | PASS（至少一家） |
+| SQLBot 模型持久化 | 3 个配置、唯一默认、重启后 ID/合同/指纹一致 | PASS |
+| SQLBot 只读安全 | 两角色 read-only；危险/public/跨场景成功均 0 | PASS |
+| 10 条 Smoke | 10/10 真请求；1 PASS、9 FAIL | NOT_PASS |
+| 100 条运行 Golden | 100/100 真请求；5 PASS、95 FAIL；25 SQL | NOT_PASS |
+| 20 条真实 Shadow | 主结果 20/20；SQL 8；token/latency 20 | CONDITIONAL |
+| Canary | 质量/准确率门槛未满足 | NO_GO |
+| Provider/SQLBot 定向 pytest | 29/29 | PASS |
+| Query Security 纯负向 | 13/13 | PASS |
+| Deterministic 固定评测 | 40/40 | PASS |
+| 双引擎离线合同 | 100/100；危险/越权成功 0 | PASS |
+| charging_ops 对账 | 15/15，differences={} | PASS |
+| sales_ops 对账 | 12/12，differences={} | PASS |
+| PostgreSQL DQ | 20/20，failures=[] | PASS |
+| Docker smoke | 6/6 | PASS |
+| Alembic | `0014 (head)`；无新 upgrade operation | PASS |
+| Vitest | 3/3 | PASS |
+| 前端生产构建 | TypeScript + Vite | PASS |
+| Playwright | 20/20 | PASS |
+| npm audit | 0 vulnerabilities | PASS |
+
+后端全量 pytest 本轮多次在 Docker Desktop SQLite 重复固定大数据重种阶段超过 10/20 分钟外层上限，未得到完成计数；不能继承旧 174/174 作为本轮结果，也没有观察到断言失败摘要。与本次变更直接相关的 29 条、Query Security 13 条及正式 PostgreSQL 专项均通过。该未完成项列为 P2A Conditional 风险，不伪造 PASS。
+
+运行后 Docker 容器组曾同时 Exit 255（无 OOM、数据库退出前健康），判断为 Docker runtime 中断；复用原容器恢复后 DB/Redis/SQLBot/API 健康，核心事实数量和 SQLBot 默认配置均再次核验不变。
+
+---
+
+## 预运行矩阵（已取代）
+
 更新时间：2026-07-31
 
 ## 1. Runtime 门禁

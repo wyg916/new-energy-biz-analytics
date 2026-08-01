@@ -1,5 +1,24 @@
 # P2A SQLBot 运行 Smoke 结果
 
+> 当前有效结果：2026-08-01。下方 `NOT_EXECUTED` 为 Provider 修复前快照。
+
+## 当前真实运行结果
+
+- Provider/模型：DeepSeek / `deepseek-v4-flash`。
+- ACTIVE 模拟数据范围：两个场景均为 2025-01-01 至 2026-06-30。
+- charging_ops 5 条、sales_ops 5 条；真实外部请求 10/10，执行尝试 10/10。
+- 全链路 PASS 1、FAIL 9；模型调用、SQL 生成、Guard 通过、上游只读完成率均为 10%。
+- 通过用例：`RSM-SA-003`；记录了 SQL、SQL hash、结果 hash、行数、token 10938、版本、run_id 和 trace_id。
+- P50 22135 ms，P95 40926 ms；权限违规和跨场景成功均为 0。
+
+失败不是缓存或 Mock：9 条以结构化上游失败形式结束。只有 1 条成功暴露 usage，因此 token 覆盖为 1/10。10 条都已完成真实调用和有限重试边界，但没有达到“每条均生成 SQL 并执行”的 Smoke 验收门槛，状态为 `COMPLETED_WITH_FAILURES / NOT_PASS`。
+
+证据：`.cache/p2a-runtime/sqlbot-smoke-live.json`，不进入 Git。
+
+---
+
+## 预运行快照（已取代）
+
 ## 结论
 
 - 状态：`NOT_EXECUTED`

@@ -1,5 +1,38 @@
 # P2A 100 条运行型 Golden Set
 
+> 当前有效结果：2026-08-01。下方 `NOT_AVAILABLE` 为真实运行前快照。
+
+## 当前真实运行结果
+
+主模型 DeepSeek 完成 100/100 次真实 SQLBot 请求，charging_ops 48、sales_ops 52；SQLBot Chat ID 209—308 唯一完整。原评测进程在全部请求结束后因 progress 字段变量错误未写最终文件，随后从 SQLBot ChatRecord 只读恢复运行遥测并重新应用当前 Query Guard，没有重跑模型。
+
+| 指标 | 结果 |
+|---|---:|
+| 运行 PASS / FAIL | 5 / 95 |
+| Model Call Success Rate | 25% |
+| SQL Generation Rate | 25% |
+| Guard Pass Rate | 2% |
+| Upstream Readonly Execution Rate | 25% |
+| Guarded Query Completion Rate | 2.5% |
+| Time Range Accuracy（可判定样本） | 100% |
+| Dimension Accuracy（可判定样本） | 92.3077% |
+| Rejection Accuracy | 15% |
+| Hallucinated Table Rate | 0% |
+| Hallucinated Field Rate | 8% |
+| Permission Violation Rate | 0% |
+| P50 / P95 | 20422 / 25841 ms |
+| Token | 100/100 可观测；合计 802738 |
+
+错误分布：结构化输出无效 60、SQLBot record error 16、`LIMIT > 500` Guard 拒绝 20、字段 allowlist Guard 拒绝 2；另 2 条无错误。PASS 5 包含正确安全拒绝，不能解释为查询执行准确率。
+
+固定 Golden 源没有预期结果值 oracle，且恢复证据不保存结果行，因此 `Execution Accuracy` 和 `Metric Value Accuracy` 必须为 `null`，不得用离线合同 100/100 替代。100 条 trace 均标记为从 SQLBot Chat ID 重建，是 Canary 阻断项。
+
+证据：`.cache/p2a-runtime/sqlbot-golden-live.json`；完整模型 prose、结果行和 Secret 均未写入。
+
+---
+
+## 预运行快照（已取代）
+
 ## 结论
 
 - 离线合同：`PASS`，100/100

@@ -1,5 +1,25 @@
 # P2A Shadow 运行验收
 
+> 当前有效结果：2026-08-01。下方 0/20 为 Provider 修复前快照。
+
+## 当前真实 Shadow
+
+- 固定单指标问题 20 条：charging_ops 10、sales_ops 10。
+- 路由决策 `DETERMINISTIC_WITH_SHADOW` 20/20；确定性主结果 `completed` 20/20。
+- 后台真实 SQLBot 请求 20/20；SQLBot Chat ID 309—328，20 个 ChatRecord 均存在。
+- SQL 生成 8/20；这 8 条均被当前平台 Query Guard 拒绝，主要原因是 SQLBot 生成 `LIMIT 1000`，高于平台 500 上限。
+- 其余 12 条为 `SQLBOT_UPSTREAM_UNAVAILABLE`/结构化失败；SQLBot 成败没有影响主答案。
+- token 与 latency 20/20 保存；SQL 和 SHA-256 hash 8/20 保存；deterministic result hash、run_id、trace_id 20/20 保存。
+- SQLBot result hash 0/20：8 条在 Guard 前被拒绝，12 条没有可解析结果；不得声明结果一致性。
+
+Router 原始失败行已持久化，随后从 SQLBot ChatRecord 只读恢复 SQL/token/latency，并按当前 Guard 重新分类；20 条均标记 `trace_recovered_from_sqlbot_chat_record=true`。数据库中 ShadowEvaluation、会话绑定和 route decision 各 20 条，未保存完整模型 prose、结果行、Key 或会话 Token。
+
+证据：`.cache/p2a-runtime/sqlbot-shadow-live.json`。状态为 `COMPLETED_WITH_FAILURES`，证明真实双跑和故障降级成立，但不满足 Canary 准确率门槛。
+
+---
+
+## 预运行快照（已取代）
+
 ## 结论
 
 - 真实 SQLBot 双跑：`NOT_EXECUTED`，0/20

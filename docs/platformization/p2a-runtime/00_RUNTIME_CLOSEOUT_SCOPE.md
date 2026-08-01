@@ -1,5 +1,7 @@
 # P2A Runtime Closeout 范围
 
+> 状态说明（2026-08-01）：本页下方门禁表是 2026-07-31 的预运行基线，其中三家 Provider 401 已被真实官方调用结果取代。当前事实以 `11_RUNTIME_CLOSEOUT_REPORT.md` 和 `12_OFFICIAL_PROVIDER_INTEGRATION_RESULT.md` 为准；工作包范围本身未变化。
+
 更新时间：2026-07-31
 
 ## 1. 工作包与基线

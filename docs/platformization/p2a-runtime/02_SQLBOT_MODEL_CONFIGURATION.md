@@ -1,5 +1,25 @@
 # SQLBot 模型配置
 
+> 当前有效结果：2026-08-01。下方 2026-07-31 内容是模型尚未配置时的预运行快照。
+
+## 当前运行配置
+
+- SQLBot：`dataease/sqlbot:v1.8.0`，本机管理端口 `127.0.0.1:18081`。
+- 主 Provider：DeepSeek；API Domain `https://api.deepseek.com`；模型 `deepseek-v4-flash`。
+- 正式配置方式：SQLBot v1.8.0 官方 Runtime API。
+- 当前模型配置数：3；默认模型数：1。
+- 当前默认配置 ID：`7489006022829281280`。
+- 默认模型合同和凭据指纹 `e1bf1d4615e9` 在 SQLBot 非预期重启后再次校验通过。
+- Kimi 对照配置可完成真实调用，但同题延迟约 127.6 秒且 SQL 同样触发 `LIMIT > 500` Guard 拒绝；DeepSeek 保持主模型。
+
+配置时发现 SQLBot v1.8.0 若创建模型时直接写 `default_model=true`，可能留下多个默认项。脚本改为先以非默认状态创建/更新，再调用专用 set-default API，最终保证唯一默认。未删除两个非默认历史验收配置，因为本轮没有删除授权；这是可回滚的清理风险，不影响当前唯一默认选择。
+
+平台请求映射同时修复：Datasource 已绑定时不再把平台字符串组织 ID `org-alpha` 发送到 SQLBot 的整数 `oid` 字段。成功结果缺少 token 时，Adapter 通过官方 record usage API补取并仅持久化总 token 数。
+
+---
+
+## 预运行快照（已取代）
+
 更新时间：2026-07-31
 
 ## 1. 固定运行时
