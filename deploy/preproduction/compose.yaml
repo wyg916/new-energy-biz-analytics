@@ -259,7 +259,7 @@ services:
       - "8084:80"
       - "8444:443"
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-check-certificate -q -O /dev/null https://127.0.0.1/api/v1/health"]
+      test: ["CMD-SHELL", "wget --no-check-certificate --header='Host: p4.localhost' -q -O /dev/null https://127.0.0.1/api/v1/health"]
       interval: 10s
       timeout: 5s
       retries: 30

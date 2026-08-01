@@ -75,7 +75,7 @@ def token_for(username: str) -> str:
 
 
 def request_case(client: httpx.Client, token: str, index: int) -> tuple[str, int, float]:
-    headers = {"Authorization": f"Bearer {token}"}
+    headers = {"Authorization": f"Bearer {token}", "Host": "p4.localhost"}
     cases = (
         ("identity", "GET", "/api/v1/auth/me", None),
         ("policy", "GET", "/api/v1/chat/scenarios", None),
