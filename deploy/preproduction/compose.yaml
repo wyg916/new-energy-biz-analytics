@@ -47,7 +47,10 @@ services:
     restart: "no"
 
   db:
-    image: postgres:16.9-alpine
+    image: renewable-p4-rc-postgres:16.14
+    build:
+      context: ../..
+      dockerfile: deploy/preproduction/postgres.Dockerfile
     environment:
       POSTGRES_DB: renewable_p4
       POSTGRES_USER: alpha
@@ -68,7 +71,7 @@ services:
       options: {max-size: "20m", max-file: "5"}
 
   redis:
-    image: redis:7.4.5-alpine
+    image: redis:7.4.10-alpine@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2
     command: ["redis-server", "/run/p4-runtime/redis.conf"]
     volumes:
       - p4_redis:/data
@@ -121,7 +124,7 @@ services:
     restart: "no"
 
   db-prepare:
-    image: postgres:16.9-alpine
+    image: renewable-p4-rc-postgres:16.14
     command:
       - sh
       - -ec
@@ -248,7 +251,7 @@ services:
     logging: *bounded-logs
 
   proxy:
-    image: nginx:1.27.5-alpine
+    image: nginx:1.31.3-alpine@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - p4_runtime:/run/p4-runtime:ro
@@ -267,7 +270,7 @@ services:
     logging: *bounded-logs
 
   backup:
-    image: postgres:16.9-alpine
+    image: renewable-p4-rc-postgres:16.14
     command:
       - sh
       - -ec
