@@ -37,6 +37,7 @@ from app.query_engines.sqlbot.client import SQLBotClient
 from app.query_engines.sqlbot.contracts import SQLBotSession, SQLBotSessionKey
 from app.query_engines.sqlbot.error_mapper import SQLBotEngineError
 from app.query_engines.sqlbot.health import CircuitBreaker
+from app.query_engines.sqlbot.limit_policy import apply_limit_policy
 from app.query_engines.sqlbot.request_mapper import map_question_request
 from app.query_engines.sqlbot.response_parser import parse_response
 from app.scenarios.charging_ops.runtime import resolve_charging_ops_context
@@ -321,6 +322,7 @@ def _execute_case(
         "attempts": attempts,
         "sqlbot_session_created": session is not None,
         "generated_sql": None,
+        "limit_policy_warnings": [],
         "sql_hash": None,
         "guard_result": "NOT_EXECUTED",
         "execution_status": "NOT_EXECUTED",
@@ -352,10 +354,22 @@ def _execute_case(
     except SQLBotEngineError as exc:
         base["error"] = str(exc.code)
         return base
+    allowed_rows = min(context.max_rows, request.limits.get("rows", context.max_rows))
+    try:
+        limited = apply_limit_policy(parsed.sql, max_limit=allowed_rows)
+    except SQLBotEngineError as exc:
+        base["error"] = str(exc.code)
+        return base
+    parsed = replace(
+        parsed,
+        sql=limited.sql,
+        warnings=parsed.warnings + limited.warnings,
+    )
     sql = parsed.sql
     observations = _sql_observations(sql, context)
     base.update({
         "generated_sql": sql,
+        "limit_policy_warnings": list(limited.warnings),
         "sql_hash": hashlib.sha256(sql.encode()).hexdigest(),
         "execution_status": "UPSTREAM_READONLY_COMPLETED",
         "row_count": len(parsed.rows),
@@ -372,6 +386,11 @@ def _execute_case(
         "hallucinated_tables": observations["hallucinated_tables"],
         "hallucinated_fields": observations["hallucinated_fields"],
     })
+    if len(parsed.rows) > allowed_rows:
+        base["guard_result"] = "REJECTED"
+        base["error"] = f"RESULT_ROW_LIMIT_EXCEEDED:{len(parsed.rows)}>{allowed_rows}"
+        base["permission_pass"] = True
+        return base
     try:
         guard_sqlbot_sql(sql, context)
     except QueryRejected as exc:
