@@ -116,6 +116,7 @@ def candidates(
     identity = IdentityContextFactory.from_user(user)
     rows = db.scalars(select(MemoryWriteCandidateRecord).where(
         MemoryWriteCandidateRecord.tenant_id == identity.tenant_id,
+        MemoryWriteCandidateRecord.organization_id == identity.org_id,
         MemoryWriteCandidateRecord.workspace_id == identity.workspace_id,
         MemoryWriteCandidateRecord.user_id == identity.subject_id,
     ).order_by(MemoryWriteCandidateRecord.created_at.desc())).all()

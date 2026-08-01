@@ -135,5 +135,6 @@ def test_non_admin_cannot_install_or_disable_skill(api_client, api_login):
     install = api_client.post("/api/v1/skills/install-initial", headers=executive)
     assert install.status_code == 403
     skills = api_client.get("/api/v1/skills?scenario_id=charging_ops", headers=executive).json()["skills"]
+    assert all(not any(item["controls"].values()) for item in skills)
     disabled = api_client.post(f"/api/v1/skills/{skills[0]['skill_id']}/disable", headers=executive)
     assert disabled.status_code == 403

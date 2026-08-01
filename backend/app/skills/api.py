@@ -21,7 +21,12 @@ from app.skills.runtime import SkillExecutionError
 router = APIRouter(prefix="/skills", tags=["skills"])
 
 
-def _skill_view(row: SkillDefinition, procedure: ProcedureDefinition | None) -> dict:
+def _skill_view(
+    row: SkillDefinition,
+    procedure: ProcedureDefinition | None,
+    *,
+    can_administer: bool = False,
+) -> dict:
     return {
         "skill_id": row.skill_id,
         "skill_code": row.skill_code,
@@ -40,9 +45,9 @@ def _skill_view(row: SkillDefinition, procedure: ProcedureDefinition | None) -> 
         "approved_by": row.approved_by,
         "approved_at": row.approved_at,
         "controls": {
-            "can_enable": row.status in {"APPROVED", "SHADOW", "CANARY"},
-            "can_disable": row.status == "ACTIVE" and row.enabled,
-            "can_rollback": bool(row.rollback_skill_id),
+            "can_enable": can_administer and row.status in {"APPROVED", "SHADOW", "CANARY"},
+            "can_disable": can_administer and row.status == "ACTIVE" and row.enabled,
+            "can_rollback": can_administer and bool(row.rollback_skill_id),
         },
     }
 
@@ -59,9 +64,14 @@ def list_skills(
     if scenario_id:
         query = query.where(SkillDefinition.scenario_id == scenario_id)
     rows = db.scalars(query).all()
+    can_administer = user.role == "analyst_admin"
     return {
         "skills": [
-            _skill_view(row, db.get(ProcedureDefinition, row.procedure_id))
+            _skill_view(
+                row,
+                db.get(ProcedureDefinition, row.procedure_id),
+                can_administer=can_administer,
+            )
             for row in rows
         ],
         "data_classification": "simulated",
@@ -99,7 +109,11 @@ def enable_skill(
 ) -> dict:
     try:
         row = SkillRegistry(db, IdentityContextFactory.from_user(user)).activate(skill_id)
-        return _skill_view(row, db.get(ProcedureDefinition, row.procedure_id))
+        return _skill_view(
+            row,
+            db.get(ProcedureDefinition, row.procedure_id),
+            can_administer=True,
+        )
     except ProcedureRegistryError as exc:
         raise HTTPException(409, detail={"code": exc.code, "message": exc.message}) from exc
 
@@ -112,7 +126,11 @@ def disable_skill(
 ) -> dict:
     try:
         row = SkillRegistry(db, IdentityContextFactory.from_user(user)).disable(skill_id)
-        return _skill_view(row, db.get(ProcedureDefinition, row.procedure_id))
+        return _skill_view(
+            row,
+            db.get(ProcedureDefinition, row.procedure_id),
+            can_administer=True,
+        )
     except ProcedureRegistryError as exc:
         raise HTTPException(409, detail={"code": exc.code, "message": exc.message}) from exc
 
@@ -125,6 +143,10 @@ def rollback_skill(
 ) -> dict:
     try:
         row = SkillRegistry(db, IdentityContextFactory.from_user(user)).rollback(skill_id)
-        return _skill_view(row, db.get(ProcedureDefinition, row.procedure_id))
+        return _skill_view(
+            row,
+            db.get(ProcedureDefinition, row.procedure_id),
+            can_administer=True,
+        )
     except ProcedureRegistryError as exc:
         raise HTTPException(409, detail={"code": exc.code, "message": exc.message}) from exc
