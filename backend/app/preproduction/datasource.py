@@ -355,7 +355,24 @@ class DataSourceGovernanceService:
             raise DataSourceGovernanceError("ROLLBACK_TARGET_MISMATCH", "回滚源和目标不匹配")
         if target_governance.lifecycle_status not in {"SUPERSEDED", "DISABLED", "ROLLED_BACK"} or not target_governance.approved_by:
             raise DataSourceGovernanceError("ROLLBACK_TARGET_NOT_APPROVED", "回滚目标不是已批准历史版本")
-        self._credential(target_governance.credential_ref_id, action="datasource.connect")
+        target_credential = self.db.get(CredentialReference, target_governance.credential_ref_id)
+        if (
+            target_credential is None
+            or target_credential.tenant_id != self.identity.tenant_id
+            or target_credential.workspace_id != self.identity.workspace_id
+        ):
+            raise DataSourceGovernanceError("CREDENTIAL_REFERENCE_NOT_FOUND", "回滚目标凭据引用不存在")
+        current_credential = self._credential(
+            current_governance.credential_ref_id, action="datasource.connect",
+        )
+        rollback_credential = CredentialReferenceService(self.db, self.identity).rotate(
+            current_credential.credential_ref_id,
+            secret_identifier=target_credential.secret_identifier,
+            metadata={
+                **json.loads(target_credential.metadata_json or "{}"),
+                "rollback_target_ref_id": target_credential.credential_ref_id,
+            },
+        )
         current_governance.lifecycle_status = "ROLLED_BACK"
         clone = DataSourceConnection(
             source_id=f"DS-P4-{uuid4()}", display_name=target.display_name, source_type=target.source_type,
@@ -366,7 +383,7 @@ class DataSourceGovernanceService:
         self.db.flush()
         self.db.add(PreproductionDataSourceGovernance(
             governance_id=f"DSGOV-P4-{uuid4()}", source_id=clone.source_id,
-            credential_ref_id=target_governance.credential_ref_id,
+            credential_ref_id=rollback_credential.credential_ref_id,
             tenant_id=target_governance.tenant_id, workspace_id=target_governance.workspace_id,
             scenario_id=target_governance.scenario_id, data_classification=target_governance.data_classification,
             lifecycle_status="ACTIVE", version=current_governance.version + 1,
@@ -374,7 +391,11 @@ class DataSourceGovernanceService:
             activated_by=self.identity.subject_id, activated_at=datetime.now(UTC),
         ))
         self.db.flush()
-        self._audit(clone, "datasource.rolled_back", "SUCCESS", {"rollback_of": current.source_id, "target_source_id": target.source_id})
+        self._audit(clone, "datasource.rolled_back", "SUCCESS", {
+            "rollback_of": current.source_id,
+            "target_source_id": target.source_id,
+            "rollback_credential_ref_id": rollback_credential.credential_ref_id,
+        })
         self.db.commit()
         return clone
 

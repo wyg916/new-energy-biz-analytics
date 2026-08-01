@@ -89,7 +89,7 @@ class Settings(BaseSettings):
     oidc_internal_base_url: str = ""
     oidc_client_id: str = "chatbi-web"
     oidc_redirect_uri: str = ""
-    oidc_scopes: str = "openid profile email groups"
+    oidc_scopes: str = "openid profile email"
     oidc_transaction_ttl_seconds: int = 300
     oidc_session_ttl_seconds: int = 3600
     oidc_http_timeout_seconds: float = 10.0

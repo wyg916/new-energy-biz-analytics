@@ -8,6 +8,7 @@ from sqlalchemy import select
 
 from app.bootstrap import bootstrap_demo_users
 from app.core.config import Settings
+from app.core.config import get_settings
 from app.core.database import SessionLocal
 from app.governance.contracts import SecretValue
 from app.governance.models import CredentialReference, SecurityAlert
@@ -37,8 +38,9 @@ def add_reference(db, identity, *, ref_id="CRED-P4-TEST", name="preprod-datasour
     return row
 
 
-def test_datasource_requires_evidence_and_approval_before_activation(client) -> None:
+def test_datasource_requires_evidence_and_approval_before_activation(client, monkeypatch) -> None:
     bootstrap_demo_users()
+    monkeypatch.setattr(get_settings(), "vault_enabled", True)
     with SessionLocal() as db:
         identity = admin_identity(db)
         reference = add_reference(db, identity)
@@ -63,6 +65,23 @@ def test_datasource_requires_evidence_and_approval_before_activation(client) -> 
         assert service.payload(service.approve(source.source_id))["lifecycle_status"] == "APPROVED"
         assert service.payload(service.publish(source.source_id))["lifecycle_status"] == "PUBLISHED"
         assert service.payload(service.activate(source.source_id))["lifecycle_status"] == "ACTIVE"
+        rotated = service.rotate(
+            source.source_id,
+            secret_identifier="preprod-kv/chatbi/datasource#password@2",
+        )
+        rotated.connection_options_json = source.connection_options_json
+        db.commit()
+        service.submit(rotated.source_id)
+        service.approve(rotated.source_id)
+        service.publish(rotated.source_id)
+        service.activate(rotated.source_id)
+        rolled_back = service.rollback(rotated.source_id, target_source_id=source.source_id)
+        rollback_governance = service._governance(rolled_back)
+        rollback_credential = db.get(CredentialReference, rollback_governance.credential_ref_id)
+        assert service.payload(rolled_back)["lifecycle_status"] == "ACTIVE"
+        assert rollback_credential.status == "ACTIVE"
+        assert rollback_credential.secret_identifier.endswith("@1")
+        assert rollback_credential.credential_ref_id != reference.credential_ref_id
         service._governance(source).tenant_id = "different-tenant"
         db.commit()
         with pytest.raises(DataSourceGovernanceError) as exc:

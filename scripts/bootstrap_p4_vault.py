@@ -55,6 +55,8 @@ def main() -> None:
 
     role_id_file = root / "vault_role_id"
     secret_id_file = root / "vault_secret_id"
+    rotation_role_id_file = root / "vault_rotation_role_id"
+    rotation_secret_id_file = root / "vault_rotation_secret_id"
     recovery_root_file = root / "vault_recovery_root"
     if root_token is None and recovery_root_file.exists():
         candidate = recovery_root_file.read_text(encoding="utf-8").strip()
@@ -92,6 +94,21 @@ path "sys/health" { capabilities = ["read"] }
         "token_policies": ["chatbi-api"], "token_ttl": "10m", "token_max_ttl": "30m",
         "secret_id_ttl": "0", "secret_id_num_uses": 0,
     }).raise_for_status()
+    rotation_policy = """
+path "preprod-kv/data/chatbi/datasource" { capabilities = ["create", "read", "update"] }
+path "preprod-kv/metadata/chatbi/datasource" { capabilities = ["read"] }
+path "preprod-kv/data/chatbi/webhook" { capabilities = ["create", "read", "update"] }
+path "preprod-kv/metadata/chatbi/webhook" { capabilities = ["read"] }
+path "sys/health" { capabilities = ["read"] }
+"""
+    request(
+        client, "PUT", "/v1/sys/policies/acl/chatbi-secret-rotation",
+        token=root_token, json={"policy": rotation_policy},
+    ).raise_for_status()
+    request(client, "POST", "/v1/auth/approle/role/chatbi-secret-rotation", token=root_token, json={
+        "token_policies": ["chatbi-secret-rotation"], "token_ttl": "5m", "token_max_ttl": "10m",
+        "secret_id_ttl": "0", "secret_id_num_uses": 0,
+    }).raise_for_status()
 
     values = {
         "acceptance": {"value": secrets.token_urlsafe(32)},
@@ -107,10 +124,20 @@ path "sys/health" { capabilities = ["read"] }
             response.raise_for_status()
     role_id = request(client, "GET", "/v1/auth/approle/role/chatbi-api/role-id", token=root_token).json()["data"]["role_id"]
     secret_id = request(client, "POST", "/v1/auth/approle/role/chatbi-api/secret-id", token=root_token).json()["data"]["secret_id"]
+    rotation_role_id = request(
+        client, "GET", "/v1/auth/approle/role/chatbi-secret-rotation/role-id", token=root_token,
+    ).json()["data"]["role_id"]
+    rotation_secret_id = request(
+        client, "POST", "/v1/auth/approle/role/chatbi-secret-rotation/secret-id", token=root_token,
+    ).json()["data"]["secret_id"]
     role_id_file.write_text(role_id, encoding="utf-8")
     secret_id_file.write_text(secret_id, encoding="utf-8")
+    rotation_role_id_file.write_text(rotation_role_id, encoding="utf-8")
+    rotation_secret_id_file.write_text(rotation_secret_id, encoding="utf-8")
     os.chmod(role_id_file, 0o600)
     os.chmod(secret_id_file, 0o600)
+    os.chmod(rotation_role_id_file, 0o600)
+    os.chmod(rotation_secret_id_file, 0o600)
     request(client, "POST", "/v1/auth/token/revoke-self", token=root_token)
     if recovery_root_file.exists():
         recovery_root_file.write_text("", encoding="utf-8")

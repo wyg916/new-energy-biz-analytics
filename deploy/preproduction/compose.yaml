@@ -26,7 +26,7 @@ x-api-environment: &api-environment
   OIDC_INTERNAL_BASE_URL: http://oidc:8080/oidc/realms/chatbi
   OIDC_CLIENT_ID: chatbi-web
   OIDC_REDIRECT_URI: https://p4.localhost:8444/oidc/callback
-  OIDC_SCOPES: openid profile email groups
+  OIDC_SCOPES: openid profile email
   VAULT_ENABLED: "true"
   VAULT_ADDRESS: http://vault:8200
   VAULT_ROLE_ID_FILE: /run/p4-runtime/vault_role_id
@@ -158,13 +158,16 @@ services:
     restart: "no"
 
   oidc:
-    image: quay.io/keycloak/keycloak:26.7.0
+    image: renewable-p4-rc-oidc:26.7.0
+    build:
+      context: ../..
+      dockerfile: deploy/preproduction/keycloak.Dockerfile
     entrypoint: ["sh", "-ec"]
     command:
       - |
         export KC_DB_PASSWORD="$$(cat /run/p4-keycloak/postgres_password)"
         export KC_BOOTSTRAP_ADMIN_PASSWORD="$$(cat /run/p4-keycloak/keycloak_admin_password)"
-        exec /opt/keycloak/bin/kc.sh start --import-realm
+        exec /opt/keycloak/bin/kc.sh start --optimized --import-realm
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: p4-admin
       KC_DB: postgres
@@ -184,7 +187,7 @@ services:
     depends_on:
       db-prepare: {condition: service_completed_successfully}
     healthcheck:
-      test: ["CMD", "bash", "-ec", "exec 3<>/dev/tcp/127.0.0.1/9000 && printf 'GET /health/ready HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 && grep -q '200 OK' <&3"]
+      test: ["CMD", "bash", "-ec", "exec 3<>/dev/tcp/127.0.0.1/9000 && printf 'GET /oidc/health/ready HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 && grep -q '200 OK' <&3"]
       interval: 10s
       timeout: 5s
       retries: 60
@@ -237,7 +240,7 @@ services:
     depends_on:
       api: {condition: service_healthy}
     healthcheck:
-      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost/"]
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
       interval: 5s
       timeout: 3s
       retries: 30
@@ -256,7 +259,7 @@ services:
       - "8084:80"
       - "8444:443"
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-check-certificate -q -O /dev/null https://localhost/api/v1/health"]
+      test: ["CMD-SHELL", "wget --no-check-certificate -q -O /dev/null https://127.0.0.1/api/v1/health"]
       interval: 10s
       timeout: 5s
       retries: 30

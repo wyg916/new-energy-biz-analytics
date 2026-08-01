@@ -12,7 +12,7 @@ unseal_key="$(head -n 1 "$runtime_root/vault_unseal_key")"
 test -n "$nonce"
 test -n "$otp"
 test -n "$unseal_key"
-vault operator generate-root -nonce="$nonce" "$unseal_key" -format=json >/tmp/p4-vault-root-update.json
+vault operator generate-root -format=json -nonce="$nonce" "$unseal_key" >/tmp/p4-vault-root-update.json
 encoded="$(sed -n 's/.*"encoded_token": "\([^"]*\)".*/\1/p' /tmp/p4-vault-root-update.json)"
 test -n "$encoded"
 vault operator generate-root -decode="$encoded" -otp="$otp" >"$runtime_root/vault_recovery_root"

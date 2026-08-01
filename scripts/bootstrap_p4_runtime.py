@@ -110,10 +110,12 @@ def _realm(root: Path) -> bool:
             },
             {
                 "id": "22222222-2222-4222-8222-222222222222", "username": "p4.disabled", "enabled": False,
+                "emailVerified": True, "email": "p4.disabled@example.invalid", "firstName": "P4", "lastName": "Disabled",
                 "credentials": [{"type": "password", "value": user_password, "temporary": False}],
             },
             {
                 "id": "33333333-3333-4333-8333-333333333333", "username": "p4.unmapped", "enabled": True,
+                "emailVerified": True, "email": "p4.unmapped@example.invalid", "firstName": "P4", "lastName": "Unmapped",
                 "credentials": [{"type": "password", "value": user_password, "temporary": False}],
             },
         ],

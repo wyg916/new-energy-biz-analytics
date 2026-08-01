@@ -1,7 +1,8 @@
 [CmdletBinding()]
 param(
     [string]$ComposeProject = "renewable-p4-rc",
-    [string]$BaseUrl = "https://p4.localhost:8444"
+    [string]$BaseUrl = "https://p4.localhost:8444",
+    [string]$Grep = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -15,9 +16,15 @@ if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($runtimePassword)) {
 try {
     $env:P4_OIDC_PASSWORD = $runtimePassword.Trim()
     $env:PLAYWRIGHT_BASE_URL = $BaseUrl
+    $chrome = "C:\Program Files\Google\Chrome\Application\chrome.exe"
+    if (-not $env:PLAYWRIGHT_EXECUTABLE_PATH -and (Test-Path $chrome)) {
+        $env:PLAYWRIGHT_EXECUTABLE_PATH = $chrome
+    }
     Push-Location $frontend
     try {
-        & npx.cmd playwright test e2e/p4-preproduction-oidc.spec.ts
+        $playwrightArgs = @("playwright", "test", "e2e/p4-preproduction-oidc.spec.ts")
+        if ($Grep) { $playwrightArgs += @("--grep", $Grep) }
+        & npx.cmd @playwrightArgs
         if ($LASTEXITCODE -ne 0) { throw "P4 OIDC Playwright acceptance failed" }
     }
     finally { Pop-Location }
@@ -25,6 +32,7 @@ try {
 finally {
     Remove-Item Env:P4_OIDC_PASSWORD -ErrorAction SilentlyContinue
     Remove-Item Env:PLAYWRIGHT_BASE_URL -ErrorAction SilentlyContinue
+    Remove-Item Env:PLAYWRIGHT_EXECUTABLE_PATH -ErrorAction SilentlyContinue
     $runtimePassword = $null
 }
 Write-Output '{"status":"PASS","flow":"authorization_code_pkce","secret_values_printed":false}'

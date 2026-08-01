@@ -121,8 +121,24 @@ class RemoteJWKSOIDCProvider:
             subject = str(payload["sub"])
         except IdentityResolutionError:
             raise
+        except jwt.InvalidIssuerError as exc:
+            raise IdentityResolutionError("OIDC_ISSUER_MISMATCH", "OIDC issuer 不匹配") from exc
+        except jwt.InvalidAudienceError as exc:
+            raise IdentityResolutionError("OIDC_AUDIENCE_MISMATCH", "OIDC audience 不匹配") from exc
+        except jwt.ExpiredSignatureError as exc:
+            raise IdentityResolutionError("OIDC_TOKEN_EXPIRED", "OIDC token 已过期") from exc
+        except jwt.MissingRequiredClaimError as exc:
+            raise IdentityResolutionError("OIDC_REQUIRED_CLAIM_MISSING", f"OIDC 必需 claim 缺失：{exc.claim}") from exc
+        except jwt.ImmatureSignatureError as exc:
+            raise IdentityResolutionError("OIDC_TOKEN_NOT_YET_VALID", "OIDC token 尚未生效") from exc
+        except jwt.InvalidSignatureError as exc:
+            raise IdentityResolutionError("OIDC_SIGNATURE_INVALID", "OIDC token 签名无效") from exc
+        except jwt.DecodeError as exc:
+            raise IdentityResolutionError("OIDC_TOKEN_MALFORMED", "OIDC token 格式无效") from exc
         except (jwt.PyJWTError, KeyError, TypeError, ValueError, httpx.HTTPError) as exc:
-            raise IdentityResolutionError("OIDC_TOKEN_INVALID", "OIDC token 验证失败") from exc
+            raise IdentityResolutionError(
+                "OIDC_TOKEN_INVALID", f"OIDC token 验证失败（{type(exc).__name__}）"
+            ) from exc
         return OIDCClaims(
             issuer=self.issuer,
             subject=subject,
@@ -148,11 +164,20 @@ class RemoteJWKSOIDCProvider:
                 response = httpx.get(self.jwks_url, timeout=self.timeout_seconds)
                 response.raise_for_status()
                 payload = response.json()
-                self._keys = {
-                    str(item["kid"]): jwt.PyJWK.from_dict(item).key
-                    for item in payload.get("keys", [])
-                    if item.get("kid") and item.get("kty") == "RSA"
-                }
+                keys: dict[str, object] = {}
+                for item in payload.get("keys", []):
+                    if (
+                        not item.get("kid")
+                        or item.get("kty") != "RSA"
+                        or item.get("use") not in {None, "sig"}
+                        or item.get("alg") not in {None, "RS256"}
+                    ):
+                        continue
+                    try:
+                        keys[str(item["kid"])] = jwt.PyJWK.from_dict(item, algorithm="RS256").key
+                    except jwt.PyJWKError:
+                        continue
+                self._keys = keys
                 self._expires_at = now + self.cache_ttl_seconds
             key = self._keys.get(kid)
         if key is None:

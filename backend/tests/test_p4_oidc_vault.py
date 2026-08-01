@@ -77,7 +77,7 @@ def test_remote_jwks_verifies_signature_claims_and_nonce(monkeypatch) -> None:
     wrong_audience = jwt.encode({**claims, "aud": "other"}, private_key, algorithm="RS256", headers={"kid": "p4-key"})
     with pytest.raises(IdentityResolutionError) as exc:
         provider.verify(wrong_audience)
-    assert exc.value.code == "OIDC_TOKEN_INVALID"
+    assert exc.value.code == "OIDC_AUDIENCE_MISMATCH"
 
 
 class FakeRedis:

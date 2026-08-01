@@ -6,17 +6,22 @@ test.use({ viewport: { width: 1600, height: 900 } })
 test.skip(!oidcPassword, 'P4 runtime-only OIDC password was not provided to this process')
 
 test('真实 OIDC Code + PKCE 登录并读取 P4 正式 API', async ({ page }) => {
-  const startResponse = page.waitForResponse(response => response.url().includes('/api/v1/auth/oidc/start') && response.ok())
   await page.goto('/')
   await expect(page.getByTestId('oidc-login')).toBeEnabled()
-  await page.getByTestId('oidc-login').click()
-  const start = await (await startResponse).json()
-  expect(start.authorization_url).toContain('/protocol/openid-connect/auth')
-  expect(start.authorization_url).toContain('code_challenge_method=S256')
+  await Promise.all([
+    page.waitForURL(/\/protocol\/openid-connect\/auth/),
+    page.getByTestId('oidc-login').click(),
+  ])
+  expect(page.url()).toContain('code_challenge_method=S256')
+  expect(page.url()).toContain('code_challenge=')
 
   await page.locator('#username').fill('p4.analyst')
   await page.locator('#password').fill(oidcPassword!)
+  const callbackResponse = page.waitForResponse(response => response.url().includes('/api/v1/auth/oidc/callback'))
   await page.locator('#kc-login').click()
+  const callback = await callbackResponse
+  const callbackBody = await callback.json()
+  expect(callback.ok(), JSON.stringify(callbackBody?.detail || { code: 'OIDC_CALLBACK_FAILED' })).toBeTruthy()
   await page.waitForURL(url => url.origin === 'https://p4.localhost:8444' && url.pathname === '/')
 
   await page.getByRole('button', { name: '治理与生产就绪' }).click()
@@ -33,7 +38,7 @@ test('真实 OIDC Code + PKCE 登录并读取 P4 正式 API', async ({ page }) =
   expect(snapshot.runtime.production_release_authorized).toBe(false)
 
   await expect(page.getByTestId('preproduction-page')).toBeVisible()
-  await expect(page.getByText('模拟数据', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('preproduction-page').getByText('模拟数据', { exact: true })).toBeVisible()
   await expect(page.getByRole('button', { name: 'SQLBot Canary 禁用' })).toBeDisabled()
   await expect(page.getByRole('button', { name: '正式生产发布已禁用' })).toBeDisabled()
 
@@ -59,7 +64,8 @@ test('真实 OIDC 禁用用户无法取得授权码', async ({ page }) => {
   await page.locator('#username').fill('p4.disabled')
   await page.locator('#password').fill(oidcPassword!)
   await page.locator('#kc-login').click()
-  await expect(page.locator('#input-error')).toBeVisible()
-  await expect(page).toHaveURL(/\/protocol\/openid-connect\/auth/)
+  await expect(page.getByText(/Account is disabled/i)).toBeVisible()
+  expect(page.url()).toContain('/oidc/realms/chatbi/login-actions/')
+  expect(page.url()).not.toContain('/oidc/callback')
   expect(await page.evaluate(() => localStorage.getItem('alpha_token'))).toBeNull()
 })
