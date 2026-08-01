@@ -1,0 +1,35 @@
+[CmdletBinding()]
+param(
+    [ValidateSet("start", "stop", "status", "migrate", "oidc-acceptance", "sqlbot-gate", "soak", "migration-check")]
+    [string]$Action = "status",
+    [int]$SoakSeconds = 1800,
+    [int]$Concurrency = 6
+)
+
+$ErrorActionPreference = "Stop"
+$workspace = Split-Path -Parent $PSScriptRoot
+$compose = Join-Path $workspace "deploy/preproduction/compose.yaml"
+$project = "renewable-p4-rc"
+$evidence = "/app/data/preproduction-evidence"
+
+Push-Location $workspace
+try {
+    switch ($Action) {
+        "start" { docker compose -p $project -f $compose up -d --build }
+        "stop" { docker compose -p $project -f $compose stop }
+        "status" { docker compose -p $project -f $compose ps -a }
+        "migrate" { docker compose -p $project -f $compose run --rm migrate }
+        "oidc-acceptance" { & (Join-Path $PSScriptRoot "Run-P4OidcAcceptance.ps1") -ComposeProject $project }
+        "sqlbot-gate" {
+            docker compose -p $project -f $compose exec -T api python scripts/run_p4_sqlbot_external_gate.py --output "$evidence/p4_sqlbot_external_gate.json"
+        }
+        "soak" {
+            docker compose -p $project -f $compose exec -T api python scripts/run_p4_capacity_soak.py --duration-seconds $SoakSeconds --concurrency $Concurrency --output "$evidence/p4_capacity_soak.json"
+        }
+        "migration-check" {
+            docker compose -p $project -f $compose exec -T api python scripts/run_p3_migration_acceptance.py --database p4_preproduction_migration_verify
+        }
+    }
+    if ($LASTEXITCODE -ne 0) { throw "P4 action failed: $Action" }
+}
+finally { Pop-Location }

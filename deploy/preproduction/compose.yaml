@@ -1,0 +1,307 @@
+name: renewable-p4-rc
+
+x-api-environment: &api-environment
+  APP_ENV: preproduction
+  DEBUG: "false"
+  AUTO_BOOTSTRAP_DEMO_USERS: "false"
+  SIMULATED_DATA_ONLY: "true"
+  LOCAL_AUTH_ENABLED: "false"
+  PRODUCTION_RELEASE_AUTHORIZED: "false"
+  PUBLIC_BASE_URL: https://p4.localhost:8444
+  CORS_ORIGINS: https://p4.localhost:8444
+  TRUSTED_HOSTS: p4.localhost,localhost,api,testserver
+  RELEASE_VERSION: 4.0.0-rc.1
+  EXPECTED_DATABASE_REVISION: p4_0001
+  PLATFORM_TENANT_ID: tenant-alpha
+  PLATFORM_ORG_ID: org-alpha
+  PLATFORM_WORKSPACE_ID: workspace-alpha
+  QUERY_ENGINE_MODE: SHADOW
+  SQLBOT_ENGINE_ENABLED: "false"
+  SQLBOT_RUNTIME_VERIFIED: "false"
+  SQLBOT_BASE_URL: http://sqlbot:8000/api/v1
+  CHATBI_READONLY_EXECUTION_ENABLED: "false"
+  OIDC_ENABLED: "true"
+  OIDC_PROVIDER_CODE: OIDC_PREPROD
+  OIDC_ISSUER: https://p4.localhost:8444/oidc/realms/chatbi
+  OIDC_INTERNAL_BASE_URL: http://oidc:8080/oidc/realms/chatbi
+  OIDC_CLIENT_ID: chatbi-web
+  OIDC_REDIRECT_URI: https://p4.localhost:8444/oidc/callback
+  OIDC_SCOPES: openid profile email groups
+  VAULT_ENABLED: "true"
+  VAULT_ADDRESS: http://vault:8200
+  VAULT_ROLE_ID_FILE: /run/p4-runtime/vault_role_id
+  VAULT_SECRET_ID_FILE: /run/p4-runtime/vault_secret_id
+  EXTERNAL_ALERT_ENABLED: "true"
+  EXTERNAL_ALERT_WEBHOOK_URL: http://alert-receiver:8090/webhook
+  EXTERNAL_ALERT_SIGNING_REFERENCE_NAME: preprod-webhook-signing
+  PREPRODUCTION_EVIDENCE_ROOT: /app/data/preproduction-evidence
+  SECRET_ENV_ALLOWLIST: ""
+
+services:
+  runtime-bootstrap:
+    image: renewable-p4-rc-api:4.0.0-rc.1
+    command: ["python", "scripts/bootstrap_p4_runtime.py", "--runtime-dir", "/run/p4-runtime", "--keycloak-dir", "/run/p4-keycloak"]
+    volumes:
+      - p4_runtime:/run/p4-runtime
+      - p4_keycloak_runtime:/run/p4-keycloak
+    restart: "no"
+
+  db:
+    image: postgres:16.9-alpine
+    environment:
+      POSTGRES_DB: renewable_p4
+      POSTGRES_USER: alpha
+      POSTGRES_PASSWORD_FILE: /run/p4-runtime/postgres_password
+    volumes:
+      - p4_postgres:/var/lib/postgresql/data
+      - p4_runtime:/run/p4-runtime:ro
+    depends_on:
+      runtime-bootstrap: {condition: service_completed_successfully}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U alpha -d renewable_p4"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+    logging: &bounded-logs
+      driver: json-file
+      options: {max-size: "20m", max-file: "5"}
+
+  redis:
+    image: redis:7.4.5-alpine
+    command: ["redis-server", "/run/p4-runtime/redis.conf"]
+    volumes:
+      - p4_redis:/data
+      - p4_runtime:/run/p4-runtime:ro
+    depends_on:
+      runtime-bootstrap: {condition: service_completed_successfully}
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli --no-auth-warning -a \"$$(cat /run/p4-runtime/redis_password)\" ping | grep PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+    logging: *bounded-logs
+
+  vault:
+    image: hashicorp/vault:2.0.3
+    command: ["vault", "server", "-config=/vault/config/vault.hcl"]
+    cap_add: [IPC_LOCK]
+    volumes:
+      - ./vault.hcl:/vault/config/vault.hcl:ro
+      - p4_vault_rc1:/vault/file
+      - p4_vault_audit:/vault/audit
+    depends_on:
+      vault-permissions: {condition: service_completed_successfully}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8200/v1/sys/health || test $$? -eq 8"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+    logging: *bounded-logs
+
+  vault-permissions:
+    image: hashicorp/vault:2.0.3
+    user: "0:0"
+    entrypoint: ["sh", "-ec"]
+    command: ["chown -R 100:1000 /vault/audit && chmod 0750 /vault/audit"]
+    volumes:
+      - p4_vault_audit:/vault/audit
+    restart: "no"
+
+  vault-bootstrap:
+    image: renewable-p4-rc-api:4.0.0-rc.1
+    command: ["python", "scripts/bootstrap_p4_vault.py"]
+    volumes:
+      - p4_runtime:/run/p4-runtime
+    depends_on:
+      runtime-bootstrap: {condition: service_completed_successfully}
+      vault: {condition: service_started}
+    restart: "no"
+
+  db-prepare:
+    image: postgres:16.9-alpine
+    command:
+      - sh
+      - -ec
+      - |
+        export PGPASSWORD="$$(cat /run/p4-runtime/postgres_password)"
+        psql -h db -U alpha -d renewable_p4 -v ON_ERROR_STOP=1 -c 'CREATE SCHEMA IF NOT EXISTS keycloak AUTHORIZATION alpha'
+    volumes:
+      - p4_runtime:/run/p4-runtime:ro
+    depends_on:
+      db: {condition: service_healthy}
+    restart: "no"
+
+  migrate:
+    image: renewable-p4-rc-api:4.0.0-rc.1
+    command: ["python", "scripts/p4_entrypoint.py", "alembic", "upgrade", "head"]
+    environment: *api-environment
+    volumes:
+      - p4_runtime:/run/p4-runtime:ro
+    depends_on:
+      db: {condition: service_healthy}
+      redis: {condition: service_healthy}
+      vault-bootstrap: {condition: service_completed_successfully}
+    restart: "no"
+
+  init:
+    image: renewable-p4-rc-api:4.0.0-rc.1
+    command: ["python", "scripts/p4_entrypoint.py", "python", "scripts/prepare_p4_preproduction.py"]
+    environment: *api-environment
+    volumes:
+      - p4_runtime:/run/p4-runtime:ro
+      - p4_evidence:/app/data/preproduction-evidence
+    depends_on:
+      migrate: {condition: service_completed_successfully}
+    restart: "no"
+
+  oidc:
+    image: quay.io/keycloak/keycloak:26.7.0
+    entrypoint: ["sh", "-ec"]
+    command:
+      - |
+        export KC_DB_PASSWORD="$$(cat /run/p4-keycloak/postgres_password)"
+        export KC_BOOTSTRAP_ADMIN_PASSWORD="$$(cat /run/p4-keycloak/keycloak_admin_password)"
+        exec /opt/keycloak/bin/kc.sh start --import-realm
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: p4-admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/renewable_p4
+      KC_DB_USERNAME: alpha
+      KC_DB_SCHEMA: keycloak
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_RELATIVE_PATH: /oidc
+      KC_HOSTNAME: https://p4.localhost:8444/oidc
+      KC_PROXY_HEADERS: xforwarded
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+      KC_LOG_LEVEL: INFO
+    volumes:
+      - p4_keycloak_runtime:/run/p4-keycloak:ro
+      - p4_keycloak_runtime:/opt/keycloak/data/import:ro
+    depends_on:
+      db-prepare: {condition: service_completed_successfully}
+    healthcheck:
+      test: ["CMD", "bash", "-ec", "exec 3<>/dev/tcp/127.0.0.1/9000 && printf 'GET /health/ready HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n' >&3 && grep -q '200 OK' <&3"]
+      interval: 10s
+      timeout: 5s
+      retries: 60
+    restart: unless-stopped
+    logging: *bounded-logs
+
+  alert-receiver:
+    image: renewable-p4-rc-api:4.0.0-rc.1
+    command: ["python", "scripts/p4_alert_receiver.py"]
+    environment:
+      VAULT_ADDR: http://vault:8200
+    volumes:
+      - p4_runtime:/run/p4-runtime:ro
+    depends_on:
+      vault-bootstrap: {condition: service_completed_successfully}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8090/health')"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+    logging: *bounded-logs
+
+  api:
+    image: renewable-p4-rc-api:4.0.0-rc.1
+    build:
+      context: ../..
+      dockerfile: backend/Dockerfile
+    command: ["python", "scripts/p4_entrypoint.py", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment: *api-environment
+    volumes:
+      - p4_runtime:/run/p4-runtime:ro
+      - p4_imports:/app/data/imports
+      - p4_evidence:/app/data/preproduction-evidence
+    depends_on:
+      init: {condition: service_completed_successfully}
+      oidc: {condition: service_healthy}
+      alert-receiver: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health/ready')"]
+      interval: 10s
+      timeout: 5s
+      retries: 60
+    restart: unless-stopped
+    logging: *bounded-logs
+
+  web:
+    build:
+      context: ../../frontend
+    depends_on:
+      api: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost/"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+    restart: unless-stopped
+    logging: *bounded-logs
+
+  proxy:
+    image: nginx:1.27.5-alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - p4_runtime:/run/p4-runtime:ro
+    depends_on:
+      api: {condition: service_healthy}
+      web: {condition: service_healthy}
+    ports:
+      - "8084:80"
+      - "8444:443"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-check-certificate -q -O /dev/null https://localhost/api/v1/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+    logging: *bounded-logs
+
+  backup:
+    image: postgres:16.9-alpine
+    command:
+      - sh
+      - -ec
+      - |
+        export PGPASSWORD="$$(cat /run/p4-runtime/postgres_password)"
+        while true; do
+          target="/backups/p4-$$(date -u +%Y%m%dT%H%M%SZ).dump"
+          pg_dump -h db -U alpha -d renewable_p4 --format=custom --no-owner --file="$$target"
+          sha256sum "$$target" > "$$target.sha256"
+          sleep 86400
+        done
+    volumes:
+      - p4_runtime:/run/p4-runtime:ro
+      - p4_backups:/backups
+    depends_on:
+      init: {condition: service_completed_successfully}
+    restart: unless-stopped
+    logging: *bounded-logs
+
+  sqlbot:
+    image: dataease/sqlbot:v1.8.0
+    profiles: ["sqlbot"]
+    restart: "no"
+    logging: *bounded-logs
+
+volumes:
+  p4_runtime:
+  p4_keycloak_runtime:
+  p4_postgres:
+  p4_redis:
+  p4_vault:
+  p4_vault_rc1:
+  p4_vault_audit:
+  p4_imports:
+  p4_evidence:
+  p4_backups:
+
+networks:
+  default:
+    name: renewable-p4-rc-network
