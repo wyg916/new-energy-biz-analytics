@@ -111,7 +111,6 @@ def main() -> None:
     if args.duration_seconds < 60 or args.concurrency < 1 or args.concurrency > 32:
         parser.error("duration must be at least 60 seconds and concurrency between 1 and 32")
 
-    token = token_for("analyst")
     started_at = datetime.now(UTC)
     deadline = time.monotonic() + args.duration_seconds
     initial_db = database_snapshot()
@@ -125,8 +124,13 @@ def main() -> None:
 
     def worker(offset: int) -> None:
         index = offset
+        token = token_for("analyst")
+        token_refresh_at = time.monotonic() + 300
         with httpx.Client(base_url=args.base_url, timeout=args.timeout_seconds, verify=False) as client:
             while not stop.is_set() and time.monotonic() < deadline:
+                if time.monotonic() >= token_refresh_at:
+                    token = token_for("analyst")
+                    token_refresh_at = time.monotonic() + 300
                 try:
                     name, status, latency = request_case(client, token, index)
                 except httpx.TimeoutException:
@@ -172,6 +176,8 @@ def main() -> None:
         "finished_at": datetime.now(UTC).isoformat(),
         "configured_duration_seconds": args.duration_seconds,
         "concurrency": args.concurrency,
+        "token_refresh_seconds": 300,
+        "duration_clock": "monotonic",
         "total_requests": total,
         "workloads": dict(sorted(workloads.items())),
         "status_counts": {str(key): value for key, value in sorted(statuses.items())},
