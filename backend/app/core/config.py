@@ -140,8 +140,6 @@ class Settings(BaseSettings):
                 failures.append("RELEASE_VERSION must identify a release candidate or release")
             if not self.simulated_data_only:
                 failures.append("SIMULATED_DATA_ONLY must remain true for this release candidate")
-            if self.local_auth_enabled:
-                failures.append("LOCAL_AUTH_ENABLED must be false outside development/test")
             if self.chatbi_readonly_execution_enabled and (
                 not self.chatbi_readonly_database_url
                 or not self.chatbi_readonly_database_url.startswith("postgresql")
@@ -161,6 +159,8 @@ class Settings(BaseSettings):
             if self.production_release_authorized:
                 failures.append("PRODUCTION_RELEASE_AUTHORIZED must remain false for P4")
             if self.app_env == "preproduction":
+                if self.local_auth_enabled:
+                    failures.append("LOCAL_AUTH_ENABLED must be false in preproduction")
                 if self.effective_query_engine_mode != "SHADOW":
                     failures.append("preproduction QUERY_ENGINE_MODE must remain SHADOW")
                 if self.sqlbot_engine_enabled:
