@@ -37,6 +37,10 @@ summary_sql="SELECT json_build_object(
   'metric_definitions',(SELECT count(*) FROM metric_definition),
   'published_metrics',(SELECT count(*) FROM metric),
   'credential_references',(SELECT count(*) FROM credential_reference),
+  'authoritative_memory_records',(SELECT count(*) FROM memory_record),
+  'governance_audit_events',(SELECT count(*) FROM governance_audit_event),
+  'platform_releases',(SELECT count(*) FROM platform_release),
+  'release_registry_records',(SELECT count(*) FROM release_record),
   'acceptance_records',(SELECT count(*) FROM preproduction_acceptance_record),
   'datasource_governance_records',(SELECT count(*) FROM preproduction_datasource_governance)
 )::text"

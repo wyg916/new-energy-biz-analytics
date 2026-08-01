@@ -82,6 +82,8 @@ def test_datasource_requires_evidence_and_approval_before_activation(client, mon
         assert rollback_credential.status == "ACTIVE"
         assert rollback_credential.secret_identifier.endswith("@1")
         assert rollback_credential.credential_ref_id != reference.credential_ref_id
+        assert service.payload(service.disable(rolled_back.source_id))["lifecycle_status"] == "DISABLED"
+        assert service.payload(service.archive(rolled_back.source_id))["lifecycle_status"] == "ARCHIVED"
         service._governance(source).tenant_id = "different-tenant"
         db.commit()
         with pytest.raises(DataSourceGovernanceError) as exc:
