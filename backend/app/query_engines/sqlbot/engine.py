@@ -1,5 +1,6 @@
 import hashlib
 import json
+from dataclasses import replace
 from time import perf_counter
 from typing import Callable
 from uuid import uuid4
@@ -115,6 +116,14 @@ class SQLBotEngine(QueryEngine):
             raw_payload,
             max_rows=min(context.max_rows, request.limits.get("rows", context.max_rows)),
         )
+        if parsed.token_usage is None and parsed.upstream_record_id is not None:
+            parsed = replace(
+                parsed,
+                token_usage=self.client.record_usage(
+                    parsed.upstream_record_id,
+                    session.access_token,
+                ),
+            )
         self.policy_guard(parsed.sql, context)
         columns, rows = parsed.columns, parsed.rows
         if context.execution_mode == "generate_only":

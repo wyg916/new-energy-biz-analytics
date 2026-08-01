@@ -149,9 +149,62 @@ def test_adapter_normalizes_result_and_never_exposes_session_secret(monkeypatch)
     assert requests[1]["token"] == "runtime-only-token"
     assert requests[1]["chat_id"] == 101
     assert requests[1]["return_img"] is False
+    assert "oid" not in requests[1]
     assert paths == [
         "/api/v1/mcp/mcp_start",
         "/api/v1/mcp/mcp_question",
+    ]
+
+
+def test_adapter_fetches_record_usage_when_question_response_omits_it(
+    monkeypatch,
+) -> None:
+    paths: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        paths.append(request.url.path)
+        if request.url.path.endswith("/mcp_start"):
+            return httpx.Response(
+                200,
+                json={"access_token": "runtime-only-token", "chat_id": 102},
+            )
+        if request.url.path.endswith("/mcp_question"):
+            return httpx.Response(
+                200,
+                json={
+                    "success": True,
+                    "data": {
+                        "record_id": 9002,
+                        "sql": (
+                            "SELECT region, sales_revenue "
+                            "FROM semantic_sales_ops_orders LIMIT 10"
+                        ),
+                        "rows": [{"region": "north", "sales_revenue": 123.45}],
+                    },
+                },
+            )
+        assert request.headers["X-SQLBOT-TOKEN"] == "Bearer runtime-only-token"
+        return httpx.Response(200, json={"data": {"total_tokens": 41}})
+
+    engine = SQLBotEngine(
+        enabled=True,
+        runtime_verified=True,
+        client=_client(monkeypatch, handler),
+    )
+    result = engine.execute(
+        QueryRequest(
+            question="按区域查看销售额",
+            identity_context=_identity(),
+            scenario_id="sales_ops",
+        ),
+        _context(),
+    )
+
+    assert result.evidence["token_usage"] == 41
+    assert paths == [
+        "/api/v1/mcp/mcp_start",
+        "/api/v1/mcp/mcp_question",
+        "/api/v1/chat/record/9002/usage",
     ]
 
 

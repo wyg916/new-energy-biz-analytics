@@ -23,6 +23,5 @@ def map_question_request(
         "stream": False,
         "lang": request.locale,
         "datasource_id": context.datasource_id,
-        "oid": request.identity_context.org_id,
         "return_img": False,
     }

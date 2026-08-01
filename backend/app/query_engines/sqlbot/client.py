@@ -95,6 +95,24 @@ class SQLBotClient:
             lambda: self.http.post("mcp/mcp_question", json=payload)
         )
 
+    def record_usage(self, record_id: str, access_token: str) -> int | None:
+        """Return SQLBot's recorded token total without exposing the session token."""
+        try:
+            response = self.http.get(
+                f"chat/record/{record_id}/usage",
+                headers={"X-SQLBOT-TOKEN": f"Bearer {access_token}"},
+            )
+            response.raise_for_status()
+            payload = response.json()
+            if isinstance(payload, dict) and isinstance(payload.get("data"), dict):
+                payload = payload["data"]
+            value = payload.get("total_tokens") if isinstance(payload, dict) else None
+            return value if isinstance(value, int) else None
+        except Exception:
+            # Usage telemetry is optional evidence. Its failure must not turn a
+            # guarded read-only query into a user-facing query failure.
+            return None
+
     def health_check(self) -> SQLBotHealth:
         if self.breaker.status == "open":
             return SQLBotHealth(status="circuit_open")
