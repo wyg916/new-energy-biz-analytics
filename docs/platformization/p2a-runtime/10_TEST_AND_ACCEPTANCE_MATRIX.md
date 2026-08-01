@@ -13,6 +13,7 @@
 | 100 条运行 Golden | 100/100 真请求；5 PASS、95 FAIL；25 SQL | NOT_PASS |
 | 20 条真实 Shadow | 主结果 20/20；SQL 8；token/latency 20 | CONDITIONAL |
 | Canary | 质量/准确率门槛未满足 | NO_GO |
+| 后端全量 pytest | 36 文件、183/183，共享内存 SQLite | PASS |
 | Provider/SQLBot 定向 pytest | 29/29 | PASS |
 | Query Security 纯负向 | 13/13 | PASS |
 | Deterministic 固定评测 | 40/40 | PASS |
@@ -27,7 +28,7 @@
 | Playwright | 20/20 | PASS |
 | npm audit | 0 vulnerabilities | PASS |
 
-后端全量 pytest 本轮多次在 Docker Desktop SQLite 重复固定大数据重种阶段超过 10/20 分钟外层上限，未得到完成计数；不能继承旧 174/174 作为本轮结果，也没有观察到断言失败摘要。与本次变更直接相关的 29 条、Query Security 13 条及正式 PostgreSQL 专项均通过。该未完成项列为 P2A Conditional 风险，不伪造 PASS。
+后端全量最初误用磁盘 SQLite，因重复固定数据写入超过外层时限；改为项目既有的单进程共享内存 SQLite，并补齐 `/docs`、`/scripts` 等只读合同挂载后，36 个文件收集 183 条并以退出码 0 全部通过。与本次变更直接相关的 29 条、Query Security 13 条及正式 PostgreSQL 专项也均独立通过。
 
 运行后 Docker 容器组曾同时 Exit 255（无 OOM、数据库退出前健康），判断为 Docker runtime 中断；复用原容器恢复后 DB/Redis/SQLBot/API 健康，核心事实数量和 SQLBot 默认配置均再次核验不变。
 

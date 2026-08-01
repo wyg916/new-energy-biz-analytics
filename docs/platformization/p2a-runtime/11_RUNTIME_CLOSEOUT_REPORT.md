@@ -21,11 +21,11 @@ Kimi 与 DeepSeek 官方调用真实通过；MiMo `api-key` 鉴权、文本和 J
 
 本轮修复三处真实集成问题：按三家官方差异化认证与探测；Datasource 已绑定时不发送字符串 `oid`；成功响应缺 token 时从 SQLBot record usage API补取。新增模型配置、Smoke/Golden/Shadow 验收与 ChatRecord 恢复脚本；未新增迁移、未修改产品 UI/RAG/场景包/数据库结构。
 
-回归通过：定向 pytest 29/29、Query Security 13/13、Deterministic 40/40、离线合同 100/100、charging 15/15、sales 12/12、DQ 20/20、只读角色安全、Docker smoke 6/6、Alembic 0014/check、Vitest 3/3、构建、Playwright 20/20、npm audit 0。后端全量 pytest 因 Docker SQLite 重种在两次 10 分钟和一次 20 分钟上限内未完成，不能标记本轮 PASS。
+回归通过：后端全量 183/183（36 文件、共享内存 SQLite）、定向 pytest 29/29、Query Security 13/13、Deterministic 40/40、离线合同 100/100、charging 15/15、sales 12/12、DQ 20/20、只读角色安全、Docker smoke 6/6、Alembic 0014/check、Vitest 3/3、构建、Playwright 20/20、npm audit 0。
 
 核心模拟事实恢复后复核：charging sessions 300000、sales orders 50000、sales order items 82514；日期范围 2025-01-01 至 2026-06-30。Secret 仅从仓库外文件注入，完整 Key 不进入 Git、Markdown、前端或验收 JSON。
 
-P2A 以 `CONDITIONAL` 关闭的含义仅是完成真实运行链路与安全降级取证。SQLBot 必须保持 Shadow；修复 source binding、输出格式、Guard policy 对齐和结果值 oracle，并补齐本轮后端全量测试后，才可重新申请 Canary。P2B 可进入，但不得把该结论解释为 SQLBot 生产准入。
+P2A 以 `CONDITIONAL` 关闭的含义仅是完成真实运行链路与安全降级取证。SQLBot 必须保持 Shadow；修复 source binding、输出格式、Guard policy 对齐和结果值 oracle 后，才可重新申请 Canary。P2B 可进入，但不得把该结论解释为 SQLBot 生产准入。
 
 ---
 
