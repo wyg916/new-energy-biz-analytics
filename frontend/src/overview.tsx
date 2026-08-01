@@ -21,6 +21,14 @@ type Metadata = {
   semantic_activation_status?: string
 }
 type Summary = { metrics: Record<string, number | null>; metadata: Metadata }
+type FrontendContext = {
+  default_time_range: { start: string; end_exclusive: string }
+  available_time_range: { start: string; end_exclusive: string }
+  scenario: { scenario_id: string; display_name: string; version: string; status: string }
+  metric_count: number
+  recommended_questions: string[]
+  metadata: Metadata
+}
 type TrendPoint = { period: string; value: number | null }
 type StationRow = {
   station_id: string
@@ -109,9 +117,28 @@ async function api<T>(path: string, token: string): Promise<T> {
 }
 const money = (value: number | null | undefined) => value == null ? '数据不足' : value.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 const endInclusive = (end: string) => {
+  if (!end) return ''
   const result = new Date(`${end}T00:00:00Z`)
   result.setUTCDate(result.getUTCDate() - 1)
   return result.toISOString().slice(0, 10)
+}
+
+function GlobalDataStatus({ metadata }: { metadata: Metadata | null }) {
+  if (!metadata) {
+    return <footer className="global-data-status" aria-label="数据状态">正在核验数据库数据状态…</footer>
+  }
+  const classification = metadata.data_classification === 'simulated'
+    ? '模拟数据'
+    : metadata.data_classification
+  const source = metadata.source === 'platform_database'
+    ? '平台数据库'
+    : metadata.source
+  return <footer className="global-data-status" aria-label="数据状态">
+    <b>{classification}</b>
+    <span>数据时间：{metadata.data_time_range.start} 至 {endInclusive(metadata.data_time_range.end_exclusive)}</span>
+    <span>来源：{source}</span>
+    <span>run_id：{metadata.analysis_run_id}</span>
+  </footer>
 }
 
 function MiniLine({ points, large = false, stroke }: { points: TrendPoint[]; large?: boolean; stroke?: string }) {
@@ -144,16 +171,15 @@ function CardLink({ label, onClick }: { label: string; onClick: () => void }) {
   return <button className="card-link" onClick={onClick}>{label}<span>→</span></button>
 }
 
-function Overview({ summary, trend, loading, error, navigate }: { summary: Summary | null; trend: TrendPoint[]; loading: boolean; error: string; navigate: (id: ViewId) => void }) {
+function Overview({ summary, trend, loading, error, navigate, context }: { summary: Summary | null; trend: TrendPoint[]; loading: boolean; error: string; navigate: (id: ViewId) => void; context: FrontendContext | null }) {
   const m = summary?.metrics ?? {}
-  const questions = ['本期各区域充电收入排名如何？', '毛利率环比下降的主要原因？', '充电利用率偏低的场站有哪些？', '设备故障率最高的站点是哪些？', '夜间电量下降的主要原因？', '大功率订单占比趋势如何？']
+  const questions = context?.recommended_questions ?? []
   return <div className="overview-page">
     {error && <div className="notice error">{error}</div>}
     <section className={`overview-hero ${loading ? 'loading' : ''}`}>
       <div className="hero-copy">
         <h2>面向新能源充电运营企业的<br />AI 经营分析平台</h2>
         <p>整合多源数据，洞察经营全貌，驱动精细化运营与科学决策</p>
-        <div className="truth-row"><b>模拟数据</b><span>来源：平台数据库</span><span>run：{summary?.metadata.analysis_run_id || '加载中'}</span></div>
       </div>
       <img src="/figma-assets/hero-operations.svg" alt="新能源充电运营场景" />
       <div className="hero-kpis">
@@ -167,7 +193,7 @@ function Overview({ summary, trend, loading, error, navigate }: { summary: Summa
       <article className="module-card"><ModuleTitle icon="台" color="blue" title="经营工作台" subtitle="经营总览与核心指标监控" /><MiniLine points={trend} /><div className="metric-pair"><span>充电收入（元）<b>{money(m.charging_revenue)}</b></span><span>毛利率<b>{formatMetric('gross_margin', m.gross_margin)}</b></span></div></article>
       <article className="module-card"><ModuleTitle icon="收" color="teal" title="收入与订单" subtitle="收入趋势、订单分析与结构洞察" /><MiniBars points={trend} /><div className="metric-pair"><span>服务费收入（元）<b>{money(m.service_fee_revenue)}</b></span><span>完成订单数<b>{formatMetric('completed_order_count', m.completed_order_count)}</b></span></div></article>
       <article className="module-card"><ModuleTitle icon="毛" color="orange" title="毛利与成本" subtitle="毛利分析、成本结构与费用洞察" /><div className="ring-content"><Donut value={m.gross_margin ?? 0} /><div><span>毛利率</span><b>{formatMetric('gross_margin', m.gross_margin)}</b><span>度电成本（元/kWh）</span><b>{formatMetric('cost_per_kwh', m.cost_per_kwh)}</b></div></div></article>
-      <article className="module-card"><ModuleTitle icon="站" color="violet" title="场站经营" subtitle="场站收入、利用率与排名分析" /><div className="util-bars">{[1, .83, .65, .47, .31].map((v, i) => <i key={i}><span style={{ width: `${Math.max((m.station_utilization_rate ?? 0) * v * 900, 15)}%` }} /></i>)}</div><div className="stack-metrics"><span>场站利用率<b>{formatMetric('station_utilization_rate', m.station_utilization_rate)}</b></span><span>充电量（kWh）<b>{formatMetric('charging_volume_kwh', m.charging_volume_kwh)}</b></span></div></article>
+      <article className="module-card"><ModuleTitle icon="站" color="violet" title="场站经营" subtitle="场站收入、利用率与排名分析" /><MiniLine points={trend} stroke="#574bdd" /><div className="stack-metrics"><span>场站利用率<b>{formatMetric('station_utilization_rate', m.station_utilization_rate)}</b></span><span>充电量（kWh）<b>{formatMetric('charging_volume_kwh', m.charging_volume_kwh)}</b></span></div></article>
       <article className="module-card"><ModuleTitle icon="设" color="violet" title="设备健康" subtitle="设备在线率、故障率与健康评估" /><div className="ring-content"><Donut value={m.device_online_rate ?? 0} device /><div><span>设备在线率</span><b>{formatMetric('device_online_rate', m.device_online_rate)}</b><span>设备故障率</span><b>{formatMetric('device_fault_rate', m.device_fault_rate)}</b></div></div></article>
     </section>
 
@@ -176,7 +202,7 @@ function Overview({ summary, trend, loading, error, navigate }: { summary: Summa
       <article className="module-card action"><ModuleTitle icon="AI" color="blue" title="AI经营分析" subtitle="自然语言分析、智能问答与归因" /><div className="ask-sample">区域A的充电收入环比下降原因？</div><button className="ask-button" onClick={() => navigate('chat')}>◉　向 AI 提问 <b>›</b></button><CardLink label="查看分析洞察" onClick={() => navigate('chat')} /></article>
       <article className="module-card action"><ModuleTitle icon="报" color="teal" title="经营报告" subtitle="经营日报、周报、月报与专题报告" /><ul className="status-list"><li>经营日报<span>按需生成</span></li><li>经营周报<span>草稿可审核</span></li><li>经营月报<span>结果可追溯</span></li></ul><CardLink label="查看全部报告" onClick={() => navigate('reports')} /></article>
       <article className="module-card action"><ModuleTitle icon="数" color="blue" title="数据接入与映射" subtitle="数据连接、同步管理与字段映射" /><ul className="status-list"><li>平台数据源<span>{error ? '查询失败' : summary ? '当前查询可用' : '加载中'}</span></li><li>数据批次<span>{summary?.metadata.batch_id ? '可追溯' : '未取得'}</span></li><li>正式消费<span>平台事实表</span></li></ul><CardLink label="进入映射配置" onClick={() => navigate('mapping')} /></article>
-      <article className="module-card action"><ModuleTitle icon="指" color="orange" title="指标与场景管理" subtitle="指标体系、业务场景与权限管理" /><ul className="status-list"><li>核心指标<span>15 项</span></li><li>当前场景<span>充电运营</span></li><li>权限模式<span>RBAC</span></li></ul><CardLink label="进入管理中心" onClick={() => navigate('metrics')} /></article>
+      <article className="module-card action"><ModuleTitle icon="指" color="orange" title="指标与场景管理" subtitle="指标体系、业务场景与权限管理" /><ul className="status-list"><li>核心指标<span>{context ? `${context.metric_count} 项` : '加载中'}</span></li><li>当前场景<span>{context?.scenario.display_name || '加载中'}</span></li><li>权限模式<span>RBAC</span></li></ul><CardLink label="进入管理中心" onClick={() => navigate('metrics')} /></article>
     </section>
 
     <section className="bottom-grid">
@@ -199,6 +225,16 @@ function compareRange(start: string, end: string, comparison: 'mom' | 'yoy') {
     from.setTime(from.getTime() - duration)
   }
   return { start: from.toISOString().slice(0, 10), end: to.toISOString().slice(0, 10) }
+}
+
+function monthBefore(endExclusive: string) {
+  const end = new Date(`${endExclusive}T00:00:00Z`)
+  const start = new Date(end)
+  start.setUTCMonth(start.getUTCMonth() - 1)
+  return {
+    start: start.toISOString().slice(0, 10),
+    end: end.toISOString().slice(0, 10),
+  }
 }
 
 function rate(current: number | null | undefined, previous: number | null | undefined) {
@@ -354,7 +390,7 @@ function WorkbenchPage({
 
     <section className="ai-summary">
       <div className="summary-copy"><i>✦</i><div><h2>AI经营摘要</h2>{summary ? <ul><li>本期充电收入 {money(metrics.charging_revenue)} 元，{comparison === 'mom' ? '环比' : '同比'} {revenueRate == null ? '数据不足' : `${revenueRate >= 0 ? '↑' : '↓'} ${(Math.abs(revenueRate) * 100).toFixed(2)}%`}；毛利率 {formatMetric('gross_margin', metrics.gross_margin)}，变化 {marginDelta == null ? '数据不足' : `${marginDelta >= 0 ? '↑' : '↓'} ${Math.abs(marginDelta).toFixed(2)}pp`}。</li><li>收入、毛利、利用率及设备指标均来自已发布指标语义层。</li><li>设备在线率 {formatMetric('device_online_rate', metrics.device_online_rate)}，故障率 {formatMetric('device_fault_rate', metrics.device_fault_rate)}；关联因素不构成因果结论。</li></ul> : <p>正在生成结构化经营摘要…</p>}</div></div>
-      <div className="summary-actions"><small>数据截止：{endInclusive(end)}　来源：平台数据库</small><div><button onClick={() => navigate('alerts')}>◉　查看分析依据</button><button onClick={() => navigate('chat')}>◎　继续追问</button><button className="primary" onClick={() => navigate('reports')}>▱　生成报告</button></div></div>
+      <div className="summary-actions"><small>数据截止：{endInclusive(end)}</small><div><button onClick={() => navigate('alerts')}>◉　查看分析依据</button><button onClick={() => navigate('chat')}>◎　继续追问</button><button className="primary" onClick={() => navigate('reports')}>▱　生成报告</button></div></div>
     </section>
 
     <section className="workbench-kpis">
@@ -384,12 +420,11 @@ function WorkbenchPage({
 }
 
 function DetailPage({ active, summary, stations, trend }: { active: ViewId; summary: Summary | null; stations: StationRow[]; trend: TrendPoint[] }) {
-  if (!summary) return <div className="notice">正在从平台数据库计算指标…</div>
+  if (!summary) return <div className="notice">正在计算经营指标…</div>
   const ids = pageMetrics[active] || pageMetrics.dashboard
   const primary = ids[0]
   const max = Math.max(...stations.map(row => row.metrics[primary] ?? 0), 1)
   return <div className="detail-page">
-    <div className="evidence"><b>模拟数据</b><span>数据时间：{summary.metadata.data_time_range.start} 至 {endInclusive(summary.metadata.data_time_range.end_exclusive)}</span><span>来源：平台数据库</span><span>run：{summary.metadata.analysis_run_id}</span></div>
     <section className="detail-kpis">{ids.map(id => <article key={id}><span>{metricNames[id]}</span><strong>{formatMetric(id, summary.metrics[id])}</strong><small>指标语义层 v0.1.0</small></article>)}</section>
     <section className="detail-grid"><article><h2>{metricNames[primary]}月度趋势</h2><p>按 Asia/Shanghai 自然月聚合</p><MiniLine points={trend} large /></article><article><h2>场站贡献排名</h2><p>{metricNames[primary]} Top 10</p><div className="ranking">{stations.map((row, index) => <div key={row.station_id}><b>{index + 1}</b><span>{row.station_name}<small>{row.region_id} · {row.station_type}</small></span><i><em style={{ width: `${(row.metrics[primary] ?? 0) / max * 100}%` }} /></i><strong>{formatMetric(primary, row.metrics[primary])}</strong></div>)}</div></article></section>
   </div>
@@ -534,6 +569,7 @@ function MarginPage({ token, summary, stations, start, end, setStart, setEnd, re
   const [costTrend, setCostTrend] = useState<TrendPoint[]>([])
   const [error, setError] = useState('')
   const [refreshKey, setRefreshKey] = useState(0)
+  const initialRange = useRef({ start, end })
   useEffect(() => {
     let cancelled = false
     const query = `start=${start}&end_exclusive=${end}`
@@ -571,7 +607,12 @@ function MarginPage({ token, summary, stations, start, end, setStart, setEnd, re
     { icon: '控', tone: 'orange', title: '复核运营成本', copy: '核对外包、物料与运维费用记录；当前未计算可实现节省额。' },
     { icon: '构', tone: 'green', title: '分析收入结构', copy: '比较时段与客户结构；所有建议需要人工确认后才能使用。' },
   ]
-  const resetFilters = () => { setDimension('月'); setComparison('mom'); setStart('2026-01-01'); setEnd('2026-07-01') }
+  const resetFilters = () => {
+    setDimension('月')
+    setComparison('mom')
+    setStart(initialRange.current.start)
+    setEnd(initialRange.current.end)
+  }
   const handleRefresh = () => { refresh(); setRefreshKey(value => value + 1) }
 
   return <div className="margin-page">
@@ -605,7 +646,6 @@ function MarginPage({ token, summary, stations, start, end, setStart, setEnd, re
     </section>
 
     {error && <div className="margin-error">{error}</div>}
-    <footer className="margin-truth"><span><b>模拟数据</b>　数据时间：{summary?.metadata.data_time_range.start || start} 至 {endInclusive(summary?.metadata.data_time_range.end_exclusive || end)}</span><span>来源：平台数据库</span><span>run_id：{diagnostic?.metadata.analysis_run_id || summary?.metadata.analysis_run_id || '加载中'}</span><span>所有金额均为含税金额</span></footer>
   </div>
 }
 
@@ -761,7 +801,7 @@ function StationPage({
     if (!selectedId && stations[0]) setSelectedId(stations[0].station_id)
   }, [selectedId, stations])
 
-  if (!summary) return <div className="notice">正在从平台数据库计算场站经营指标…</div>
+  if (!summary) return <div className="notice">正在计算场站经营指标…</div>
 
   const regionOptions = [...new Set(stations.map(row => row.region_id))]
   const cityOptions = [...new Set(stations.map(row => row.city_id))]
@@ -828,7 +868,6 @@ function StationPage({
       <label><span>运营状态</span><select value={status} onChange={event => setStatus(event.target.value as 'all' | StationSegment)}><option value="all">全部状态</option>{(Object.keys(stationSegmentMeta) as StationSegment[]).map(segment => <option value={segment} key={segment}>{stationSegmentMeta[segment].label}</option>)}</select></label>
       <button type="button" className="filter-reset" onClick={reset}>重置</button>
       <button type="button" className="filter-submit" onClick={refresh}>查询</button>
-      <div className="station-truth"><b>模拟数据</b><span>{summary.metadata.data_time_range.start} 至 {endInclusive(summary.metadata.data_time_range.end_exclusive)}</span><span>来源：{summary.metadata.source}</span><span title={summary.metadata.analysis_run_id}>run：{summary.metadata.analysis_run_id}</span></div>
     </section>
 
     <section className="station-kpis">
@@ -970,7 +1009,6 @@ function DevicePage({ token, summary, start, end, setStart, setEnd, refresh }: {
       <div className="device-period"><input aria-label="设备开始日期" type="date" value={start} onChange={event => setStart(event.target.value)} /><span>~</span><input aria-label="设备结束日期" type="date" value={endInclusive(end)} onChange={event => { const next = new Date(`${event.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div>
       <button type="button" onClick={reset}>重置</button>
       <button type="button" className="primary" onClick={runRefresh}>↻　刷新</button>
-      <div className="device-data-note"><b>模拟数据</b><span>{analysis?.metadata.data_time_range.start || start} 至 {endInclusive(analysis?.metadata.data_time_range.end_exclusive || end)}</span><span>来源：{analysis?.metadata.source || 'platform_database'}</span><span title={analysis?.metadata.analysis_run_id || '加载中'}>run_id：{analysis?.metadata.analysis_run_id || '加载中'}</span></div>
     </section>
 
     <section className="device-kpis">
@@ -1003,17 +1041,13 @@ function DevicePage({ token, summary, start, end, setStart, setEnd, refresh }: {
   </div>
 }
 
-const CHAT_INITIAL_QUESTION = '2026年6月充电收入环比变化的原因？'
-const SALES_CHAT_INITIAL_QUESTION = '2026年6月销售收入、订单数和销售毛利率是多少？'
-const CHAT_SCENARIO_DEFAULTS = [
-  { scenario_id: 'charging_ops', display_name: '充电运营', status: 'ACTIVE', scenario_version: null },
-  { scenario_id: 'sales_ops', display_name: '销售经营', status: 'NOT_ACTIVE', scenario_version: null },
-]
 type ChatScenario = {
   scenario_id: string
   display_name: string
   status: string
   scenario_version: string | null
+  initial_question: string
+  suggested_questions: string[]
 }
 const chatDriverNames: Record<string, string> = {
   charging_volume_effect: '充电量变化',
@@ -1032,10 +1066,10 @@ function ChatTrend({ points }: { points: TrendPoint[] }) {
   return <div className="chat-trend"><svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="充电收入月度趋势"><polygon points={`0,92 ${coords} 100,92`} /><polyline points={coords} />{values.map((value, index) => <circle key={index} cx={index / Math.max(values.length - 1, 1) * 100} cy={86 - (value - min) / (max - min || 1) * 64} r="1.2" />)}</svg><div>{points.map(item => <span key={item.period}>{item.period.slice(5)}</span>)}</div></div>
 }
 
-function ChatPage({ token }: { token: string }) {
-  const [question, setQuestion] = useState(CHAT_INITIAL_QUESTION)
-  const [scenarioId, setScenarioId] = useState('charging_ops')
-  const [scenarios, setScenarios] = useState<ChatScenario[]>(CHAT_SCENARIO_DEFAULTS)
+function ChatPage({ token, start, end }: { token: string; start: string; end: string }) {
+  const [question, setQuestion] = useState('')
+  const [scenarioId, setScenarioId] = useState('')
+  const [scenarios, setScenarios] = useState<ChatScenario[]>([])
   const [result, setResult] = useState<any>(null)
   const [summary, setSummary] = useState<Summary | null>(null)
   const [previous, setPrevious] = useState<Summary | null>(null)
@@ -1050,7 +1084,7 @@ function ChatPage({ token }: { token: string }) {
   const [compositeResult, setCompositeResult] = useState<any>(null)
   const [runtimeStatus, setRuntimeStatus] = useState<any>(null)
   const initialized = useRef('')
-  const activeScenario = useRef('charging_ops')
+  const activeScenario = useRef('')
   const requestSequence = useRef(0)
 
   const runQuestion = async (nextQuestion: string, currentConversation = conversationId, targetScenario = scenarioId) => {
@@ -1125,7 +1159,12 @@ function ChatPage({ token }: { token: string }) {
 
   useEffect(() => {
     api<{ scenarios: ChatScenario[] }>('/api/v1/chat/scenarios', token)
-      .then(body => setScenarios(body.scenarios))
+      .then(body => {
+        setScenarios(body.scenarios)
+        const selected = body.scenarios.find(item => item.status === 'ACTIVE')
+        if (!selected) throw new Error('当前没有已激活的 ChatBI 场景')
+        setScenarioId(selected.scenario_id)
+      })
       .catch(reason => setError(reason instanceof Error ? reason.message : '场景目录加载失败'))
   }, [token])
 
@@ -1136,10 +1175,15 @@ function ChatPage({ token }: { token: string }) {
   }, [token])
 
   useEffect(() => {
+    if (!scenarioId) return
     if (initialized.current === scenarioId) return
     initialized.current = scenarioId
     activeScenario.current = scenarioId
-    const initialQuestion = scenarioId === 'sales_ops' ? SALES_CHAT_INITIAL_QUESTION : CHAT_INITIAL_QUESTION
+    const initialQuestion = scenarios.find(item => item.scenario_id === scenarioId)?.initial_question
+    if (!initialQuestion) {
+      setError('场景未提供受控初始问题')
+      return
+    }
     setQuestion(initialQuestion)
     setConversationId(null)
     setResult(null)
@@ -1147,11 +1191,14 @@ function ChatPage({ token }: { token: string }) {
     setHistory([])
     setFeedback('')
     if (scenarioId === 'charging_ops') {
+      const currentRange = monthBefore(end)
+      const previousRange = monthBefore(currentRange.start)
+      const yearAgoRange = compareRange(currentRange.start, currentRange.end, 'yoy')
       Promise.all([
-        api<Summary>('/api/v1/dashboard/summary?start=2026-06-01&end_exclusive=2026-07-01', token),
-        api<Summary>('/api/v1/dashboard/summary?start=2026-05-01&end_exclusive=2026-06-01', token),
-        api<Summary>('/api/v1/dashboard/summary?start=2025-06-01&end_exclusive=2025-07-01', token),
-        api<{ points: TrendPoint[] }>('/api/v1/dashboard/trend?metric=charging_revenue&start=2026-01-01&end_exclusive=2026-07-01', token),
+        api<Summary>(`/api/v1/dashboard/summary?start=${currentRange.start}&end_exclusive=${currentRange.end}`, token),
+        api<Summary>(`/api/v1/dashboard/summary?start=${previousRange.start}&end_exclusive=${previousRange.end}`, token),
+        api<Summary>(`/api/v1/dashboard/summary?start=${yearAgoRange.start}&end_exclusive=${yearAgoRange.end}`, token),
+        api<{ points: TrendPoint[] }>(`/api/v1/dashboard/trend?metric=charging_revenue&start=${start}&end_exclusive=${end}`, token),
       ]).then(([currentResult, previousResult, yearAgoResult, trendResult]) => {
         setSummary(currentResult)
         setPrevious(previousResult)
@@ -1165,7 +1212,7 @@ function ChatPage({ token }: { token: string }) {
       setTrend([])
     }
     void runQuestion(initialQuestion, null, scenarioId)
-  }, [token, scenarioId])
+  }, [token, scenarioId, scenarios, start, end])
 
   const ask = (event: React.FormEvent) => {
     event.preventDefault()
@@ -1175,7 +1222,7 @@ function ChatPage({ token }: { token: string }) {
     setConversationId(null)
     setResult(null)
     setHistory([])
-    setQuestion(scenarioId === 'sales_ops' ? SALES_CHAT_INITIAL_QUESTION : CHAT_INITIAL_QUESTION)
+    setQuestion(scenarios.find(item => item.scenario_id === scenarioId)?.initial_question || '')
     setError('')
     setFeedback('')
   }
@@ -1198,6 +1245,7 @@ function ChatPage({ token }: { token: string }) {
   }
 
   const isSales = scenarioId === 'sales_ops'
+  const scenarioConfig = scenarios.find(item => item.scenario_id === scenarioId)
   const queryResult = result?.query_result
   const routing = result?.engine_routing
   const knowledgeOnly = compositeResult?.route === 'knowledge'
@@ -1212,20 +1260,25 @@ function ChatPage({ token }: { token: string }) {
   const stationImpacts = diagnosis?.station_contributions ?? []
   const maxBridge = Math.max(...bridge.map((item: any) => Math.abs(item.contribution ?? 0)), 1)
   const strongestDriver = [...bridge].sort((a: any, b: any) => Math.abs(b.contribution) - Math.abs(a.contribution))[0]
-  const conclusion = isSales
+  const conclusionStart = result?.evidence?.data_time_range?.start
+  const conclusionPeriod = conclusionStart
+    ? `${new Date(`${conclusionStart}T00:00:00Z`).getUTCFullYear()}年${new Date(`${conclusionStart}T00:00:00Z`).getUTCMonth() + 1}月`
+    : '当前数据期'
+  const rawConclusion = isSales
     ? result?.answer
     : diagnosis
-    ? `结论：全部授权区域 2026年6月充电收入为 ${money(metrics.charging_revenue)} 元，环比${revenueChange != null && revenueChange < 0 ? '下降' : '上升'} ${revenueChange == null ? '数据不足' : `${(Math.abs(revenueChange) * 100).toFixed(2)}%`}。变化拆解中贡献最大项为${chatDriverNames[strongestDriver?.driver] ?? '其他因素'}；关联线索不构成因果结论。`
+    ? `结论：全部授权区域 ${conclusionPeriod}充电收入为 ${money(metrics.charging_revenue)} 元，环比${revenueChange != null && revenueChange < 0 ? '下降' : '上升'} ${revenueChange == null ? '数据不足' : `${(Math.abs(revenueChange) * 100).toFixed(2)}%`}。变化拆解中贡献最大项为${chatDriverNames[strongestDriver?.driver] ?? '其他因素'}；关联线索不构成因果结论。`
     : result?.answer
+  const conclusion = typeof rawConclusion === 'string'
+    ? rawConclusion.replace(/^(?:【(?:模拟|真实)数据】|(?:模拟|真实)数据[：:])\s*/, '')
+    : rawConclusion
   const cards = [
     { id: 'charging_revenue', label: '充电收入', icon: '¥', color: 'teal' },
     { id: 'charging_volume_kwh', label: '充电量', icon: '↯', color: 'teal' },
     { id: 'revenue_per_kwh', label: '度电收入', icon: '价', color: 'orange' },
     { id: 'gross_margin', label: '毛利率', icon: '率', color: 'red' },
   ]
-  const suggestions = isSales
-    ? ['2026年6月退款率是多少？', '2026年6月新客户数和复购客户数是多少？', '2026年6月客单价是多少？']
-    : ['毛利率低于行业均值的原因？', '场站利用率下降原因', '度电成本上升原因']
+  const suggestions = scenarioConfig?.suggested_questions ?? []
   const salesMetricNames: Record<string, string> = {
     sales_revenue: '销售收入',
     order_count: '订单数',
@@ -1259,8 +1312,8 @@ function ChatPage({ token }: { token: string }) {
 
     <main className="chat-analysis-center">
       <form className="chat-question-box" onSubmit={ask}><div><textarea aria-label="经营分析问题" maxLength={500} value={question} onChange={event => setQuestion(event.target.value)} /><span>{question.length}/500</span><button aria-label="发送分析问题" disabled={loading}>{loading ? '…' : '➤'}</button></div><footer><span>试试这样问：</span>{suggestions.map(item => <button type="button" key={item} onClick={() => setQuestion(item)}>{item}</button>)}</footer></form>
-      <section className="chat-recommended"><h3>推荐追问</h3><div>{(isSales ? ['退款金额和退款率是多少？', '新客户与复购客户有多少？', '最大渠道贡献率是多少？'] : ['夜间电量下降的主要原因？', '低功率时段占比为何上升？', '快充占比下降的原因？', '与周边区域对比表现如何？']).map(item => <button key={item} onClick={() => setQuestion(item)}>{item}</button>)}</div><span title="推荐问题为固定受控模板">固定模板</span></section>
-      <section className="chat-conditions"><h3>当前条件</h3><div><label>业务场景　<select aria-label="当前业务场景" value={scenarioId} onChange={event => { activeScenario.current = event.target.value; requestSequence.current += 1; setScenarioId(event.target.value) }}>{scenarios.map(scenario => <option key={scenario.scenario_id} value={scenario.scenario_id} disabled={scenario.status !== 'ACTIVE'}>{scenario.display_name} · {scenario.status}</option>)}</select></label><span>时间范围　2026-06-01 ~ 2026-06-30</span><span>数据分类　模拟数据</span><span>权限范围　全部授权区域</span><button onClick={() => setQuestion(isSales ? SALES_CHAT_INITIAL_QUESTION : CHAT_INITIAL_QUESTION)}>重置条件</button></div></section>
+      <section className="chat-recommended"><h3>推荐追问</h3><div>{suggestions.map(item => <button key={item} onClick={() => setQuestion(item)}>{item}</button>)}</div><span title="推荐问题由场景目录提供">场景模板</span></section>
+      <section className="chat-conditions"><h3>当前条件</h3><div><label>业务场景　<select aria-label="当前业务场景" value={scenarioId} onChange={event => { activeScenario.current = event.target.value; requestSequence.current += 1; setScenarioId(event.target.value) }}>{scenarios.map(scenario => <option key={scenario.scenario_id} value={scenario.scenario_id} disabled={scenario.status !== 'ACTIVE'}>{scenario.display_name} · {scenario.status}</option>)}</select></label><span>时间范围　{result?.evidence?.data_time_range?.start ?? '等待执行'} ~ {result?.evidence?.data_time_range?.end_exclusive ?? '等待执行'}</span><span>权限范围　全部授权区域</span><button onClick={() => setQuestion(scenarioConfig?.initial_question || '')}>重置条件</button></div></section>
 
       <section className="chat-runtime-strip" aria-label="查询运行证据"><span>场景 <b>{queryResult?.scenario ?? scenarioId}</b></span><span>数据集 <b>{queryResult?.dataset_version ?? '等待 ACTIVE 版本'}</b></span><span>语义 <b>{queryResult?.semantic_version ?? '等待 ACTIVE 版本'}</b></span><span>引擎 <b>{queryResult?.engine ?? '等待执行'}</b></span><span>模式 <b>{routing?.mode ?? '等待执行'}</b></span><span>耗时 <b>{queryResult ? `${queryResult.execution_time} ms` : '—'}</b></span></section>
 
@@ -1280,20 +1333,19 @@ function ChatPage({ token }: { token: string }) {
           <article><header><h3>原因拆解（贡献度）</h3><span>ⓘ</span></header><div className="chat-driver-list">{bridge.slice(0, 5).map((item: any) => <div key={item.driver}><span>{chatDriverNames[item.driver] ?? item.driver}</span><b>{money(item.contribution)}</b><i><em className={item.contribution < 0 ? 'negative' : ''} style={{ width: `${Math.max(Math.abs(item.contribution) / maxBridge * 100, 5)}%` }} /></i></div>)}</div><small>对账残差：{money(diagnosis?.reconciliation?.residual)}</small></article>
           <article><header><h3>建议行动</h3></header><ul><li>复核充电量变化对应的时段与场站结构<b>高影响</b></li><li>复核度电收入变化与价格策略<b>高影响</b></li><li>关注贡献下降场站的运营条件<b>中影响</b></li><li>结合设备指标作同期关联排查<b>中影响</b></li></ul></article>
         </section></>}
-        {isSales && <section className="chat-sales-evidence"><article><h3>结构化查询结果</h3><p>所有业务数字均来自统一 QueryResult；当前 Response Composer 未使用 SQLBot 原始回答。</p><dl><div><dt>结果字段</dt><dd>{queryResult?.columns?.join('、') || '等待执行'}</dd></div><div><dt>数据来源</dt><dd>{result?.evidence?.source || 'platform_database'}</dd></div><div><dt>版本绑定</dt><dd>{queryResult ? `${queryResult.scenario_version} / ${queryResult.semantic_version} / ${queryResult.dataset_version}` : '等待执行'}</dd></div></dl></article><article><h3>受控状态</h3><ul><li>Query Guard：{result?.evidence?.query_guard ?? 'pending'}</li><li>Answer Guard：{result?.evidence?.answer_guard?.status ?? 'pending'}</li><li>Shadow：{routing?.route_reason ?? '等待执行'}</li><li>警告：{queryResult?.warnings?.join('、') || '无'}</li></ul></article></section>}
-        <footer className="chat-followups"><b>推荐追问</b>{(isSales ? suggestions : ['夜间电量下降的主要原因？', '低功率时段占比为何上升？', '快充占比下降的原因？']).map(item => <button key={item} onClick={() => setQuestion(item)}>{item}</button>)}</footer>
+        {isSales && <section className="chat-sales-evidence"><article><h3>结构化查询结果</h3><p>所有业务数字均来自统一 QueryResult；当前 Response Composer 未使用 SQLBot 原始回答。</p><dl><div><dt>结果字段</dt><dd>{queryResult?.columns?.join('、') || '等待执行'}</dd></div><div><dt>版本绑定</dt><dd>{queryResult ? `${queryResult.scenario_version} / ${queryResult.semantic_version} / ${queryResult.dataset_version}` : '等待执行'}</dd></div></dl></article><article><h3>受控状态</h3><ul><li>Query Guard：{result?.evidence?.query_guard ?? 'pending'}</li><li>Answer Guard：{result?.evidence?.answer_guard?.status ?? 'pending'}</li><li>Shadow：{routing?.route_reason ?? '等待执行'}</li><li>警告：{queryResult?.warnings?.join('、') || '无'}</li></ul></article></section>}
+        <footer className="chat-followups"><b>推荐追问</b>{suggestions.map(item => <button key={item} onClick={() => setQuestion(item)}>{item}</button>)}</footer>
         <div className="chat-feedback"><span>这次结构化回答是否有帮助？</span><button type="button" disabled={!result || Boolean(feedback)} className={feedback === 'helpful' ? 'selected' : ''} onClick={() => void recordFeedback('helpful')}>有帮助</button><button type="button" disabled={!result || Boolean(feedback)} className={feedback === 'not_helpful' ? 'selected' : ''} onClick={() => void recordFeedback('not_helpful')}>需改进</button>{feedback && <b>反馈已记录到审计日志</b>}</div>
       </article>
     </main>
 
     <aside className="chat-evidence-panel">
-      <header><h2>证据与数据来源</h2><span>×</span></header>
-      <section><h3><i>①</i>数据来源</h3><p><b>{result?.evidence?.source || '平台数据库'}</b><em>simulated</em></p><small>固定 seed {isSales ? '销售经营' : '新能源充电运营'}模拟业务库</small></section>
-      <section><h3><i>②</i>版本与引擎</h3><p>场景：{queryResult?.scenario ?? scenarioId}@{queryResult?.scenario_version ?? 'pending'}</p><p>语义 / 数据集：{queryResult?.semantic_version ?? 'pending'} / {queryResult?.dataset_version ?? 'pending'}</p><p>引擎 / 模式：{queryResult?.engine ?? 'pending'} / {routing?.mode ?? 'pending'}</p></section>
-      <section><h3><i>③</i>查询条件</h3><ul><li>时间范围：{result?.evidence?.data_time_range?.start ?? '2026-06-01'} ~ {result?.evidence?.data_time_range?.end_exclusive ?? '2026-07-01'}（右开）</li><li>区域：全部授权区域</li><li>业务场景：{scenarioId}</li><li>数据分类：模拟数据</li></ul></section>
-      <section><h3><i>④</i>Query Plan 摘要</h3><p>{result?.query_plan ? `${result.query_plan.intent}；指标 ${result.query_plan.metrics.join('、')}；${result.query_plan.comparison?.type ?? '无'}比较。` : '等待结构化解析'}</p><details><summary>查看详情　›</summary><pre>{JSON.stringify(result?.query_plan, null, 2)}</pre></details></section>
-      <section><h3><i>⑤</i>SQL 与警告</h3><details><summary>查看受控 SQL　‹/›</summary><pre>{queryResult?.sql || result?.evidence?.sql || '当前引擎通过受控查询构造器执行，未向该角色暴露 SQL 文本。'}</pre></details><p>警告：{queryResult?.warnings?.join('、') || '无'}</p></section>
-      <section><h3><i>⑥</i>analysis_run_id</h3><code>{result?.evidence?.analysis_run_id ?? '等待生成'}</code></section>
+      <header><h2>查询证据</h2><span>×</span></header>
+      <section><h3><i>①</i>版本与引擎</h3><p>场景：{queryResult?.scenario ?? scenarioId}@{queryResult?.scenario_version ?? 'pending'}</p><p>语义 / 数据集：{queryResult?.semantic_version ?? 'pending'} / {queryResult?.dataset_version ?? 'pending'}</p><p>引擎 / 模式：{queryResult?.engine ?? 'pending'} / {routing?.mode ?? 'pending'}</p></section>
+      <section><h3><i>②</i>查询条件</h3><ul><li>时间范围：{result?.evidence?.data_time_range?.start ?? '等待执行'} ~ {result?.evidence?.data_time_range?.end_exclusive ?? '等待执行'}（右开）</li><li>区域：全部授权区域</li><li>业务场景：{scenarioId}</li></ul></section>
+      <section><h3><i>③</i>Query Plan 摘要</h3><p>{result?.query_plan ? `${result.query_plan.intent}；指标 ${result.query_plan.metrics.join('、')}；${result.query_plan.comparison?.type ?? '无'}比较。` : '等待结构化解析'}</p><details><summary>查看详情　›</summary><pre>{JSON.stringify(result?.query_plan, null, 2)}</pre></details></section>
+      <section><h3><i>④</i>SQL 与警告</h3><details><summary>查看受控 SQL　‹/›</summary><pre>{queryResult?.sql || result?.evidence?.sql || '当前引擎通过受控查询构造器执行，未向该角色暴露 SQL 文本。'}</pre></details><p>警告：{queryResult?.warnings?.join('、') || '无'}</p></section>
+      <section><h3><i>⑤</i>analysis_run_id</h3><code>{result?.evidence?.analysis_run_id ?? '等待生成'}</code></section>
       <footer><span>♢</span><p><b>业务默认，证据按需查看</b><small>Query Guard：{result?.evidence?.query_guard ?? 'pending'} · Answer Guard：{result?.evidence?.answer_guard?.status ?? 'pending'} · {routing?.route_decision ?? '等待路由'}</small></p></footer>
     </aside>
   </div>
@@ -1428,7 +1480,7 @@ function DiagnosticsPage({ token, start, end }: { token: string; start: string; 
       </article>
     </section>
 
-    <footer className="alert-truth"><b>模拟数据</b><span>数据时间：{start} 至 {endInclusive(end)}</span><span>来源：平台数据库</span><span>run_id：{data.metadata.analysis_run_id}</span><span>{data.metadata.causality_boundary}</span></footer>
+    <footer className="alert-boundary">{data.metadata.causality_boundary}</footer>
   </div>
 }
 
@@ -1569,13 +1621,13 @@ function ReportPage({ token, start, end, summary, stations, trend }: { token: st
 
     <section className="report-canvas">
       <header className="report-titlebar">
-        <div><div><h2>{reportName}</h2><span>{start} ～ {endInclusive(end)}（{reportType === 'weekly' ? '周报' : '月报'}）</span><em>{isReady ? '● 已完成' : '○ 生成中'}</em></div><p>生成时间：{generatedAt || '正在生成'}　｜　来源：报告草稿服务</p></div>
+        <div><div><h2>{reportName}</h2><span>{start} ～ {endInclusive(end)}（{reportType === 'weekly' ? '周报' : '月报'}）</span><em>{isReady ? '● 已完成' : '○ 生成中'}</em></div><p>生成时间：{generatedAt || '正在生成'}</p></div>
         <nav><button className="report-primary" onClick={() => void generate()}>▱　{loading ? '生成中…' : '生成报告'}</button><button disabled={!isReady} onClick={() => void download('markdown')}>▧　导出 MD</button><button disabled={!isReady} onClick={() => void download('csv')}>▧　导出 CSV</button><button disabled title="分享能力未实现">⌯　分享未开放</button></nav>
       </header>
       {error && <div className="report-error">{error}</div>}
 
       <section className={`report-executive${enabled.summary ? '' : ' section-off'}`}>
-        <header><h3>一、管理摘要</h3><span>模拟数据 · {metadata?.batch_id || '数据加载中'}</span></header>
+        <header><h3>一、管理摘要</h3><span>批次 {metadata?.batch_id || '数据加载中'}</span></header>
         <p>本期整体经营表现已按发布口径汇总；充电收入较上期 {momSummary}。设备在线率与经营变化仅作为同期关联线索，不构成因果结论。</p>
         <div className="report-kpis">{primaryMetrics.map(([id, label]) => {
           const comparison = deltaText(id, metrics[id], previous?.metrics[id])
@@ -1599,7 +1651,6 @@ function ReportPage({ token, start, end, summary, stations, trend }: { token: st
       </section>
 
       <section className={`report-actions-card${enabled.action ? '' : ' section-off'}`}><div><h3>七、建议行动草稿</h3>{actionRows.map(action => <p key={action}><span>✓　{action}</span><b>负责人待补充</b><time>期限待补充</time></p>)}</div></section>
-      <footer className="report-truth">模拟数据　｜　数据时间：{start} 至 {endInclusive(end)}　｜　来源：平台数据库　｜　run_id：{metadata?.analysis_run_id || '生成中'}</footer>
     </section>
 
     <aside className="report-settings">
@@ -1769,10 +1820,10 @@ function MappingPage({ token, start, end }: { token: string; start: string; end:
     void loadPlatform()
   }, [token, start, end])
   if (integrationLoading && !integration) {
-    return <div className="mapping-page"><div className="notice">正在读取数据接入事实…</div><footer className="mapping-truth"><b>模拟数据</b><span>数据接入状态：加载中</span><span>未显示替代业务数据</span></footer></div>
+    return <div className="mapping-page"><div className="notice">正在读取数据接入事实…</div></div>
   }
   if (integrationError || !integration) {
-    return <div className="mapping-page"><div className="notice error"><h2>数据接入已阻塞</h2><p>{integrationError || '数据接入事实不可用'}</p><p>未显示任何替代业务数据，请恢复接口后重试。</p><button onClick={() => void loadIntegration()}>重新加载</button></div><footer className="mapping-truth"><b>模拟数据</b><span>数据接入状态：Blocked</span><span>未显示替代业务数据</span></footer></div>
+    return <div className="mapping-page"><div className="notice error"><h2>数据接入已阻塞</h2><p>{integrationError || '数据接入事实不可用'}</p><p>数据接入状态：Blocked</p><p>未显示任何替代业务数据，请恢复接口后重试。</p><button onClick={() => void loadIntegration()}>重新加载</button></div></div>
   }
   const mappingFields = integration.dataset.mapping
   const previewRows: IntegrationPreview[] = integration.preview
@@ -1898,7 +1949,7 @@ function MappingPage({ token, start, end }: { token: string; start: string; end:
         result = await postIntegration<IntegrationWorkflow>(`/api/v1/data-integration/datasets/${datasetId}/runs/${runId}/submit`, {})
         act('批次已提交管理员审批，状态和操作人已写入数据库。')
       } else if (workflow.workflow_status === 'pending_approval') {
-        if (!window.confirm('确认以数据分析师/管理员身份批准当前模拟数据批次？')) return
+        if (!window.confirm('确认以数据分析师/管理员身份批准当前数据批次？')) return
         result = await postIntegration<IntegrationWorkflow>(`/api/v1/data-integration/datasets/${datasetId}/runs/${runId}/review`, { action: 'approve' })
         act('审批已通过，可执行受控发布。')
       } else if (workflow.workflow_status === 'approved') {
@@ -1961,7 +2012,7 @@ function MappingPage({ token, start, end }: { token: string; start: string; end:
       '/api/v1/platform/foundation/sources',
       {
         source_id: 'platform-postgresql',
-        display_name: 'PostgreSQL 平台模拟数据源',
+        display_name: 'PostgreSQL 平台数据源',
         source_type: 'postgresql',
       },
       result => result.created ? `数据源 ${result.source_id} 已创建。` : `数据源 ${result.source_id} 已存在，幂等登记通过。`,
@@ -2038,7 +2089,7 @@ function MappingPage({ token, start, end }: { token: string; start: string; end:
   const approvePlatformVersion = async () => {
     const version = platform?.versions.find(item => item.status === 'PENDING_APPROVAL')
     if (!version) return act('没有待批准版本。')
-    if (!window.confirm(`确认批准模拟数据集版本 v${version.version}？批准不等于激活。`)) return
+    if (!window.confirm(`确认批准数据集版本 v${version.version}？批准不等于激活。`)) return
     await platformAction(
       `/api/v1/platform/foundation/versions/${version.dataset_version_id}/approve`,
       { idempotency_key: `ui-approve-${version.dataset_version_id}`, reason: '前端受控审批' },
@@ -2048,7 +2099,7 @@ function MappingPage({ token, start, end }: { token: string; start: string; end:
   const rejectPlatformVersion = async () => {
     const version = platform?.versions.find(item => item.status === 'PENDING_APPROVAL')
     if (!version) return act('没有待驳回版本。')
-    if (!window.confirm(`确认驳回模拟数据集版本 v${version.version}？`)) return
+    if (!window.confirm(`确认驳回数据集版本 v${version.version}？`)) return
     await platformAction(
       `/api/v1/platform/foundation/versions/${version.dataset_version_id}/reject`,
       { idempotency_key: `ui-reject-${version.dataset_version_id}`, reason: '前端受控驳回' },
@@ -2145,11 +2196,11 @@ function MappingPage({ token, start, end }: { token: string; start: string; end:
         <button onClick={() => void rollbackPlatformVersion()}><b>13</b><span>回滚</span><small>{platform?.rollbacks.length || 0} 条记录</small></button>
       </div>
       <footer>
-        <b>模拟数据</b>
         <span>场景：{platform?.scenario ? `${platform.scenario.scenario_id}@${platform.scenario.version} / ${platform.scenario.status}` : '未安装'}</span>
         <span>版本数：{platform?.versions.length || 0}</span>
         <span>语义：{platform?.activation?.semantic_version || '未激活'}</span>
         <span>状态：{platformLoading ? 'Loading' : platformError ? 'Blocked' : platform?.installed ? 'Success' : 'Empty'}</span>
+        <span>治理状态：{workflowStatusLabel}；语义激活：{integration.metadata.semantic_activation_status || 'not_implemented'}</span>
       </footer>
     </section>
 
@@ -2171,7 +2222,7 @@ function MappingPage({ token, start, end }: { token: string; start: string; end:
         <article className="mapping-preview-panel">
           <header><h2>数据预览（前 {previewRows.length || 0} 行）</h2><label>以标准字段预览 <input type="checkbox" checked={standardPreview} onChange={() => setStandardPreview(value => !value)} /></label></header>
           <div><table><thead><tr><th>#</th><th>场站编码</th><th>场站名称</th><th>运营区域</th><th>充电收入（元）</th><th>充电电量（kWh）</th><th>毛利率</th></tr></thead><tbody>{previewRows.map((row, index) => <tr key={row.station_id}><td>{index + 1}</td><td>{row.station_id}</td><td>{row.station_name}</td><td>{row.region_id}</td><td>{money(row.charging_revenue)}</td><td>{money(row.charging_volume_kwh)}</td><td>{formatMetric('gross_margin', row.gross_margin)}</td></tr>)}</tbody></table>{!previewRows.length && <p className="mapping-empty">{integrationLoading ? '正在从 PostgreSQL 读取已授权数据预览…' : '数据库暂无可预览数据'}</p>}</div>
-          <footer><span>共 {previewRows.length} 行数据库预览 · 来源：{integration.metadata.preview_source}</span><span>生成时间：{integration.metadata.generated_at}　｜　<button onClick={() => void loadIntegration()}>⟳ 重新预览</button></span></footer>
+          <footer><span>共 {previewRows.length} 行数据库预览</span><span>生成时间：{integration.metadata.generated_at}　｜　<button onClick={() => void loadIntegration()}>⟳ 重新预览</button></span></footer>
         </article>
       </main>
 
@@ -2181,7 +2232,6 @@ function MappingPage({ token, start, end }: { token: string; start: string; end:
       </aside>
     </section>
 
-    <footer className="mapping-truth"><b>模拟数据</b><span>数据时间：{integration.metadata.data_time_range.start} 至 {endInclusive(integration.metadata.data_time_range.end_exclusive)}</span><span>来源：PostgreSQL 平台数据库</span><span>run_id：{integration.latest_ingestion?.run_id || '尚未试运行'}</span><em>治理状态：{workflowStatusLabel}；语义激活：{integration.metadata.semantic_activation_status}</em></footer>
   </div>
 }
 
@@ -2189,10 +2239,10 @@ function BoundaryPage({ active, summary }: { active: ViewId; summary: Summary | 
   const messages: Record<string, string> = {
     alerts: '当前入口使用已实现的规则异常、同比环比与贡献拆解能力；完整预警工作流不属于本界面复刻范围。',
     reports: '当前 Alpha 只生成可审核报告草稿，不自动发送或发布。',
-    mapping: '当前 Alpha 使用已验证的平台数据库与固定种子模拟数据，不接入未经授权的真实企业数据。',
+    mapping: '当前入口使用已验证的数据治理链路，不接入未经授权的企业数据。',
     metrics: '当前已发布 15 项核心指标与 charging_ops 场景，组织规则发布仍需管理员或指标负责人审批。',
   }
-  return <div className="boundary-page"><article><i>{active === 'reports' ? '报' : active === 'metrics' ? '指' : active === 'mapping' ? '数' : '警'}</i><h2>{titles[active]}</h2><p>{messages[active]}</p><div className="evidence"><b>模拟数据</b><span>批次：{summary?.metadata.batch_id || '加载中'}</span><span>来源：平台数据库</span><span>能力边界：如实展示</span></div></article></div>
+  return <div className="boundary-page"><article><i>{active === 'reports' ? '报' : active === 'metrics' ? '指' : active === 'mapping' ? '数' : '警'}</i><h2>{titles[active]}</h2><p>{messages[active]}</p><div className="evidence"><span>批次：{summary?.metadata.batch_id || '加载中'}</span><span>能力边界：如实展示</span></div></article></div>
 }
 
 function Sidebar({ active, navigate }: { active: ViewId; navigate: (id: ViewId) => void }) {
@@ -2202,21 +2252,37 @@ function Sidebar({ active, navigate }: { active: ViewId; navigate: (id: ViewId) 
 function ProductHeader({ active, start, end, setStart, setEnd, logout }: { active: ViewId; start: string; end: string; setStart: (v: string) => void; setEnd: (v: string) => void; logout: () => void }) {
   const showSearchAndDate = active === 'overview' || active === 'revenue' || active === 'margin' || active === 'stations' || active === 'devices' || active === 'alerts' || active === 'reports' || active === 'mapping' || active === 'metrics'
   const searchPlaceholder = '全局搜索尚未实现'
-  return <header className={`product-header${active === 'chat' ? ' chat-header' : ''}`}><div className="page-title">{active === 'alerts' && <i className="alert-header-icon">♧</i>}<h1>{titles[active]}</h1>{(active === 'overview' || active === 'margin') && <span>当前场景：<b>charging_ops</b>｜充电运营</span>}{active === 'dashboard' && <small>数据范围：{start} 至 {endInclusive(end)}　｜　模拟数据　｜　来源：平台数据库</small>}</div>{showSearchAndDate && <><label className="search"><i>⌕</i><input disabled aria-label="全局搜索" placeholder={searchPlaceholder} /></label><div className="date-range"><input aria-label="开始日期" type="date" value={start} onChange={e => setStart(e.target.value)} /><span>～</span><input aria-label="结束日期" type="date" value={endInclusive(end)} onChange={e => { const next = new Date(`${e.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></>}{active === 'chat' && <><button disabled className="chat-model">分析模式　确定性链路</button><div className="chat-period">{start}　~　{endInclusive(end)}　▣</div></>}<button disabled className="organization">单客户工作区</button><button disabled className="bell" aria-label="通知未开放" title="通知未实现">♧</button><button className="profile" onClick={logout} title="点击退出当前会话"><span>会</span><div><b>当前会话</b><small>认证用户 · 点击退出</small></div><i>⌄</i></button></header>
+  return <header className={`product-header${active === 'chat' ? ' chat-header' : ''}`}><div className="page-title">{active === 'alerts' && <i className="alert-header-icon">♧</i>}<h1>{titles[active]}</h1>{(active === 'overview' || active === 'margin') && <span>当前场景：<b>charging_ops</b>｜充电运营</span>}{active === 'dashboard' && <small>数据范围：{start} 至 {endInclusive(end)}</small>}</div>{showSearchAndDate && <><label className="search"><i>⌕</i><input disabled aria-label="全局搜索" placeholder={searchPlaceholder} /></label><div className="date-range"><input aria-label="开始日期" type="date" value={start} onChange={e => setStart(e.target.value)} /><span>～</span><input aria-label="结束日期" type="date" value={endInclusive(end)} onChange={e => { const next = new Date(`${e.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></>}{active === 'chat' && <><button disabled className="chat-model">分析模式　确定性链路</button><div className="chat-period">{start}　~　{endInclusive(end)}　▣</div></>}<button disabled className="organization">单客户工作区</button><button disabled className="bell" aria-label="通知未开放" title="通知未实现">♧</button><button className="profile" onClick={logout} title="点击退出当前会话"><span>会</span><div><b>当前会话</b><small>认证用户 · 点击退出</small></div><i>⌄</i></button></header>
 }
 
 function ProductShell({ token, logout }: { token: string; logout: () => void }) {
   const [active, setActive] = useState<ViewId>('overview')
+  const [context, setContext] = useState<FrontendContext | null>(null)
   const [summary, setSummary] = useState<Summary | null>(null)
   const [stations, setStations] = useState<StationRow[]>([])
   const [trend, setTrend] = useState<TrendPoint[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [start, setStart] = useState('2026-01-01')
-  const [end, setEnd] = useState('2026-07-01')
+  const [start, setStart] = useState('')
+  const [end, setEnd] = useState('')
   const [refreshKey, setRefreshKey] = useState(0)
   const primary = useMemo(() => active === 'stations' ? 'charging_revenue' : pageMetrics[active]?.[0] || 'charging_revenue', [active])
   useEffect(() => {
+    let cancelled = false
+    api<FrontendContext>('/api/v1/dashboard/context', token)
+      .then(result => {
+        if (cancelled) return
+        setContext(result)
+        setStart(result.default_time_range.start)
+        setEnd(result.default_time_range.end_exclusive)
+      })
+      .catch(reason => {
+        if (!cancelled) setError(reason instanceof Error ? reason.message : '前端数据上下文加载失败')
+      })
+    return () => { cancelled = true }
+  }, [token])
+  useEffect(() => {
+    if (!start || !end) return
     let cancelled = false
     setLoading(true)
     setError('')
@@ -2238,13 +2304,14 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
     return () => { cancelled = true }
   }, [token, start, end, primary, refreshKey])
   let content: React.ReactNode
-  if (active === 'overview') content = <Overview summary={summary} trend={trend} loading={loading} error={error} navigate={setActive} />
+  if (!start || !end) content = <div className={`notice${error ? ' error' : ''}`}>{error || '正在从数据库读取可用数据周期…'}</div>
+  else if (active === 'overview') content = <Overview summary={summary} trend={trend} loading={loading} error={error} navigate={setActive} context={context} />
   else if (active === 'dashboard') content = <WorkbenchPage token={token} summary={summary} stations={stations} revenueTrend={trend} start={start} end={end} setStart={setStart} setEnd={setEnd} navigate={setActive} refreshKey={refreshKey} refresh={() => setRefreshKey(value => value + 1)} />
   else if (active === 'revenue') content = <>{error && <div className="notice error">{error}</div>}<RevenuePage token={token} summary={summary} stations={stations} start={start} end={end} setStart={setStart} setEnd={setEnd} refresh={() => setRefreshKey(value => value + 1)} /></>
   else if (active === 'margin') content = <>{error && <div className="notice error">{error}</div>}<MarginPage token={token} summary={summary} stations={stations} start={start} end={end} setStart={setStart} setEnd={setEnd} refresh={() => setRefreshKey(value => value + 1)} /></>
   else if (active === 'stations') content = <>{error && <div className="notice error">{error}</div>}<StationPage token={token} summary={summary} stations={stations} trend={trend} start={start} end={end} setStart={setStart} setEnd={setEnd} refresh={() => setRefreshKey(value => value + 1)} navigate={setActive} /></>
   else if (active === 'devices') content = <>{error && <div className="notice error">{error}</div>}<DevicePage token={token} summary={summary} start={start} end={end} setStart={setStart} setEnd={setEnd} refresh={() => setRefreshKey(value => value + 1)} /></>
-  else if (active === 'chat') content = <ChatPage token={token} />
+  else if (active === 'chat') content = <ChatPage token={token} start={start} end={end} />
   else if (active === 'alerts') content = <DiagnosticsPage token={token} start={start} end={end} />
   else if (active === 'reports') content = <ReportPage token={token} start={start} end={end} summary={summary} stations={stations} trend={trend} />
   else if (active === 'knowledge') content = <KnowledgePage token={token} />
@@ -2255,7 +2322,7 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
   else content = <>{error && <div className="notice error">{error}</div>}<DetailPage active={active} summary={summary} stations={stations} trend={trend} /></>
   const shellMode = active === 'revenue' ? ' revenue-mode' : active === 'margin' ? ' margin-mode' : active === 'stations' ? ' station-mode' : active === 'devices' ? ' device-mode' : active === 'alerts' ? ' alert-mode' : active === 'reports' ? ' report-mode' : active === 'knowledge' ? ' knowledge-mode' : active === 'memory' || active === 'skills' ? ' governance-mode' : active === 'mapping' ? ' mapping-mode' : active === 'metrics' ? ' metrics-mode' : ''
   const mainMode = active === 'revenue' ? ' revenue-main' : active === 'margin' ? ' margin-main' : active === 'stations' ? ' station-main' : active === 'devices' ? ' device-main' : active === 'alerts' ? ' alert-main' : active === 'reports' ? ' report-main' : active === 'knowledge' ? ' knowledge-main' : active === 'memory' || active === 'skills' ? ' governance-main' : active === 'mapping' ? ' mapping-main' : active === 'metrics' ? ' metrics-main' : ''
-  return <div className={`product-shell${shellMode}`}><Sidebar active={active} navigate={setActive} /><div className="workspace"><ProductHeader active={active} start={start} end={end} setStart={setStart} setEnd={setEnd} logout={logout} /><main className={`product-main${mainMode}`}>{content}</main></div></div>
+  return <div className={`product-shell${shellMode}`}><Sidebar active={active} navigate={setActive} /><div className="workspace"><ProductHeader active={active} start={start} end={end} setStart={setStart} setEnd={setEnd} logout={logout} /><main className={`product-main${mainMode}`}>{content}</main><GlobalDataStatus metadata={summary?.metadata ?? context?.metadata ?? null} /></div></div>
 }
 
 function Login({ loggedIn }: { loggedIn: (token: string) => void }) {
@@ -2277,7 +2344,7 @@ function Login({ loggedIn }: { loggedIn: (token: string) => void }) {
       setLoading(false)
     }
   }
-  return <main className="product-login"><form onSubmit={login}><div className="login-brand"><img src="/figma-assets/brand-mark.svg" alt="" /><span><strong>新能源经营分析智能平台</strong><small>AI 增强 BI · 产品级 Alpha</small></span></div><h1>欢迎登录</h1><p>统一指标、可信问数与经营洞察</p><div className="login-truth">固定种子模拟数据环境 · 不代表真实企业数据</div><label>账号<input name="username" defaultValue="analyst" autoComplete="username" /></label><label>密码<input name="password" type="password" defaultValue="AlphaAnalyst!2026" autoComplete="current-password" /></label><button disabled={loading}>{loading ? '正在安全登录…' : '安全登录'}</button>{error && <div className="login-error">{error}</div>}</form></main>
+  return <main className="product-login"><form onSubmit={login}><div className="login-brand"><img src="/figma-assets/brand-mark.svg" alt="" /><span><strong>新能源经营分析智能平台</strong><small>AI 增强 BI · 产品级 Alpha</small></span></div><h1>欢迎登录</h1><p>统一指标、可信问数与经营洞察</p><div className="login-truth">数据环境状态将在登录后统一展示</div><label>账号<input name="username" defaultValue="analyst" autoComplete="username" /></label><label>密码<input name="password" type="password" defaultValue="AlphaAnalyst!2026" autoComplete="current-password" /></label><button disabled={loading}>{loading ? '正在安全登录…' : '安全登录'}</button>{error && <div className="login-error">{error}</div>}</form></main>
 }
 
 export function ProductApp() {

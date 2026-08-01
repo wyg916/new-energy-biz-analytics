@@ -25,6 +25,25 @@ def summary(start: date, end_exclusive: date, db: Session = Depends(get_db), use
     return DashboardService(db, user).summary(start, end_exclusive)
 
 
+@router.get("/context")
+def frontend_context(
+    db: Session = Depends(get_db),
+    user: User = Depends(current_user),
+) -> dict:
+    try:
+        return DashboardService(db, user).frontend_context()
+    except RuntimeError as exc:
+        if str(exc) != "PUBLISHED_DATASET_NOT_READY":
+            raise
+        raise HTTPException(
+            status_code=409,
+            detail={
+                "code": "PUBLISHED_DATASET_NOT_READY",
+                "message": "已发布数据批次尚未就绪",
+            },
+        ) from exc
+
+
 @router.get("/metric-catalog")
 def metric_catalog(start: date, end_exclusive: date, db: Session = Depends(get_db), user: User = Depends(current_user)) -> dict:
     validate_range(start, end_exclusive)

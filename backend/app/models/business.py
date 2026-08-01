@@ -160,6 +160,21 @@ class MetricDefinition(Base):
     status: Mapped[str] = mapped_column(String(32))
     formula: Mapped[str] = mapped_column(Text)
     allowed_dimensions_json: Mapped[str] = mapped_column(Text)
+    business_domain: Mapped[str] = mapped_column(
+        String(64), default="经营分析", server_default="经营分析"
+    )
+    definition: Mapped[str] = mapped_column(Text, default="", server_default="")
+    source_tables_json: Mapped[str] = mapped_column(
+        Text, default="[]", server_default="[]"
+    )
+    supported_grains_json: Mapped[str] = mapped_column(
+        Text,
+        default='["day", "week", "month"]',
+        server_default='["day", "week", "month"]',
+    )
+    metric_type: Mapped[str] = mapped_column(
+        String(32), default="aggregation", server_default="aggregation"
+    )
 
 
 class AnalysisRun(Base):

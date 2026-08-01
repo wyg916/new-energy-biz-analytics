@@ -25,7 +25,7 @@ test('收入与订单复刻页在100%缩放下一屏完整展示', async ({ page
   await expect(page.getByRole('heading', { name: '重点下滑场站' })).toBeVisible()
   await expect(page.getByRole('heading', { name: 'AI经营洞察' })).toBeVisible()
   await expect(page.getByText('模拟数据', { exact: true })).toBeVisible()
-  await expect(page.getByText(/run：REV-/)).toBeVisible()
+  await expect(page.locator('.global-data-status')).toContainText(/run_id：DASH-/)
 
   const fit = await page.evaluate(() => {
     const panels = [...document.querySelectorAll<HTMLElement>('.revenue-panel')]

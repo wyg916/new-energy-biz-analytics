@@ -31,6 +31,8 @@ class ScenarioChatServiceError(RuntimeError):
 class ScenarioChatRegistration:
     scenario_id: str
     display_name: str
+    initial_question: str
+    suggested_questions: tuple[str, ...]
     service_factory: Callable[[Session, User, str], ScenarioChatService]
 
 
@@ -76,6 +78,8 @@ class ScenarioChatServiceRegistry:
                 "status": "ACTIVE" if release else "NOT_ACTIVE",
                 "scenario_version": release.version if release else None,
                 "data_classification": "simulated",
+                "initial_question": registration.initial_question,
+                "suggested_questions": list(registration.suggested_questions),
             })
         return rows
 
@@ -205,11 +209,23 @@ def get_scenario_chat_registry() -> ScenarioChatServiceRegistry:
     registry.register(ScenarioChatRegistration(
         scenario_id="charging_ops",
         display_name="充电运营",
+        initial_question="2026年6月充电收入环比变化的原因？",
+        suggested_questions=(
+            "毛利率变化的主要关联因素？",
+            "场站利用率下降的场站有哪些？",
+            "度电成本上升的主要贡献项？",
+        ),
         service_factory=ChatBIService,
     ))
     registry.register(ScenarioChatRegistration(
         scenario_id="sales_ops",
         display_name="销售经营",
+        initial_question="2026年6月销售收入、订单数和销售毛利率是多少？",
+        suggested_questions=(
+            "2026年6月退款率是多少？",
+            "2026年6月新客户数和复购客户数是多少？",
+            "2026年6月客单价是多少？",
+        ),
         service_factory=SalesOpsChatService,
     ))
     return registry

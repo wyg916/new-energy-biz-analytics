@@ -30,7 +30,7 @@ test('经营预警复刻页在100%缩放下一屏完整展示', async ({ page })
   await expect(page.getByRole('heading', { name: '本轮诊断证据' })).toBeVisible()
   await expect(page.getByText('无虚构处理记录')).toBeVisible()
   await expect(page.getByText('模拟数据', { exact: true })).toBeVisible()
-  await expect(page.getByText(/run_id：DIAG-/)).toBeVisible()
+  await expect(page.locator('.global-data-status')).toContainText(/run_id：DASH-/)
 
   const fit = await page.evaluate(() => {
     const panels = [...document.querySelectorAll<HTMLElement>('.alert-panel')]

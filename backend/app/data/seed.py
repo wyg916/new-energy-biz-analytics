@@ -15,7 +15,12 @@ from app.models.business import (
     DeviceStatusEvent, EnergyCost, MetricDefinition, OperationExpense,
     Region, SimulatedUser, Station,
 )
-from app.services.metric_catalog import ALLOWED_DIMENSIONS, METRICS
+from app.services.metric_catalog import (
+    ALLOWED_DIMENSIONS,
+    METRICS,
+    METRIC_DETAILS,
+    SUPPORTED_GRAINS,
+)
 
 SEED = 20260722
 VERSION = "0.1.0"
@@ -181,7 +186,20 @@ def generate_simulated_data(db: Session, session_count: int = 300_000, seed: int
                 expense_rows.append({"station_id": station_id, "expense_date": day, "expense_type": expense_type, "amount": _money(revenue * rate), "is_variable": True, "allocation_rule": allocation, "batch_id": batch_id, "source_type": "simulated"})
     _bulk(db, EnergyCost, energy_rows); _bulk(db, OperationExpense, expense_rows)
 
-    metric_rows = [{"metric_id": key, "display_name": value[0], "unit": value[1], "version": VERSION, "status": "approved_for_implementation", "formula": value[2], "allowed_dimensions_json": json.dumps(ALLOWED_DIMENSIONS)} for key, value in METRICS.items()]
+    metric_rows = [{
+        "metric_id": key,
+        "display_name": value[0],
+        "unit": value[1],
+        "version": VERSION,
+        "status": "approved_for_implementation",
+        "formula": value[2],
+        "allowed_dimensions_json": json.dumps(ALLOWED_DIMENSIONS),
+        "business_domain": METRIC_DETAILS[key]["business_domain"],
+        "definition": METRIC_DETAILS[key]["definition"],
+        "source_tables_json": json.dumps(METRIC_DETAILS[key]["source_tables"]),
+        "supported_grains_json": json.dumps(SUPPORTED_GRAINS),
+        "metric_type": METRIC_DETAILS[key]["metric_type"],
+    } for key, value in METRICS.items()]
     _bulk(db, MetricDefinition, metric_rows)
     counts = {"regions": len(regions), "cities": len(cities), "stations": len(stations), "devices": len(devices), "users": len(users), "dates": len(days), "sessions": len(session_rows), "device_status_events": len(status_rows), "energy_cost_rows": len(energy_rows), "operation_expense_rows": len(expense_rows), "metrics": len(metric_rows)}
     run.actual_counts_json = json.dumps(counts)

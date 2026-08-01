@@ -1,5 +1,5 @@
 import json
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from uuid import uuid4
 
 from sqlalchemy import func, select
@@ -11,7 +11,7 @@ from app.models.business import MetricDefinition
 from app.models.integration import PublishedStationSnapshot
 from app.scenarios.charging_ops.manifest import MANIFEST_CHECKSUM, VERSION
 from app.scenarios.registry import published_charging_ops
-from app.services.metric_catalog import METRICS
+from app.services.metric_catalog import DIMENSION_LABELS, METRICS
 from app.services.metrics import MetricService
 from app.core.config import get_settings
 from app.scenarios.charging_ops.runtime import (
@@ -87,6 +87,11 @@ class DashboardService:
             "status": definition.status,
             "formula": definition.formula,
             "allowed_dimensions": json.loads(definition.allowed_dimensions_json),
+            "business_domain": definition.business_domain,
+            "definition": definition.definition,
+            "source_tables": json.loads(definition.source_tables_json),
+            "supported_grains": json.loads(definition.supported_grains_json),
+            "metric_type": definition.metric_type,
         } for definition in definitions]
         self._audit(
             "dashboard.metric_catalog",
@@ -99,6 +104,7 @@ class DashboardService:
         )
         return {
             "rows": rows,
+            "dimension_labels": DIMENSION_LABELS,
             "scenario": {
                 "scenario_id": "charging_ops",
                 "display_name": "充电运营",
@@ -107,6 +113,68 @@ class DashboardService:
                 "status": "published" if published_charging_ops(self.db) else "installed",
             },
             "metadata": self._metadata(start, end_exclusive, run_id),
+        }
+
+    def frontend_context(self) -> dict:
+        run_id = f"CTX-{uuid4()}"
+        scenario = published_charging_ops(self.db)
+        batch = (
+            self.db.get(DataGenerationRun, scenario.source_batch_id)
+            if scenario and scenario.source_batch_id
+            else None
+        )
+        if batch is None or batch.status != "completed" or batch.quality_status != "passed":
+            raise RuntimeError("PUBLISHED_DATASET_NOT_READY")
+        end_exclusive = batch.period_end + timedelta(days=1)
+        default_start_month = end_exclusive.month - 6
+        default_start_year = end_exclusive.year
+        while default_start_month <= 0:
+            default_start_month += 12
+            default_start_year -= 1
+        default_start = max(
+            batch.period_start,
+            date(default_start_year, default_start_month, 1),
+        )
+        metric_count = int(
+            self.db.scalar(select(func.count()).select_from(MetricDefinition)) or 0
+        )
+        self._audit(
+            "dashboard.frontend_context",
+            run_id,
+            {
+                "batch_id": batch.batch_id,
+                "metric_count": metric_count,
+            },
+        )
+        return {
+            "default_time_range": {
+                "start": default_start.isoformat(),
+                "end_exclusive": end_exclusive.isoformat(),
+            },
+            "available_time_range": {
+                "start": batch.period_start.isoformat(),
+                "end_exclusive": end_exclusive.isoformat(),
+            },
+            "scenario": {
+                "scenario_id": scenario.scenario_id,
+                "display_name": scenario.display_name,
+                "version": scenario.version,
+                "status": scenario.status,
+            },
+            "metric_count": metric_count,
+            "recommended_questions": [
+                "本期各区域充电收入排名如何？",
+                "毛利率环比变化的主要关联因素？",
+                "充电利用率偏低的场站有哪些？",
+                "设备故障率最高的站点是哪些？",
+                "夜间充电量的变化趋势如何？",
+                "高功率设备订单的结构如何？",
+            ],
+            "metadata": self._metadata(
+                batch.period_start,
+                end_exclusive,
+                run_id,
+            ),
         }
 
     def station_analysis(self, metric_ids: list[str], start: date, end_exclusive: date, limit: int = 30) -> dict:
