@@ -15,6 +15,8 @@ from app.bootstrap import bootstrap_demo_users
 from app.core.config import get_settings
 from app.core.logging import configure_logging
 from app.core.observability import request_metrics
+from app.governance.identity import TrustedIdentityMiddleware
+from app.governance.authorization import AuthorizationDenied
 
 
 logger = logging.getLogger("app.http")
@@ -33,6 +35,7 @@ async def lifespan(_: FastAPI):
 app = FastAPI(title=get_settings().app_name, version="0.1.0", lifespan=lifespan)
 app.add_middleware(CORSMiddleware, allow_origins=get_settings().cors_origin_list, allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=get_settings().trusted_host_list)
+app.add_middleware(TrustedIdentityMiddleware)
 app.include_router(api_router)
 
 
@@ -67,3 +70,11 @@ async def observe_request(request: Request, call_next):
 @app.exception_handler(RequestValidationError)
 async def validation_error(_: Request, exc: RequestValidationError) -> JSONResponse:
     return JSONResponse(status_code=422, content={"error": {"code": "VALIDATION_ERROR", "message": "请求参数不合法", "details": exc.errors()}})
+
+
+@app.exception_handler(AuthorizationDenied)
+async def authorization_denied(_: Request, exc: AuthorizationDenied) -> JSONResponse:
+    return JSONResponse(
+        status_code=403,
+        content={"detail": {"code": exc.code, "message": str(exc)}},
+    )

@@ -17,9 +17,15 @@ class IdentityContext:
     auth_strength: str
     issued_at: datetime
     request_id: str
+    principal_id: str | None = None
+    provider_code: str = "LOCAL"
 
 
 class IdentityContextFactory:
+    @staticmethod
+    def now() -> datetime:
+        return datetime.now(UTC)
+
     @staticmethod
     def from_user(user, *, request_id: str | None = None) -> IdentityContext:
         settings = get_settings()
@@ -35,4 +41,6 @@ class IdentityContextFactory:
             auth_strength="local-jwt",
             issued_at=datetime.now(UTC),
             request_id=request_id or f"REQ-{uuid4()}",
+            principal_id=f"PRN-LOCAL-{user.id}",
+            provider_code="LOCAL",
         )

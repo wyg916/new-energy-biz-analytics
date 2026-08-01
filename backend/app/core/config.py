@@ -7,8 +7,16 @@ from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
+def _default_knowledge_source_root() -> str:
+    container_root = Path("/app/knowledge_sources")
+    if container_root.is_dir():
+        return str(container_root)
+    return str(Path(__file__).resolve().parents[3])
+
+
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    # Runtime configuration is injected explicitly. The application does not scan .env files.
+    model_config = SettingsConfigDict(extra="ignore")
 
     app_name: str = "新能源企业经营分析智能平台"
     app_env: Literal["development", "test", "production"] = "development"
@@ -21,12 +29,18 @@ class Settings(BaseSettings):
     auto_bootstrap_demo_users: bool = True
     simulated_data_only: bool = True
     data_import_root: str = "data/imports"
-    knowledge_source_root: str = "/app/knowledge_sources"
+    knowledge_source_root: str = _default_knowledge_source_root()
     api_source_allowlist: str = "localhost,127.0.0.1,host.docker.internal"
     public_base_url: str = "http://localhost:8080"
     trusted_hosts: str = "localhost,127.0.0.1,testserver"
     release_version: str = "0.1.0-dev"
-    expected_database_revision: str = "p2b_0001"
+    expected_database_revision: str = "p3_0001"
+    secret_env_allowlist: str = (
+        "SQLBOT_SERVICE_USERNAME,SQLBOT_SERVICE_PASSWORD,"
+        "P2A_SQLBOT_USERNAME,P2A_SQLBOT_PASSWORD,"
+        "MODEL_GATEWAY_KIMI_API_KEY,MODEL_GATEWAY_MIMO_API_KEY,"
+        "MODEL_GATEWAY_DEEPSEEK_API_KEY"
+    )
     platform_version_routing_enabled: bool | None = None
     sqlbot_engine_enabled: bool = False
     sqlbot_runtime_verified: bool = False
@@ -168,6 +182,10 @@ class Settings(BaseSettings):
             "users": self._csv_set(self.query_engine_canary_users),
             "scenarios": self._csv_set(self.query_engine_canary_scenarios),
         }
+
+    @property
+    def secret_env_allowlist_set(self) -> set[str]:
+        return set(self._csv_set(self.secret_env_allowlist))
 
 
 @lru_cache

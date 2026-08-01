@@ -6,6 +6,7 @@ from app.core.database import Base, SessionLocal, engine
 from app.core.security import hash_password
 from app.models.auth import User
 from app.models.integration import DataSetDefinition, DataSourceConnection
+from app.governance.bootstrap import install_governance_baseline
 from app.scenarios.charging_ops.manifest import MAPPING_FIELDS
 from app.scenarios.registry import install_charging_ops
 from app.platform.identity import IdentityContextFactory
@@ -63,3 +64,4 @@ def bootstrap_demo_users() -> None:
             identity = IdentityContextFactory.from_user(admin)
             install_initial_skills(db, identity)
             install_initial_source_bindings(db, identity)
+        install_governance_baseline(db)
