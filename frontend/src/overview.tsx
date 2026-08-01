@@ -4,6 +4,7 @@ import { MetricsPage } from './metrics'
 import { RevenuePage } from './revenue'
 import { KnowledgePage } from './knowledge'
 import { MemoryPage, SkillPage } from './memory-skills'
+import { GovernancePage } from './governance'
 import './overview.css'
 import './report.css'
 import './mapping.css'
@@ -80,7 +81,7 @@ type DeviceAnalysis = {
   reason_summary: Array<{ reason_code: string; count: number }>
   metadata: Metadata
 }
-type ViewId = 'overview' | 'dashboard' | 'revenue' | 'margin' | 'stations' | 'devices' | 'alerts' | 'chat' | 'reports' | 'knowledge' | 'memory' | 'skills' | 'mapping' | 'metrics'
+type ViewId = 'overview' | 'dashboard' | 'revenue' | 'margin' | 'stations' | 'devices' | 'alerts' | 'chat' | 'reports' | 'knowledge' | 'memory' | 'skills' | 'mapping' | 'metrics' | 'governance'
 
 const groups: Array<{ title: string; items: Array<{ id: ViewId; label: string; icon: string }> }> = [
   { title: '基础入口', items: [{ id: 'overview', label: '功能总览', icon: '⌂' }, { id: 'dashboard', label: '经营工作台', icon: '◫' }] },
@@ -88,12 +89,14 @@ const groups: Array<{ title: string; items: Array<{ id: ViewId; label: string; i
   { title: '智能分析', items: [{ id: 'chat', label: 'AI经营分析', icon: 'AI' }, { id: 'memory', label: '记忆与偏好', icon: '忆' }, { id: 'skills', label: 'Skill 管理', icon: '技' }] },
   { title: '内容管理', items: [{ id: 'reports', label: '经营报告', icon: '▱' }, { id: 'knowledge', label: '企业知识库', icon: '知' }] },
   { title: '数据管理', items: [{ id: 'mapping', label: '数据接入与字段映射', icon: '◎' }, { id: 'metrics', label: '指标与场景管理', icon: '▧' }] },
+  { title: '企业治理', items: [{ id: 'governance', label: '治理与生产就绪', icon: '治' }] },
 ]
 
 const titles: Record<ViewId, string> = {
   overview: '功能总览', dashboard: '经营工作台', revenue: '收入与订单', margin: '毛利与成本',
   stations: '场站经营', devices: '设备健康', alerts: '经营预警', chat: 'AI经营分析',
   reports: '经营报告', knowledge: '企业知识库', memory: '记忆与偏好', skills: 'Skill 管理', mapping: '数据接入与字段映射', metrics: '指标与场景管理',
+  governance: '企业治理与生产就绪',
 }
 const pageMetrics: Record<string, string[]> = {
   dashboard: ['charging_revenue', 'gross_profit', 'gross_margin', 'charging_volume_kwh', 'completed_order_count', 'active_user_count'],
@@ -2319,9 +2322,10 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
   else if (active === 'skills') content = <SkillPage token={token} />
   else if (active === 'mapping') content = <MappingPage token={token} start={start} end={end} />
   else if (active === 'metrics') content = <MetricsPage token={token} summary={summary} start={start} end={end} />
+  else if (active === 'governance') content = <GovernancePage token={token} />
   else content = <>{error && <div className="notice error">{error}</div>}<DetailPage active={active} summary={summary} stations={stations} trend={trend} /></>
-  const shellMode = active === 'revenue' ? ' revenue-mode' : active === 'margin' ? ' margin-mode' : active === 'stations' ? ' station-mode' : active === 'devices' ? ' device-mode' : active === 'alerts' ? ' alert-mode' : active === 'reports' ? ' report-mode' : active === 'knowledge' ? ' knowledge-mode' : active === 'memory' || active === 'skills' ? ' governance-mode' : active === 'mapping' ? ' mapping-mode' : active === 'metrics' ? ' metrics-mode' : ''
-  const mainMode = active === 'revenue' ? ' revenue-main' : active === 'margin' ? ' margin-main' : active === 'stations' ? ' station-main' : active === 'devices' ? ' device-main' : active === 'alerts' ? ' alert-main' : active === 'reports' ? ' report-main' : active === 'knowledge' ? ' knowledge-main' : active === 'memory' || active === 'skills' ? ' governance-main' : active === 'mapping' ? ' mapping-main' : active === 'metrics' ? ' metrics-main' : ''
+  const shellMode = active === 'revenue' ? ' revenue-mode' : active === 'margin' ? ' margin-mode' : active === 'stations' ? ' station-mode' : active === 'devices' ? ' device-mode' : active === 'alerts' ? ' alert-mode' : active === 'reports' ? ' report-mode' : active === 'knowledge' ? ' knowledge-mode' : active === 'memory' || active === 'skills' || active === 'governance' ? ' governance-mode' : active === 'mapping' ? ' mapping-mode' : active === 'metrics' ? ' metrics-mode' : ''
+  const mainMode = active === 'revenue' ? ' revenue-main' : active === 'margin' ? ' margin-main' : active === 'stations' ? ' station-main' : active === 'devices' ? ' device-main' : active === 'alerts' ? ' alert-main' : active === 'reports' ? ' report-main' : active === 'knowledge' ? ' knowledge-main' : active === 'memory' || active === 'skills' || active === 'governance' ? ' governance-main' : active === 'mapping' ? ' mapping-main' : active === 'metrics' ? ' metrics-main' : ''
   return <div className={`product-shell${shellMode}`}><Sidebar active={active} navigate={setActive} /><div className="workspace"><ProductHeader active={active} start={start} end={end} setStart={setStart} setEnd={setEnd} logout={logout} /><main className={`product-main${mainMode}`}>{content}</main><GlobalDataStatus metadata={summary?.metadata ?? context?.metadata ?? null} /></div></div>
 }
 
