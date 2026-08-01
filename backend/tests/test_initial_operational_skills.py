@@ -107,6 +107,18 @@ def request(skill_code, *, scenario="charging_ops"):
     )
 
 
+def test_charging_adapter_reads_metric_metadata_from_full_metric_contract(db, users):
+    from app.skills.adapters import ChargingOpsAnalysisAdapter
+
+    metadata = ChargingOpsAnalysisAdapter(db, users[0]).metric_metadata(
+        "charging_revenue"
+    )
+    assert metadata["metric_id"] == "charging_revenue"
+    assert metadata["metric_name"]
+    assert metadata["unit"]
+    assert metadata["source"] == "published charging_ops semantic layer"
+
+
 def install(db, admin):
     return install_initial_skills(db, IdentityContextFactory.from_user(admin))
 

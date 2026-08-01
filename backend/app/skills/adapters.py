@@ -105,7 +105,9 @@ class ChargingOpsAnalysisAdapter:
         } for row in result["bridge"])
 
     def metric_metadata(self, metric_id: str) -> dict:
-        name, unit = METRICS[metric_id]
+        # The charging metric contract also carries its deterministic formula.
+        # Metadata consumers need only the first two fields.
+        name, unit, *_ = METRICS[metric_id]
         return {
             "metric_id": metric_id,
             "metric_name": name,

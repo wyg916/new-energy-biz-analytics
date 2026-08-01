@@ -111,6 +111,9 @@ def install_governance_baseline(db: Session) -> None:
             )
             db.add(role)
         roles[role_code] = role
+        # SessionLocal disables autoflush. Persist the role before inserting
+        # role-permission rows that reference its string primary key.
+        db.flush()
         for permission_code in permission_codes:
             permission = db.scalar(select(GovernancePermission).where(
                 GovernancePermission.permission_code == permission_code
@@ -148,6 +151,9 @@ def install_governance_baseline(db: Session) -> None:
             created_by="system:p3-baseline",
         )
         db.add(policy)
+    # Governance bindings reference both the role and policy by identifier;
+    # force both parents to exist before PostgreSQL checks the foreign keys.
+    db.flush()
     for role_code, role in roles.items():
         binding_id = f"BIND-P3-{role_code.upper()}"
         if db.get(GovernanceBinding, binding_id) is None:
