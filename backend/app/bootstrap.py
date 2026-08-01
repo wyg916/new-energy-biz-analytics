@@ -8,6 +8,8 @@ from app.models.auth import User
 from app.models.integration import DataSetDefinition, DataSourceConnection
 from app.scenarios.charging_ops.manifest import MAPPING_FIELDS
 from app.scenarios.registry import install_charging_ops
+from app.platform.identity import IdentityContextFactory
+from app.skills.definitions import install_initial_skills
 
 
 DEMO_USERS = (
@@ -55,3 +57,6 @@ def bootstrap_demo_users() -> None:
             ))
         install_charging_ops(db)
         db.commit()
+        admin = db.scalar(select(User).where(User.username == "analyst"))
+        if admin is not None:
+            install_initial_skills(db, IdentityContextFactory.from_user(admin))

@@ -17,6 +17,8 @@ from app.platform.semantic_registry import SemanticRegistryError
 from app.query_engines.router import QueryRoutingError
 from app.response.contracts import ResponseProfileName
 from app.scenarios.sales_ops.engine import SalesOpsQueryError
+from app.orchestration.memory_skills import FeedbackHandler
+from app.platform.identity import IdentityContextFactory
 
 router = APIRouter(prefix="/assistant", tags=["assistant"])
 
@@ -38,6 +40,7 @@ class AssistantFeedbackRequest(BaseModel):
     trace_id: str = Field(min_length=8, max_length=96)
     rating: str = Field(pattern=r"^(helpful|not_helpful)$")
     comment: str | None = Field(default=None, max_length=500)
+    scenario_id: str = Field(default="charging_ops", pattern=r"^(charging_ops|sales_ops)$")
 
 
 @router.post("/query")
@@ -102,6 +105,7 @@ def assistant_query(
         "run_id": result.run_id,
         "conversation_id": result.conversation_id,
         "data_classification": "simulated",
+        "memory_context": result.memory_context,
     }
 
 
@@ -131,4 +135,15 @@ def assistant_feedback(
         }, ensure_ascii=False),
     ))
     db.commit()
-    return {"status": "recorded", "rating": payload.rating, "run_id": payload.run_id}
+    try:
+        return FeedbackHandler(
+            db, IdentityContextFactory.from_user(user)
+        ).record(
+            run_id=payload.run_id,
+            trace_id=payload.trace_id,
+            rating=payload.rating,
+            comment=payload.comment,
+            scenario_id=payload.scenario_id,
+        )
+    except LookupError:
+        return {"status": "recorded", "rating": payload.rating, "run_id": payload.run_id}

@@ -24,6 +24,7 @@ ALLOWED_SEMANTIC_KEYS = {
     "confirmed_preference",
     "corrected_term",
     "tenant_analysis_config_ref",
+    "memory_enabled",
 }
 FORBIDDEN_SEMANTIC_KEYS = {
     "revenue",

@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.memory.episodic import EpisodicMemoryService, EpisodicRun
 from app.memory.models import SkillExecutionRecord
+from app.memory.policy import MemoryPolicyService
 from app.memory.procedural import SkillRegistry
 from app.models.auth import User
 from app.platform.identity import IdentityContextFactory
@@ -356,6 +357,10 @@ class SkillExecutor:
         adapter: AnalysisAdapter,
         execution: SkillExecutionRecord,
     ) -> None:
+        if not MemoryPolicyService(self.db, self.identity).is_enabled(
+            scenario_id=request.scenario_id
+        ):
+            return
         output.steps.append({
             "step_id": f"STEP-{uuid4()}",
             "code": "write_episode",

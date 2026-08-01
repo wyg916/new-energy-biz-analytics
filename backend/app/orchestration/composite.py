@@ -11,6 +11,10 @@ from app.knowledge.models import RetrievalIdentity
 from app.knowledge.retrieval import KnowledgeRetrievalService
 from app.models.auth import AuditLog, User
 from app.platform.identity import IdentityContextFactory
+from app.memory.episodic import EpisodicMemoryService, EpisodicRun
+from app.memory.policy import MemoryPolicyService
+from app.memory.working import WorkingMemoryService, WorkingMemoryState
+from app.orchestration.memory_skills import MemoryContextLoader, ProcedureMatcher
 from app.response.composer import ResponseComposer
 from app.response.contracts import (
     CitationEvidence,
@@ -43,6 +47,7 @@ class CompositeResult:
     trace_id: str
     run_id: str
     conversation_id: str | None
+    memory_context: dict
 
 
 class CompositeQueryOrchestrator:
@@ -62,6 +67,24 @@ class CompositeQueryOrchestrator:
         route = requested_route or self.classify(question)
         trace_id = f"TRACE-{uuid4()}"
         run_id = f"COMPOSITE-{uuid4()}"
+        identity = IdentityContextFactory.from_user(self.user)
+        matched_skill = ProcedureMatcher(self.db, identity).match(
+            question=question,
+            scenario_id=scenario_id,
+        )
+        loaded_memory = MemoryContextLoader(self.db, identity).load(
+            scenario_id=scenario_id,
+            user_question=question,
+            session_id=conversation_id,
+            active_procedure=(
+                {
+                    "skill_id": matched_skill.skill_id,
+                    "skill_code": matched_skill.skill_code,
+                    "version": matched_skill.version,
+                }
+                if matched_skill else None
+            ),
+        )
         data_payload = None
         data_evidence = None
         bound_conversation = conversation_id
@@ -79,7 +102,6 @@ class CompositeQueryOrchestrator:
         knowledge_result = None
         knowledge_evidence = None
         if route in {CompositeRoute.KNOWLEDGE, CompositeRoute.DATA_AND_KNOWLEDGE}:
-            identity = IdentityContextFactory.from_user(self.user)
             knowledge_result = KnowledgeRetrievalService(self.db).retrieve(
                 question,
                 RetrievalIdentity(
@@ -116,6 +138,86 @@ class CompositeQueryOrchestrator:
             ),
         ))
         self.db.commit()
+        memory_enabled = MemoryPolicyService(self.db, identity).is_enabled(
+            scenario_id=scenario_id
+        )
+        if memory_enabled:
+            EpisodicMemoryService(self.db, identity).record_success(EpisodicRun(
+                run_id=run_id,
+                trace_id=trace_id,
+                session_id=bound_conversation or f"COMPOSITE-{run_id}",
+                raw_question=question,
+                normalized_question=question.strip(),
+                scenario_id=scenario_id,
+                dataset_version=str(
+                    ((data_payload or {}).get("query_result") or {}).get("dataset_version")
+                    or "ACTIVE"
+                ),
+                semantic_version=str(
+                    ((data_payload or {}).get("query_result") or {}).get("semantic_version")
+                    or "ACTIVE"
+                ),
+                engine="deterministic_composite",
+                query_plan=(data_payload or {}).get("query_plan") or {"route": route},
+                actual_sql=((data_payload or {}).get("query_result") or {}).get("sql"),
+                result_summary={
+                    "route": route,
+                    "refused": response.refused,
+                    "data_status": (data_payload or {}).get("status"),
+                    "citation_count": len(knowledge_result.citations) if knowledge_result else 0,
+                },
+                rag_evidence=(
+                    [
+                        {"chunk_id": chunk_id}
+                        for chunk_id in self._safe_knowledge_evidence(knowledge_result).get("chunk_ids", [])
+                    ]
+                    if knowledge_result else []
+                ),
+                final_answer=response.conclusion,
+                skill_code=matched_skill.skill_code if matched_skill else None,
+                steps=[
+                    {"step_id": f"STEP-{uuid4()}", "code": "identity", "status": "completed"},
+                    {"step_id": f"STEP-{uuid4()}", "code": "memory_context", "status": "completed"},
+                    {"step_id": f"STEP-{uuid4()}", "code": "compose", "status": "completed"},
+                ],
+                errors=[],
+                adopted=None,
+                runtime_cost={"token_usage": 0},
+                latency_ms=0,
+            ))
+            if bound_conversation:
+                working = WorkingMemoryService.from_runtime(self.db, identity).save(
+                    session_id=bound_conversation,
+                    state=WorkingMemoryState(
+                        scenario_id=scenario_id,
+                        dataset_version=str(
+                            ((data_payload or {}).get("query_result") or {}).get("dataset_version")
+                            or "ACTIVE"
+                        ),
+                        semantic_version=str(
+                            ((data_payload or {}).get("query_result") or {}).get("semantic_version")
+                            or "ACTIVE"
+                        ),
+                        metrics=list(((data_payload or {}).get("query_plan") or {}).get("metrics", [])),
+                        dimensions=list(((data_payload or {}).get("query_plan") or {}).get("dimensions", [])),
+                        query_result_summary={
+                            "status": (data_payload or {}).get("status"),
+                            "route": route,
+                        },
+                        knowledge_references=(
+                            self._safe_knowledge_evidence(knowledge_result).get("chunk_ids", [])
+                            if knowledge_result else []
+                        ),
+                        response_profile=profile,
+                        current_intent=matched_skill.skill_code if matched_skill else None,
+                        run_id=run_id,
+                    ),
+                )
+                working_status = working.status
+            else:
+                working_status = loaded_memory.working_status
+        else:
+            working_status = "DISABLED"
         return CompositeResult(
             route=route,
             response=response.model_dump(mode="json"),
@@ -128,6 +230,13 @@ class CompositeQueryOrchestrator:
             trace_id=trace_id,
             run_id=run_id,
             conversation_id=bound_conversation,
+            memory_context={
+                "enabled": memory_enabled,
+                "working_status": working_status,
+                "semantic_count": len(loaded_memory.sections.semantic_facts),
+                "episodic_example_count": len(loaded_memory.sections.episodic_examples),
+                "matched_skill": matched_skill.skill_code if matched_skill else None,
+            },
         )
 
     @staticmethod
