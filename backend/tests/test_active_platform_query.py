@@ -108,7 +108,7 @@ def test_sqlbot_adapter_is_disabled_and_runtime_unverified_by_default() -> None:
     engine = SQLBotEngine(enabled=False)
     assert engine.health_check() == {
         "engine": "sqlbot",
-        "version": "adapter-1.0.0/sqlbot-v1.8.0",
+        "version": "adapter-1.1.0/sqlbot-v1.8.0",
         "enabled": False,
         "runtime_verified": False,
         "status": "DISABLED",

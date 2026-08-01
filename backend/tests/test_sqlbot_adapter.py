@@ -361,8 +361,6 @@ def test_timeout_opens_circuit_without_unbounded_retry(monkeypatch) -> None:
         "SELECT secret_field FROM semantic_sales_ops_orders LIMIT 1",
         "SELECT * FROM semantic_sales_ops_orders LIMIT 1",
         "SELECT pg_sleep(1) FROM semantic_sales_ops_orders LIMIT 1",
-        "SELECT order_id FROM semantic_sales_ops_orders",
-        "SELECT order_id FROM semantic_sales_ops_orders LIMIT 1000",
         "WITH x AS (SELECT order_id FROM semantic_sales_ops_orders) "
         "SELECT order_id FROM x LIMIT 1",
     ],

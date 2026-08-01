@@ -247,6 +247,50 @@ def evaluate_golden_contract(source: dict[str, Any]) -> dict[str, Any]:
                     f"{sorted(unknown_dimensions)}"
                 )
 
+        expected_metric = case.get("expected_metric")
+        if expected_metric is not None and expected_metric not in metrics:
+            errors.append("expected_metric must be null or one of expected_metrics")
+        expected_time_range = case.get("expected_time_range")
+        if not isinstance(expected_time_range, dict) or expected_time_range.get("mode") not in {
+            "explicit", "semantic_default", "out_of_dataset_range"
+        }:
+            errors.append("expected_time_range oracle is invalid")
+        elif expected_time_range.get("mode") == "explicit" and not {
+            "start", "end_exclusive"
+        }.issubset(expected_time_range):
+            errors.append("explicit expected_time_range is incomplete")
+        expected_sort = case.get("expected_sort")
+        if expected_sort is not None and (
+            not isinstance(expected_sort, dict)
+            or expected_sort.get("direction") not in {"ASC", "DESC"}
+            or not isinstance(expected_sort.get("limit"), int)
+            or not 1 <= expected_sort["limit"] <= 500
+        ):
+            errors.append("expected_sort oracle is invalid")
+        row_range = case.get("expected_row_count_range")
+        if not isinstance(row_range, dict) or not all(
+            isinstance(row_range.get(key), int) for key in ("min", "max")
+        ) or not 0 <= row_range["min"] <= row_range["max"] <= 500:
+            errors.append("expected_row_count_range oracle is invalid")
+        result_hash = case.get("expected_result_hash")
+        tolerance = case.get("expected_result_tolerance")
+        if decision == "QUERY" and not (
+            isinstance(result_hash, str)
+            or (
+                isinstance(tolerance, dict)
+                and isinstance(tolerance.get("relative"), (int, float))
+                and isinstance(tolerance.get("absolute"), (int, float))
+            )
+        ):
+            errors.append("query oracle requires expected_result_hash or tolerance")
+        if case.get("expected_rejection") is not (decision == "REJECT"):
+            errors.append("expected_rejection does not match expected_decision")
+        allowed_variants = case.get("allowed_sql_variants")
+        if not isinstance(allowed_variants, list) or not allowed_variants or not all(
+            isinstance(item, str) and item for item in allowed_variants
+        ):
+            errors.append("allowed_sql_variants oracle is invalid")
+
         candidate_sql = case.get("candidate_sql")
         if target_engine == "query_guard":
             security_candidates += 1

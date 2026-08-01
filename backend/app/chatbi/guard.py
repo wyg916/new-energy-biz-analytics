@@ -94,7 +94,11 @@ def guard_sqlbot_sql(sql: str, context: Any) -> None:
         raise QueryRejected("SQLBot field is not in the active semantic allowlist")
 
     limit = root.args.get("limit")
-    if limit is None or not isinstance(limit.expression, exp.Literal):
+    if limit is None:
+        if root.find(exp.AggFunc) is not None or root.args.get("group") is not None:
+            return
+        raise QueryRejected("SQLBot detail result must have a literal LIMIT")
+    if not isinstance(limit.expression, exp.Literal):
         raise QueryRejected("SQLBot result must have a literal LIMIT")
     try:
         requested_limit = int(limit.expression.this)

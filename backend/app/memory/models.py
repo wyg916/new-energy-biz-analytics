@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-from sqlalchemy import Boolean, DateTime, Float, Index, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, DateTime, Float, Index, Integer, String, Text, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -237,6 +237,13 @@ class SQLBotSourceBindingRelease(Base):
     __table_args__ = (
         UniqueConstraint("scenario_id", "version", name="uq_sqlbot_binding_scenario_version"),
         Index("ix_sqlbot_binding_active", "scenario_id", "status"),
+        Index(
+            "uq_sqlbot_binding_single_active",
+            "scenario_id",
+            unique=True,
+            postgresql_where=text("status = 'ACTIVE'"),
+            sqlite_where=text("status = 'ACTIVE'"),
+        ),
     )
 
     binding_release_id: Mapped[str] = mapped_column(String(64), primary_key=True)

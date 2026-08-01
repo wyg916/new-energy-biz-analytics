@@ -16,6 +16,7 @@ from app.query_engines.sqlbot.error_mapper import (
 )
 from app.query_engines.sqlbot.feature_flags import SQLBotFeatureFlags
 from app.query_engines.sqlbot.health import CircuitBreaker
+from app.query_engines.sqlbot.limit_policy import apply_limit_policy
 from app.query_engines.sqlbot.request_mapper import map_question_request
 from app.query_engines.sqlbot.response_parser import parse_response
 from app.query_engines.sqlbot.session_manager import SQLBotSessionManager
@@ -35,7 +36,7 @@ def _binding_hash(key: SQLBotSessionKey) -> str:
 
 class SQLBotEngine(QueryEngine):
     name = "sqlbot"
-    version = "adapter-1.0.0/sqlbot-v1.8.0"
+    version = "adapter-1.1.0/sqlbot-v1.8.0"
 
     def __init__(
         self,
@@ -115,6 +116,15 @@ class SQLBotEngine(QueryEngine):
         parsed = parse_response(
             raw_payload,
             max_rows=min(context.max_rows, request.limits.get("rows", context.max_rows)),
+        )
+        limited = apply_limit_policy(
+            parsed.sql,
+            max_limit=min(context.max_rows, request.limits.get("rows", context.max_rows)),
+        )
+        parsed = replace(
+            parsed,
+            sql=limited.sql,
+            warnings=parsed.warnings + limited.warnings,
         )
         if parsed.token_usage is None and parsed.upstream_record_id is not None:
             parsed = replace(

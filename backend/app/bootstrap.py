@@ -10,6 +10,7 @@ from app.scenarios.charging_ops.manifest import MAPPING_FIELDS
 from app.scenarios.registry import install_charging_ops
 from app.platform.identity import IdentityContextFactory
 from app.skills.definitions import install_initial_skills
+from app.query_engines.sqlbot.source_binding import install_initial_source_bindings
 
 
 DEMO_USERS = (
@@ -59,4 +60,6 @@ def bootstrap_demo_users() -> None:
         db.commit()
         admin = db.scalar(select(User).where(User.username == "analyst"))
         if admin is not None:
-            install_initial_skills(db, IdentityContextFactory.from_user(admin))
+            identity = IdentityContextFactory.from_user(admin)
+            install_initial_skills(db, identity)
+            install_initial_source_bindings(db, identity)

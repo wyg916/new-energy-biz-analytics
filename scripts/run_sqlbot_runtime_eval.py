@@ -157,6 +157,25 @@ def _cases(args, stats: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
     cases = source.get("cases")
     if not isinstance(cases, list) or len(cases) != 100:
         raise RuntimeError("runtime Golden source must contain exactly 100 cases")
+    if args.mode == "representative":
+        selected = []
+        for category in (
+            "single_metric",
+            "filter_sort",
+            "trend_comparison",
+            "multi_table_dimension",
+            "ambiguity_security_refusal",
+        ):
+            for scenario in ("charging_ops", "sales_ops"):
+                group = [
+                    case for case in cases
+                    if case.get("category") == category
+                    and case.get("scenario_id") == scenario
+                ][:3]
+                if len(group) != 3:
+                    raise RuntimeError("representative Golden selection must contain 3 cases per category/scenario")
+                selected.extend(group)
+        return selected
     return cases
 
 
@@ -561,7 +580,7 @@ def _metrics(results: list[dict[str, Any]]) -> dict[str, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=("smoke", "golden"), required=True)
+    parser.add_argument("--mode", choices=("smoke", "representative", "golden"), required=True)
     parser.add_argument("--source", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument(
@@ -575,8 +594,8 @@ def main() -> None:
     parser.add_argument("--concurrency", type=int, choices=(1, 2), default=1)
     parser.add_argument("--recovery-source", type=Path)
     args = parser.parse_args()
-    if args.mode == "golden" and args.source is None:
-        parser.error("--source is required for golden mode")
+    if args.mode in {"representative", "golden"} and args.source is None:
+        parser.error("--source is required for representative or golden mode")
     if args.max_attempts not in {1, 2}:
         parser.error("--max-attempts must be 1 or 2")
 
