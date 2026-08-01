@@ -13,6 +13,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from app.core.config import get_settings
 from app.core.database import SessionLocal
 from app.core.security import decode_access_token
 from app.governance.contracts import OIDCClaims
@@ -287,6 +288,11 @@ class TrustedIdentityMiddleware(BaseHTTPMiddleware):
                         raise IdentityResolutionError("INVALID_TOKEN", "登录状态无效")
                     provider_code = str(payload.get("auth_provider") or "LOCAL")
                     if provider_code == "LOCAL":
+                        if not get_settings().local_auth_enabled:
+                            raise IdentityResolutionError(
+                                "LOCAL_AUTH_DISABLED",
+                                "本环境不接受本地身份令牌",
+                            )
                         identity = IdentityService(db).resolve_local(user, request_id=request_id)
                     else:
                         from app.preproduction.oidc import OIDCSessionStore

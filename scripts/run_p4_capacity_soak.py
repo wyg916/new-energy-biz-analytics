@@ -26,9 +26,10 @@ from sqlalchemy import func, select, text
 from app.core.config import get_settings
 from app.core.database import SessionLocal
 from app.core.security import create_access_token
-from app.governance.models import GovernanceAuditEvent
+from app.governance.models import GovernanceAuditEvent, Principal
 from app.models.auth import User
 from app.preproduction.models import PreproductionAcceptanceRecord
+from app.preproduction.oidc import OIDCSessionStore
 
 
 def percentile(values: list[float], fraction: float) -> float:
@@ -66,12 +67,32 @@ def redis_snapshot() -> dict:
         client.close()
 
 
-def token_for(username: str) -> str:
+def token_for(username: str, *, session_id: str | None = None) -> tuple[str, str]:
     with SessionLocal() as db:
         user = db.scalar(select(User).where(User.username == username, User.is_active.is_(True)))
         if user is None:
             raise RuntimeError(f"acceptance principal unavailable: {username}")
-        return create_access_token(user.id, user.role)
+        principal = db.scalar(select(Principal).where(
+            Principal.local_user_id == user.id,
+            Principal.provider_code == get_settings().oidc_provider_code,
+            Principal.status == "ACTIVE",
+        ))
+        if principal is None:
+            raise RuntimeError(f"OIDC acceptance principal unavailable: {username}")
+        if session_id is None:
+            session_id = OIDCSessionStore().create_session(
+                principal_id=principal.principal_id,
+                user_id=user.id,
+                groups=("analysts",),
+                refresh_token="",
+            )
+        return create_access_token(
+            user.id,
+            user.role,
+            auth_provider=principal.provider_code,
+            principal_id=principal.principal_id,
+            session_id=session_id,
+        ), session_id
 
 
 def request_case(client: httpx.Client, token: str, index: int) -> tuple[str, int, float]:
@@ -124,24 +145,30 @@ def main() -> None:
 
     def worker(offset: int) -> None:
         index = offset
-        token = token_for("analyst")
+        token, session_id = token_for("analyst")
         token_refresh_at = time.monotonic() + 300
-        with httpx.Client(base_url=args.base_url, timeout=args.timeout_seconds, verify=False) as client:
-            while not stop.is_set() and time.monotonic() < deadline:
-                if time.monotonic() >= token_refresh_at:
-                    token = token_for("analyst")
-                    token_refresh_at = time.monotonic() + 300
-                try:
-                    name, status, latency = request_case(client, token, index)
-                except httpx.TimeoutException:
-                    name, status, latency = "timeout", 0, args.timeout_seconds * 1000
-                except httpx.HTTPError:
-                    name, status, latency = "transport_error", 0, 0
-                with lock:
-                    workloads[name] += 1
-                    statuses[status] += 1
-                    latencies.append(latency)
-                index += args.concurrency
+        try:
+            with httpx.Client(base_url=args.base_url, timeout=args.timeout_seconds, verify=False) as client:
+                while not stop.is_set() and time.monotonic() < deadline:
+                    if time.monotonic() >= token_refresh_at:
+                        token, _ = token_for("analyst", session_id=session_id)
+                        token_refresh_at = time.monotonic() + 300
+                    try:
+                        name, status, latency = request_case(client, token, index)
+                    except httpx.TimeoutException:
+                        name, status, latency = "timeout", 0, args.timeout_seconds * 1000
+                    except httpx.HTTPError:
+                        name, status, latency = "transport_error", 0, 0
+                    with lock:
+                        workloads[name] += 1
+                        statuses[status] += 1
+                        latencies.append(latency)
+                    index += args.concurrency
+        finally:
+            try:
+                OIDCSessionStore().revoke_session(session_id)
+            except Exception:
+                pass
 
     with ThreadPoolExecutor(max_workers=args.concurrency) as executor:
         futures = [executor.submit(worker, offset) for offset in range(args.concurrency)]
@@ -176,6 +203,7 @@ def main() -> None:
         "finished_at": datetime.now(UTC).isoformat(),
         "configured_duration_seconds": args.duration_seconds,
         "concurrency": args.concurrency,
+        "authentication_mode": "server_mapped_oidc_session",
         "token_refresh_seconds": 300,
         "duration_clock": "monotonic",
         "total_requests": total,

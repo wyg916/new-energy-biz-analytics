@@ -8,7 +8,9 @@ import jwt
 import pytest
 from cryptography.hazmat.primitives.asymmetric import rsa
 
+from app.core.security import create_access_token
 from app.core.config import Settings
+import app.governance.identity as identity_module
 from app.governance.identity import IdentityResolutionError, RemoteJWKSOIDCProvider
 from app.governance.secrets import SecretResolutionError, VaultKVv2SecretProvider
 from app.preproduction.oidc import OIDCFlowError, OIDCSessionStore
@@ -48,6 +50,21 @@ def test_preproduction_settings_fail_closed() -> None:
         secure_settings(query_engine_mode="CANARY")
     with pytest.raises(ValueError, match="Vault"):
         secure_settings(vault_enabled=False)
+
+
+def test_preproduction_rejects_an_existing_local_bearer(client, monkeypatch) -> None:
+    from app.bootstrap import bootstrap_demo_users
+    from app.core.database import SessionLocal
+    from app.models.auth import User
+    from sqlalchemy import select
+
+    bootstrap_demo_users()
+    with SessionLocal() as db:
+        analyst = db.scalar(select(User).where(User.username == "analyst"))
+        token = create_access_token(analyst.id, analyst.role)
+    monkeypatch.setattr(identity_module, "get_settings", lambda: secure_settings())
+    response = client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == 401
 
 
 def test_remote_jwks_verifies_signature_claims_and_nonce(monkeypatch) -> None:
