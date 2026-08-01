@@ -2332,6 +2332,25 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
 function Login({ loggedIn }: { loggedIn: (token: string) => void }) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [oidc, setOidc] = useState<{ configured: boolean; status: string; provider?: string; pkce_method?: string } | null>(null)
+  useEffect(() => {
+    fetch('/api/v1/auth/oidc/status').then(async response => {
+      if (!response.ok) throw new Error('OIDC 状态不可用')
+      setOidc(await response.json())
+    }).catch(() => setOidc({ configured: false, status: 'CONDITIONAL' }))
+  }, [])
+  const enterpriseLogin = async () => {
+    setLoading(true); setError('')
+    try {
+      const response = await fetch('/api/v1/auth/oidc/start', { method: 'POST' })
+      const body = await response.json().catch(() => null)
+      if (!response.ok || !body?.authorization_url) throw new Error(body?.detail?.message || '企业身份登录不可用')
+      location.assign(body.authorization_url)
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : '企业身份登录不可用')
+      setLoading(false)
+    }
+  }
   const login = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setLoading(true)
@@ -2348,10 +2367,35 @@ function Login({ loggedIn }: { loggedIn: (token: string) => void }) {
       setLoading(false)
     }
   }
-  return <main className="product-login"><form onSubmit={login}><div className="login-brand"><img src="/figma-assets/brand-mark.svg" alt="" /><span><strong>新能源经营分析智能平台</strong><small>AI 增强 BI · 产品级 Alpha</small></span></div><h1>欢迎登录</h1><p>统一指标、可信问数与经营洞察</p><div className="login-truth">数据环境状态将在登录后统一展示</div><label>账号<input name="username" defaultValue="analyst" autoComplete="username" /></label><label>密码<input name="password" type="password" defaultValue="AlphaAnalyst!2026" autoComplete="current-password" /></label><button disabled={loading}>{loading ? '正在安全登录…' : '安全登录'}</button>{error && <div className="login-error">{error}</div>}</form></main>
+  return <main className="product-login"><form onSubmit={login}><div className="login-brand"><img src="/figma-assets/brand-mark.svg" alt="" /><span><strong>新能源经营分析智能平台</strong><small>AI 增强 BI · 受控经营分析</small></span></div><h1>欢迎登录</h1><p>统一指标、可信问数与经营洞察</p><div className="login-truth">数据环境状态将在登录后统一展示</div>{oidc?.configured ? <><div className="login-truth">{oidc.provider} · Authorization Code + PKCE {oidc.pkce_method} · {oidc.status}</div><button type="button" data-testid="oidc-login" disabled={loading || oidc.status !== 'READY'} onClick={() => void enterpriseLogin()}>{loading ? '正在转到企业身份服务…' : '企业身份登录'}</button></> : <><label>账号<input name="username" defaultValue="analyst" autoComplete="username" /></label><label>密码<input name="password" type="password" defaultValue="AlphaAnalyst!2026" autoComplete="current-password" /></label><button disabled={loading}>{loading ? '正在安全登录…' : '安全登录'}</button></>}{error && <div className="login-error">{error}</div>}</form></main>
+}
+
+function OIDCCallback({ loggedIn }: { loggedIn: (token: string) => void }) {
+  const [error, setError] = useState('')
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const code = params.get('code')
+    const state = params.get('state')
+    if (!code || !state) { setError('OIDC 回调缺少 code 或 state'); return }
+    fetch('/api/v1/auth/oidc/callback', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code, state }),
+    }).then(async response => {
+      const body = await response.json().catch(() => null)
+      if (!response.ok || !body?.access_token) throw new Error(body?.detail?.message || 'OIDC 登录失败')
+      localStorage.setItem('alpha_token', body.access_token)
+      history.replaceState({}, '', '/')
+      loggedIn(body.access_token)
+    }).catch(reason => setError(reason instanceof Error ? reason.message : 'OIDC 登录失败'))
+  }, [loggedIn])
+  return <main className="product-login"><section className="gov-state" data-testid="oidc-callback"><b>{error ? '企业身份登录失败' : '正在校验企业身份映射…'}</b>{error && <><span>{error}</span><button onClick={() => location.assign('/')}>返回登录</button></>}</section></main>
 }
 
 export function ProductApp() {
   const [token, setToken] = useState(localStorage.getItem('alpha_token') || '')
-  return token ? <ProductShell token={token} logout={() => { localStorage.removeItem('alpha_token'); setToken('') }} /> : <Login loggedIn={setToken} />
+  if (location.pathname === '/oidc/callback') return <OIDCCallback loggedIn={setToken} />
+  const logout = async () => {
+    if (token) await fetch('/api/v1/auth/oidc/logout', { method: 'POST', headers: { Authorization: `Bearer ${token}` } }).catch(() => undefined)
+    localStorage.removeItem('alpha_token'); setToken('')
+  }
+  return token ? <ProductShell token={token} logout={() => void logout()} /> : <Login loggedIn={setToken} />
 }

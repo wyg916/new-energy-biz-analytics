@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { PreproductionPage } from './preproduction'
 import './governance.css'
 
 type Snapshot = {
@@ -15,8 +16,8 @@ type Snapshot = {
   runtime: { readiness_http_status: number; readiness: Record<string, unknown>; query_engine_mode: string; sqlbot_engine_enabled: boolean; sqlbot_canary_eligible: boolean; production_release_enabled: boolean }
 }
 
-type Tab = 'overview' | 'identity' | 'credentials' | 'retention' | 'audit' | 'release'
-const tabs: Array<[Tab, string]> = [['overview', '治理总览'], ['identity', '身份与授权'], ['credentials', '凭据引用'], ['retention', 'Legal Hold 与保留'], ['audit', '审计与告警'], ['release', '发布与运行']]
+type Tab = 'overview' | 'identity' | 'credentials' | 'retention' | 'audit' | 'release' | 'preproduction'
+const tabs: Array<[Tab, string]> = [['overview', '治理总览'], ['identity', '身份与授权'], ['credentials', '凭据引用'], ['retention', 'Legal Hold 与保留'], ['audit', '审计与告警'], ['release', '发布与运行'], ['preproduction', 'P4 预生产与 RC']]
 
 async function request<T>(path: string, token: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, { ...init, headers: { Authorization: `Bearer ${token}`, ...(init?.body ? { 'Content-Type': 'application/json' } : {}), ...(init?.headers || {}) } })
@@ -73,5 +74,6 @@ export function GovernancePage({ token }: { token: string }) {
     {tab === 'audit' && <section className="gov-grid two"><article className="gov-panel"><header><h3>站内安全告警</h3><span>{openAlerts} OPEN</span></header>{snapshot.alerts.length ? snapshot.alerts.map(item => <div className="gov-alert" key={item.alert_id}><span className={item.severity}><b>{item.rule_code}</b><small>{item.summary} · {item.event_count} 次 · trace_id={item.trace_id}</small></span><div><Status value={item.status} />{item.status === 'OPEN' && <button onClick={() => void action(`/api/v1/governance/alerts/${item.alert_id}/acknowledge`)}>确认</button>}</div></div>) : <Empty>当前无站内安全告警</Empty>}<button disabled title="P3 不自动发送外部消息">外部通知未开放</button></article><article className="gov-panel"><header><h3>Governance Audit</h3><span>追加写入</span></header>{snapshot.audit_events.slice(0, 12).map(item => <div className="gov-audit" key={item.event_id}><span><b>{item.action}</b><small>{item.actor} · {item.resource_type}/{item.resource_id || '-'}</small></span><span><Status value={item.result} /><small>{item.trace_id}</small></span></div>)}<p className="gov-note">审计事件为追加写入，普通业务用户无修改或删除接口；服务端支持过滤、分页和 CSV 导出。</p></article></section>}
 
     {tab === 'release' && <section className="gov-grid two"><article className="gov-panel wide"><header><div><h3>Release Registry</h3><p>DRAFT → REVIEW → APPROVED → ACTIVE；回滚创建新记录并保留历史。</p></div><button disabled title="真实生产发布在 P3 明确禁用">生产发布已禁用</button></header>{snapshot.releases.length ? <table><thead><tr><th>对象</th><th>版本 / 环境</th><th>状态</th><th>审批</th><th>回滚链</th></tr></thead><tbody>{snapshot.releases.map(item => <tr key={item.release_id}><td><b>{item.object_type}</b><small>{item.object_id}</small></td><td>{item.version} / {item.environment}</td><td><Status value={item.status} /></td><td>{item.approved_by || '未审批'}</td><td>{item.rollback_of_release_id || item.supersedes_release_id || '-'}</td></tr>)}</tbody></table> : <Empty>尚无平台发布记录</Empty>}</article><article className="gov-panel"><header><h3>运行健康</h3><Status value={snapshot.runtime.readiness_http_status === 200 ? 'ACTIVE' : 'FAILED'} /></header><pre>{JSON.stringify(snapshot.runtime.readiness, null, 2)}</pre></article><article className="gov-panel"><header><h3>容量验收边界</h3><span>隔离环境</span></header><p className="gov-note">P50、P95、错误率和并发数由可重复的本地验收脚本生成，不作为生产 SLA。真实企业 SSO、生产发布和真实企业数据仍受外部门禁限制。</p><button onClick={() => void load()}>刷新运行状态</button></article></section>}
+    {tab === 'preproduction' && <PreproductionPage token={token} />}
   </div>
 }
