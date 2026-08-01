@@ -79,6 +79,18 @@ def query(
     user: User = Depends(current_user),
     identity: IdentityContext = Depends(trusted_identity),
 ) -> dict:
+    registry = get_scenario_chat_registry()
+    # Scenario availability is already exposed by the authenticated catalog.
+    # Preserve the public API contract for unknown registrations before ABAC
+    # evaluates the narrower allow-list of supported business scenarios.
+    if payload.scenario_id not in registry.scenario_ids:
+        raise HTTPException(
+            status_code=404,
+            detail={
+                "code": "SCENARIO_NOT_SUPPORTED",
+                "message": "请求场景未注册 ChatBI 服务",
+            },
+        )
     try:
         for action, resource_type in (
             ("datasource.view", "datasource"),
@@ -92,7 +104,7 @@ def query(
                 scenario_id=payload.scenario_id,
                 environment=get_settings().app_env,
             ))
-        return get_scenario_chat_registry().execute(
+        return registry.execute(
             db,
             user,
             scenario_id=payload.scenario_id,
