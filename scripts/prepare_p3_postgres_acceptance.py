@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from datetime import date
 
 from sqlalchemy import select, text
 
@@ -15,14 +16,62 @@ from app.core.database import SessionLocal
 from app.data.seed import SEED as CHARGING_SEED
 from app.data.seed import generate_simulated_data
 from app.models.auth import User
+from app.models.integration import DataIngestionReview, DataIngestionRun
 from app.platform.identity import IdentityContextFactory
 from app.scenarios.charging_ops.package_adapter import install_platform_foundation
 from app.scenarios.sales_ops.package_adapter import install_sales_ops_foundation
 from app.scenarios.sales_ops.seed import DEFAULT_ORDER_COUNT, DEFAULT_SEED
 from app.scenarios.sales_ops.seed import generate_sales_orders
+from app.services.data_integration import DataIntegrationService
 
 
 EXPECTED_REVISION = "p3_0001"
+
+
+def ensure_published_ingestion(db, analyst: User) -> dict:
+    latest_run = db.scalar(
+        select(DataIngestionRun)
+        .where(DataIngestionRun.dataset_id == "station-operations")
+        .order_by(DataIngestionRun.started_at.desc(), DataIngestionRun.run_id.desc())
+    )
+    latest_review = (
+        db.scalar(select(DataIngestionReview).where(
+            DataIngestionReview.run_id == latest_run.run_id
+        ))
+        if latest_run else None
+    )
+    if latest_review and latest_review.workflow_status == "published":
+        return {
+            "run_id": latest_run.run_id,
+            "workflow_status": latest_review.workflow_status,
+            "quality_status": latest_review.quality_status,
+            "release_version": latest_review.release_version,
+            "reused": True,
+        }
+
+    service = DataIntegrationService(db, analyst)
+    run = service.ingest_dataset(
+        "station-operations",
+        date(2026, 1, 1),
+        date(2026, 7, 1),
+        limit=30,
+    )
+    run_id = run["run_id"]
+    quality = service.validate_ingestion("station-operations", run_id)
+    if quality["quality_status"] != "passed":
+        raise RuntimeError("P3 acceptance ingestion quality did not pass")
+    service.submit_ingestion("station-operations", run_id)
+    service.decide_ingestion("station-operations", run_id, "approve")
+    published = service.publish_ingestion("station-operations", run_id)
+    return {
+        "run_id": run_id,
+        "workflow_status": published["workflow_status"],
+        "quality_status": published["quality_status"],
+        "release_version": published["release_version"],
+        "rules_passed": published["summary"]["rules_passed"],
+        "snapshot_rows": published["summary"]["snapshot_rows"],
+        "reused": False,
+    }
 
 
 def main() -> None:
@@ -50,6 +99,7 @@ def main() -> None:
             seed=CHARGING_SEED,
         )
         charging_platform = install_platform_foundation(db, identity)
+        ingestion_governance = ensure_published_ingestion(db, analyst)
         sales_summary = generate_sales_orders(
             db,
             order_count=args.sales_orders,
@@ -70,6 +120,7 @@ def main() -> None:
         "charging_seed": CHARGING_SEED,
         "charging": charging_counts,
         "charging_platform": charging_platform,
+        "ingestion_governance": ingestion_governance,
         "sales_seed": DEFAULT_SEED,
         "sales": sales_summary.as_dict(),
         "sales_platform": sales_platform,
