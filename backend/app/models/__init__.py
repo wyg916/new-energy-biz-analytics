@@ -34,6 +34,16 @@ from app.models.knowledge import (
     KnowledgePublicationEvent,
     KnowledgeRetrievalEvent,
 )
+from app.memory.models import (
+    MemoryAuditEvent,
+    MemoryDeletionAudit,
+    MemoryRecord,
+    MemoryWriteCandidateRecord,
+    ProcedureDefinition,
+    SkillDefinition,
+    SkillExecutionRecord,
+    SQLBotSourceBindingRelease,
+)
 
 __all__ = [
     "AuditLog", "User", "AnalysisRun", "ChargingSession", "City", "DataGenerationRun",
@@ -55,4 +65,7 @@ __all__ = [
     "KnowledgeChunk", "KnowledgeDocument", "KnowledgeDocumentAcl",
     "KnowledgeDocumentVersion", "KnowledgePublicationEvent",
     "KnowledgeRetrievalEvent",
+    "MemoryAuditEvent", "MemoryDeletionAudit", "MemoryRecord",
+    "MemoryWriteCandidateRecord", "ProcedureDefinition", "SkillDefinition",
+    "SkillExecutionRecord", "SQLBotSourceBindingRelease",
 ]
