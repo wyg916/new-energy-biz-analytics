@@ -3,12 +3,17 @@ from __future__ import annotations
 import json
 import os
 import re
+import threading
+import time
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Protocol
+from urllib.parse import quote
 from uuid import uuid4
 
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
+import httpx
 
 from app.core.config import get_settings
 from app.governance.audit import record_governance_event
@@ -19,6 +24,12 @@ from app.platform.identity import IdentityContext
 
 
 ENV_IDENTIFIER = re.compile(r"^[A-Z][A-Z0-9_]{2,127}$")
+VAULT_IDENTIFIER = re.compile(
+    r"^(?P<mount>[a-z0-9][a-z0-9_-]{1,63})/"
+    r"(?P<path>[A-Za-z0-9][A-Za-z0-9_./-]{0,255})#"
+    r"(?P<field>[A-Za-z][A-Za-z0-9_-]{0,63})"
+    r"(?:@(?P<version>[1-9][0-9]*))?$"
+)
 FORBIDDEN_METADATA_KEYS = re.compile(r"(?i)(secret|password|token|api[_-]?key|connection_string)")
 
 
@@ -49,9 +60,124 @@ class EnvironmentSecretProvider:
         return value
 
 
+class VaultKVv2SecretProvider:
+    provider_code = "VAULT_KV_V2"
+
+    def __init__(
+        self,
+        *,
+        address: str | None = None,
+        role_id_file: str | None = None,
+        secret_id_file: str | None = None,
+        timeout_seconds: float | None = None,
+        cache_ttl_seconds: int | None = None,
+        client: httpx.Client | None = None,
+    ) -> None:
+        settings = get_settings()
+        self.address = (address or settings.vault_address).rstrip("/")
+        self.role_id_file = Path(role_id_file or settings.vault_role_id_file)
+        self.secret_id_file = Path(secret_id_file or settings.vault_secret_id_file)
+        self.timeout_seconds = timeout_seconds or settings.vault_timeout_seconds
+        self.cache_ttl_seconds = cache_ttl_seconds or settings.vault_cache_ttl_seconds
+        self.client = client or httpx.Client(timeout=self.timeout_seconds)
+        self._token: str | None = None
+        self._token_expires_at = 0.0
+        self._cache: dict[str, tuple[str, float]] = {}
+        self._lock = threading.Lock()
+
+    def resolve(self, identifier: str) -> str:
+        parsed = self.validate_identifier(identifier)
+        now = time.monotonic()
+        with self._lock:
+            cached = self._cache.get(identifier)
+            if cached and cached[1] > now:
+                return cached[0]
+        token = self._client_token()
+        params = {"version": parsed["version"]} if parsed["version"] else None
+        endpoint = (
+            f"{self.address}/v1/{quote(parsed['mount'], safe='')}/data/"
+            f"{quote(parsed['path'], safe='/')}"
+        )
+        try:
+            response = self.client.get(endpoint, params=params, headers={"X-Vault-Token": token})
+            if response.status_code == 403:
+                self.invalidate_auth()
+                response = self.client.get(
+                    endpoint,
+                    params=params,
+                    headers={"X-Vault-Token": self._client_token()},
+                )
+            response.raise_for_status()
+            payload = response.json()
+            value = payload["data"]["data"][parsed["field"]]
+            if not isinstance(value, str) or not value:
+                raise KeyError(parsed["field"])
+        except (httpx.HTTPError, KeyError, TypeError, ValueError) as exc:
+            raise SecretResolutionError("VAULT_SECRET_UNAVAILABLE", "Vault 未返回可用 Secret") from exc
+        with self._lock:
+            self._cache[identifier] = (value, now + self.cache_ttl_seconds)
+        return value
+
+    @staticmethod
+    def validate_identifier(identifier: str) -> dict[str, str | None]:
+        match = VAULT_IDENTIFIER.fullmatch(identifier)
+        if not match or ".." in identifier:
+            raise SecretResolutionError("VAULT_IDENTIFIER_INVALID", "Vault Secret identifier 格式不合法")
+        return match.groupdict()
+
+    def invalidate(self, identifier: str | None = None) -> None:
+        with self._lock:
+            if identifier is None:
+                self._cache.clear()
+            else:
+                self._cache.pop(identifier, None)
+
+    def invalidate_auth(self) -> None:
+        with self._lock:
+            self._token = None
+            self._token_expires_at = 0.0
+
+    def health(self) -> bool:
+        try:
+            response = self.client.get(f"{self.address}/v1/sys/health")
+            return response.status_code in {200, 429, 472, 473}
+        except httpx.HTTPError:
+            return False
+
+    def _client_token(self) -> str:
+        now = time.monotonic()
+        with self._lock:
+            if self._token and self._token_expires_at > now + 5:
+                return self._token
+        try:
+            role_id = self.role_id_file.read_text(encoding="utf-8").strip()
+            secret_id = self.secret_id_file.read_text(encoding="utf-8").strip()
+            if not role_id or not secret_id:
+                raise OSError("empty AppRole credential")
+            response = self.client.post(
+                f"{self.address}/v1/auth/approle/login",
+                json={"role_id": role_id, "secret_id": secret_id},
+            )
+            response.raise_for_status()
+            auth = response.json()["auth"]
+            token = str(auth["client_token"])
+            lease = max(30, int(auth.get("lease_duration") or 300))
+        except (OSError, httpx.HTTPError, KeyError, TypeError, ValueError) as exc:
+            raise SecretResolutionError("VAULT_AUTH_FAILED", "Vault AppRole 认证失败") from exc
+        with self._lock:
+            self._token = token
+            self._token_expires_at = now + lease
+        return token
+
+
 class SecretProviderRegistry:
     def __init__(self, providers: tuple[SecretProvider, ...] | None = None) -> None:
-        entries = providers or (EnvironmentSecretProvider(),)
+        if providers is None:
+            entries: tuple[SecretProvider, ...] = (EnvironmentSecretProvider(),)
+            if get_settings().vault_enabled:
+                entries = (*entries, VaultKVv2SecretProvider())
+        else:
+            entries = providers
         self.providers = {provider.provider_code: provider for provider in entries}
 
     def get(self, code: str) -> SecretProvider:
@@ -88,6 +214,10 @@ class CredentialReferenceService:
         self._authorize("credential.manage", resource_id=reference_name, scenario_id=scenario_id)
         if provider == "ENV" and not ENV_IDENTIFIER.fullmatch(secret_identifier):
             raise SecretResolutionError("SECRET_IDENTIFIER_INVALID", "ENV identifier 格式不合法")
+        if provider == "VAULT_KV_V2":
+            VaultKVv2SecretProvider.validate_identifier(secret_identifier)
+        if provider not in self.providers.providers:
+            raise SecretResolutionError("SECRET_PROVIDER_NOT_CONFIGURED", "Secret Provider 未配置")
         if any(FORBIDDEN_METADATA_KEYS.search(str(key)) for key in metadata):
             raise SecretResolutionError("PLAINTEXT_SECRET_METADATA_REJECTED", "CredentialReference 元数据禁止保存敏感值")
         current_version = int(self.db.scalar(select(func.max(CredentialReference.version)).where(
@@ -141,6 +271,9 @@ class CredentialReferenceService:
         current.status = CredentialStatus.SUPERSEDED
         current.updated_at = datetime.now(UTC)
         replacement.rotated_from_id = current.credential_ref_id
+        invalidator = getattr(self.providers.get(current.provider), "invalidate", None)
+        if invalidator:
+            invalidator(current.secret_identifier)
         record_governance_event(
             self.db, self.identity,
             action="credential.reference_rotated",
@@ -209,6 +342,17 @@ class CredentialReferenceService:
         )
         self.db.commit()
         return SecretValue(value=value, credential_ref_id=record.credential_ref_id, version=record.version)
+
+    def active_by_name(self, reference_name: str) -> CredentialReference:
+        record = self.db.scalar(select(CredentialReference).where(
+            CredentialReference.tenant_id == self.identity.tenant_id,
+            CredentialReference.workspace_id == self.identity.workspace_id,
+            CredentialReference.reference_name == reference_name,
+            CredentialReference.status == CredentialStatus.ACTIVE,
+        ).order_by(CredentialReference.version.desc()))
+        if record is None:
+            raise SecretResolutionError("CREDENTIAL_REFERENCE_NOT_FOUND", "CredentialReference 不存在或不可访问")
+        return record
 
     def _usage_failure(self, record: CredentialReference, action: str, trace_id: str, code: str):
         self._audit_usage(record, action, "FAILED", trace_id, code)

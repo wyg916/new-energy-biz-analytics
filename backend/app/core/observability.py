@@ -92,6 +92,33 @@ def readiness_snapshot() -> tuple[dict[str, Any], int]:
         if redis_client is not None:
             redis_client.close()
 
+    if settings.app_env == "preproduction":
+        try:
+            from app.governance.secrets import SecretProviderRegistry
+
+            vault = SecretProviderRegistry().get("VAULT_KV_V2")
+            components["secret_provider"] = {
+                "status": "ok" if bool(getattr(vault, "health")()) else "unavailable",
+                "provider": "VAULT_KV_V2",
+            }
+        except Exception:
+            components["secret_provider"] = {"status": "unavailable", "provider": "VAULT_KV_V2"}
+        try:
+            import httpx
+
+            response = httpx.get(
+                f"{settings.oidc_internal_base_url}/.well-known/openid-configuration",
+                timeout=settings.oidc_http_timeout_seconds,
+            )
+            discovery = response.json()
+            oidc_ok = response.is_success and discovery.get("issuer") == settings.oidc_issuer
+            components["oidc"] = {
+                "status": "ok" if oidc_ok else "unavailable",
+                "provider": settings.oidc_provider_code,
+            }
+        except Exception:
+            components["oidc"] = {"status": "unavailable", "provider": settings.oidc_provider_code}
+
     ready = all(component["status"] == "ok" for component in components.values())
     payload = {
         "status": "ready" if ready else "not_ready",

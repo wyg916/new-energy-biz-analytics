@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(extra="ignore")
 
     app_name: str = "新能源企业经营分析智能平台"
-    app_env: Literal["development", "test", "production"] = "development"
+    app_env: Literal["development", "test", "preproduction", "production"] = "development"
     debug: bool = False
     secret_key: str = "local-alpha-change-me"
     access_token_minutes: int = 60
@@ -81,10 +81,37 @@ class Settings(BaseSettings):
     platform_tenant_id: str = "tenant-alpha"
     platform_org_id: str = "org-alpha"
     platform_workspace_id: str = "workspace-alpha"
+    local_auth_enabled: bool = True
+    production_release_authorized: bool = False
+    oidc_enabled: bool = False
+    oidc_provider_code: str = "OIDC_PREPROD"
+    oidc_issuer: str = ""
+    oidc_internal_base_url: str = ""
+    oidc_client_id: str = "chatbi-web"
+    oidc_redirect_uri: str = ""
+    oidc_scopes: str = "openid profile email groups"
+    oidc_transaction_ttl_seconds: int = 300
+    oidc_session_ttl_seconds: int = 3600
+    oidc_http_timeout_seconds: float = 10.0
+    oidc_jwks_cache_ttl_seconds: int = 300
+    vault_enabled: bool = False
+    vault_address: str = "http://vault:8200"
+    vault_role_id_file: str = "/run/p4-secrets/vault_role_id"
+    vault_secret_id_file: str = "/run/p4-secrets/vault_secret_id"
+    vault_timeout_seconds: float = 5.0
+    vault_cache_ttl_seconds: int = 60
+    external_alert_enabled: bool = False
+    external_alert_webhook_url: str = ""
+    external_alert_signing_reference_name: str = "preprod-webhook-signing"
+    external_alert_timeout_seconds: float = 3.0
+    external_alert_max_attempts: int = 3
+    external_alert_circuit_threshold: int = 3
+    external_alert_circuit_recovery_seconds: int = 30
+    preproduction_evidence_root: str = "/app/data/preproduction-evidence"
 
     @model_validator(mode="after")
     def fail_closed_in_production(self) -> "Settings":
-        if self.app_env == "production":
+        if self.app_env in {"preproduction", "production"}:
             failures = []
             if self.secret_key == "local-alpha-change-me" or len(self.secret_key) < 32:
                 failures.append("SECRET_KEY must be non-default and at least 32 characters")
@@ -113,6 +140,8 @@ class Settings(BaseSettings):
                 failures.append("RELEASE_VERSION must identify a release candidate or release")
             if not self.simulated_data_only:
                 failures.append("SIMULATED_DATA_ONLY must remain true for this release candidate")
+            if self.local_auth_enabled:
+                failures.append("LOCAL_AUTH_ENABLED must be false outside development/test")
             if self.chatbi_readonly_execution_enabled and (
                 not self.chatbi_readonly_database_url
                 or not self.chatbi_readonly_database_url.startswith("postgresql")
@@ -129,14 +158,26 @@ class Settings(BaseSettings):
                     failures.append(
                         "CHATBI_READONLY_EXECUTION_ENABLED must be true before enabling SQLBot in production"
                     )
-            if self.effective_query_engine_mode != "DETERMINISTIC_ONLY":
-                failures.append(
-                    "production QUERY_ENGINE_MODE must be DETERMINISTIC_ONLY"
-                )
-            if self.effective_platform_version_routing_enabled:
-                failures.append(
-                    "production PLATFORM_VERSION_ROUTING_ENABLED must be false"
-                )
+            if self.production_release_authorized:
+                failures.append("PRODUCTION_RELEASE_AUTHORIZED must remain false for P4")
+            if self.app_env == "preproduction":
+                if self.effective_query_engine_mode != "SHADOW":
+                    failures.append("preproduction QUERY_ENGINE_MODE must remain SHADOW")
+                if self.sqlbot_engine_enabled:
+                    failures.append("preproduction SQLBOT_ENGINE_ENABLED must remain false")
+                if not self.oidc_enabled or not self.oidc_issuer.startswith("https://"):
+                    failures.append("preproduction OIDC must be enabled with an HTTPS issuer")
+                if not self.oidc_internal_base_url.startswith(("http://", "https://")):
+                    failures.append("OIDC_INTERNAL_BASE_URL must be configured")
+                if not self.oidc_redirect_uri.startswith("https://"):
+                    failures.append("OIDC_REDIRECT_URI must use HTTPS")
+                if not self.vault_enabled:
+                    failures.append("preproduction Vault Secret Provider must be enabled")
+            else:
+                if self.effective_query_engine_mode != "DETERMINISTIC_ONLY":
+                    failures.append("production QUERY_ENGINE_MODE must be DETERMINISTIC_ONLY")
+                if self.effective_platform_version_routing_enabled:
+                    failures.append("production PLATFORM_VERSION_ROUTING_ENABLED must be false")
             if failures:
                 raise ValueError("production configuration rejected: " + "; ".join(failures))
         return self
@@ -149,6 +190,8 @@ class Settings(BaseSettings):
         if self.database_url.startswith("sqlite"):
             Path("data").mkdir(parents=True, exist_ok=True)
         Path(self.data_import_root).mkdir(parents=True, exist_ok=True)
+        if self.app_env == "preproduction":
+            Path(self.preproduction_evidence_root).mkdir(parents=True, exist_ok=True)
 
     @property
     def api_source_allowed_hosts(self) -> set[str]:
@@ -163,6 +206,10 @@ class Settings(BaseSettings):
         if self.query_engine_mode:
             return self.query_engine_mode
         return "DETERMINISTIC_ONLY" if self.app_env == "production" else "SHADOW"
+
+    @property
+    def oidc_scope_list(self) -> list[str]:
+        return [item.strip() for item in self.oidc_scopes.split() if item.strip()]
 
     @property
     def effective_platform_version_routing_enabled(self) -> bool:

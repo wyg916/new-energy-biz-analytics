@@ -18,6 +18,7 @@ from sqlalchemy import delete, func, select, text
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
+from app.governance.secrets import CredentialReferenceService, SecretResolutionError
 from app.models.auth import User
 from app.models.business import DataGenerationRun, Station
 from app.models.integration import (
@@ -26,6 +27,8 @@ from app.models.integration import (
     PublishedStationSnapshot,
 )
 from app.scenarios.charging_ops.manifest import METRICS, SCENARIO_ID, VERSION
+from app.platform.identity import IdentityContextFactory
+from app.preproduction.models import PreproductionDataSourceGovernance
 from app.scenarios.registry import published_charging_ops
 from app.services.dashboard import allowed_station_ids
 from app.services.metrics import MetricService
@@ -624,6 +627,23 @@ class DataIntegrationService:
         return {field: normalized.get(field) for field in STANDARD_FIELDS}
 
     def _credential(self, source: DataSourceConnection, supplied: str | None) -> str:
+        if self.settings.app_env in {"preproduction", "production"}:
+            if supplied:
+                raise DataIntegrationError("PLAINTEXT_CREDENTIAL_REJECTED", "预生产和生产禁止在请求中传递明文凭据")
+            governance = self.db.scalar(select(PreproductionDataSourceGovernance).where(
+                PreproductionDataSourceGovernance.source_id == source.source_id,
+            ))
+            if self.user is None or governance is None:
+                raise DataIntegrationError("CREDENTIAL_REFERENCE_REQUIRED", "该环境必须使用 CredentialReference")
+            try:
+                identity = IdentityContextFactory.from_user(self.user, request_id=f"DATA-INTEGRATION-{uuid.uuid4()}")
+                return CredentialReferenceService(self.db, identity).resolve(
+                    governance.credential_ref_id,
+                    action="datasource.connect",
+                    trace_id=identity.request_id,
+                ).value
+            except SecretResolutionError as exc:
+                raise DataIntegrationError(exc.code, "数据源 CredentialReference 解析失败") from exc
         credential = supplied or (os.getenv(source.credential_env_key) if source.credential_env_key else None)
         if not credential:
             raise DataIntegrationError("CREDENTIAL_REQUIRED", "该数据源需要单次凭据或受控环境变量")
@@ -692,8 +712,10 @@ class DataIntegrationService:
             "gross_margin": float(row.gross_margin) if row.gross_margin is not None else None,
         }
 
-    @staticmethod
-    def _source_payload(source: DataSourceConnection) -> dict:
+    def _source_payload(self, source: DataSourceConnection) -> dict:
+        governance = self.db.scalar(select(PreproductionDataSourceGovernance).where(
+            PreproductionDataSourceGovernance.source_id == source.source_id,
+        ))
         return {
             "source_id": source.source_id,
             "display_name": source.display_name,
@@ -708,6 +730,9 @@ class DataIntegrationService:
             "last_latency_ms": source.last_latency_ms,
             "last_error_code": source.last_error_code,
             "credential_stored": False,
+            "credential_ref_id": governance.credential_ref_id if governance else None,
+            "lifecycle_status": governance.lifecycle_status if governance else "legacy_registry",
+            "version": governance.version if governance else 1,
         }
 
     @staticmethod

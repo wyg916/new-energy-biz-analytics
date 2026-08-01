@@ -2,6 +2,7 @@ import hashlib
 import hmac
 import os
 from datetime import UTC, datetime, timedelta
+from uuid import uuid4
 
 import jwt
 
@@ -25,10 +26,28 @@ def verify_password(password: str, encoded: str) -> bool:
         return False
 
 
-def create_access_token(user_id: int, role: str) -> str:
+def create_access_token(
+    user_id: int,
+    role: str,
+    *,
+    auth_provider: str = "LOCAL",
+    principal_id: str | None = None,
+    session_id: str | None = None,
+) -> str:
     settings = get_settings()
     now = datetime.now(UTC)
-    payload = {"sub": str(user_id), "role": role, "iat": now, "exp": now + timedelta(minutes=settings.access_token_minutes)}
+    payload = {
+        "sub": str(user_id),
+        "role": role,
+        "iat": now,
+        "exp": now + timedelta(minutes=settings.access_token_minutes),
+        "jti": str(uuid4()),
+        "auth_provider": auth_provider,
+    }
+    if principal_id:
+        payload["principal_id"] = principal_id
+    if session_id:
+        payload["sid"] = session_id
     return jwt.encode(payload, settings.secret_key, algorithm="HS256")
 
 

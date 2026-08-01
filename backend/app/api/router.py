@@ -16,6 +16,7 @@ from app.core.observability import readiness_snapshot, request_metrics
 from app.memory.api import router as memory_router
 from app.skills.api import router as skills_router
 from app.governance.api import router as governance_router
+from app.preproduction.api import router as preproduction_router
 
 api_router = APIRouter(prefix="/api/v1")
 api_router.include_router(auth_router)
@@ -31,6 +32,7 @@ api_router.include_router(assistant_router)
 api_router.include_router(memory_router)
 api_router.include_router(skills_router)
 api_router.include_router(governance_router)
+api_router.include_router(preproduction_router)
 
 
 @api_router.get("/health", tags=["system"])

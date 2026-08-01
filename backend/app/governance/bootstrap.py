@@ -21,6 +21,10 @@ from app.models.auth import User
 
 PERMISSIONS: dict[str, tuple[str, str, str]] = {
     "datasource.view": ("datasource", "view", "查看数据源"),
+    "datasource.manage": ("datasource", "manage", "管理数据源"),
+    "datasource.review": ("datasource", "review", "审核数据源"),
+    "datasource.activate": ("datasource", "activate", "发布和激活数据源"),
+    "datasource.rollback": ("datasource", "rollback", "回滚数据源"),
     "dataset.view": ("dataset", "view", "查看数据集"),
     "metric.query": ("metric", "query", "查询已发布指标"),
     "rag.document.view": ("rag_document", "view", "访问授权 RAG 文档"),
@@ -143,7 +147,7 @@ def install_governance_baseline(db: Session) -> None:
             conditions_json=json.dumps({
                 "scenarios": ["charging_ops", "sales_ops"],
                 "data_classifications": ["simulated", "internal", "public"],
-                "environments": ["development", "test", "staging"],
+                "environments": ["development", "test", "staging", "preproduction"],
                 "owner_enforced_actions": ["memory.confirm", "memory.correct", "memory.delete"],
             }, sort_keys=True),
             approved_by="system:p3-baseline",

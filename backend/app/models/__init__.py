@@ -44,6 +44,14 @@ from app.memory.models import (
     SkillExecutionRecord,
     SQLBotSourceBindingRelease,
 )
+from app.governance.models import (
+    Principal, IdentityGroup, IdentityGroupMembership, GovernanceRole,
+    GovernancePermission, GovernanceRolePermission, GovernancePolicy,
+    GovernanceBinding, CredentialReference, CredentialUsageAudit,
+    RetentionPolicy, LegalHold, GovernanceAuditEvent, SecurityAlert,
+    PlatformRelease,
+)
+from app.preproduction.models import PreproductionAcceptanceRecord, PreproductionDataSourceGovernance, ExternalAlertDelivery
 
 __all__ = [
     "AuditLog", "User", "AnalysisRun", "ChargingSession", "City", "DataGenerationRun",
@@ -68,4 +76,9 @@ __all__ = [
     "MemoryAuditEvent", "MemoryDeletionAudit", "MemoryRecord",
     "MemoryWriteCandidateRecord", "ProcedureDefinition", "SkillDefinition",
     "SkillExecutionRecord", "SQLBotSourceBindingRelease",
+    "Principal", "IdentityGroup", "IdentityGroupMembership", "GovernanceRole",
+    "GovernancePermission", "GovernanceRolePermission", "GovernancePolicy",
+    "GovernanceBinding", "CredentialReference", "CredentialUsageAudit",
+    "RetentionPolicy", "LegalHold", "GovernanceAuditEvent", "SecurityAlert",
+    "PlatformRelease", "PreproductionAcceptanceRecord", "PreproductionDataSourceGovernance", "ExternalAlertDelivery",
 ]

@@ -149,7 +149,7 @@ class AuthorizationService:
         classifications = conditions.get("data_classifications", ["simulated", "internal", "public"])
         if not _matches(context.data_classification, classifications):
             return False
-        environments = conditions.get("environments", ["development", "test", "staging"])
+        environments = conditions.get("environments", ["development", "test", "staging", "preproduction"])
         if not _matches(context.environment, environments):
             return False
         owner_actions = conditions.get("owner_enforced_actions", [])
