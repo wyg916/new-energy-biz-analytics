@@ -4,6 +4,7 @@
 **/.pytest_cache
 **/.coverage*
 backend/data
+backend/.venv
 frontend/data
 backend/tests
 frontend/node_modules
