@@ -82,6 +82,7 @@ class SignedWebhookAlertAdapter:
             "enabled": self.settings.external_alert_enabled,
             "status": "READY" if configured and _CIRCUIT.status() == "CLOSED" else ("DISABLED" if not self.settings.external_alert_enabled else "UNAVAILABLE"),
             "circuit": _CIRCUIT.status(),
+            "circuit_state": _CIRCUIT.status(),
             "endpoint_hash": hashlib.sha256(self.settings.external_alert_webhook_url.encode()).hexdigest() if parsed.hostname else None,
         }
 

@@ -99,6 +99,9 @@ def snapshot(
     latest_by_category = {}
     for item in acceptance:
         latest_by_category.setdefault(item.category, item)
+    acceptance_status = {
+        category: item.status for category, item in latest_by_category.items()
+    }
     rc = db.scalar(select(PlatformRelease).where(
         PlatformRelease.tenant_id == identity.tenant_id,
         PlatformRelease.workspace_id == identity.workspace_id,
@@ -107,17 +110,31 @@ def snapshot(
     delivery_counts = dict(db.execute(select(
         ExternalAlertDelivery.status, func.count(ExternalAlertDelivery.delivery_id),
     ).group_by(ExternalAlertDelivery.status)).all())
+    sqlbot_gate_record = latest_by_category.get("SQLBOT_EXTERNAL")
     sqlbot_gate = {
-        "status": "CONDITIONAL",
+        "status": sqlbot_gate_record.status if sqlbot_gate_record else "CONDITIONAL",
         "actual_external_requests": 0,
         "reason": "未提供经授权的外部模型 CredentialReference，已在网络请求前退出",
         "query_engine_mode": settings.effective_query_engine_mode,
         "engine_enabled": settings.sqlbot_engine_enabled,
         "canary_eligible": False,
     }
+    required_pass_categories = {
+        "OIDC_INTEGRATION", "SECRET_PROVIDER", "DATASOURCE_GOVERNANCE",
+        "CAPACITY_SOAK", "FAILURE_RECOVERY", "BACKUP_RESTORE",
+        "SECURITY_NEGATIVE", "FRONTEND_E2E", "FULL_REGRESSION",
+    }
+    code_complete = all(
+        acceptance_status.get(category) == "PASS"
+        for category in {"FRONTEND_E2E", "FULL_REGRESSION"}
+    )
+    acceptance_complete = (
+        all(acceptance_status.get(category) == "PASS" for category in required_pass_categories)
+        and acceptance_status.get("SQLBOT_EXTERNAL") == "CONDITIONAL"
+    )
     gates = {
-        "preproduction_code_complete": False,
-        "preproduction_acceptance_complete": False,
+        "preproduction_code_complete": code_complete,
+        "preproduction_acceptance_complete": acceptance_complete,
         "release_candidate_approved": bool(rc and rc.status in {"APPROVED", "ACTIVE"}),
         "enterprise_idp_approved": False,
         "external_model_approved": False,
