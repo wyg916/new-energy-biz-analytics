@@ -38,6 +38,8 @@ class RedisWorkingClient(Protocol):
     def get(self, key: str) -> bytes | str | None: ...
     def set(self, key: str, value: str, *, ex: int) -> Any: ...
     def delete(self, key: str) -> int: ...
+    def sadd(self, key: str, *values: str) -> int: ...
+    def srem(self, key: str, *values: str) -> int: ...
 
 
 class WorkingMemoryState(BaseModel):
@@ -86,6 +88,15 @@ def _contains_secret(value: Any, path: str = "") -> str | None:
             if found:
                 return found
     return None
+
+
+def working_registry_key(identity: IdentityContext) -> str:
+    digest = hashlib.sha256(
+        "|".join(
+            (identity.tenant_id, identity.workspace_id, identity.subject_id)
+        ).encode("utf-8")
+    ).hexdigest()
+    return f"chatbi:working-registry:v1:{digest}"
 
 
 class WorkingMemoryService:
@@ -210,6 +221,7 @@ class WorkingMemoryService:
             idempotent = current == encoded
             if not idempotent:
                 self.redis_client.set(key, encoded, ex=self.ttl_seconds)
+                self.redis_client.sadd(working_registry_key(self.identity), key)
             audit_memory_use(
                 self.db,
                 self.identity,
@@ -240,6 +252,7 @@ class WorkingMemoryService:
             return self._degraded("REDIS_CLIENT_UNAVAILABLE", key, "working.close", run_id)
         try:
             self.redis_client.delete(key)
+            self.redis_client.srem(working_registry_key(self.identity), key)
             audit_memory_use(
                 self.db,
                 self.identity,

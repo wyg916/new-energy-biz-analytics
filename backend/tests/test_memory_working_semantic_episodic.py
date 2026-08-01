@@ -39,6 +39,18 @@ class FakeRedis:
             raise ConnectionError("redis unavailable")
         return int(self.data.pop(key, None) is not None)
 
+    def sadd(self, key, *values):
+        current = self.data.setdefault(key, set())
+        before = len(current)
+        current.update(values)
+        return len(current) - before
+
+    def srem(self, key, *values):
+        current = self.data.get(key, set())
+        before = len(current)
+        current.difference_update(values)
+        return before - len(current)
+
 
 @pytest.fixture
 def identity(db):
