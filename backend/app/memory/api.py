@@ -21,9 +21,28 @@ from app.memory.semantic import SemanticMemoryError, SemanticMemoryService
 from app.memory.working import WorkingMemoryService
 from app.models.auth import User
 from app.platform.identity import IdentityContextFactory
+from app.core.config import get_settings
+from app.governance.authorization import AuthorizationDenied, AuthorizationService, request_context
+from app.governance.audit import record_governance_event
 
 
 router = APIRouter(prefix="/memory", tags=["memory"])
+
+
+def _require(db: Session, user: User, action: str, *, resource_id: str | None = None, owner: str | None = None, scenario_id: str | None = None) -> None:
+    identity = IdentityContextFactory.from_user(user)
+    try:
+        AuthorizationService(db, identity).require(request_context(
+            identity,
+            action=action,
+            resource_type="memory",
+            resource_id=resource_id,
+            owner_subject_id=owner,
+            scenario_id=scenario_id,
+            environment=get_settings().app_env,
+        ))
+    except AuthorizationDenied as exc:
+        raise HTTPException(403, detail={"code": exc.code, "message": str(exc)}) from exc
 
 
 class SemanticPreferenceRequest(BaseModel):
@@ -74,6 +93,7 @@ def list_records(
     user: User = Depends(current_user),
 ) -> dict:
     identity = IdentityContextFactory.from_user(user)
+    _require(db, user, "memory.view", owner=identity.subject_id, scenario_id=scenario_id)
     types = (memory_type,) if memory_type else (
         MemoryType.SEMANTIC,
         MemoryType.EPISODIC,
@@ -102,6 +122,7 @@ def working_memory(
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ) -> dict:
+    _require(db, user, "memory.view", resource_id=session_id, owner=f"user:{user.id}", scenario_id=scenario_id)
     result = WorkingMemoryService.from_runtime(
         db, IdentityContextFactory.from_user(user)
     ).load(scenario_id=scenario_id, session_id=session_id)
@@ -113,6 +134,7 @@ def candidates(
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ) -> dict:
+    _require(db, user, "memory.view", owner=f"user:{user.id}")
     identity = IdentityContextFactory.from_user(user)
     rows = db.scalars(select(MemoryWriteCandidateRecord).where(
         MemoryWriteCandidateRecord.tenant_id == identity.tenant_id,
@@ -141,6 +163,7 @@ def propose_preference(
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ) -> dict:
+    _require(db, user, "memory.correct", owner=f"user:{user.id}", scenario_id=payload.scenario_id)
     try:
         candidate = SemanticMemoryService(
             db, IdentityContextFactory.from_user(user)
@@ -153,6 +176,16 @@ def propose_preference(
             explicitly_confirmed=payload.confirmed,
             idempotency_key=f"api:{user.id}:{uuid4()}",
             write_reason=payload.write_reason,
+        )
+        record_governance_event(
+            db,
+            IdentityContextFactory.from_user(user),
+            action="memory.write_candidate",
+            resource_type="memory",
+            resource_id=candidate.candidate_id,
+            result="SUCCESS",
+            detail={"memory_type": candidate.memory_type, "scenario_id": candidate.scenario_id},
+            commit=True,
         )
         return {
             "candidate_id": candidate.candidate_id,
@@ -169,10 +202,20 @@ def confirm_candidate(
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ) -> dict:
+    _require(db, user, "memory.confirm", resource_id=candidate_id, owner=f"user:{user.id}")
     try:
         record = SemanticMemoryService(
             db, IdentityContextFactory.from_user(user)
         ).confirm(candidate_id)
+        record_governance_event(
+            db,
+            IdentityContextFactory.from_user(user),
+            action="memory.confirm",
+            resource_type="memory",
+            resource_id=record.memory_id,
+            result="SUCCESS",
+            commit=True,
+        )
         return _serialize(record)
     except SemanticMemoryError as exc:
         raise HTTPException(404, detail={"code": exc.code, "message": exc.message}) from exc
@@ -185,10 +228,20 @@ def reject_candidate(
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ) -> dict:
+    _require(db, user, "memory.correct", resource_id=candidate_id, owner=f"user:{user.id}")
     try:
         SemanticMemoryService(
             db, IdentityContextFactory.from_user(user)
         ).reject(candidate_id, reason=payload.reason)
+        record_governance_event(
+            db,
+            IdentityContextFactory.from_user(user),
+            action="memory.correct",
+            resource_type="memory",
+            resource_id=candidate_id,
+            result="REJECTED",
+            commit=True,
+        )
         return {"status": "REJECTED", "candidate_id": candidate_id}
     except SemanticMemoryError as exc:
         raise HTTPException(404, detail={"code": exc.code, "message": exc.message}) from exc
@@ -200,6 +253,7 @@ def set_memory_enabled(
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ) -> dict:
+    _require(db, user, "memory.correct", owner=f"user:{user.id}")
     service = SemanticMemoryService(db, IdentityContextFactory.from_user(user))
     candidate = service.propose(
         key="memory_enabled",
@@ -222,10 +276,26 @@ def delete_record(
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ) -> dict:
+    record = db.get(MemoryRecord, memory_id)
+    _require(
+        db, user, "memory.delete", resource_id=memory_id,
+        owner=record.user_id if record else f"user:{user.id}",
+        scenario_id=record.scenario_id if record else None,
+    )
     try:
         result = MemoryDeletionService(
             db, IdentityContextFactory.from_user(user)
         ).delete_one(memory_id, reason=reason)
+        record_governance_event(
+            db,
+            IdentityContextFactory.from_user(user),
+            action="memory.delete",
+            resource_type="memory",
+            resource_id=memory_id,
+            result="SUCCESS" if result.deleted_count else "BLOCKED",
+            detail=result.__dict__,
+            commit=True,
+        )
         return result.__dict__
     except MemoryAuthorizationError as exc:
         raise HTTPException(403, detail={"code": exc.code, "message": exc.message}) from exc
@@ -237,9 +307,20 @@ def delete_current_user_memory(
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ) -> dict:
+    _require(db, user, "memory.delete", owner=f"user:{user.id}")
     result = MemoryDeletionService(
         db, IdentityContextFactory.from_user(user)
     ).purge_current_user(reason=reason)
+    record_governance_event(
+        db,
+        IdentityContextFactory.from_user(user),
+        action="memory.delete_user",
+        resource_type="memory",
+        resource_id=f"user:{user.id}",
+        result="SUCCESS" if result.deleted_count else "NOOP",
+        detail=result.__dict__,
+        commit=True,
+    )
     return result.__dict__
 
 

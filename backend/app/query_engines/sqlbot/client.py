@@ -19,14 +19,16 @@ class SQLBotClient:
         self,
         base_url: str,
         *,
-        username_env_key: str,
-        password_env_key: str,
+        username_env_key: str | None = None,
+        password_env_key: str | None = None,
+        credential_loader: Callable[[], tuple[str, str]] | None = None,
         timeout_seconds: float,
         breaker: CircuitBreaker,
         transport: httpx.BaseTransport | None = None,
     ):
         self.username_env_key = username_env_key
         self.password_env_key = password_env_key
+        self.credential_loader = credential_loader
         self.breaker = breaker
         parsed_base_url = urlsplit(base_url)
         self.health_url = urlunsplit((
@@ -43,8 +45,11 @@ class SQLBotClient:
         )
 
     def _credentials(self) -> tuple[str, str]:
-        username = os.getenv(self.username_env_key)
-        password = os.getenv(self.password_env_key)
+        if self.credential_loader is not None:
+            username, password = self.credential_loader()
+        else:
+            username = os.getenv(self.username_env_key) if self.username_env_key else None
+            password = os.getenv(self.password_env_key) if self.password_env_key else None
         if not username or not password:
             raise SQLBotEngineError(
                 SQLBotErrorCode.NOT_CONFIGURED,

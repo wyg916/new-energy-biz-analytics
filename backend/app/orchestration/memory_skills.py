@@ -19,6 +19,8 @@ from app.models.auth import User
 from app.platform.identity import IdentityContext, IdentityContextFactory
 from app.skills.contracts import SkillOutput, SkillRequest
 from app.skills.runtime import SkillExecutor
+from app.core.config import get_settings
+from app.governance.authorization import AuthorizationService, request_context
 
 
 @dataclass(frozen=True)
@@ -43,6 +45,13 @@ class MemoryContextLoader:
         current_data: dict | None = None,
         rag_evidence: tuple[dict, ...] = (),
     ) -> LoadedMemoryContext:
+        AuthorizationService(self.db, self.identity).require(request_context(
+            self.identity,
+            action="memory.view",
+            resource_type="memory",
+            scenario_id=scenario_id,
+            environment=get_settings().app_env,
+        ))
         enabled = MemoryPolicyService(self.db, self.identity).is_enabled(
             scenario_id=scenario_id
         )
@@ -179,6 +188,15 @@ class MemorySkillOrchestrator:
         run_id = request.run_id or f"SKRUN-{uuid4()}"
         trace_id = request.trace_id or f"TRACE-{uuid4()}"
         request = request.model_copy(update={"run_id": run_id, "trace_id": trace_id})
+        AuthorizationService(self.db, self.identity).require(request_context(
+            self.identity,
+            action="skill.execute",
+            resource_type="skill",
+            resource_id=request.skill_code,
+            scenario_id=request.scenario_id,
+            environment=get_settings().app_env,
+            trace_id=trace_id,
+        ))
         match = SkillRegistry(self.db, self.identity).match(
             skill_code=request.skill_code,
             scenario_id=request.scenario_id,

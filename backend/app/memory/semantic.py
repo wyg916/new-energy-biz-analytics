@@ -5,7 +5,7 @@ import json
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.memory.audit import audit_memory_use
@@ -155,7 +155,10 @@ class SemanticMemoryService:
             )
             self.db.commit()
             return existing
-        version = (existing.version + 1) if existing else 1
+        latest_version = int(self.db.scalar(select(func.max(MemoryRecord.version)).where(
+            MemoryRecord.duplicate_hash == candidate.duplicate_hash,
+        )) or 0)
+        version = latest_version + 1
         conflict_group = f"MEMCON-{uuid4()}" if existing else None
         if existing:
             existing.status = MemoryStatus.SUPERSEDED

@@ -11,7 +11,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import os
 from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -35,16 +34,11 @@ from app.query_engines.sqlbot.session_manager import SQLBotSessionManager
 from app.scenarios.charging_ops.runtime import resolve_charging_ops_context
 from app.scenarios.sales_ops.engine import SalesOpsDeterministicEngine
 from app.scenarios.sales_ops.runtime import resolve_sales_ops_context
+from app.governance.secrets import CredentialReferenceService
+from app.platform.identity import IdentityContextFactory
 
 
 DATASOURCE_IDS = {"charging_ops": "1", "sales_ops": "2"}
-
-
-def _required_env(name: str) -> str:
-    value = os.getenv(name)
-    if not value:
-        raise RuntimeError(f"required CredentialReference env://{name} is unavailable")
-    return value
 
 
 def _sha256(value: str | None) -> str | None:
@@ -101,10 +95,10 @@ def main() -> None:
     parser.add_argument("--timeout-seconds", type=float, default=45.0)
     parser.add_argument("--provider", default="deepseek")
     parser.add_argument("--model", default="deepseek-v4-flash")
+    parser.add_argument("--username-credential-ref", required=True)
+    parser.add_argument("--password-credential-ref", required=True)
     args = parser.parse_args()
 
-    _required_env("P2A_SQLBOT_PASSWORD")
-    os.environ["P2A_SQLBOT_USERNAME"] = os.getenv("P2A_SQLBOT_USERNAME", "admin")
     cases = _cases(args.source)
     evaluated_at = datetime.now(UTC)
     results: list[dict[str, Any]] = []
@@ -117,6 +111,21 @@ def main() -> None:
         )
         if user is None:
             raise RuntimeError("no active acceptance user")
+
+        credential_service = CredentialReferenceService(
+            db, IdentityContextFactory.from_user(user)
+        )
+        credential_trace = f"P3-SQLBOT-SHADOW-{datetime.now(UTC).strftime('%Y%m%dT%H%M%S%f')}"
+        username = credential_service.resolve(
+            args.username_credential_ref,
+            action="sqlbot.shadow.username",
+            trace_id=credential_trace,
+        ).value
+        password = credential_service.resolve(
+            args.password_credential_ref,
+            action="sqlbot.shadow.password",
+            trace_id=credential_trace,
+        ).value
 
         charging_identity, charging_active = resolve_charging_ops_context(db, user)
         sales_identity, sales_active = resolve_sales_ops_context(db, user)
@@ -131,8 +140,7 @@ def main() -> None:
         repository = RoutingEvidenceRepository(db)
         client = SQLBotClient(
             args.sqlbot_base_url,
-            username_env_key="P2A_SQLBOT_USERNAME",
-            password_env_key="P2A_SQLBOT_PASSWORD",
+            credential_loader=lambda: (username, password),
             timeout_seconds=args.timeout_seconds,
             breaker=CircuitBreaker(100, recovery_seconds=1),
         )
@@ -274,11 +282,11 @@ def main() -> None:
         "secret_values_exposed": False,
         "model_response_prose_exposed": False,
     }
+    serialized = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
+    if password in serialized or username in serialized:
+        raise RuntimeError("shadow evidence contains a credential value")
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(
-        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    args.output.write_text(serialized, encoding="utf-8")
     print(json.dumps({
         "output": str(args.output),
         "total": report["total"],

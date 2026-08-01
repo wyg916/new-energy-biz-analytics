@@ -33,8 +33,31 @@ from app.models.knowledge import (
     KnowledgeDocumentVersion,
 )
 from app.platform.identity import IdentityContextFactory
+from app.governance.authorization import AuthorizationDenied, AuthorizationService, request_context
 
 router = APIRouter(prefix="/knowledge", tags=["knowledge"])
+
+
+def _require(
+    db: Session,
+    user: User,
+    action: str,
+    *,
+    resource_id: str | None = None,
+    scenario_id: str | None = None,
+) -> None:
+    identity = IdentityContextFactory.from_user(user)
+    try:
+        AuthorizationService(db, identity).require(request_context(
+            identity,
+            action=action,
+            resource_type="rag_document",
+            resource_id=resource_id,
+            scenario_id=scenario_id,
+            environment=get_settings().app_env,
+        ))
+    except AuthorizationDenied as exc:
+        raise HTTPException(403, detail={"code": exc.code, "message": str(exc)}) from exc
 
 
 class IngestRequest(BaseModel):
@@ -109,6 +132,7 @@ def documents(
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ) -> dict:
+    _require(db, user, "rag.document.view", scenario_id=scenario_id)
     identity = IdentityContextFactory.from_user(user)
     query = (
         select(KnowledgeDocument, KnowledgeDocumentVersion)
@@ -150,6 +174,7 @@ def ingest(
     db: Session = Depends(get_db),
     user: User = Depends(require_roles("analyst_admin")),
 ) -> dict:
+    _require(db, user, "release.review", resource_id=payload.document_id, scenario_id=payload.scenario_id)
     identity = IdentityContextFactory.from_user(user)
     try:
         version = KnowledgeIngestionService(
@@ -175,6 +200,7 @@ def publish(
     db: Session = Depends(get_db),
     user: User = Depends(require_roles("analyst_admin")),
 ) -> dict:
+    _require(db, user, "release.activate", resource_id=version_id)
     try:
         version = KnowledgePublicationService(
             db,
@@ -192,6 +218,7 @@ def retire(
     db: Session = Depends(get_db),
     user: User = Depends(require_roles("analyst_admin")),
 ) -> dict:
+    _require(db, user, "release.activate", resource_id=version_id)
     try:
         version = KnowledgePublicationService(
             db,
@@ -209,6 +236,7 @@ def soft_delete(
     db: Session = Depends(get_db),
     user: User = Depends(require_roles("analyst_admin")),
 ) -> dict:
+    _require(db, user, "release.activate", resource_id=version_id)
     try:
         version = KnowledgePublicationService(
             db,
@@ -233,6 +261,7 @@ def rollback(
     db: Session = Depends(get_db),
     user: User = Depends(require_roles("analyst_admin")),
 ) -> dict:
+    _require(db, user, "release.rollback", resource_id=version_id)
     try:
         version = KnowledgePublicationService(
             db,
@@ -249,6 +278,7 @@ def retrieval_test(
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ) -> dict:
+    _require(db, user, "rag.document.view", scenario_id=payload.scenario_id)
     identity = IdentityContextFactory.from_user(user)
     result = KnowledgeRetrievalService(db).retrieve(
         payload.query,

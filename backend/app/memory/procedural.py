@@ -185,6 +185,29 @@ class ProcedureRegistry:
         self.db.commit()
         return definition
 
+    def rollback(self, procedure_id: str) -> ProcedureDefinition:
+        _require_reviewer(self.identity)
+        current = self._get(procedure_id)
+        if not current.rollback_procedure_id:
+            raise ProcedureRegistryError("ROLLBACK_TARGET_MISSING", "Procedure 未配置回滚版本")
+        target = self._get(current.rollback_procedure_id)
+        if not target.approved_by or target.status not in {
+            ProcedureStatus.APPROVED,
+            ProcedureStatus.DEPRECATED,
+            ProcedureStatus.ACTIVE,
+        }:
+            raise ProcedureRegistryError("ROLLBACK_TARGET_NOT_APPROVED", "回滚目标未经批准")
+        current.status = ProcedureStatus.DEPRECATED
+        target.status = ProcedureStatus.ACTIVE
+        self._audit(
+            current,
+            "procedure.rollback",
+            "success",
+            {"rollback_target_procedure_id": target.procedure_id},
+        )
+        self.db.commit()
+        return target
+
     def match(self, *, procedure_code: str, scenario_id: str) -> ProcedureDefinition | None:
         return self.db.scalar(select(ProcedureDefinition).where(
             ProcedureDefinition.procedure_code == procedure_code,

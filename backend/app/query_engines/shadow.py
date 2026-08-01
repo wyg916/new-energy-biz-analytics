@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Any
 from uuid import uuid4
 
-from sqlalchemy import select
+from sqlalchemy import inspect, select
 from sqlalchemy.orm import Session
 
 from app.models.query_routing import (
@@ -15,6 +15,7 @@ from app.models.query_routing import (
 )
 from app.platform.query_engine import QueryContext, QueryRequest, QueryResult
 from app.query_engines.sqlbot.contracts import SQLBotSession
+from app.governance.audit import record_governance_event
 
 
 def normalized_question(question: str) -> str:
@@ -256,5 +257,21 @@ class RoutingEvidenceRepository:
             trace_id=request.identity_context.request_id,
         )
         self.db.add(record)
+        if inspect(self.db.get_bind()).has_table("governance_audit_event"):
+            record_governance_event(
+                self.db,
+                request.identity_context,
+                action="sqlbot.shadow",
+                resource_type="sqlbot_shadow",
+                resource_id=record.shadow_evaluation_id,
+                result="SUCCESS" if sqlbot is not None else "FAILED",
+                trace_id=request.identity_context.request_id,
+                detail={
+                    "scenario_id": request.scenario_id,
+                    "permission_result": record.permission_result,
+                    "error_code": error_code,
+                    "long_term_fact_written": False,
+                },
+            )
         self.db.commit()
         return record

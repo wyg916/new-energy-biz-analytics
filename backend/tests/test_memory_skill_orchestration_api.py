@@ -7,11 +7,13 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 import app.main as main_module
+import app.governance.identity as identity_module
 from app.api.dependencies import current_user
 from app.core.database import Base, get_db
 from app.core.security import hash_password
 from app.main import app
 from app.models.auth import User
+from app.governance.bootstrap import install_governance_baseline
 from app.platform.identity import IdentityContextFactory
 from app.skills.definitions import install_initial_skills
 
@@ -35,6 +37,7 @@ def api_client(monkeypatch):
         )
         db.add_all(users)
         db.commit()
+        install_governance_baseline(db)
         install_initial_skills(db, IdentityContextFactory.from_user(users[0]))
 
     def override_db():
@@ -42,6 +45,7 @@ def api_client(monkeypatch):
             yield db
 
     monkeypatch.setattr(main_module, "bootstrap_demo_users", lambda: None)
+    monkeypatch.setattr(identity_module, "SessionLocal", factory)
     app.dependency_overrides[get_db] = override_db
     with TestClient(app) as client:
         yield client

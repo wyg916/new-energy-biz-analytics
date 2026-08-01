@@ -16,9 +16,26 @@ from app.platform.identity import IdentityContextFactory
 from app.skills.contracts import SkillRequest
 from app.skills.definitions import install_initial_skills
 from app.skills.runtime import SkillExecutionError
+from app.core.config import get_settings
+from app.governance.authorization import AuthorizationDenied, AuthorizationService, request_context
 
 
 router = APIRouter(prefix="/skills", tags=["skills"])
+
+
+def _require(db: Session, user: User, action: str, *, resource_id: str | None = None, scenario_id: str | None = None) -> None:
+    identity = IdentityContextFactory.from_user(user)
+    try:
+        AuthorizationService(db, identity).require(request_context(
+            identity,
+            action=action,
+            resource_type="skill",
+            resource_id=resource_id,
+            scenario_id=scenario_id,
+            environment=get_settings().app_env,
+        ))
+    except AuthorizationDenied as exc:
+        raise HTTPException(403, detail={"code": exc.code, "message": str(exc)}) from exc
 
 
 def _skill_view(
@@ -58,6 +75,7 @@ def list_skills(
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ) -> dict:
+    _require(db, user, "skill.view", scenario_id=scenario_id)
     query = select(SkillDefinition).order_by(
         SkillDefinition.skill_code, SkillDefinition.scenario_id, SkillDefinition.version.desc()
     )
@@ -84,6 +102,7 @@ def execute_skill(
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ) -> dict:
+    _require(db, user, "skill.execute", resource_id=payload.skill_code, scenario_id=payload.scenario_id)
     try:
         return MemorySkillOrchestrator(db, user).execute(payload)
     except (SkillExecutionError, ValueError) as exc:
@@ -98,6 +117,7 @@ def install_skills(
     db: Session = Depends(get_db),
     user: User = Depends(require_roles("analyst_admin")),
 ) -> dict:
+    _require(db, user, "procedure.activate", resource_id="initial-skills")
     return install_initial_skills(db, IdentityContextFactory.from_user(user))
 
 
@@ -107,6 +127,7 @@ def enable_skill(
     db: Session = Depends(get_db),
     user: User = Depends(require_roles("analyst_admin")),
 ) -> dict:
+    _require(db, user, "procedure.activate", resource_id=skill_id)
     try:
         row = SkillRegistry(db, IdentityContextFactory.from_user(user)).activate(skill_id)
         return _skill_view(
@@ -124,6 +145,7 @@ def disable_skill(
     db: Session = Depends(get_db),
     user: User = Depends(require_roles("analyst_admin")),
 ) -> dict:
+    _require(db, user, "procedure.disable", resource_id=skill_id)
     try:
         row = SkillRegistry(db, IdentityContextFactory.from_user(user)).disable(skill_id)
         return _skill_view(
@@ -141,6 +163,7 @@ def rollback_skill(
     db: Session = Depends(get_db),
     user: User = Depends(require_roles("analyst_admin")),
 ) -> dict:
+    _require(db, user, "procedure.rollback", resource_id=skill_id)
     try:
         row = SkillRegistry(db, IdentityContextFactory.from_user(user)).rollback(skill_id)
         return _skill_view(

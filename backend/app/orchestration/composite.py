@@ -15,6 +15,8 @@ from app.memory.episodic import EpisodicMemoryService, EpisodicRun
 from app.memory.policy import MemoryPolicyService
 from app.memory.working import WorkingMemoryService, WorkingMemoryState
 from app.orchestration.memory_skills import MemoryContextLoader, ProcedureMatcher
+from app.core.config import get_settings
+from app.governance.authorization import AuthorizationService, request_context
 from app.response.composer import ResponseComposer
 from app.response.contracts import (
     CitationEvidence,
@@ -68,6 +70,30 @@ class CompositeQueryOrchestrator:
         trace_id = f"TRACE-{uuid4()}"
         run_id = f"COMPOSITE-{uuid4()}"
         identity = IdentityContextFactory.from_user(self.user)
+        authorizer = AuthorizationService(self.db, identity)
+        if route in {CompositeRoute.DATA, CompositeRoute.DATA_AND_KNOWLEDGE}:
+            for action, resource_type in (
+                ("datasource.view", "datasource"),
+                ("dataset.view", "dataset"),
+                ("metric.query", "metric"),
+            ):
+                authorizer.require(request_context(
+                    identity,
+                    action=action,
+                    resource_type=resource_type,
+                    scenario_id=scenario_id,
+                    environment=get_settings().app_env,
+                    trace_id=trace_id,
+                ))
+        if route in {CompositeRoute.KNOWLEDGE, CompositeRoute.DATA_AND_KNOWLEDGE}:
+            authorizer.require(request_context(
+                identity,
+                action="rag.document.view",
+                resource_type="rag_document",
+                scenario_id=scenario_id,
+                environment=get_settings().app_env,
+                trace_id=trace_id,
+            ))
         matched_skill = ProcedureMatcher(self.db, identity).match(
             question=question,
             scenario_id=scenario_id,

@@ -1,7 +1,7 @@
 """Run real SQLBot smoke or Golden evaluation against ACTIVE simulated data.
 
 The script is intended for an isolated acceptance container. SQLBot service
-credentials are provided only through environment references. The detailed
+credentials are resolved only through governed CredentialReference records. The detailed
 JSON artifact contains generated SQL and hashes, but never credentials, access
 tokens, model response prose, or business result rows.
 """
@@ -12,7 +12,6 @@ import argparse
 import hashlib
 import json
 import math
-import os
 import re
 import statistics
 from collections import Counter
@@ -42,6 +41,8 @@ from app.query_engines.sqlbot.request_mapper import map_question_request
 from app.query_engines.sqlbot.response_parser import parse_response
 from app.scenarios.charging_ops.runtime import resolve_charging_ops_context
 from app.scenarios.sales_ops.runtime import resolve_sales_ops_context
+from app.governance.secrets import CredentialReferenceService
+from app.platform.identity import IdentityContextFactory
 
 
 DATASOURCE_IDS = {"charging_ops": "1", "sales_ops": "2"}
@@ -64,13 +65,6 @@ RELATION_WORDS = {
         "organization": ("organization_code",),
     },
 }
-
-
-def _required_env(name: str) -> str:
-    value = os.getenv(name)
-    if not value:
-        raise RuntimeError(f"required CredentialReference env://{name} is unavailable")
-    return value
 
 
 def _hash(value: Any) -> str:
@@ -612,6 +606,8 @@ def main() -> None:
     parser.add_argument("--model", default="deepseek-v4-flash")
     parser.add_argument("--concurrency", type=int, choices=(1, 2), default=1)
     parser.add_argument("--recovery-source", type=Path)
+    parser.add_argument("--username-credential-ref", required=True)
+    parser.add_argument("--password-credential-ref", required=True)
     args = parser.parse_args()
     if args.mode in {"representative", "golden"} and args.source is None:
         parser.error("--source is required for representative or golden mode")
@@ -629,15 +625,26 @@ def main() -> None:
         stats = _source_stats(db)
         identities, contexts = _runtime_contexts(db, user)
         cases = _cases(args, stats)
+        credential_service = CredentialReferenceService(
+            db, IdentityContextFactory.from_user(user)
+        )
+        credential_trace = f"P3-SQLBOT-{datetime.now(UTC).strftime('%Y%m%dT%H%M%S%f')}"
+        username = credential_service.resolve(
+            args.username_credential_ref,
+            action="sqlbot.runtime.username",
+            trace_id=credential_trace,
+        ).value
+        password = credential_service.resolve(
+            args.password_credential_ref,
+            action="sqlbot.runtime.password",
+            trace_id=credential_trace,
+        ).value
 
-    os.environ["P2A_SQLBOT_USERNAME"] = os.getenv("P2A_SQLBOT_USERNAME", "admin")
-    _required_env("P2A_SQLBOT_PASSWORD")
     def run_case(index: int, case: dict[str, Any]) -> tuple[int, dict[str, Any]]:
         scenario = str(case.get("scenario") or case.get("scenario_id"))
         case_client = SQLBotClient(
             args.sqlbot_base_url,
-            username_env_key="P2A_SQLBOT_USERNAME",
-            password_env_key="P2A_SQLBOT_PASSWORD",
+            credential_loader=lambda: (username, password),
             timeout_seconds=args.timeout_seconds,
             breaker=CircuitBreaker(999, 1),
         )
@@ -736,8 +743,7 @@ def main() -> None:
         "model_response_prose_exposed": False,
     }
     serialized = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
-    credential = _required_env("P2A_SQLBOT_PASSWORD")
-    if credential in serialized:
+    if password in serialized or username in serialized:
         raise RuntimeError("runtime evidence contains a credential value")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(serialized, encoding="utf-8")

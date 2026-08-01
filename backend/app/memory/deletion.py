@@ -6,7 +6,7 @@ from datetime import UTC, datetime
 from typing import Protocol
 from uuid import uuid4
 
-from sqlalchemy import select
+from sqlalchemy import inspect, select
 from sqlalchemy.orm import Session
 
 from app.memory.audit import audit_memory_use
@@ -15,6 +15,7 @@ from app.memory.contracts import MemoryStatus
 from app.memory.models import MemoryDeletionAudit, MemoryRecord, MemoryWriteCandidateRecord
 from app.memory.working import working_registry_key
 from app.platform.identity import IdentityContext
+from app.governance.retention import DeletionGovernance
 
 
 class RedisDeletionClient(Protocol):
@@ -39,6 +40,7 @@ class DeletionResult:
     legal_hold_count: int
     redis_deleted_count: int
     derived_deleted_count: int
+    retention_blocked_count: int = 0
 
 
 class MemoryDeletionService:
@@ -60,10 +62,15 @@ class MemoryDeletionService:
         if record is None:
             return DeletionResult(0, 0, 0, 0)
         MemoryAuthorization.assert_owned(self.identity, record)
-        if record.legal_hold:
+        governance = self._governance_decision(record)
+        if record.legal_hold or governance.code == "LEGAL_HOLD_BLOCKED":
             self._audit_deletion(record, reason=reason, legal_hold=True, derived_deleted=False, working_deleted=False)
             self.db.commit()
             return DeletionResult(0, 1, 0, 0)
+        if governance.code == "RETENTION_POLICY_BLOCKED":
+            self._audit_deletion(record, reason=reason, legal_hold=False, derived_deleted=False, working_deleted=False)
+            self.db.commit()
+            return DeletionResult(0, 0, 0, 0, 1)
         derived_deleted = self.derived_index.delete(record.memory_id)
         self._anonymize(record)
         self._audit_deletion(
@@ -92,11 +99,16 @@ class MemoryDeletionService:
             MemoryRecord.user_id == self.identity.subject_id,
             MemoryRecord.deleted_at.is_(None),
         )).all()
-        deleted = held = derived_deleted_count = 0
+        deleted = held = derived_deleted_count = retention_blocked = 0
         for record in records:
-            if record.legal_hold:
+            governance = self._governance_decision(record)
+            if record.legal_hold or governance.code == "LEGAL_HOLD_BLOCKED":
                 held += 1
                 self._audit_deletion(record, reason=reason, legal_hold=True, derived_deleted=False, working_deleted=False)
+                continue
+            if governance.code == "RETENTION_POLICY_BLOCKED":
+                retention_blocked += 1
+                self._audit_deletion(record, reason=reason, legal_hold=False, derived_deleted=False, working_deleted=False)
                 continue
             derived_deleted = self.derived_index.delete(record.memory_id)
             derived_deleted_count += int(derived_deleted)
@@ -128,10 +140,23 @@ class MemoryDeletionService:
                 "legal_hold_count": held,
                 "candidate_deleted_count": len(candidates),
                 "redis_deleted_count": redis_deleted,
+                "retention_blocked_count": retention_blocked,
             },
         )
         self.db.commit()
-        return DeletionResult(deleted, held, redis_deleted, derived_deleted_count)
+        return DeletionResult(deleted, held, redis_deleted, derived_deleted_count, retention_blocked)
+
+    def _governance_decision(self, record: MemoryRecord):
+        if not inspect(self.db.get_bind()).has_table("legal_hold"):
+            from app.governance.retention import DeletionGovernanceDecision
+            return DeletionGovernanceDecision(True, "DELETE_ALLOWED")
+        return DeletionGovernance(self.db, self.identity).evaluate(
+            resource_type="memory",
+            resource_id=record.memory_id,
+            user_id=record.user_id,
+            memory_type=record.memory_type,
+            created_at=record.created_at,
+        )
 
     @staticmethod
     def _anonymize(record: MemoryRecord) -> None:
