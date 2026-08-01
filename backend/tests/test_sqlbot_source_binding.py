@@ -1,3 +1,4 @@
+import json
 from datetime import UTC, datetime
 
 import pytest
@@ -43,6 +44,31 @@ def test_initial_source_bindings_are_versioned_approved_active_and_audited(bindi
     assert (charging.datasource_id, charging.status, charging.approved_by) == ("1", "ACTIVE", "user:admin")
     assert (sales.datasource_id, sales.status, sales.approved_by) == ("2", "ACTIVE", "user:admin")
     assert len(db.scalars(select(MemoryAuditEvent).where(MemoryAuditEvent.action.like("sqlbot.binding.%"))).all()) == 6
+
+
+def test_initial_source_bindings_publish_v2_when_relation_scope_changes(binding_context):
+    db, identity = binding_context
+    install_initial_source_bindings(db, identity)
+    registry = SQLBotSourceBindingRegistry(db, identity)
+    legacy = registry.active("sales_ops")
+    legacy_payload = json.loads(legacy.binding_json)
+    legacy_payload["approved_relations"] = [
+        "active_context", "sales_channel", "sales_order", "sales_order_item",
+        "sales_product", "sales_region",
+    ]
+    legacy.binding_json = json.dumps(legacy_payload, ensure_ascii=False, sort_keys=True)
+    db.commit()
+
+    upgraded = install_initial_source_bindings(db, identity)
+    active = registry.active("sales_ops")
+    assert upgraded["sales_ops"] == active.binding_release_id
+    assert active.version == 2
+    assert legacy.status == "SUPERSEDED"
+    assert "sales_customer" in json.loads(active.binding_json)["approved_relations"]
+
+    repeated = install_initial_source_bindings(db, identity)
+    assert repeated["sales_ops"] == active.binding_release_id
+    assert registry.active("sales_ops").version == 2
 
 
 def test_source_binding_rollback_creates_new_active_version(binding_context):

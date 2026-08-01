@@ -20,8 +20,10 @@ EXPECTED_BINDINGS = {
     "sales_ops": {
         "datasource_id": "2",
         "approved_relations": (
-            "active_context", "sales_channel", "sales_order", "sales_order_item",
-            "sales_product", "sales_region",
+            "active_context", "sales_business_date", "sales_channel",
+            "sales_customer", "sales_order", "sales_order_item",
+            "sales_product", "sales_product_category", "sales_region",
+            "salesperson",
         ),
     },
 }
@@ -171,7 +173,15 @@ def install_initial_source_bindings(db: Session, identity: IdentityContext) -> d
     installed: dict[str, str] = {}
     for scenario_id, datasource_id in EXPECTED_DATASOURCES.items():
         active = registry.active(scenario_id)
-        if active is None or active.datasource_id != datasource_id:
+        spec = EXPECTED_BINDINGS[scenario_id]
+        active_payload = json.loads(active.binding_json) if active is not None else {}
+        active_relations = set(active_payload.get("approved_relations") or ())
+        expected_relations = set(spec["approved_relations"])
+        if (
+            active is None
+            or active.datasource_id != datasource_id
+            or active_relations != expected_relations
+        ):
             draft = registry.register(
                 scenario_id=scenario_id,
                 datasource_id=datasource_id,
