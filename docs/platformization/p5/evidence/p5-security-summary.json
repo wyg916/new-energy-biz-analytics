@@ -1,0 +1,27 @@
+{
+  "evidence_type": "p5_security_summary",
+  "trivy": {
+    "completed_scans": 1,
+    "keycloak_26_7_0": {
+      "critical": 0,
+      "high": 15,
+      "unique_high": 12,
+      "raw_sha256": "7f5389ff720d99904384176b4c8d0dc0ce1e6da3bbc50d60a663597050df9948",
+      "status": "BLOCKED"
+    },
+    "sqlbot_v1_8_0": "SCAN_NOT_COMPLETED_REMOTE_PULL_TIMEOUT",
+    "remaining_images": "SCAN_NOT_COMPLETED_DOCKER_ENGINE_BLOCKED"
+  },
+  "risk_acceptance_documents": 0,
+  "waivers_created": 0,
+  "high_confidence_secret_matches_in_p5_change_scope": 0,
+  "env_files_scanned": false,
+  "unauthorized_external_calls": 0,
+  "cross_tenant_successes": 0,
+  "model_privilege_escalation_successes": 0,
+  "unreviewed_release_successes": 0,
+  "npm_audit_vulnerabilities": 0,
+  "production_release_authorized": false,
+  "production_traffic_switched": false,
+  "verified_at": "2026-08-02T15:45:00+08:00"
+}

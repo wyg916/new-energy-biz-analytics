@@ -1,0 +1,26 @@
+{
+  "evidence_type": "p5_environment_blockers",
+  "observed_at": "2026-08-02T13:50:00+08:00",
+  "docker_engine": {
+    "status": "BLOCKED",
+    "pipe_present": true,
+    "api_responsive": false,
+    "observed_errors": [
+      "Wsl/Service/CreateInstance/HCS_E_CONNECTION_TIMEOUT",
+      "Docker API probe did not return within the bounded observation window"
+    ],
+    "destructive_recovery_attempted": false,
+    "volumes_deleted": false
+  },
+  "external_authorizations": {
+    "enterprise_idp_test_tenant": false,
+    "enterprise_secret_manager": false,
+    "external_model_credential_reference": false,
+    "enterprise_alert_receiver": false,
+    "production_data": false,
+    "representative_production_specification": false
+  },
+  "unauthorized_external_requests": 0,
+  "production_release_authorized": false,
+  "production_traffic_switched": false
+}

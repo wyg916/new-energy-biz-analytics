@@ -1,0 +1,24 @@
+{
+  "alembic": {
+    "initial_head": "p4_0001",
+    "final_head": "p5_0001",
+    "heads_count": 1,
+    "base_to_head": "PASS",
+    "p5_to_p4_to_p5": "PASS"
+  },
+  "database": "isolated_sqlite_acceptance_database_not_production",
+  "data_classification": "simulated",
+  "period": {
+    "start": "2025-01-01",
+    "end_inclusive": "2026-06-30"
+  },
+  "counts": {
+    "charging_sessions": 300000,
+    "charging_metrics": 15,
+    "sales_orders": 50000,
+    "sales_order_items": 82514,
+    "sales_metrics": 12
+  },
+  "production_data_connected": false,
+  "verified_at": "2026-08-02T15:40:00+08:00"
+}

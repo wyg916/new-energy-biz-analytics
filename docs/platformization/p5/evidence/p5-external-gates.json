@@ -1,0 +1,22 @@
+{
+  "enterprise_idp": {"status": "CONDITIONAL", "external_requests": 0},
+  "secret_manager": {"status": "CONDITIONAL", "secret_values_read": 0},
+  "external_model_credential_reference": {"status": "CONDITIONAL", "provided": false},
+  "sqlbot": {
+    "status": "CONDITIONAL",
+    "smoke_10_requests": 0,
+    "golden_30_requests": 0,
+    "shadow_20_requests": 0,
+    "sql_generation_rate": null,
+    "guard_pass_rate": null,
+    "security_violations": 0,
+    "token_usage": 0,
+    "cost": 0,
+    "canary_eligible": false
+  },
+  "enterprise_alert_receiver": {"status": "CONDITIONAL", "external_messages": 0},
+  "production_data": {"status": "CONDITIONAL", "connected": false},
+  "representative_production_specification": {"provided": false, "production_capacity_verified": false},
+  "production_release_authorized": false,
+  "production_traffic_switched": false
+}

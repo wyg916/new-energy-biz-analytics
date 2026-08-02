@@ -1,0 +1,28 @@
+{
+  "evidence_type": "p5_test_summary",
+  "backend": {
+    "status": "PASS",
+    "passed": 353,
+    "failed": 0,
+    "original_baseline_tests": 342,
+    "p5_added_tests": 11
+  },
+  "focused": {
+    "p5_gate_and_idp": {"passed": 11, "failed": 0},
+    "rag_knowledge_response_affected": {"passed": 17, "failed": 0},
+    "deterministic": {"passed": 40, "failed": 0},
+    "sales_metric_reconciliation": {"passed": 12, "failed": 0, "differences": {}},
+    "charging_metric_reconciliation": {"status": "FAIL_ON_SQLITE", "metrics_checked": 15, "differences_count": 10, "p4_postgresql_baseline": "15/15"}
+  },
+  "database_migration": {"status": "PASS", "cycle": "base_to_p5_then_p5_to_p4_to_p5", "final_head": "p5_0001"},
+  "frontend": {
+    "typescript_vite_build": "PASS",
+    "vitest": {"passed": 3, "failed": 0},
+    "npm_audit_vulnerabilities": 0,
+    "p5_playwright": {"passed": 1, "failed": 0},
+    "frozen_playwright_26": {"passed": 15, "failed": 8, "skipped": 3, "status": "BLOCKED_BY_NON_POSTGRES_NON_OIDC_ENVIRONMENT"}
+  },
+  "docker_smoke": "NOT_RUN_DOCKER_ENGINE_BLOCKED",
+  "capacity_soak": "NOT_RUN_DOCKER_ENGINE_AND_PRODUCTION_SPEC_BLOCKED",
+  "verified_at": "2026-08-02T15:45:00+08:00"
+}
