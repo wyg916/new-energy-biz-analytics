@@ -24,5 +24,6 @@
   },
   "docker_smoke": "NOT_RUN_DOCKER_ENGINE_BLOCKED",
   "capacity_soak": "NOT_RUN_DOCKER_ENGINE_AND_PRODUCTION_SPEC_BLOCKED",
+  "git_push": "BLOCKED_GITHUB_443_TIMEOUT_AFTER_TWO_ATTEMPTS",
   "verified_at": "2026-08-02T15:45:00+08:00"
 }

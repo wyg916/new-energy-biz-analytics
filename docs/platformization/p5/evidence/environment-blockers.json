@@ -20,6 +20,12 @@
     "production_data": false,
     "representative_production_specification": false
   },
+  "git_remote": {
+    "status": "BLOCKED",
+    "attempts": 2,
+    "error": "github.com:443 connection timeout",
+    "remote_branch_created": false
+  },
   "unauthorized_external_requests": 0,
   "production_release_authorized": false,
   "production_traffic_switched": false

@@ -14,6 +14,8 @@
 - SQLBot：SHADOW、disabled、runtime unverified、canary false；
 - Release authorized：false；Traffic switched：false。
 
+分发状态：本地最终提交已生成；普通 push 两次均因 `github.com:443` 连接超时失败，远端 P5 分支尚未创建。
+
 ## 镜像、SBOM 与 CVE
 
 P4 SBOM/依赖清单保持冻结且哈希已核验，但不能代表 P5 新构建；本轮因 Docker/WSL 阻断没有新的完整镜像摘要和 SBOM。Keycloak 26.7.0 实际 Trivy 结果为 0 Critical/15 High（12 unique），原始证据 SHA-256 `7f5389ff720d99904384176b4c8d0dc0ce1e6da3bbc50d60a663597050df9948`。SQLBot 镜像实际扫描未完成；Vault 的 P4 0C/1H 仅为历史基线。镜像安全门禁为 BLOCKED，无风险例外。
@@ -32,11 +34,11 @@ P4 SBOM/依赖清单保持冻结且哈希已核验，但不能代表 P5 新构�
 
 | 证据 | SHA-256 |
 |---|---|
-| `environment-blockers.json` | `e5b12b15626a40ad9d5257cc5e4c4d9324a3375ff7282d14f04bace161f476fe` |
+| `environment-blockers.json` | `eccf60ad64b52653c8e891477e609258a3a212a6e61f1e1fe827c280b406679c` |
 | `p5-external-gates.json` | `338ebcb8382a98c57c657dca64c8abfb24a0be7dc1cb32e3dcaf78f1cae693a4` |
 | `p5-migration-and-data.json` | `4c817882b785efd6504cc982a4e8d1f2b3cb3761737f3dd71b0d6480ff5ba95d` |
 | `p5-security-summary.json` | `da7c6c1ef39facfdaa7e7bb70b078f2380b13c3e69d8caacc5ccce31469965a0` |
-| `p5-test-summary.json` | `c8ceeb17045e511d5769ea429efe76307105f05a8112decfed37c1a2cc79c4b1` |
+| `p5-test-summary.json` | `74007017c9a920461847cbfb3455fcc5c7c7d608a15e9e41aa1a7a9f7abaafa8` |
 | `rag-keyword-release.json` | `a59c871188aba4216a82281790a7bb1e3064ed0dc28f83e11fff144e35eccd8e` |
 
 ## 最终决策

@@ -42,4 +42,4 @@ Keycloak 实际复扫仍为 0 Critical/15 High；SQLBot 与其余镜像没有完
 
 主要风险是镜像 High、SQLBot 未扫描/未实测、缺少企业 IdP/Secret Manager/告警/数据/生产规格授权、P5 容量与恢复未运行，以及本地 SQLite 无法替代 PostgreSQL 冻结 Oracle。回滚代码提交后执行 `alembic downgrade p4_0001`，恢复前端和 keyword 状态；先导出门禁历史，禁止删卷。RAG 后续 Vector 发布必须走独立版本和评测。
 
-当前不允许进入生产部署或切流阶段；只允许继续关闭列明门禁并在证据齐全后提交新的生产授权评审。
+普通 push 已按要求执行两次，但 GitHub 443 均连接超时；远端 P5 分支未创建，本地提交保持完整且工作区 clean。当前不允许进入生产部署或切流阶段；只允许恢复网络后普通 push，并继续关闭列明门禁，在证据齐全后提交新的生产授权评审。

@@ -28,5 +28,6 @@
 | P5 变更范围敏感信息扫描 | PASS | 高置信度新增泄漏 0；未扫描 `.env*` |
 | 容量/2h 耐久 | NOT RUN | Docker 阻断且无代表性生产规格 |
 | P5 备份恢复/故障演练 | NOT RUN | Docker 阻断；P4 历史通过不提升为 P5 证据 |
+| 普通 push | BLOCKED | 两次连接 GitHub 443 超时；远端 P5 分支未创建，本地提交与 clean 状态保留 |
 
 机器摘要：`evidence/p5-test-summary.json`、`evidence/p5-migration-and-data.json`。当前测试事实不满足生产验收最低要求，结论必须保持 `NO_GO`。
