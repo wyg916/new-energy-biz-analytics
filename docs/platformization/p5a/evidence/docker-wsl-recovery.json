@@ -1,0 +1,57 @@
+{
+  "captured_at": "2026-08-02T09:47:51Z",
+  "previous_blocker": "WSL HCS connection timeout caused Docker Linux Engine API to be unavailable during P5",
+  "current_runtime": {
+    "wsl_distribution": "docker-desktop",
+    "wsl_version": 2,
+    "wsl_state": "Running",
+    "docker_desktop_version": "4.84.0",
+    "docker_client_version": "29.6.2",
+    "docker_server_version": "29.6.2",
+    "compose_version": "5.3.1",
+    "context": "desktop-linux",
+    "kernel": "6.18.33.2-microsoft-standard-WSL2"
+  },
+  "p5a_project": "renewable-p5a-remediation",
+  "network": "renewable-p5a-remediation-network",
+  "network_attached_running_services": 9,
+  "named_volume_count": 9,
+  "existing_p4_volumes_deleted": false,
+  "existing_p4_volumes_reused": false,
+  "repairs": [
+    "replace Compose multi-service Bake with sequential BuildKit image builds for the Unicode workspace",
+    "wait for the final PostgreSQL TCP listener before dependent migration and Keycloak services",
+    "use the P5A trusted Host header in the Nginx healthcheck"
+  ],
+  "liveness": {"http_status": 200, "status": "ok"},
+  "readiness": {
+    "http_status": 200,
+    "status": "ready",
+    "database_revision": "p5_0001",
+    "postgresql": "ok",
+    "redis": "ok",
+    "vault_kv_v2": "ok",
+    "keycloak_oidc": "ok"
+  },
+  "fixed_simulated_counts": {
+    "charging_sessions": 300000,
+    "sales_orders": 50000,
+    "sales_order_items": 82514
+  },
+  "images": {
+    "api": "sha256:f487774a4db5a890116c9f7427bae40c2791287f47a45ac17bd4cb242d399c8d",
+    "web": "sha256:5364a6c917fd39d37b284cdbd055d17d0b3cc0628e66b29d327f8cc3954aa43b",
+    "postgresql": "sha256:486298eaa6cbd4830f8d1ae199e6dc9f33cee75a6bc178b0ee2d34c94b3041e3",
+    "keycloak": "sha256:c2b643bb866cb4c297176d11e8c60065ec4628102a19256ffb65b5a8d0bfeafd"
+  },
+  "registry_connectivity": {
+    "docker_internal_dns": "PASS",
+    "busybox_pull": "PASS",
+    "standalone_manifest_inspect": "TIMEOUT",
+    "status": "INTERMITTENT"
+  },
+  "sqlbot_engine_enabled": false,
+  "sqlbot_canary_eligible": false,
+  "production_release_authorized": false,
+  "production_traffic_switched": false
+}

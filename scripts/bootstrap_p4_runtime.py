@@ -12,6 +12,7 @@ import os
 import secrets
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from urllib.parse import urlparse
 
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
@@ -27,15 +28,15 @@ def _write_once(path: Path, value: str) -> bool:
     return True
 
 
-def _certificate(root: Path) -> bool:
+def _certificate(root: Path, *, hostname: str, label: str) -> bool:
     key_path = root / "tls_key.pem"
     cert_path = root / "tls_cert.pem"
     if key_path.exists() and cert_path.exists():
         return False
     private_key = rsa.generate_private_key(public_exponent=65537, key_size=3072)
     subject = issuer = x509.Name([
-        x509.NameAttribute(NameOID.ORGANIZATION_NAME, "ChatBI P4 Isolated Preproduction"),
-        x509.NameAttribute(NameOID.COMMON_NAME, "p4.localhost"),
+        x509.NameAttribute(NameOID.ORGANIZATION_NAME, f"ChatBI {label} Isolated Acceptance"),
+        x509.NameAttribute(NameOID.COMMON_NAME, hostname),
     ])
     now = datetime.now(UTC)
     cert = (
@@ -48,7 +49,7 @@ def _certificate(root: Path) -> bool:
         .not_valid_after(now + timedelta(days=30))
         .add_extension(
             x509.SubjectAlternativeName([
-                x509.DNSName("p4.localhost"), x509.DNSName("localhost"),
+                x509.DNSName(hostname), x509.DNSName("localhost"),
                 x509.IPAddress(ipaddress.ip_address("127.0.0.1")),
             ]),
             critical=False,
@@ -66,7 +67,7 @@ def _certificate(root: Path) -> bool:
     return True
 
 
-def _realm(root: Path) -> bool:
+def _realm(root: Path, *, public_base_url: str, label: str) -> bool:
     realm_path = root / "keycloak_realm.json"
     if realm_path.exists():
         return False
@@ -74,7 +75,7 @@ def _realm(root: Path) -> bool:
     realm = {
         "realm": "chatbi",
         "enabled": True,
-        "displayName": "ChatBI P4 Preproduction",
+        "displayName": f"ChatBI {label} Acceptance",
         "sslRequired": "external",
         "registrationAllowed": False,
         "resetPasswordAllowed": False,
@@ -88,8 +89,8 @@ def _realm(root: Path) -> bool:
             "publicClient": True,
             "standardFlowEnabled": True,
             "directAccessGrantsEnabled": False,
-            "redirectUris": ["https://p4.localhost:8444/oidc/callback"],
-            "webOrigins": ["https://p4.localhost:8444"],
+            "redirectUris": [f"{public_base_url}/oidc/callback"],
+            "webOrigins": [public_base_url],
             "attributes": {"pkce.code.challenge.method": "S256"},
             "protocolMappers": [
                 {"name": "audience", "protocol": "openid-connect", "protocolMapper": "oidc-audience-mapper", "consentRequired": False,
@@ -129,7 +130,16 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--runtime-dir", type=Path, default=Path("/run/p4-runtime"))
     parser.add_argument("--keycloak-dir", type=Path, default=Path("/run/p4-keycloak"))
+    parser.add_argument(
+        "--public-base-url",
+        default=os.getenv("ACCEPTANCE_PUBLIC_BASE_URL", "https://p4.localhost:8444"),
+    )
+    parser.add_argument("--label", default=os.getenv("ACCEPTANCE_LABEL", "P4 Preproduction"))
     args = parser.parse_args()
+    parsed_base_url = urlparse(args.public_base_url)
+    if parsed_base_url.scheme != "https" or not parsed_base_url.hostname or parsed_base_url.path.rstrip("/"):
+        parser.error("public base URL must be an HTTPS origin without a path")
+    public_base_url = args.public_base_url.rstrip("/")
     args.runtime_dir.mkdir(parents=True, exist_ok=True)
     # Service-specific files remain 0600; the directory must be traversable by
     # the Redis runtime before it can read its dedicated configuration file.
@@ -142,7 +152,9 @@ def main() -> None:
         "application_signing_key": _write_once(args.runtime_dir / "application_signing_key", secrets.token_urlsafe(64)),
         "keycloak_admin_password": _write_once(args.keycloak_dir / "keycloak_admin_password", secrets.token_urlsafe(36)),
         "keycloak_user_password": _write_once(args.keycloak_dir / "keycloak_user_password", secrets.token_urlsafe(24)),
-        "tls_material": _certificate(args.runtime_dir),
+        "tls_material": _certificate(
+            args.runtime_dir, hostname=parsed_base_url.hostname, label=args.label,
+        ),
     }
     redis_configuration = args.runtime_dir / "redis.conf"
     if not redis_configuration.exists():
@@ -161,7 +173,9 @@ def main() -> None:
     created["keycloak_database_password"] = _write_once(args.keycloak_dir / "postgres_password", database_password)
     for name in ("keycloak_admin_password", "keycloak_user_password", "postgres_password"):
         os.chmod(args.keycloak_dir / name, 0o640)
-    created["keycloak_realm"] = _realm(args.keycloak_dir)
+    created["keycloak_realm"] = _realm(
+        args.keycloak_dir, public_base_url=public_base_url, label=args.label,
+    )
     os.chmod(args.keycloak_dir / "keycloak_realm.json", 0o640)
     print(json.dumps({
         "status": "READY", "runtime_only": True, "repository_files_written": False,

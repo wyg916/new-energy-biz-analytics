@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from datetime import UTC, date, datetime
 
 from sqlalchemy import func, select, text
@@ -28,7 +29,8 @@ from app.scenarios.sales_ops.seed import DEFAULT_ORDER_COUNT, DEFAULT_SEED, gene
 from app.services.data_integration import DataIntegrationService
 
 
-EXPECTED_REVISION = "p4_0001"
+EXPECTED_REVISION = os.getenv("EXPECTED_DATABASE_REVISION", "p4_0001")
+ACCEPTANCE_DATABASE_NAME = os.getenv("ACCEPTANCE_POSTGRES_DB", "renewable_p4")
 
 
 def published_ingestion(db, analyst: User) -> dict:
@@ -139,7 +141,7 @@ def main() -> None:
         if governed is None:
             governed = data_service.create(
                 display_name="P4 模拟 PostgreSQL", source_type="postgresql", host="db", port=5432,
-                database_name="renewable_p4", username="alpha", credential_ref_id=datasource_ref.credential_ref_id,
+                database_name=ACCEPTANCE_DATABASE_NAME, username="alpha", credential_ref_id=datasource_ref.credential_ref_id,
                 scenario_id="charging_ops", connection_options={"write_access": False},
             )
         governance = db.scalar(select(PreproductionDataSourceGovernance).where(
