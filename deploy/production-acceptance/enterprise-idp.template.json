@@ -1,0 +1,33 @@
+{
+  "schema_version": "p5-enterprise-idp-v1",
+  "provider_code": "ENTERPRISE_OIDC",
+  "issuer": "https://idp.example.invalid/tenant-id/v2.0",
+  "metadata_url": "https://idp.example.invalid/tenant-id/v2.0/.well-known/openid-configuration",
+  "client_id": "replace-with-approved-client-id",
+  "redirect_uri": "https://chatbi.example.invalid/oidc/callback",
+  "allowed_issuers": [
+    "https://idp.example.invalid/tenant-id/v2.0"
+  ],
+  "scopes": [
+    "openid",
+    "profile",
+    "email"
+  ],
+  "claim_mapping": {
+    "subject": "sub",
+    "groups": "groups",
+    "roles": "roles",
+    "tenant": "tenant_id",
+    "workspace": "workspace_id",
+    "user_status": "account_status"
+  },
+  "disabled_user_values": [
+    "disabled",
+    "terminated",
+    "suspended"
+  ],
+  "clock_skew_seconds": 30,
+  "jwks_cache_ttl_seconds": 300,
+  "require_pkce_s256": true,
+  "require_session_revocation": true
+}

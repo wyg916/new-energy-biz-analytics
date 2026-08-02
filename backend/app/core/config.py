@@ -94,6 +94,7 @@ class Settings(BaseSettings):
     oidc_session_ttl_seconds: int = 3600
     oidc_http_timeout_seconds: float = 10.0
     oidc_jwks_cache_ttl_seconds: int = 300
+    oidc_clock_skew_seconds: int = 30
     vault_enabled: bool = False
     vault_address: str = "http://vault:8200"
     vault_role_id_file: str = "/run/p4-secrets/vault_role_id"
@@ -157,7 +158,11 @@ class Settings(BaseSettings):
                         "CHATBI_READONLY_EXECUTION_ENABLED must be true before enabling SQLBot in production"
                     )
             if self.production_release_authorized:
-                failures.append("PRODUCTION_RELEASE_AUTHORIZED must remain false for P4")
+                failures.append("PRODUCTION_RELEASE_AUTHORIZED must remain false until explicit post-acceptance authorization")
+            if not 0 <= self.oidc_clock_skew_seconds <= 120:
+                failures.append("OIDC_CLOCK_SKEW_SECONDS must be between 0 and 120")
+            if not 30 <= self.oidc_jwks_cache_ttl_seconds <= 900:
+                failures.append("OIDC_JWKS_CACHE_TTL_SECONDS must be between 30 and 900")
             if self.app_env == "preproduction":
                 if self.local_auth_enabled:
                     failures.append("LOCAL_AUTH_ENABLED must be false in preproduction")

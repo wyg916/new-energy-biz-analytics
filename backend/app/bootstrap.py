@@ -12,6 +12,7 @@ from app.scenarios.registry import install_charging_ops
 from app.platform.identity import IdentityContextFactory
 from app.skills.definitions import install_initial_skills
 from app.query_engines.sqlbot.source_binding import install_initial_source_bindings
+from app.production_acceptance.bootstrap import install_production_gate_baseline
 
 
 DEMO_USERS = (
@@ -65,3 +66,4 @@ def bootstrap_demo_users() -> None:
             install_initial_skills(db, identity)
             install_initial_source_bindings(db, identity)
         install_governance_baseline(db)
+        install_production_gate_baseline(db)

@@ -52,12 +52,15 @@ PERMISSIONS: dict[str, tuple[str, str, str]] = {
     "alert.view": ("security_alert", "view", "查看站内安全告警"),
     "alert.manage": ("security_alert", "manage", "确认站内安全告警"),
     "health.view": ("runtime_health", "view", "查看运行健康"),
+    "production_gate.view": ("production_gate", "view", "查看生产验收门禁"),
+    "production_gate.manage": ("production_gate", "manage", "记录生产验收门禁结论"),
 }
 
 BUSINESS_PERMISSIONS = {
     "datasource.view", "dataset.view", "metric.query", "rag.document.view",
     "memory.view", "memory.confirm", "memory.correct", "memory.delete",
     "skill.view", "skill.execute", "health.view",
+    "production_gate.view",
 }
 
 

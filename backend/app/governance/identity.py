@@ -78,6 +78,7 @@ class RemoteJWKSOIDCProvider:
         provider_code: str,
         timeout_seconds: float = 10.0,
         cache_ttl_seconds: int = 300,
+        clock_skew_seconds: int = 30,
     ) -> None:
         self.issuer = issuer.rstrip("/")
         self.audience = audience
@@ -85,6 +86,7 @@ class RemoteJWKSOIDCProvider:
         self.provider_code = provider_code
         self.timeout_seconds = timeout_seconds
         self.cache_ttl_seconds = cache_ttl_seconds
+        self.clock_skew_seconds = clock_skew_seconds
         self._keys: dict[str, object] = {}
         self._expires_at = 0.0
         self._lock = threading.Lock()
@@ -98,6 +100,7 @@ class RemoteJWKSOIDCProvider:
             provider_code=settings.oidc_provider_code,
             timeout_seconds=settings.oidc_http_timeout_seconds,
             cache_ttl_seconds=settings.oidc_jwks_cache_ttl_seconds,
+            clock_skew_seconds=settings.oidc_clock_skew_seconds,
         )
 
     def verify(self, id_token: str) -> OIDCClaims:
@@ -115,6 +118,7 @@ class RemoteJWKSOIDCProvider:
                 algorithms=["RS256"],
                 audience=self.audience,
                 issuer=self.issuer,
+                leeway=self.clock_skew_seconds,
                 options={"require": ["exp", "iat", "iss", "aud", "sub"]},
             )
             if expected_nonce is not None and payload.get("nonce") != expected_nonce:

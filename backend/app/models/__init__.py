@@ -52,6 +52,7 @@ from app.governance.models import (
     PlatformRelease,
 )
 from app.preproduction.models import PreproductionAcceptanceRecord, PreproductionDataSourceGovernance, ExternalAlertDelivery
+from app.production_acceptance.models import ProductionGate, ProductionGateHistory
 
 __all__ = [
     "AuditLog", "User", "AnalysisRun", "ChargingSession", "City", "DataGenerationRun",
@@ -81,4 +82,5 @@ __all__ = [
     "GovernanceBinding", "CredentialReference", "CredentialUsageAudit",
     "RetentionPolicy", "LegalHold", "GovernanceAuditEvent", "SecurityAlert",
     "PlatformRelease", "PreproductionAcceptanceRecord", "PreproductionDataSourceGovernance", "ExternalAlertDelivery",
+    "ProductionGate", "ProductionGateHistory",
 ]
