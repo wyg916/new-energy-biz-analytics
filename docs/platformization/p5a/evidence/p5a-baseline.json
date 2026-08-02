@@ -1,0 +1,30 @@
+{
+  "captured_at": "2026-08-02T08:56:05Z",
+  "p5_worktree": "E:\\新能源企业经营分析智能平台-p5-acceptance",
+  "p5_branch": "feat/p5-production-acceptance-gates",
+  "p5_head": "cf37a43c444515f2c92530aab050410efac4b544",
+  "p5_worktree_clean": true,
+  "p5_commits": [
+    "8dcf2af68f2069c9246dc9f777263b794f8570bf",
+    "158bfcc0cb8761ada836e1cfce2cace8733cbeeb",
+    "1e9fdd60c2f3befab8a7e365bc64e79169ee987a",
+    "36abd996b5104d83339d9bc525570298134bee47",
+    "cbc7804a7054e9cd8b761850322da61256d8f2f4",
+    "cf37a43c444515f2c92530aab050410efac4b544"
+  ],
+  "git_fsck_exit_code": 0,
+  "p5_remote_push": {
+    "status": "PASSED",
+    "remote_head": "cf37a43c444515f2c92530aab050410efac4b544",
+    "ahead": 0,
+    "behind": 0,
+    "force_push": false
+  },
+  "p5a_worktree": "E:\\新能源企业经营分析智能平台-p5a-remediation",
+  "p5a_branch": "fix/p5a-production-gate-remediation",
+  "alembic_head": "p5_0001",
+  "alembic_head_count": 1,
+  "production_release_authorized": false,
+  "production_traffic_switched": false,
+  "go_no_go": "NO_GO"
+}
