@@ -1,0 +1,14 @@
+{
+  "base_to_head": true,
+  "database": "p5a_migration_verify",
+  "database_removed": true,
+  "evidence_type": "p5a_migration_acceptance",
+  "existing_volume_deleted": false,
+  "head_revision": "p5_0001",
+  "head_to_rollback": true,
+  "isolation": "dedicated_database",
+  "observed_rollback_revision": "p4_0001",
+  "passed": true,
+  "rollback_revision": "p4_0001",
+  "rollback_to_head": true
+}

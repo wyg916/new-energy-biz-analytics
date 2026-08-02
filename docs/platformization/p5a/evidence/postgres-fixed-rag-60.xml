@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="14.147" timestamp="2026-08-02T11:28:20.950137+00:00" hostname="b60b8e8a9459"><testcase classname="tests.test_rag_golden_60" name="test_rag_golden_60_manifest_and_runtime_evaluation" time="13.415" /></testsuite></testsuites>

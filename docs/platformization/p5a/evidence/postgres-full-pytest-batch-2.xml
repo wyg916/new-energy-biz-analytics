@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="11" skipped="0" tests="108" time="1267.946" timestamp="2026-08-02T10:22:31.173994+00:00" hostname="79eb61ced386"><testcase classname="tests.test_platform_connectors" name="test_registry_and_capability_contract" time="0.003" /><testcase classname="tests.test_platform_connectors" name="test_registry_rejects_unknown_type" time="0.011" /><testcase classname="tests.test_platform_connectors" name="test_plaintext_credential_is_rejected_before_driver_use" time="0.002" /><testcase classname="tests.test_platform_connectors" name="test_safe_config_never_returns_credential_reference_or_value" time="0.002" /><testcase classname="tests.test_platform_connectors" name="test_csv_discovery_preview_profile_and_pagination" time="0.511" /><testcase classname="tests.test_platform_connectors" name="test_csv_empty_or_invalid_data_fails_closed" time="0.017" /><testcase classname="tests.test_platform_connectors" name="test_csv_path_escape_is_denied" time="0.016" /><testcase classname="tests.test_platform_connectors" name="test_file_incremental_read_is_explicitly_unsupported" time="0.039" /><testcase classname="tests.test_platform_connectors" name="test_cancellation_and_lifecycle_are_enforced" time="0.029" /><testcase classname="tests.test_platform_connectors" name="test_excel_discovery_and_preview" time="0.378" /><testcase classname="tests.test_platform_connectors" name="test_excel_missing_sheet_fails_without_fallback" time="0.153" /><testcase classname="tests.test_platform_connectors" name="test_mock_incremental_cursor_and_failure_mapping" time="0.003" /><testcase classname="tests.test_platform_connectors" name="test_driver_error_mapping_is_stable_and_redacted" time="0.002" /><testcase classname="tests.test_platform_connectors" name="test_mysql_registration_configuration_and_connection_contract" time="0.007" /><testcase classname="tests.test_platform_connectors" name="test_postgresql_configuration_requires_reference" time="0.010" /><testcase classname="tests.test_platform_connectors" name="test_postgresql_schema_and_column_discovery" time="0.004" /><testcase classname="tests.test_platform_connectors" name="test_postgresql_schema_allowlist_is_fail_closed" time="0.014" /><testcase classname="tests.test_platform_connectors" name="test_page_request_hard_limits" time="0.004" /><testcase classname="tests.test_dataset_release" name="test_release_is_immutable_idempotent_and_not_implicitly_active" time="12.234" /><testcase classname="tests.test_dataset_release" name="test_quality_failure_and_rejection_cannot_be_published" time="15.126" /><testcase classname="tests.test_dataset_release" name="test_activation_is_atomic_unique_and_idempotent" time="14.525" /><testcase classname="tests.test_dataset_release" name="test_failed_activation_preserves_previous_active_version" time="17.095" /><testcase classname="tests.test_dataset_release" name="test_rollback_creates_audit_is_idempotent_and_failure_is_atomic" time="17.191" /><testcase classname="tests.test_dataset_release" name="test_tenant_scope_is_not_client_overridable" time="16.840" /><testcase classname="tests.test_official_model_provider_validation" name="test_env_file_parser_handles_bom_quotes_and_safe_audit" time="0.030" /><testcase classname="tests.test_official_model_provider_validation" name="test_env_file_parser_rejects_duplicate_variables" time="0.055" /><testcase classname="tests.test_official_model_provider_validation" name="test_official_specs_reject_non_official_base_url" time="0.003" /><testcase classname="tests.test_official_model_provider_validation" name="test_kimi_uses_models_bearer_then_three_smokes" time="0.016" /><testcase classname="tests.test_official_model_provider_validation" name="test_deepseek_401_retries_once_and_keeps_request_id" time="0.003" /><testcase classname="tests.test_official_model_provider_validation" name="test_mimo_calls_chat_with_api_key_without_models" time="0.004" /><testcase classname="tests.test_official_model_provider_validation" name="test_mimo_only_falls_back_to_bearer_after_api_key_401" time="0.004" /><testcase classname="tests.test_official_model_provider_validation" name="test_all_official_401_results_use_required_blocker" time="0.004" /><testcase classname="tests.test_p4_oidc_vault" name="test_preproduction_settings_fail_closed" time="15.295" /><testcase classname="tests.test_p4_oidc_vault" name="test_preproduction_rejects_an_existing_local_bearer" time="29.750" /><testcase classname="tests.test_p4_oidc_vault" name="test_remote_jwks_verifies_signature_claims_and_nonce" time="17.366" /><testcase classname="tests.test_p4_oidc_vault" name="test_oidc_state_is_one_time_and_session_is_revocable" time="16.486" /><testcase classname="tests.test_p4_oidc_vault" name="test_vault_kv_v2_version_cache_invalidation_and_fail_closed" time="16.892" /><testcase classname="tests.test_engine_router" name="test_deterministic_only_never_calls_sqlbot" time="0.013" /><testcase classname="tests.test_engine_router" name="test_shadow_returns_deterministic_and_compares_sqlbot" time="0.011" /><testcase classname="tests.test_engine_router" name="test_sqlbot_failure_does_not_affect_shadow_user_result" time="0.006" /><testcase classname="tests.test_engine_router" name="test_canary_routes_only_selected_long_tail_queries" time="0.003" /><testcase classname="tests.test_engine_router" name="test_core_query_remains_deterministic_even_when_sqlbot_enabled" time="0.003" /><testcase classname="tests.test_engine_router" name="test_disabled_mode_fails_closed" time="0.003" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_revenue_decline_evaluation_expansion[1]" time="1.462" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_revenue_decline_evaluation_expansion[2]" time="0.113" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_revenue_decline_evaluation_expansion[3]" time="0.084" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_revenue_decline_evaluation_expansion[4]" time="0.064" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_revenue_decline_evaluation_expansion[5]" time="0.074" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_revenue_decline_evaluation_expansion[6]" time="0.085" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_revenue_decline_evaluation_expansion[7]" time="0.083" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_revenue_decline_evaluation_expansion[8]" time="0.086" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_revenue_decline_evaluation_expansion[9]" time="0.075" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_order_anomaly_evaluation_expansion[1]" time="0.055" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_order_anomaly_evaluation_expansion[2]" time="0.059" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_order_anomaly_evaluation_expansion[3]" time="0.098" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_order_anomaly_evaluation_expansion[4]" time="0.098" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_order_anomaly_evaluation_expansion[5]" time="0.089" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_order_anomaly_evaluation_expansion[6]" time="0.084" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_order_anomaly_evaluation_expansion[7]" time="0.124" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_gross_profit_evaluation_expansion[1]" time="0.093" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_gross_profit_evaluation_expansion[2]" time="0.060" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_gross_profit_evaluation_expansion[3]" time="0.073" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_gross_profit_evaluation_expansion[4]" time="0.094" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_gross_profit_evaluation_expansion[5]" time="0.091" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_gross_profit_evaluation_expansion[6]" time="0.120" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_gross_profit_evaluation_expansion[7]" time="0.131" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_station_efficiency_evaluation_expansion[1]" time="0.087" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_station_efficiency_evaluation_expansion[2]" time="0.057" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_station_efficiency_evaluation_expansion[3]" time="0.081" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_station_efficiency_evaluation_expansion[4]" time="0.066" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_station_efficiency_evaluation_expansion[5]" time="0.082" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_station_efficiency_evaluation_expansion[6]" time="0.084" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_report_generation_evaluation_expansion[1]" time="0.058" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_report_generation_evaluation_expansion[2]" time="0.068" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_report_generation_evaluation_expansion[3]" time="0.066" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_report_generation_evaluation_expansion[4]" time="0.090" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_report_generation_evaluation_expansion[5]" time="0.076" /><testcase classname="tests.test_skill_evaluation_expansion" name="test_report_generation_evaluation_expansion[6]" time="0.104" /><testcase classname="tests.test_sales_ops" name="test_sales_ops_package_uses_existing_contract_without_core_special_case" time="4.374" /><testcase classname="tests.test_sales_ops" name="test_sales_seed_metrics_versions_engine_and_scenario_isolation" time="288.301" /><testcase classname="tests.test_active_platform_query" name="test_active_versions_route_all_formal_consumers_and_fail_closed" time="272.914"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x784fb0ae4150&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x784fb569ccc0&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x784fb191c690&gt;
+
+    def test_active_versions_route_all_formal_consumers_and_fail_closed(client, login, monkeypatch) -&gt; None:
+        settings = get_settings()
+        monkeypatch.setattr(settings, "platform_version_routing_enabled", True)
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=1_000)
+            user = db.query(User).filter_by(username="analyst").one()
+            identity = IdentityContextFactory.from_user(user)
+            with pytest.raises(SemanticRegistryError) as exc:
+                ActiveSemanticResolver(db).resolve(
+                    identity,
+                    scenario_id=SCENARIO_ID,
+                    dataset_code=DATASET_CODE,
+                )
+            assert exc.value.code in {"DATASET_NOT_FOUND", "NO_ACTIVE_VERSION"}
+            installed = install_platform_foundation(db, identity)
+            assert installed["metric_count"] == 15
+            assert installed["scenario_status"] == "ACTIVE"
+    
+&gt;       headers = login()
+                  ^^^^^^^
+
+tests/test_active_platform_query.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_active_platform_query" name="test_sqlbot_adapter_is_disabled_and_runtime_unverified_by_default" time="0.738" /><testcase classname="tests.test_p5_enterprise_idp_acceptance" name="test_enterprise_idp_template_contract_validates_without_external_call" time="0.017"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/deploy/production-acceptance/enterprise-idp.template.json'">&gt;   ???
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\test_p5_enterprise_idp_acceptance.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.11/pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/deploy/production-acceptance/enterprise-idp.template.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/deploy/production-acceptance/enterprise-idp.template.json'
+
+/usr/local/lib/python3.11/pathlib.py:1044: FileNotFoundError</failure></testcase><testcase classname="tests.test_p5_enterprise_idp_acceptance" name="test_metadata_requires_https_and_rejects_embedded_credentials[authorization_endpoint]" time="0.023" /><testcase classname="tests.test_p5_enterprise_idp_acceptance" name="test_metadata_requires_https_and_rejects_embedded_credentials[token_endpoint]" time="0.003" /><testcase classname="tests.test_p5_enterprise_idp_acceptance" name="test_metadata_requires_https_and_rejects_embedded_credentials[jwks_uri]" time="0.003" /><testcase classname="tests.test_p5_enterprise_idp_acceptance" name="test_multi_issuer_and_wrong_issuer_fail_closed" time="0.011" /><testcase classname="tests.test_p5_enterprise_idp_acceptance" name="test_missing_pkce_revocation_and_canonical_claims_fail_closed" time="0.005" /><testcase classname="tests.test_platform_canary" name="test_platform_version_routing_defaults_and_immediate_rollback" time="0.062"><failure message="pydantic_core._pydantic_core.ValidationError: 1 validation error for Settings&#10;  Value error, production configuration rejected: production QUERY_ENGINE_MODE must be DETERMINISTIC_ONLY [type=value_error, input_value={'app_env': 'production',..._routing_enabled': None}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/value_error">monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x784fb0e6c250&gt;
+
+    def test_platform_version_routing_defaults_and_immediate_rollback(
+        monkeypatch,
+    ) -&gt; None:
+        monkeypatch.delenv("PLATFORM_VERSION_ROUTING_ENABLED", raising=False)
+        assert Settings(
+            app_env="development",
+            platform_version_routing_enabled=None,
+        ).effective_platform_version_routing_enabled is True
+        assert Settings(
+            app_env="test",
+            platform_version_routing_enabled=None,
+        ).effective_platform_version_routing_enabled is True
+    
+&gt;       production = Settings(
+            **_production_values(),
+            platform_version_routing_enabled=None,
+        )
+
+tests/test_platform_canary.py:76: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+__pydantic_self__ = Settings(app_name='新能源企业经营分析智能平台', app_env='production', debug=False, secret_key='a-secure-private-release-secret-key'...hreshold=3, external_alert_circuit_recovery_seconds=30, preproduction_evidence_root='/app/data/preproduction-evidence')
+_case_sensitive = None, _nested_model_default_partial_update = None
+_env_prefix = None, _env_file = PosixPath('.'), _env_file_encoding = None
+_env_ignore_empty = None, _env_nested_delimiter = None
+_env_nested_max_split = None, _env_parse_none_str = None
+_env_parse_enums = None, _cli_prog_name = None, _cli_parse_args = None
+_cli_settings_source = None, _cli_parse_none_str = None
+_cli_hide_none_type = None, _cli_avoid_json = None, _cli_enforce_required = None
+_cli_use_class_docs_for_groups = None, _cli_exit_on_error = None
+_cli_prefix = None, _cli_flag_prefix_char = None, _cli_implicit_flags = None
+_cli_ignore_unknown_args = None, _cli_kebab_case = None, _secrets_dir = None
+values = {'app_env': 'production', 'auto_bootstrap_demo_users': False, 'cors_origins': 'https://analytics.example.internal', 'database_url': 'postgresql+psycopg://renewable:strong-db-password@db:5432/renewable_private', ...}
+
+    def __init__(
+        __pydantic_self__,
+        _case_sensitive: bool | None = None,
+        _nested_model_default_partial_update: bool | None = None,
+        _env_prefix: str | None = None,
+        _env_file: DotenvType | None = ENV_FILE_SENTINEL,
+        _env_file_encoding: str | None = None,
+        _env_ignore_empty: bool | None = None,
+        _env_nested_delimiter: str | None = None,
+        _env_nested_max_split: int | None = None,
+        _env_parse_none_str: str | None = None,
+        _env_parse_enums: bool | None = None,
+        _cli_prog_name: str | None = None,
+        _cli_parse_args: bool | list[str] | tuple[str, ...] | None = None,
+        _cli_settings_source: CliSettingsSource[Any] | None = None,
+        _cli_parse_none_str: str | None = None,
+        _cli_hide_none_type: bool | None = None,
+        _cli_avoid_json: bool | None = None,
+        _cli_enforce_required: bool | None = None,
+        _cli_use_class_docs_for_groups: bool | None = None,
+        _cli_exit_on_error: bool | None = None,
+        _cli_prefix: str | None = None,
+        _cli_flag_prefix_char: str | None = None,
+        _cli_implicit_flags: bool | None = None,
+        _cli_ignore_unknown_args: bool | None = None,
+        _cli_kebab_case: bool | None = None,
+        _secrets_dir: PathType | None = None,
+        **values: Any,
+    ) -&gt; None:
+&gt;       super().__init__(
+            **__pydantic_self__._settings_build_values(
+                values,
+                _case_sensitive=_case_sensitive,
+                _nested_model_default_partial_update=_nested_model_default_partial_update,
+                _env_prefix=_env_prefix,
+                _env_file=_env_file,
+                _env_file_encoding=_env_file_encoding,
+                _env_ignore_empty=_env_ignore_empty,
+                _env_nested_delimiter=_env_nested_delimiter,
+                _env_nested_max_split=_env_nested_max_split,
+                _env_parse_none_str=_env_parse_none_str,
+                _env_parse_enums=_env_parse_enums,
+                _cli_prog_name=_cli_prog_name,
+                _cli_parse_args=_cli_parse_args,
+                _cli_settings_source=_cli_settings_source,
+                _cli_parse_none_str=_cli_parse_none_str,
+                _cli_hide_none_type=_cli_hide_none_type,
+                _cli_avoid_json=_cli_avoid_json,
+                _cli_enforce_required=_cli_enforce_required,
+                _cli_use_class_docs_for_groups=_cli_use_class_docs_for_groups,
+                _cli_exit_on_error=_cli_exit_on_error,
+                _cli_prefix=_cli_prefix,
+                _cli_flag_prefix_char=_cli_flag_prefix_char,
+                _cli_implicit_flags=_cli_implicit_flags,
+                _cli_ignore_unknown_args=_cli_ignore_unknown_args,
+                _cli_kebab_case=_cli_kebab_case,
+                _secrets_dir=_secrets_dir,
+            )
+        )
+E       pydantic_core._pydantic_core.ValidationError: 1 validation error for Settings
+E         Value error, production configuration rejected: production QUERY_ENGINE_MODE must be DETERMINISTIC_ONLY [type=value_error, input_value={'app_env': 'production',..._routing_enabled': None}, input_type=dict]
+E           For further information visit https://errors.pydantic.dev/2.13/v/value_error
+
+/usr/local/lib/python3.11/site-packages/pydantic_settings/main.py:176: ValidationError</failure></testcase><testcase classname="tests.test_platform_canary" name="test_production_rejects_enabled_platform_version_routing" time="0.031" /><testcase classname="tests.test_platform_canary" name="test_canary_scope_requires_tenant_workspace_user_and_scenario" time="0.002" /><testcase classname="tests.test_auth" name="test_health_is_public" time="23.523"><failure message="AssertionError: assert '5.0.0-p5a' == '0.1.0-dev'&#10;  &#10;  - 0.1.0-dev&#10;  + 5.0.0-p5a">client = &lt;starlette.testclient.TestClient object at 0x784fb1ae80d0&gt;
+
+    def test_health_is_public(client):
+        response = client.get("/api/v1/health")
+        assert response.status_code == 200
+        assert response.json()["data_classification"] == "simulated"
+&gt;       assert response.json()["release_version"] == "0.1.0-dev"
+E       AssertionError: assert '5.0.0-p5a' == '0.1.0-dev'
+E         
+E         - 0.1.0-dev
+E         + 5.0.0-p5a
+
+tests/test_auth.py:11: AssertionError</failure></testcase><testcase classname="tests.test_auth" name="test_login_and_me" time="19.139"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x784fafac0910&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x784fa9b92f20&gt;
+
+    def test_login_and_me(client, login):
+&gt;       headers = login()
+                  ^^^^^^^
+
+tests/test_auth.py:16: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_auth" name="test_invalid_login_is_401" time="18.343"><failure message="assert 403 == 401&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x784fb1ec2290&gt;
+
+    def test_invalid_login_is_401(client):
+        response = client.post("/api/v1/auth/login", json={"username": "analyst", "password": "wrong-pass"})
+&gt;       assert response.status_code == 401
+E       assert 403 == 401
+E        +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+tests/test_auth.py:24: AssertionError</failure></testcase><testcase classname="tests.test_auth" name="test_missing_token_is_401" time="17.923" /><testcase classname="tests.test_auth" name="test_regional_user_is_403_for_admin" time="19.144"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x784fa922b8d0&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x784fa9b93ec0&gt;
+
+    def test_regional_user_is_403_for_admin(client, login):
+&gt;       headers = login("regional", "AlphaRegion!2026")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_auth.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'regional', password = 'AlphaRegion!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_auth" name="test_production_configuration_fails_closed" time="12.982" /><testcase classname="tests.test_auth" name="test_production_configuration_accepts_private_rc_baseline" time="12.973"><failure message="pydantic_core._pydantic_core.ValidationError: 1 validation error for Settings&#10;  Value error, production configuration rejected: production QUERY_ENGINE_MODE must be DETERMINISTIC_ONLY [type=value_error, input_value={'app_env': 'production',...preproduction-evidence'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/value_error">def test_production_configuration_accepts_private_rc_baseline():
+&gt;       settings = Settings(
+            app_env="production",
+            database_url="postgresql+psycopg://renewable:strong-db-password@db:5432/renewable_private",
+            redis_url="redis://redis:6379/0",
+            secret_key="a-secure-private-release-secret-key",
+            auto_bootstrap_demo_users=False,
+            public_base_url="https://analytics.example.internal",
+            cors_origins="https://analytics.example.internal",
+            trusted_hosts="analytics.example.internal",
+            release_version="0.6.0-rc1",
+            simulated_data_only=True,
+        )
+
+tests/test_auth.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+__pydantic_self__ = Settings(app_name='新能源企业经营分析智能平台', app_env='production', debug=False, secret_key='a-secure-private-release-secret-key'...hreshold=3, external_alert_circuit_recovery_seconds=30, preproduction_evidence_root='/app/data/preproduction-evidence')
+_case_sensitive = None, _nested_model_default_partial_update = None
+_env_prefix = None, _env_file = PosixPath('.'), _env_file_encoding = None
+_env_ignore_empty = None, _env_nested_delimiter = None
+_env_nested_max_split = None, _env_parse_none_str = None
+_env_parse_enums = None, _cli_prog_name = None, _cli_parse_args = None
+_cli_settings_source = None, _cli_parse_none_str = None
+_cli_hide_none_type = None, _cli_avoid_json = None, _cli_enforce_required = None
+_cli_use_class_docs_for_groups = None, _cli_exit_on_error = None
+_cli_prefix = None, _cli_flag_prefix_char = None, _cli_implicit_flags = None
+_cli_ignore_unknown_args = None, _cli_kebab_case = None, _secrets_dir = None
+values = {'app_env': 'production', 'auto_bootstrap_demo_users': False, 'cors_origins': 'https://analytics.example.internal', 'database_url': 'postgresql+psycopg://renewable:strong-db-password@db:5432/renewable_private', ...}
+
+    def __init__(
+        __pydantic_self__,
+        _case_sensitive: bool | None = None,
+        _nested_model_default_partial_update: bool | None = None,
+        _env_prefix: str | None = None,
+        _env_file: DotenvType | None = ENV_FILE_SENTINEL,
+        _env_file_encoding: str | None = None,
+        _env_ignore_empty: bool | None = None,
+        _env_nested_delimiter: str | None = None,
+        _env_nested_max_split: int | None = None,
+        _env_parse_none_str: str | None = None,
+        _env_parse_enums: bool | None = None,
+        _cli_prog_name: str | None = None,
+        _cli_parse_args: bool | list[str] | tuple[str, ...] | None = None,
+        _cli_settings_source: CliSettingsSource[Any] | None = None,
+        _cli_parse_none_str: str | None = None,
+        _cli_hide_none_type: bool | None = None,
+        _cli_avoid_json: bool | None = None,
+        _cli_enforce_required: bool | None = None,
+        _cli_use_class_docs_for_groups: bool | None = None,
+        _cli_exit_on_error: bool | None = None,
+        _cli_prefix: str | None = None,
+        _cli_flag_prefix_char: str | None = None,
+        _cli_implicit_flags: bool | None = None,
+        _cli_ignore_unknown_args: bool | None = None,
+        _cli_kebab_case: bool | None = None,
+        _secrets_dir: PathType | None = None,
+        **values: Any,
+    ) -&gt; None:
+&gt;       super().__init__(
+            **__pydantic_self__._settings_build_values(
+                values,
+                _case_sensitive=_case_sensitive,
+                _nested_model_default_partial_update=_nested_model_default_partial_update,
+                _env_prefix=_env_prefix,
+                _env_file=_env_file,
+                _env_file_encoding=_env_file_encoding,
+                _env_ignore_empty=_env_ignore_empty,
+                _env_nested_delimiter=_env_nested_delimiter,
+                _env_nested_max_split=_env_nested_max_split,
+                _env_parse_none_str=_env_parse_none_str,
+                _env_parse_enums=_env_parse_enums,
+                _cli_prog_name=_cli_prog_name,
+                _cli_parse_args=_cli_parse_args,
+                _cli_settings_source=_cli_settings_source,
+                _cli_parse_none_str=_cli_parse_none_str,
+                _cli_hide_none_type=_cli_hide_none_type,
+                _cli_avoid_json=_cli_avoid_json,
+                _cli_enforce_required=_cli_enforce_required,
+                _cli_use_class_docs_for_groups=_cli_use_class_docs_for_groups,
+                _cli_exit_on_error=_cli_exit_on_error,
+                _cli_prefix=_cli_prefix,
+                _cli_flag_prefix_char=_cli_flag_prefix_char,
+                _cli_implicit_flags=_cli_implicit_flags,
+                _cli_ignore_unknown_args=_cli_ignore_unknown_args,
+                _cli_kebab_case=_cli_kebab_case,
+                _secrets_dir=_secrets_dir,
+            )
+        )
+E       pydantic_core._pydantic_core.ValidationError: 1 validation error for Settings
+E         Value error, production configuration rejected: production QUERY_ENGINE_MODE must be DETERMINISTIC_ONLY [type=value_error, input_value={'app_env': 'production',...preproduction-evidence'}, input_type=dict]
+E           For further information visit https://errors.pydantic.dev/2.13/v/value_error
+
+/usr/local/lib/python3.11/site-packages/pydantic_settings/main.py:176: ValidationError</failure></testcase><testcase classname="tests.test_auth" name="test_production_configuration_rejects_unsafe_release_values[public_base_url-http://analytics.example.internal]" time="12.418" /><testcase classname="tests.test_auth" name="test_production_configuration_rejects_unsafe_release_values[cors_origins-http://analytics.example.internal]" time="13.918" /><testcase classname="tests.test_auth" name="test_production_configuration_rejects_unsafe_release_values[trusted_hosts-*]" time="12.915" /><testcase classname="tests.test_auth" name="test_production_configuration_rejects_unsafe_release_values[release_version-0.6.0-dev]" time="13.685" /><testcase classname="tests.test_auth" name="test_production_configuration_rejects_unsafe_release_values[simulated_data_only-False]" time="12.982" /><testcase classname="tests.test_dual_engine_golden" name="test_dual_engine_golden_contract_is_complete_and_safe" time="0.018"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/tests/evaluation/nl2sql_dual_engine_v1.json'">def test_dual_engine_golden_contract_is_complete_and_safe():
+&gt;       report = evaluate_golden_contract(_load_source())
+                                          ^^^^^^^^^^^^^^
+
+tests/test_dual_engine_golden.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_dual_engine_golden.py:26: in _load_source
+    return json.loads(_source_path().read_text(encoding="utf-8"))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tests/evaluation/nl2sql_dual_engine_v1.json'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tests/evaluation/nl2sql_dual_engine_v1.json'
+
+/usr/local/lib/python3.11/pathlib.py:1044: FileNotFoundError</failure></testcase><testcase classname="tests.test_dual_engine_golden" name="test_contract_detects_a_dangerous_sql_that_passes_the_guard" time="0.057"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/tests/evaluation/nl2sql_dual_engine_v1.json'">def test_contract_detects_a_dangerous_sql_that_passes_the_guard():
+&gt;       source = deepcopy(_load_source())
+                          ^^^^^^^^^^^^^^
+
+tests/test_dual_engine_golden.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_dual_engine_golden.py:26: in _load_source
+    return json.loads(_source_path().read_text(encoding="utf-8"))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tests/evaluation/nl2sql_dual_engine_v1.json'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tests/evaluation/nl2sql_dual_engine_v1.json'
+
+/usr/local/lib/python3.11/pathlib.py:1044: FileNotFoundError</failure></testcase><testcase classname="tests.test_dual_engine_golden" name="test_contract_rejects_unknown_scenario_metric" time="0.041"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/tests/evaluation/nl2sql_dual_engine_v1.json'">def test_contract_rejects_unknown_scenario_metric():
+&gt;       source = deepcopy(_load_source())
+                          ^^^^^^^^^^^^^^
+
+tests/test_dual_engine_golden.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_dual_engine_golden.py:26: in _load_source
+    return json.loads(_source_path().read_text(encoding="utf-8"))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tests/evaluation/nl2sql_dual_engine_v1.json'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tests/evaluation/nl2sql_dual_engine_v1.json'
+
+/usr/local/lib/python3.11/pathlib.py:1044: FileNotFoundError</failure></testcase><testcase classname="tests.test_metrics_and_data" name="test_fixed_seed_data_metrics_and_quality" time="247.192" /><testcase classname="tests.test_metrics_and_data" name="test_division_metrics_are_null_without_business_data" time="4.345" /></testsuite></testsuites>

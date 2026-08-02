@@ -24,10 +24,13 @@ def main() -> None:
     postgres_host = os.getenv("ACCEPTANCE_POSTGRES_HOST", "db")
     postgres_port = os.getenv("ACCEPTANCE_POSTGRES_PORT", "5432")
     postgres_database = os.getenv("ACCEPTANCE_POSTGRES_DB", "renewable_p4")
-    os.environ["DATABASE_URL"] = (
+    database_url = (
         f"postgresql+psycopg://{postgres_user}:{password}"
         f"@{postgres_host}:{postgres_port}/{postgres_database}"
     )
+    os.environ["DATABASE_URL"] = database_url
+    if os.getenv("ACCEPTANCE_TEST_DATABASE_URL_FROM_RUNTIME", "false").lower() == "true":
+        os.environ["TEST_DATABASE_URL"] = database_url
     redis_password = quote(_read("redis_password"), safe="")
     redis_host = os.getenv("ACCEPTANCE_REDIS_HOST", "redis")
     redis_port = os.getenv("ACCEPTANCE_REDIS_PORT", "6379")

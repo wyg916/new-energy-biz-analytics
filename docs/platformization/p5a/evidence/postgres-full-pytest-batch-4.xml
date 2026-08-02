@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="21" skipped="0" tests="74" time="1692.842" timestamp="2026-08-02T10:22:34.162930+00:00" hostname="845a4d35da8c"><testcase classname="tests.test_data_integration" name="test_overview_and_platform_ingestion_are_database_backed" time="302.284"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b7a756a490&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b7a6dd0ea0&gt;
+
+    def test_overview_and_platform_ingestion_are_database_backed(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=1_000)
+&gt;       headers = login()
+                  ^^^^^^^
+
+tests/test_data_integration.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_data_integration" name="test_quality_approval_and_publication_are_database_backed_and_audited" time="267.475"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b7a651d550&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b7ab0ba3e0&gt;
+
+    def test_quality_approval_and_publication_are_database_backed_and_audited(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=1_000)
+&gt;       headers = login()
+                  ^^^^^^^
+
+tests/test_data_integration.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_data_integration" name="test_failed_publication_rolls_back_workflow_before_failure_audit" time="259.930"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b7a651c890&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b7a6755bc0&gt;
+
+    def test_failed_publication_rolls_back_workflow_before_failure_audit(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=1_000)
+&gt;       headers = login()
+                  ^^^^^^^
+
+tests/test_data_integration.py:147: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_data_integration" name="test_quality_failure_and_invalid_publication_fail_closed" time="239.940"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b7a7568ad0&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b79e332700&gt;
+
+    def test_quality_failure_and_invalid_publication_fail_closed(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=1_000)
+&gt;       headers = login()
+                  ^^^^^^^
+
+tests/test_data_integration.py:196: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_data_integration" name="test_connection_test_is_audited_and_credentials_are_never_persisted" time="17.587"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b79f067910&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b79e3318a0&gt;
+
+    def test_connection_test_is_audited_and_credentials_are_never_persisted(client, login):
+&gt;       headers = login()
+                  ^^^^^^^
+
+tests/test_data_integration.py:225: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_data_integration" name="test_regional_user_cannot_test_or_run_connectors" time="19.718"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b79e185e10&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b7a672b7e0&gt;
+
+    def test_regional_user_cannot_test_or_run_connectors(client, login):
+&gt;       headers = login("regional", "AlphaRegion!2026")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_data_integration.py:244: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'regional', password = 'AlphaRegion!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_data_integration" name="test_excel_rows_are_parsed_then_persisted_in_database" time="18.918" /><testcase classname="tests.test_data_integration" name="test_two_versioned_csv_samples_pass_connector_contract[station_operations_region_a.csv-FILE-A-001]" time="20.424"><failure message="app.services.data_integration.DataIntegrationError: 导入文件不存在">self = &lt;app.services.data_integration.DataIntegrationService object at 0x79b7a245d0d0&gt;
+source_id = 'excel-import', password = None, resource_locator = None
+
+    def test_source(self, source_id: str, password: str | None = None, resource_locator: str | None = None) -&gt; dict:
+        source = self.db.get(DataSourceConnection, source_id)
+        if source is None:
+            raise DataIntegrationError("SOURCE_NOT_FOUND", "数据源不存在")
+        started = time.perf_counter()
+        try:
+&gt;           details = self._test_by_type(source, password, resource_locator)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+app/services/data_integration.py:158: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+app/services/data_integration.py:516: in _test_by_type
+    path = self._import_path(resource_locator or source.resource_locator)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;app.services.data_integration.DataIntegrationService object at 0x79b7a245d0d0&gt;
+locator = 'station_operations_region_a.csv'
+
+    def _import_path(self, locator: str | None) -&gt; Path:
+        if not locator:
+            raise DataIntegrationError("RESOURCE_NOT_CONFIGURED", "尚未配置 Excel/CSV 文件")
+        candidate = Path(locator)
+        if candidate.is_absolute() or ".." in candidate.parts:
+            raise DataIntegrationError("UNSAFE_FILE_PATH", "仅允许导入目录内的相对文件名")
+        root = Path(self.settings.data_import_root).resolve()
+        path = (root / candidate).resolve()
+        if root not in path.parents and path != root:
+            raise DataIntegrationError("UNSAFE_FILE_PATH", "文件路径超出受控导入目录")
+        if not path.is_file():
+&gt;           raise DataIntegrationError("FILE_NOT_FOUND", "导入文件不存在")
+E           app.services.data_integration.DataIntegrationError: 导入文件不存在
+
+app/services/data_integration.py:663: DataIntegrationError
+
+The above exception was the direct cause of the following exception:
+
+client = &lt;starlette.testclient.TestClient object at 0x79b7a6759c10&gt;
+file_name = 'station_operations_region_a.csv', expected_station = 'FILE-A-001'
+
+    @pytest.mark.parametrize("file_name,expected_station", [
+        ("station_operations_region_a.csv", "FILE-A-001"),
+        ("station_operations_region_b.csv", "FILE-B-001"),
+    ])
+    def test_two_versioned_csv_samples_pass_connector_contract(client, file_name, expected_station):
+        sample_root = Path(__file__).parents[2] / "samples" / "data" / "charging_ops"
+        with SessionLocal() as db:
+            source = db.get(DataSourceConnection, "excel-import")
+            source.resource_locator = file_name
+            dataset_id = f"csv-{expected_station.lower()}"
+            db.add(DataSetDefinition(
+                dataset_id=dataset_id, source_id=source.source_id,
+                display_name=f"CSV 样例 {expected_station}", source_object=file_name,
+                target_table="ingested_station_preview", standard_schema="charging_ops",
+                mapping_json=json.dumps(MAPPING_FIELDS, ensure_ascii=False),
+                data_classification="simulated", status="draft",
+            ))
+            db.commit()
+            user = db.scalar(select(User).where(User.username == "analyst"))
+            service = DataIntegrationService(db, user)
+            service.settings.data_import_root = str(sample_root)
+&gt;           assert service.test_source(source.source_id)["details"]["row_count"] == 2
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_data_integration.py:319: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;app.services.data_integration.DataIntegrationService object at 0x79b7a245d0d0&gt;
+source_id = 'excel-import', password = None, resource_locator = None
+
+    def test_source(self, source_id: str, password: str | None = None, resource_locator: str | None = None) -&gt; dict:
+        source = self.db.get(DataSourceConnection, source_id)
+        if source is None:
+            raise DataIntegrationError("SOURCE_NOT_FOUND", "数据源不存在")
+        started = time.perf_counter()
+        try:
+            details = self._test_by_type(source, password, resource_locator)
+            source.status = "available"
+            source.last_error_code = None
+            if resource_locator and source.source_type in {"excel", "api"}:
+                source.resource_locator = resource_locator
+            ok = True
+        except Exception as exc:
+            code = _safe_error_code(exc)
+            source.status = "configured" if code in {"CREDENTIAL_REQUIRED", "RESOURCE_NOT_CONFIGURED"} else "unavailable"
+            source.last_error_code = code
+            source.last_tested_at = _utc_now()
+            source.last_latency_ms = round((time.perf_counter() - started) * 1000)
+            source.updated_at = _utc_now()
+            self.db.commit()
+            message = exc.message if isinstance(exc, DataIntegrationError) else "连接测试失败，详细异常未暴露"
+&gt;           raise DataIntegrationError(code, message) from exc
+E           app.services.data_integration.DataIntegrationError: 导入文件不存在
+
+app/services/data_integration.py:173: DataIntegrationError</failure></testcase><testcase classname="tests.test_data_integration" name="test_two_versioned_csv_samples_pass_connector_contract[station_operations_region_b.csv-FILE-B-001]" time="19.286"><failure message="app.services.data_integration.DataIntegrationError: 导入文件不存在">self = &lt;app.services.data_integration.DataIntegrationService object at 0x79b79dd12410&gt;
+source_id = 'excel-import', password = None, resource_locator = None
+
+    def test_source(self, source_id: str, password: str | None = None, resource_locator: str | None = None) -&gt; dict:
+        source = self.db.get(DataSourceConnection, source_id)
+        if source is None:
+            raise DataIntegrationError("SOURCE_NOT_FOUND", "数据源不存在")
+        started = time.perf_counter()
+        try:
+&gt;           details = self._test_by_type(source, password, resource_locator)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+app/services/data_integration.py:158: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+app/services/data_integration.py:516: in _test_by_type
+    path = self._import_path(resource_locator or source.resource_locator)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;app.services.data_integration.DataIntegrationService object at 0x79b79dd12410&gt;
+locator = 'station_operations_region_b.csv'
+
+    def _import_path(self, locator: str | None) -&gt; Path:
+        if not locator:
+            raise DataIntegrationError("RESOURCE_NOT_CONFIGURED", "尚未配置 Excel/CSV 文件")
+        candidate = Path(locator)
+        if candidate.is_absolute() or ".." in candidate.parts:
+            raise DataIntegrationError("UNSAFE_FILE_PATH", "仅允许导入目录内的相对文件名")
+        root = Path(self.settings.data_import_root).resolve()
+        path = (root / candidate).resolve()
+        if root not in path.parents and path != root:
+            raise DataIntegrationError("UNSAFE_FILE_PATH", "文件路径超出受控导入目录")
+        if not path.is_file():
+&gt;           raise DataIntegrationError("FILE_NOT_FOUND", "导入文件不存在")
+E           app.services.data_integration.DataIntegrationError: 导入文件不存在
+
+app/services/data_integration.py:663: DataIntegrationError
+
+The above exception was the direct cause of the following exception:
+
+client = &lt;starlette.testclient.TestClient object at 0x79b7a654fdd0&gt;
+file_name = 'station_operations_region_b.csv', expected_station = 'FILE-B-001'
+
+    @pytest.mark.parametrize("file_name,expected_station", [
+        ("station_operations_region_a.csv", "FILE-A-001"),
+        ("station_operations_region_b.csv", "FILE-B-001"),
+    ])
+    def test_two_versioned_csv_samples_pass_connector_contract(client, file_name, expected_station):
+        sample_root = Path(__file__).parents[2] / "samples" / "data" / "charging_ops"
+        with SessionLocal() as db:
+            source = db.get(DataSourceConnection, "excel-import")
+            source.resource_locator = file_name
+            dataset_id = f"csv-{expected_station.lower()}"
+            db.add(DataSetDefinition(
+                dataset_id=dataset_id, source_id=source.source_id,
+                display_name=f"CSV 样例 {expected_station}", source_object=file_name,
+                target_table="ingested_station_preview", standard_schema="charging_ops",
+                mapping_json=json.dumps(MAPPING_FIELDS, ensure_ascii=False),
+                data_classification="simulated", status="draft",
+            ))
+            db.commit()
+            user = db.scalar(select(User).where(User.username == "analyst"))
+            service = DataIntegrationService(db, user)
+            service.settings.data_import_root = str(sample_root)
+&gt;           assert service.test_source(source.source_id)["details"]["row_count"] == 2
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_data_integration.py:319: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;app.services.data_integration.DataIntegrationService object at 0x79b79dd12410&gt;
+source_id = 'excel-import', password = None, resource_locator = None
+
+    def test_source(self, source_id: str, password: str | None = None, resource_locator: str | None = None) -&gt; dict:
+        source = self.db.get(DataSourceConnection, source_id)
+        if source is None:
+            raise DataIntegrationError("SOURCE_NOT_FOUND", "数据源不存在")
+        started = time.perf_counter()
+        try:
+            details = self._test_by_type(source, password, resource_locator)
+            source.status = "available"
+            source.last_error_code = None
+            if resource_locator and source.source_type in {"excel", "api"}:
+                source.resource_locator = resource_locator
+            ok = True
+        except Exception as exc:
+            code = _safe_error_code(exc)
+            source.status = "configured" if code in {"CREDENTIAL_REQUIRED", "RESOURCE_NOT_CONFIGURED"} else "unavailable"
+            source.last_error_code = code
+            source.last_tested_at = _utc_now()
+            source.last_latency_ms = round((time.perf_counter() - started) * 1000)
+            source.updated_at = _utc_now()
+            self.db.commit()
+            message = exc.message if isinstance(exc, DataIntegrationError) else "连接测试失败，详细异常未暴露"
+&gt;           raise DataIntegrationError(code, message) from exc
+E           app.services.data_integration.DataIntegrationError: 导入文件不存在
+
+app/services/data_integration.py:173: DataIntegrationError</failure></testcase><testcase classname="tests.test_data_integration" name="test_api_rows_are_fetched_then_persisted_in_database" time="19.129" /><testcase classname="tests.test_data_integration" name="test_unsafe_paths_and_api_hosts_fail_closed" time="14.463" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_write_pipeline_injects_scope_and_redacts_email" time="0.122" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_write_pipeline_rejects_secret_fields[password]" time="0.065" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_write_pipeline_rejects_secret_fields[api_key]" time="0.057" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_write_pipeline_rejects_secret_fields[token]" time="0.054" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_write_pipeline_rejects_secret_fields[database_url]" time="0.057" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_procedural_candidate_requires_approval" time="0.046" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_sqlbot_shadow_cannot_enter_semantic_memory" time="0.074" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_lifecycle_expires_semantic_archives_episode_and_decays" time="0.139" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_deleted_memory_is_not_retrievable" time="0.099" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_legal_hold_prevents_deletion" time="0.063" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_purge_user_does_not_touch_other_user" time="0.096" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_retrieval_hard_filters_cross_scope[tenant-other-workspace-alpha-1-charging_ops]" time="0.084" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_retrieval_hard_filters_cross_scope[tenant-alpha-workspace-other-1-charging_ops]" time="0.179" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_retrieval_hard_filters_cross_scope[tenant-alpha-workspace-alpha-2-charging_ops]" time="0.102" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_retrieval_hard_filters_cross_scope[tenant-alpha-workspace-alpha-1-sales_ops]" time="0.078" /><testcase classname="tests.test_memory_governance_lifecycle" name="test_context_assembler_keeps_system_constraints_separate" time="0.058" /><testcase classname="tests.test_initial_operational_skills" name="test_charging_adapter_reads_metric_metadata_from_full_metric_contract" time="0.082" /><testcase classname="tests.test_initial_operational_skills" name="test_initial_skill_catalog_has_five_charging_and_three_sales" time="0.261" /><testcase classname="tests.test_initial_operational_skills" name="test_five_charging_skills_execute_with_governed_output[revenue_decline_diagnosis]" time="0.303" /><testcase classname="tests.test_initial_operational_skills" name="test_five_charging_skills_execute_with_governed_output[order_anomaly_analysis]" time="0.203" /><testcase classname="tests.test_initial_operational_skills" name="test_five_charging_skills_execute_with_governed_output[gross_profit_change_decomposition]" time="0.286" /><testcase classname="tests.test_initial_operational_skills" name="test_five_charging_skills_execute_with_governed_output[station_efficiency_diagnosis]" time="0.177" /><testcase classname="tests.test_initial_operational_skills" name="test_five_charging_skills_execute_with_governed_output[operating_report_generation]" time="0.263" /><testcase classname="tests.test_initial_operational_skills" name="test_sales_reuses_three_generic_skill_procedures[revenue_decline_diagnosis]" time="0.252" /><testcase classname="tests.test_initial_operational_skills" name="test_sales_reuses_three_generic_skill_procedures[order_anomaly_analysis]" time="0.298" /><testcase classname="tests.test_initial_operational_skills" name="test_sales_reuses_three_generic_skill_procedures[gross_profit_change_decomposition]" time="0.161" /><testcase classname="tests.test_initial_operational_skills" name="test_failed_skill_does_not_write_success_episode" time="0.199" /><testcase classname="tests.test_initial_operational_skills" name="test_skill_success_writes_replayable_episode_not_full_rows" time="0.192" /><testcase classname="tests.test_knowledge_lifecycle" name="test_ingest_requires_tracked_repository_source" time="5.618" /><testcase classname="tests.test_knowledge_lifecycle" name="test_lifecycle_publish_supersede_and_rollback" time="4.626"><failure message="app.knowledge.ingestion.KnowledgeSourceDenied: knowledge source must be a repository file">db_session = &lt;sqlalchemy.orm.session.Session object at 0x79b7a6ebdc50&gt;
+
+    def test_lifecycle_publish_supersede_and_rollback(db_session) -&gt; None:
+        actor = identity()
+        ingestion = KnowledgeIngestionService(db_session, actor, REPO_ROOT)
+        publication = KnowledgePublicationService(db_session, actor)
+&gt;       first = ingestion.ingest(request())
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_knowledge_lifecycle.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+app/knowledge/ingestion.py:38: in ingest
+    path = self._approved_source_path(request.source_path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;app.knowledge.ingestion.KnowledgeIngestionService object at 0x79b7a6575690&gt;
+source_path = 'docs/metric_dictionary_v0.1.md'
+
+    def _approved_source_path(self, source_path: str) -&gt; Path:
+        candidate = (self.repo_root / source_path).resolve()
+        if self.repo_root not in candidate.parents or not candidate.is_file():
+&gt;           raise KnowledgeSourceDenied("knowledge source must be a repository file")
+E           app.knowledge.ingestion.KnowledgeSourceDenied: knowledge source must be a repository file
+
+app/knowledge/ingestion.py:146: KnowledgeSourceDenied</failure></testcase><testcase classname="tests.test_knowledge_lifecycle" name="test_only_authorized_current_published_version_is_retrieved" time="3.239"><failure message="app.knowledge.ingestion.KnowledgeSourceDenied: knowledge source must be a repository file">db_session = &lt;sqlalchemy.orm.session.Session object at 0x79b79e4300d0&gt;
+
+    def test_only_authorized_current_published_version_is_retrieved(db_session) -&gt; None:
+        actor = identity()
+&gt;       version = KnowledgeIngestionService(db_session, actor, REPO_ROOT).ingest(request())
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_knowledge_lifecycle.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+app/knowledge/ingestion.py:38: in ingest
+    path = self._approved_source_path(request.source_path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;app.knowledge.ingestion.KnowledgeIngestionService object at 0x79b7a3acff10&gt;
+source_path = 'docs/metric_dictionary_v0.1.md'
+
+    def _approved_source_path(self, source_path: str) -&gt; Path:
+        candidate = (self.repo_root / source_path).resolve()
+        if self.repo_root not in candidate.parents or not candidate.is_file():
+&gt;           raise KnowledgeSourceDenied("knowledge source must be a repository file")
+E           app.knowledge.ingestion.KnowledgeSourceDenied: knowledge source must be a repository file
+
+app/knowledge/ingestion.py:146: KnowledgeSourceDenied</failure></testcase><testcase classname="tests.test_knowledge_lifecycle" name="test_validity_window_and_retirement_remove_document_from_retrieval" time="3.878"><failure message="app.knowledge.ingestion.KnowledgeSourceDenied: knowledge source must be a repository file">db_session = &lt;sqlalchemy.orm.session.Session object at 0x79b7a35b5b50&gt;
+
+    def test_validity_window_and_retirement_remove_document_from_retrieval(db_session) -&gt; None:
+        now = datetime.now(UTC)
+        actor = identity()
+&gt;       version = KnowledgeIngestionService(db_session, actor, REPO_ROOT).ingest(request(
+            valid_from=now - timedelta(days=1),
+            valid_to=now + timedelta(days=1),
+        ))
+
+tests/test_knowledge_lifecycle.py:181: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+app/knowledge/ingestion.py:38: in ingest
+    path = self._approved_source_path(request.source_path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;app.knowledge.ingestion.KnowledgeIngestionService object at 0x79b7a35b7510&gt;
+source_path = 'docs/metric_dictionary_v0.1.md'
+
+    def _approved_source_path(self, source_path: str) -&gt; Path:
+        candidate = (self.repo_root / source_path).resolve()
+        if self.repo_root not in candidate.parents or not candidate.is_file():
+&gt;           raise KnowledgeSourceDenied("knowledge source must be a repository file")
+E           app.knowledge.ingestion.KnowledgeSourceDenied: knowledge source must be a repository file
+
+app/knowledge/ingestion.py:146: KnowledgeSourceDenied</failure></testcase><testcase classname="tests.test_shadow_evidence" name="test_shadow_route_and_session_evidence_never_persist_access_token" time="3.591" /><testcase classname="tests.test_shadow_evidence" name="test_shadow_runtime_pending_preserves_main_result_and_error_evidence" time="3.893" /><testcase classname="tests.test_multi_scenario_chat" name="test_chatbi_uses_registry_for_two_isolated_scenarios" time="63.844"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b79f0220d0&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b7a5fd36a0&gt;
+
+    def test_chatbi_uses_registry_for_two_isolated_scenarios(
+        client,
+        login,
+    ) -&gt; None:
+        bootstrap_demo_users()
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=500)
+            generate_sales_orders(db, order_count=500)
+            analyst = db.query(User).filter_by(username="analyst").one()
+            identity = IdentityContextFactory.from_user(analyst)
+            install_platform_foundation(db, identity)
+            install_sales_ops_foundation(
+                db,
+                identity,
+                expected_order_count=500,
+            )
+    
+&gt;       analyst_headers = login()
+                          ^^^^^^^
+
+tests/test_multi_scenario_chat.py:32: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_live_model_provider_validation" name="test_live_provider_report_is_complete_and_never_exposes_key" time="0.001" /><testcase classname="tests.test_live_model_provider_validation" name="test_authentication_failure_is_sanitized_and_stops_model_calls" time="0.001" /><testcase classname="tests.test_live_model_provider_validation" name="test_mimo_rechecks_api_key_header_after_bearer_401" time="0.001" /><testcase classname="tests.test_live_model_provider_validation" name="test_provider_environment_requires_all_runtime_references" time="0.001" /><testcase classname="tests.test_live_model_provider_validation" name="test_model_selection_prefers_exact_then_provider_family" time="0.001" /><testcase classname="tests.test_model_gateway" name="test_mock_provider_contract_records_usage" time="0.003" /><testcase classname="tests.test_model_gateway" name="test_retry_once_then_fallback" time="0.001" /><testcase classname="tests.test_model_gateway" name="test_data_classification_denied_before_provider_call" time="0.001" /><testcase classname="tests.test_model_gateway" name="test_credential_reference_does_not_reveal_secret" time="0.001" /><testcase classname="tests.test_model_gateway" name="test_openai_compatible_response_and_authorization_header" time="0.002" /><testcase classname="tests.test_memory_evaluation_expansion" name="test_working_context_inheritance_evaluation[region-update0-filters]" time="0.029" /><testcase classname="tests.test_memory_evaluation_expansion" name="test_working_context_inheritance_evaluation[dimension-update1-dimensions]" time="0.028" /><testcase classname="tests.test_memory_evaluation_expansion" name="test_working_context_inheritance_evaluation[comparison-update2-comparison]" time="0.027" /><testcase classname="tests.test_memory_evaluation_expansion" name="test_working_context_inheritance_evaluation[report-update3-current_intent]" time="0.027" /><testcase classname="tests.test_memory_evaluation_expansion" name="test_working_context_inheritance_evaluation[chart-update4-chart_type]" time="0.029" /><testcase classname="tests.test_memory_evaluation_expansion" name="test_episodic_replay_and_retrieval_evaluation[2]" time="0.059" /><testcase classname="tests.test_memory_evaluation_expansion" name="test_episodic_replay_and_retrieval_evaluation[3]" time="0.036" /><testcase classname="tests.test_memory_evaluation_expansion" name="test_episodic_replay_and_retrieval_evaluation[4]" time="0.035" /><testcase classname="tests.test_memory" name="test_session_inheritance_override_isolation_and_run_evidence" time="37.824"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b79defe7d0&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b7a5ff5940&gt;
+
+    def test_session_inheritance_override_isolation_and_run_evidence(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=1_000)
+&gt;       analyst = login()
+                  ^^^^^^^
+
+tests/test_memory.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_memory" name="test_expired_session_is_not_inherited" time="33.468"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b79fe6ff90&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b79f76fc40&gt;
+
+    def test_expired_session_is_not_inherited(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=100)
+&gt;       headers = login()
+                  ^^^^^^^
+
+tests/test_memory.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_memory" name="test_work_memory_is_structured_versioned_and_released" time="1.590" /><testcase classname="tests.test_dashboard" name="test_dashboard_uses_database_and_enforces_region_scope" time="33.881"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b79d8b4850&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b7a5fd0d60&gt;
+
+    def test_dashboard_uses_database_and_enforces_region_scope(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=1_000)
+&gt;       analyst_headers = login()
+                          ^^^^^^^
+
+tests/test_dashboard.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_dashboard" name="test_dashboard_rejects_unapproved_metric" time="2.700"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b7a558a190&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b79e40c2c0&gt;
+
+    def test_dashboard_rejects_unapproved_metric(client, login):
+&gt;       response = client.get("/api/v1/dashboard/trend?metric=repurchase_rate&amp;start=2025-01-01&amp;end_exclusive=2025-02-01", headers=login())
+                                                                                                                                  ^^^^^^^
+
+tests/test_dashboard.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_dashboard" name="test_device_dashboard_uses_simulated_database_and_enforces_region_scope" time="56.093"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b79e30bfd0&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b79f6bd3a0&gt;
+
+    def test_device_dashboard_uses_simulated_database_and_enforces_region_scope(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=1_000)
+        analyst = client.get(
+            "/api/v1/dashboard/devices?start=2026-06-01&amp;end_exclusive=2026-07-01",
+&gt;           headers=login(),
+                    ^^^^^^^
+        )
+
+tests/test_dashboard.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_diagnostics" name="test_revenue_and_profit_decomposition_reconcile" time="49.966"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b79e30af90&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b79f6bc7c0&gt;
+
+    def test_revenue_and_profit_decomposition_reconcile(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=1_000)
+&gt;       headers = login()
+                  ^^^^^^^
+
+tests/test_diagnostics.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_diagnostics" name="test_regional_peer_comparison_rejects_other_region" time="33.717"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b7a6ee6490&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b79f6bcea0&gt;
+
+    def test_regional_peer_comparison_rejects_other_region(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=100)
+&gt;       response = client.get("/api/v1/diagnostics/peer?station_id=S011&amp;metric=charging_revenue&amp;start=2026-06-01&amp;end_exclusive=2026-07-01", headers=login("regional", "AlphaRegion!2026"))
+                                                                                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_diagnostics.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'regional', password = 'AlphaRegion!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_revenue" name="test_revenue_analysis_is_fact_backed_and_scope_filtered" time="38.481"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b79e96f750&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b7a5fbc220&gt;
+
+    def test_revenue_analysis_is_fact_backed_and_scope_filtered(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=1_000)
+    
+        response = client.get(
+            "/api/v1/revenue/analysis?start=2026-06-01&amp;end_exclusive=2026-07-01",
+&gt;           headers=login(),
+                    ^^^^^^^
+        )
+
+tests/test_revenue.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_reports" name="test_report_draft_and_exports_are_traceable" time="49.507"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x79b7a572a310&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x79b79f6bfe20&gt;
+
+    def test_report_draft_and_exports_are_traceable(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=1_000)
+&gt;       headers = login()
+                  ^^^^^^^
+
+tests/test_reports.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase></testsuite></testsuites>

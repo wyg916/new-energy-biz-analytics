@@ -1,0 +1,82 @@
+{
+  "evidence_type": "p5a_postgresql_canonical_regression",
+  "executed_at": "2026-08-02T11:37:22.6968031Z",
+  "data_classification": "simulated",
+  "period_start": "2025-01-01",
+  "period_end_exclusive": "2026-07-01",
+  "postgres_image": "renewable-p5a-postgres:16.14",
+  "postgres_image_id": "sha256:486298eaa6cbd4830f8d1ae199e6dc9f33cee75a6bc178b0ee2d34c94b3041e3",
+  "database_revision": "p5_0001",
+  "main_database_counts": {
+    "charging_sessions": 300000,
+    "sales_orders": 50000,
+    "sales_order_items": 82514
+  },
+  "full_pytest": {
+    "collected": 353,
+    "initial_passed": 351,
+    "initial_failed": 2,
+    "corrective_reruns_passed": 2,
+    "effective_passed": 353,
+    "effective_failed": 0,
+    "effective_skipped": 0,
+    "initial_failure_cause": "The test runner explicitly injected QUERY_ENGINE_MODE=DETERMINISTIC_ONLY; the two tests require the unconfigured test default SHADOW while production Settings must resolve to DETERMINISTIC_ONLY.",
+    "code_change_required": false,
+    "final_batch_sha256": {
+      "batch_1": "33024747b69c32017ca65be4dde1a442aafa572160f6725ae2842e75af11a92c",
+      "batch_2": "34fe401bd9d0d869da9a1eaad8baf020a08f867f0c0d3123ae7dba5b69f47e56",
+      "batch_3": "68025b0b8f01bc792fbffc74a3ca85b24ff1fc56232f6dc5f5f6f0211a52257b",
+      "batch_4": "9b88cf56e8ee9f8d9355e8cc973c8dec9d7bccf4af5ef25d50d1846d70342171"
+    },
+    "corrective_rerun_sha256": {
+      "active_platform": "54befe8aae8968b89027486b140f6490d311a624d890561a142457315982394e",
+      "multi_scenario": "3946961dad53d339843568f419c3dc3c566b30e8c323ffa40f78dce20be8cd98"
+    }
+  },
+  "fixed_evaluations": {
+    "deterministic": {"passed": 40, "total": 40},
+    "charging_metric_reconciliation": {"passed": 15, "total": 15, "differences": {}},
+    "sales_metric_reconciliation": {"passed": 12, "total": 12, "differences": {}},
+    "data_quality": {"passed": 20, "total": 20, "failures": []},
+    "memory": {"passed": 40, "total": 40},
+    "skill": {"passed": 40, "total": 40},
+    "rag_keyword": {
+      "passed": 60,
+      "total": 60,
+      "mrr": 0.9667,
+      "recall_at_10": 0.8936,
+      "citation_accuracy": 1.0,
+      "answer_faithfulness": 1.0,
+      "unauthorized_retrievals": 0,
+      "prompt_injection_effects": 0,
+      "vector_status": "VECTOR_DEFERRED_POST_P5"
+    },
+    "response_composer": {"passed": 7, "total": 7},
+    "query_security": {"passed": 15, "total": 15},
+    "sqlbot_offline": {
+      "initial_passed": 45,
+      "initial_total": 46,
+      "resource_timeout_rerun_passed": 1,
+      "effective_passed": 46,
+      "effective_total": 46,
+      "external_runtime_claimed": false
+    }
+  },
+  "migration_cycle": {
+    "database": "p5a_migration_verify",
+    "base_to_head": true,
+    "head_revision": "p5_0001",
+    "head_to_rollback": true,
+    "observed_rollback_revision": "p4_0001",
+    "rollback_to_head": true,
+    "database_removed": true,
+    "existing_volume_deleted": false
+  },
+  "temporary_test_databases": {
+    "postgres_version": "16.14",
+    "storage": "tmpfs",
+    "persistent_volume_attached": false,
+    "removed_after_test": true
+  },
+  "passed": true
+}

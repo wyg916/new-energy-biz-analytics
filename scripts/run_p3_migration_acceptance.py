@@ -30,6 +30,11 @@ def main() -> None:
         default="p3_governance_migration_verify",
         help="dedicated disposable database name",
     )
+    parser.add_argument(
+        "--rollback-revision",
+        default="base",
+        help="revision to downgrade to before the final upgrade",
+    )
     args = parser.parse_args()
     if not SAFE_DATABASE_NAME.fullmatch(args.database):
         parser.error("--database must be a safe lowercase PostgreSQL identifier")
@@ -49,8 +54,9 @@ def main() -> None:
         "database": args.database,
         "head_revision": None,
         "base_to_head": False,
-        "head_to_base": False,
-        "base_to_head_again": False,
+        "rollback_revision": args.rollback_revision,
+        "head_to_rollback": False,
+        "rollback_to_head": False,
         "database_removed": False,
         "existing_volume_deleted": False,
     }
@@ -83,15 +89,19 @@ def main() -> None:
             revision = MigrationContext.configure(connection).get_current_revision()
         report["base_to_head"] = revision == report["head_revision"]
 
-        command.downgrade(config, "base")
+        if args.rollback_revision != "base" and scripts.get_revision(args.rollback_revision) is None:
+            raise RuntimeError(f"unknown rollback revision: {args.rollback_revision}")
+        command.downgrade(config, args.rollback_revision)
         with verification_engine.connect() as connection:
             revision = MigrationContext.configure(connection).get_current_revision()
-        report["head_to_base"] = revision is None
+        expected_rollback = None if args.rollback_revision == "base" else args.rollback_revision
+        report["observed_rollback_revision"] = revision
+        report["head_to_rollback"] = revision == expected_rollback
 
         command.upgrade(config, "head")
         with verification_engine.connect() as connection:
             revision = MigrationContext.configure(connection).get_current_revision()
-        report["base_to_head_again"] = revision == report["head_revision"]
+        report["rollback_to_head"] = revision == report["head_revision"]
     finally:
         os.environ["DATABASE_URL"] = original_url
         if verification_engine is not None:
@@ -110,7 +120,7 @@ def main() -> None:
         admin_engine.dispose()
 
     report["passed"] = all(report[key] for key in (
-        "base_to_head", "head_to_base", "base_to_head_again", "database_removed"
+        "base_to_head", "head_to_rollback", "rollback_to_head", "database_removed"
     ))
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
     raise SystemExit(0 if report["passed"] else 1)

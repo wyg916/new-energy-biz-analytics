@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="15" skipped="0" tests="83" time="1220.510" timestamp="2026-08-02T10:22:40.196197+00:00" hostname="68a4a9e0cfd2"><testcase classname="tests.test_rag_golden_60" name="test_rag_golden_60_manifest_and_runtime_evaluation" time="10.054"><failure message="app.knowledge.ingestion.KnowledgeSourceDenied: knowledge source must be a repository file">db_session = &lt;sqlalchemy.orm.session.Session object at 0x7d1b99c23290&gt;
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_rag_golden_60_manifest_an0')
+
+    def test_rag_golden_60_manifest_and_runtime_evaluation(db_session, tmp_path) -&gt; None:
+        cases = json.loads(GOLDEN_PATH.read_text(encoding="utf-8"))
+        counts = Counter(case["category"] for case in cases)
+        assert len(cases) == 60
+        assert counts == {
+            "single_fact": 15,
+            "multi_evidence": 15,
+            "version_time": 10,
+            "permission_isolation": 10,
+            "injection_refusal": 10,
+        }
+        assert len({case["id"] for case in cases}) == 60
+    
+&gt;       current_versions, metric_old, metric_current = _seed_corpus(db_session)
+                                                       ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_rag_golden_60.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_rag_golden_60.py:88: in _seed_corpus
+    version = ingestion.ingest(IngestionRequest(
+app/knowledge/ingestion.py:38: in ingest
+    path = self._approved_source_path(request.source_path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;app.knowledge.ingestion.KnowledgeIngestionService object at 0x7d1b9a623190&gt;
+source_path = 'docs/metric_dictionary_v0.1.md'
+
+    def _approved_source_path(self, source_path: str) -&gt; Path:
+        candidate = (self.repo_root / source_path).resolve()
+        if self.repo_root not in candidate.parents or not candidate.is_file():
+&gt;           raise KnowledgeSourceDenied("knowledge source must be a repository file")
+E           app.knowledge.ingestion.KnowledgeSourceDenied: knowledge source must be a repository file
+
+app/knowledge/ingestion.py:146: KnowledgeSourceDenied</failure></testcase><testcase classname="tests.test_memory_working_semantic_episodic" name="test_working_memory_round_trip_ttl_and_idempotency" time="1.964" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_working_memory_multiturn_inheritance" time="0.278" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_working_memory_close_removes_state" time="0.290" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_working_memory_redis_failure_is_explicit_and_audited" time="0.384" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_working_memory_rejects_secret_fields" time="0.276" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_semantic_unconfirmed_inference_cannot_be_active" time="0.376" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_semantic_confirm_and_correct_versions" time="0.490" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_semantic_forbidden_content_is_rejected[revenue]" time="0.149" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_semantic_forbidden_content_is_rejected[order_amount]" time="0.156" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_semantic_forbidden_content_is_rejected[root_cause]" time="0.201" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_semantic_forbidden_content_is_rejected[sqlbot_shadow]" time="0.236" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_semantic_forbidden_content_is_rejected[password]" time="0.199" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_semantic_forbidden_content_is_rejected[token]" time="0.289" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_episodic_record_and_replay_by_run_id" time="0.376" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_episodic_idempotent_write" time="0.329" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_episodic_search_is_scenario_scoped" time="0.339" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_episodic_shadow_cannot_become_fact_memory" time="0.209" /><testcase classname="tests.test_memory_working_semantic_episodic" name="test_episodic_full_rows_are_rejected" time="0.303" /><testcase classname="tests.test_mysql_connector" name="test_mysql_preview_batch_pagination_and_normalization" time="0.024" /><testcase classname="tests.test_mysql_connector" name="test_mysql_preview_normalizes_datetime_and_binary" time="0.011" /><testcase classname="tests.test_mysql_connector" name="test_mysql_profile_and_connection_health" time="0.012" /><testcase classname="tests.test_mysql_connector" name="test_mysql_rejects_cross_database_unknown_columns_and_injection" time="0.003" /><testcase classname="tests.test_mysql_connector" name="test_mysql_timeout_cancellation_and_incremental_status" time="0.006" /><testcase classname="tests.test_mysql_connector" name="test_mysql_type_contract_includes_date" time="0.004" /><testcase classname="tests.test_knowledge_api_and_composite" name="test_composite_route_classifier_supports_three_routes" time="15.961" /><testcase classname="tests.test_knowledge_api_and_composite" name="test_data_route_preserves_and_role_redacts_governed_engine_evidence" time="16.774" /><testcase classname="tests.test_knowledge_api_and_composite" name="test_assistant_maps_scenario_query_errors_to_safe_contract" time="27.265"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x7d1b99d53890&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x7d1b99738180&gt;
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x7d1b99586750&gt;
+
+    def test_assistant_maps_scenario_query_errors_to_safe_contract(
+        client,
+        login,
+        monkeypatch,
+    ) -&gt; None:
+        def reject(*args, **kwargs):
+            raise SalesOpsQueryError("METRIC_AMBIGUOUS", "请明确销售指标")
+    
+        monkeypatch.setattr(CompositeQueryOrchestrator, "execute", reject)
+        response = client.post(
+            "/api/v1/assistant/query",
+&gt;           headers=login(),
+                    ^^^^^^^
+            json={
+                "question": "2026年6月表现如何？",
+                "scenario_id": "sales_ops",
+                "profile": "analyst_detailed",
+            },
+        )
+
+tests/test_knowledge_api_and_composite.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_knowledge_api_and_composite" name="test_knowledge_api_governed_flow_and_composed_answer" time="24.986"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x7d1b99542950&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x7d1b995cf240&gt;
+
+    def test_knowledge_api_governed_flow_and_composed_answer(client, login) -&gt; None:
+&gt;       headers = login()
+                  ^^^^^^^
+
+tests/test_knowledge_api_and_composite.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_knowledge_api_and_composite" name="test_untracked_user_source_document_is_rejected_by_api" time="26.087"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x7d1b99518410&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x7d1b9954bba0&gt;
+
+    def test_untracked_user_source_document_is_rejected_by_api(client, login) -&gt; None:
+&gt;       headers = login()
+                  ^^^^^^^
+
+tests/test_knowledge_api_and_composite.py:195: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_p3_identity_authorization" name="test_trusted_identity_ignores_spoofed_scope_headers" time="24.934"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x7d1b99e45610&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x7d1b99312480&gt;
+
+    def test_trusted_identity_ignores_spoofed_scope_headers(client, login) -&gt; None:
+        headers = {
+&gt;           **login(),
+              ^^^^^^^
+            "x-tenant-id": "tenant-attacker",
+            "x-workspace-id": "workspace-attacker",
+            "x-user-id": "user:attacker",
+            "x-role": "super-admin",
+        }
+
+tests/test_p3_identity_authorization.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_p3_identity_authorization" name="test_rbac_abac_default_deny_and_cross_scope_guards" time="24.710" /><testcase classname="tests.test_p3_identity_authorization" name="test_oidc_provider_requires_preapproved_mapping" time="23.627" /><testcase classname="tests.test_platform_foundation_api" name="test_platform_foundation_real_release_activation_and_rollback" time="261.164"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x7d1b993dd0d0&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x7d1b993ecd60&gt;
+
+    def test_platform_foundation_real_release_activation_and_rollback(client, login) -&gt; None:
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=300)
+&gt;       headers = login()
+                  ^^^^^^^
+
+tests/test_platform_foundation_api.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_platform_foundation_api" name="test_platform_foundation_requires_admin_role" time="20.088"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x7d1b912edc50&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x7d1b993276a0&gt;
+
+    def test_platform_foundation_requires_admin_role(client, login) -&gt; None:
+&gt;       headers = login("regional", "AlphaRegion!2026")
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_platform_foundation_api.py:160: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'regional', password = 'AlphaRegion!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_memory_skill_orchestration_api" name="test_memory_preference_confirm_correct_and_delete_api" time="4.428"><failure message="AssertionError: {&quot;detail&quot;:{&quot;code&quot;:&quot;LOCAL_AUTH_DISABLED&quot;,&quot;message&quot;:&quot;本环境只允许企业身份登录&quot;}}&#10;assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">api_client = &lt;starlette.testclient.TestClient object at 0x7d1b953aa0d0&gt;
+api_login = &lt;function api_login.&lt;locals&gt;.login at 0x7d1b99373f60&gt;
+
+    def test_memory_preference_confirm_correct_and_delete_api(api_client, api_login):
+&gt;       headers = api_login()
+                  ^^^^^^^^^^^
+
+tests/test_memory_skill_orchestration_api.py:70: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+    def login(username="analyst", password="AlphaAnalyst!2026"):
+        response = api_client.post(
+            "/api/v1/auth/login",
+            json={"username": username, "password": password},
+        )
+&gt;       assert response.status_code == 200, response.text
+E       AssertionError: {"detail":{"code":"LOCAL_AUTH_DISABLED","message":"本环境只允许企业身份登录"}}
+E       assert 403 == 200
+E        +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+tests/test_memory_skill_orchestration_api.py:63: AssertionError</failure></testcase><testcase classname="tests.test_memory_skill_orchestration_api" name="test_memory_disable_setting_is_enforced" time="5.196"><failure message="AssertionError: {&quot;detail&quot;:{&quot;code&quot;:&quot;LOCAL_AUTH_DISABLED&quot;,&quot;message&quot;:&quot;本环境只允许企业身份登录&quot;}}&#10;assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">api_client = &lt;starlette.testclient.TestClient object at 0x7d1b9539d150&gt;
+api_login = &lt;function api_login.&lt;locals&gt;.login at 0x7d1b912cc040&gt;
+
+    def test_memory_disable_setting_is_enforced(api_client, api_login):
+&gt;       headers = api_login()
+                  ^^^^^^^^^^^
+
+tests/test_memory_skill_orchestration_api.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+    def login(username="analyst", password="AlphaAnalyst!2026"):
+        response = api_client.post(
+            "/api/v1/auth/login",
+            json={"username": username, "password": password},
+        )
+&gt;       assert response.status_code == 200, response.text
+E       AssertionError: {"detail":{"code":"LOCAL_AUTH_DISABLED","message":"本环境只允许企业身份登录"}}
+E       assert 403 == 200
+E        +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+tests/test_memory_skill_orchestration_api.py:63: AssertionError</failure></testcase><testcase classname="tests.test_memory_skill_orchestration_api" name="test_initial_skills_are_bootstrapped_and_visible" time="5.019"><failure message="AssertionError: {&quot;detail&quot;:{&quot;code&quot;:&quot;LOCAL_AUTH_DISABLED&quot;,&quot;message&quot;:&quot;本环境只允许企业身份登录&quot;}}&#10;assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">api_client = &lt;starlette.testclient.TestClient object at 0x7d1b97193010&gt;
+api_login = &lt;function api_login.&lt;locals&gt;.login at 0x7d1ba17e3ec0&gt;
+
+    def test_initial_skills_are_bootstrapped_and_visible(api_client, api_login):
+&gt;       response = api_client.get("/api/v1/skills?scenario_id=charging_ops", headers=api_login())
+                                                                                     ^^^^^^^^^^^
+
+tests/test_memory_skill_orchestration_api.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+    def login(username="analyst", password="AlphaAnalyst!2026"):
+        response = api_client.post(
+            "/api/v1/auth/login",
+            json={"username": username, "password": password},
+        )
+&gt;       assert response.status_code == 200, response.text
+E       AssertionError: {"detail":{"code":"LOCAL_AUTH_DISABLED","message":"本环境只允许企业身份登录"}}
+E       assert 403 == 200
+E        +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+tests/test_memory_skill_orchestration_api.py:63: AssertionError</failure></testcase><testcase classname="tests.test_memory_skill_orchestration_api" name="test_unimplemented_skill_controls_are_truthfully_disabled" time="6.864"><failure message="AssertionError: {&quot;detail&quot;:{&quot;code&quot;:&quot;LOCAL_AUTH_DISABLED&quot;,&quot;message&quot;:&quot;本环境只允许企业身份登录&quot;}}&#10;assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">api_client = &lt;starlette.testclient.TestClient object at 0x7d1b954c8310&gt;
+api_login = &lt;function api_login.&lt;locals&gt;.login at 0x7d1b95394680&gt;
+
+    def test_unimplemented_skill_controls_are_truthfully_disabled(api_client, api_login):
+&gt;       response = api_client.get("/api/v1/skills?scenario_id=charging_ops", headers=api_login())
+                                                                                     ^^^^^^^^^^^
+
+tests/test_memory_skill_orchestration_api.py:130: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+    def login(username="analyst", password="AlphaAnalyst!2026"):
+        response = api_client.post(
+            "/api/v1/auth/login",
+            json={"username": username, "password": password},
+        )
+&gt;       assert response.status_code == 200, response.text
+E       AssertionError: {"detail":{"code":"LOCAL_AUTH_DISABLED","message":"本环境只允许企业身份登录"}}
+E       assert 403 == 200
+E        +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+tests/test_memory_skill_orchestration_api.py:63: AssertionError</failure></testcase><testcase classname="tests.test_memory_skill_orchestration_api" name="test_non_admin_cannot_install_or_disable_skill" time="5.778"><failure message="AssertionError: {&quot;detail&quot;:{&quot;code&quot;:&quot;LOCAL_AUTH_DISABLED&quot;,&quot;message&quot;:&quot;本环境只允许企业身份登录&quot;}}&#10;assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">api_client = &lt;starlette.testclient.TestClient object at 0x7d1b988a7510&gt;
+api_login = &lt;function api_login.&lt;locals&gt;.login at 0x7d1b912abd80&gt;
+
+    def test_non_admin_cannot_install_or_disable_skill(api_client, api_login):
+&gt;       executive = api_login(username="executive", password="AlphaExec!2026")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_memory_skill_orchestration_api.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'executive', password = 'AlphaExec!2026'
+
+    def login(username="analyst", password="AlphaAnalyst!2026"):
+        response = api_client.post(
+            "/api/v1/auth/login",
+            json={"username": username, "password": password},
+        )
+&gt;       assert response.status_code == 200, response.text
+E       AssertionError: {"detail":{"code":"LOCAL_AUTH_DISABLED","message":"本环境只允许企业身份登录"}}
+E       assert 403 == 200
+E        +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+tests/test_memory_skill_orchestration_api.py:63: AssertionError</failure></testcase><testcase classname="tests.test_sqlbot_quality_patch" name="test_structured_response_formats_are_parsed_in_auditable_order[payload0-standard_json]" time="0.003" /><testcase classname="tests.test_sqlbot_quality_patch" name="test_structured_response_formats_are_parsed_in_auditable_order[```json\n{&quot;sql&quot;: &quot;SELECT order_id FROM sales_order LIMIT 1&quot;}\n```-json_code_block]" time="0.011" /><testcase classname="tests.test_sqlbot_quality_patch" name="test_structured_response_formats_are_parsed_in_auditable_order[```sql\nSELECT order_id FROM sales_order LIMIT 1\n```-sql_code_block]" time="0.049" /><testcase classname="tests.test_sqlbot_quality_patch" name="test_structured_response_formats_are_parsed_in_auditable_order[SELECT order_id FROM sales_order LIMIT 1;-single_select_text]" time="0.005" /><testcase classname="tests.test_sqlbot_quality_patch" name="test_structured_response_formats_are_parsed_in_auditable_order[payload4-sqlbot_record]" time="0.003" /><testcase classname="tests.test_sqlbot_quality_patch" name="test_sqlbot_v18_fields_and_matrix_rows_are_normalized" time="0.012" /><testcase classname="tests.test_sqlbot_quality_patch" name="test_natural_language_or_non_select_text_is_not_guessed_as_sql[\u6211\u731c\u53ef\u4ee5\u6267\u884c SELECT order_id FROM sales_order LIMIT 1]" time="0.004" /><testcase classname="tests.test_sqlbot_quality_patch" name="test_natural_language_or_non_select_text_is_not_guessed_as_sql[\u524d\u8a00\n```sql\nSELECT order_id FROM sales_order LIMIT 1\n```]" time="0.005" /><testcase classname="tests.test_sqlbot_quality_patch" name="test_natural_language_or_non_select_text_is_not_guessed_as_sql[payload2]" time="0.009" /><testcase classname="tests.test_sqlbot_quality_patch" name="test_natural_language_or_non_select_text_is_not_guessed_as_sql[UPDATE sales_order SET net_revenue = 0]" time="0.006" /><testcase classname="tests.test_sqlbot_quality_patch" name="test_limit_policy_clamps_ast_and_adds_only_detail_default" time="0.026" /><testcase classname="tests.test_sqlbot_quality_patch" name="test_request_prompt_contains_only_current_authorized_scenario_contract" time="0.005" /><testcase classname="tests.test_sqlbot_source_binding" name="test_initial_source_bindings_are_versioned_approved_active_and_audited" time="1.514" /><testcase classname="tests.test_sqlbot_source_binding" name="test_initial_source_bindings_publish_v2_when_relation_scope_changes" time="1.073" /><testcase classname="tests.test_sqlbot_source_binding" name="test_source_binding_rollback_creates_new_active_version" time="1.112" /><testcase classname="tests.test_sqlbot_source_binding" name="test_unapproved_or_mismatched_source_binding_never_activates" time="1.678" /><testcase classname="tests.test_memory_scope_authorization" name="test_scope_is_injected_from_identity[TENANT-kwargs0-None]" time="0.011" /><testcase classname="tests.test_memory_scope_authorization" name="test_scope_is_injected_from_identity[WORKSPACE-kwargs1-None]" time="0.011" /><testcase classname="tests.test_memory_scope_authorization" name="test_scope_is_injected_from_identity[USER-kwargs2-user:1]" time="0.009" /><testcase classname="tests.test_memory_scope_authorization" name="test_scope_is_injected_from_identity[AGENT-kwargs3-user:1]" time="0.004" /><testcase classname="tests.test_memory_scope_authorization" name="test_scope_is_injected_from_identity[SESSION-kwargs4-user:1]" time="0.003" /><testcase classname="tests.test_memory_scope_authorization" name="test_scope_is_injected_from_identity[RUN-kwargs5-user:1]" time="0.005" /><testcase classname="tests.test_memory_scope_authorization" name="test_invalid_scope_is_rejected[GLOBAL-kwargs0-GLOBAL_SCOPE_FORBIDDEN]" time="0.014" /><testcase classname="tests.test_memory_scope_authorization" name="test_invalid_scope_is_rejected[AGENT-kwargs1-AGENT_SCOPE_REQUIRED]" time="0.010" /><testcase classname="tests.test_memory_scope_authorization" name="test_invalid_scope_is_rejected[SESSION-kwargs2-SESSION_SCOPE_REQUIRED]" time="0.004" /><testcase classname="tests.test_memory_scope_authorization" name="test_invalid_scope_is_rejected[RUN-kwargs3-RUN_SCOPE_REQUIRED]" time="0.003" /><testcase classname="tests.test_memory_scope_authorization" name="test_cross_scope_record_is_rejected[changed0-CROSS_TENANT_DENIED]" time="0.006" /><testcase classname="tests.test_memory_scope_authorization" name="test_cross_scope_record_is_rejected[changed1-CROSS_ORGANIZATION_DENIED]" time="0.009" /><testcase classname="tests.test_memory_scope_authorization" name="test_cross_scope_record_is_rejected[changed2-CROSS_WORKSPACE_DENIED]" time="0.003" /><testcase classname="tests.test_memory_scope_authorization" name="test_cross_scope_record_is_rejected[changed3-CROSS_USER_DENIED]" time="0.014" /><testcase classname="tests.test_memory_scope_authorization" name="test_cross_scenario_record_is_rejected" time="0.005" /><testcase classname="tests.test_memory_scope_authorization" name="test_admin_can_create_global_scope" time="0.002" /><testcase classname="tests.test_metric_catalog" name="test_metric_catalog_returns_published_semantic_layer_with_truth_metadata" time="262.687"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x7d1b96054e90&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x7d1b98e80860&gt;
+
+    def test_metric_catalog_returns_published_semantic_layer_with_truth_metadata(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=100)
+    
+        response = client.get(
+            "/api/v1/dashboard/metric-catalog?start=2026-01-01&amp;end_exclusive=2026-07-01",
+&gt;           headers=login(),
+                    ^^^^^^^
+        )
+
+tests/test_metric_catalog.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_metric_catalog" name="test_metric_catalog_requires_authentication" time="18.573" /><testcase classname="tests.test_metric_catalog" name="test_frontend_context_uses_persisted_published_batch" time="233.131"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x7d1b9686ae50&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x7d1b98ed4680&gt;
+
+    def test_frontend_context_uses_persisted_published_batch(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=100)
+    
+&gt;       response = client.get("/api/v1/dashboard/context", headers=login())
+                                                                   ^^^^^^^
+
+tests/test_metric_catalog.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_metric_catalog" name="test_frontend_context_fails_closed_without_published_batch" time="17.958"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x7d1b9824b7d0&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x7d1b995cea20&gt;
+
+    def test_frontend_context_fails_closed_without_published_batch(client, login):
+&gt;       response = client.get("/api/v1/dashboard/context", headers=login())
+                                                                   ^^^^^^^
+
+tests/test_metric_catalog.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_observability" name="test_readiness_fails_closed_without_redis_and_redacts_connections" time="19.124" /><testcase classname="tests.test_observability" name="test_readiness_returns_200_when_dependencies_and_revision_are_ready" time="19.237" /><testcase classname="tests.test_observability" name="test_prometheus_metrics_are_low_cardinality" time="18.711" /><testcase classname="tests.test_observability" name="test_json_formatter_includes_only_explicit_safe_context" time="12.602" /><testcase classname="tests.test_readonly_boundary" name="test_readonly_boundary_is_default_off_and_never_exposes_credentials" time="12.910" /><testcase classname="tests.test_readonly_boundary" name="test_enabled_readonly_boundary_fails_closed_without_postgresql_url" time="13.174" /><testcase classname="tests.test_memory_evaluation_report" name="test_memory_skill_evaluator_enforces_exact_40_plus_40_distribution_and_safety" time="0.004" /></testsuite></testsuites>

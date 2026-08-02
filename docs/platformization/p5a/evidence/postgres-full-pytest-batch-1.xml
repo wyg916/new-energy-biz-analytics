@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="13" skipped="0" tests="88" time="1338.350" timestamp="2026-08-02T10:22:31.171349+00:00" hostname="a43c3eec62a9"><testcase classname="tests.test_sqlbot_adapter" name="test_sqlbot_engine_direct_import_and_health_check_are_order_independent" time="30.100"><failure message="subprocess.TimeoutExpired: Command '['/usr/local/bin/python', '-c', &quot;from app.query_engines.sqlbot.engine import SQLBotEngine; result = SQLBotEngine(enabled=False).health_check(); assert result['status'] == 'DISABLED'&quot;]' timed out after 30 seconds">def test_sqlbot_engine_direct_import_and_health_check_are_order_independent():
+&gt;       process = subprocess.run(
+            [
+                sys.executable,
+                "-c",
+                (
+                    "from app.query_engines.sqlbot.engine import SQLBotEngine; "
+                    "result = SQLBotEngine(enabled=False).health_check(); "
+                    "assert result['status'] == 'DISABLED'"
+                ),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+
+tests/test_sqlbot_adapter.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.11/subprocess.py:550: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/subprocess.py:1209: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/subprocess.py:2116: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;Popen: returncode: -9 args: ['/usr/local/bin/python', '-c', "from app.query...&gt;
+endtime = 12691.181930619, orig_timeout = 30, stdout_seq = [], stderr_seq = []
+skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() &gt; endtime:
+&gt;           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['/usr/local/bin/python', '-c', "from app.query_engines.sqlbot.engine import SQLBotEngine; result = SQLBotEngine(enabled=False).health_check(); assert result['status'] == 'DISABLED'"]' timed out after 30 seconds
+
+/usr/local/lib/python3.11/subprocess.py:1253: TimeoutExpired</failure></testcase><testcase classname="tests.test_sqlbot_adapter" name="test_adapter_normalizes_result_and_never_exposes_session_secret" time="0.103" /><testcase classname="tests.test_sqlbot_adapter" name="test_adapter_fetches_record_usage_when_question_response_omits_it" time="0.054" /><testcase classname="tests.test_sqlbot_adapter" name="test_health_probe_uses_upstream_root_health_endpoint" time="0.004" /><testcase classname="tests.test_sqlbot_adapter" name="test_sessions_are_isolated_by_user_workspace_scenario_and_versions" time="0.086" /><testcase classname="tests.test_sqlbot_adapter" name="test_generate_only_uses_platform_executor_after_guard" time="0.038" /><testcase classname="tests.test_sqlbot_adapter" name="test_timeout_opens_circuit_without_unbounded_retry" time="0.020" /><testcase classname="tests.test_sqlbot_adapter" name="test_sqlbot_security_policy_rejects_dangerous_or_unscoped_sql[INSERT INTO semantic_sales_ops_orders(order_id) VALUES (1)]" time="0.052" /><testcase classname="tests.test_sqlbot_adapter" name="test_sqlbot_security_policy_rejects_dangerous_or_unscoped_sql[UPDATE semantic_sales_ops_orders SET sales_revenue = 0]" time="0.032" /><testcase classname="tests.test_sqlbot_adapter" name="test_sqlbot_security_policy_rejects_dangerous_or_unscoped_sql[DELETE FROM semantic_sales_ops_orders]" time="0.014" /><testcase classname="tests.test_sqlbot_adapter" name="test_sqlbot_security_policy_rejects_dangerous_or_unscoped_sql[DROP TABLE semantic_sales_ops_orders]" time="0.032" /><testcase classname="tests.test_sqlbot_adapter" name="test_sqlbot_security_policy_rejects_dangerous_or_unscoped_sql[ALTER TABLE semantic_sales_ops_orders ADD COLUMN secret text]" time="0.033" /><testcase classname="tests.test_sqlbot_adapter" name="test_sqlbot_security_policy_rejects_dangerous_or_unscoped_sql[SELECT order_id FROM semantic_sales_ops_orders LIMIT 1; SELECT 1]" time="0.031" /><testcase classname="tests.test_sqlbot_adapter" name="test_sqlbot_security_policy_rejects_dangerous_or_unscoped_sql[SELECT relname FROM pg_catalog.pg_class LIMIT 1]" time="0.045" /><testcase classname="tests.test_sqlbot_adapter" name="test_sqlbot_security_policy_rejects_dangerous_or_unscoped_sql[SELECT order_id FROM another_scenario LIMIT 1]" time="0.028" /><testcase classname="tests.test_sqlbot_adapter" name="test_sqlbot_security_policy_rejects_dangerous_or_unscoped_sql[SELECT secret_field FROM semantic_sales_ops_orders LIMIT 1]" time="0.046" /><testcase classname="tests.test_sqlbot_adapter" name="test_sqlbot_security_policy_rejects_dangerous_or_unscoped_sql[SELECT * FROM semantic_sales_ops_orders LIMIT 1]" time="0.023" /><testcase classname="tests.test_sqlbot_adapter" name="test_sqlbot_security_policy_rejects_dangerous_or_unscoped_sql[SELECT pg_sleep(1) FROM semantic_sales_ops_orders LIMIT 1]" time="0.040" /><testcase classname="tests.test_sqlbot_adapter" name="test_sqlbot_security_policy_rejects_dangerous_or_unscoped_sql[WITH x AS (SELECT order_id FROM semantic_sales_ops_orders) SELECT order_id FROM x LIMIT 1]" time="0.032" /><testcase classname="tests.test_semantic_registry" name="test_registry_loads_generic_entities_and_published_version_is_immutable" time="12.463" /><testcase classname="tests.test_semantic_registry" name="test_active_resolver_requires_atomic_dataset_and_semantic_activation" time="17.363" /><testcase classname="tests.test_semantic_registry" name="test_unpublished_or_incompatible_semantic_version_is_rejected" time="18.079" /><testcase classname="tests.test_semantic_registry" name="test_resolver_fails_closed_without_active_semantic_version" time="15.246" /><testcase classname="tests.test_procedure_skill_registry" name="test_reflection_only_creates_candidate" time="0.408" /><testcase classname="tests.test_procedure_skill_registry" name="test_procedure_version_is_immutable" time="1.172" /><testcase classname="tests.test_procedure_skill_registry" name="test_non_admin_cannot_approve_procedure" time="0.320" /><testcase classname="tests.test_procedure_skill_registry" name="test_failed_tests_prevent_procedure_approval" time="0.240" /><testcase classname="tests.test_procedure_skill_registry" name="test_approved_active_procedure_can_be_matched" time="0.372" /><testcase classname="tests.test_procedure_skill_registry" name="test_skill_requires_existing_procedure" time="0.230" /><testcase classname="tests.test_procedure_skill_registry" name="test_skill_cannot_activate_before_human_approval" time="0.281" /><testcase classname="tests.test_procedure_skill_registry" name="test_skill_full_approval_and_activation" time="0.508" /><testcase classname="tests.test_procedure_skill_registry" name="test_skill_is_scenario_isolated" time="0.749" /><testcase classname="tests.test_procedure_skill_registry" name="test_skill_disable_removes_from_match" time="0.587" /><testcase classname="tests.test_procedure_skill_registry" name="test_skill_rollback_reactivates_approved_target" time="0.789" /><testcase classname="tests.test_procedure_skill_registry" name="test_unapproved_procedure_never_matches[DRAFT]" time="0.451" /><testcase classname="tests.test_procedure_skill_registry" name="test_unapproved_procedure_never_matches[CANDIDATE]" time="0.483" /><testcase classname="tests.test_procedure_skill_registry" name="test_unapproved_procedure_never_matches[REVIEWING]" time="0.555" /><testcase classname="tests.test_procedure_skill_registry" name="test_unapproved_procedure_never_matches[FAILED]" time="0.449" /><testcase classname="tests.test_p3_credentials_retention" name="test_credential_reference_rotation_disable_and_audit" time="26.298" /><testcase classname="tests.test_p3_credentials_retention" name="test_credential_reference_rejects_sensitive_metadata_and_missing_provider_value" time="25.869" /><testcase classname="tests.test_p3_credentials_retention" name="test_legal_hold_and_retention_apply_strictest_deletion_rule" time="27.530" /><testcase classname="tests.test_p3_credentials_retention" name="test_business_user_cannot_manage_legal_hold" time="25.492"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x70a18d5fed90&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x70a18d25b600&gt;
+
+    def test_business_user_cannot_manage_legal_hold(client, login) -&gt; None:
+        response = client.post(
+            "/api/v1/governance/legal-holds",
+&gt;           headers=login(username="executive", password="AlphaExec!2026"),
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            json={
+                "resource_type": "memory",
+                "resource_id": "MEM-NOT-RELEVANT",
+                "reason_code": "UNAUTHORIZED",
+                "reason": "must be denied",
+            },
+        )
+
+tests/test_p3_credentials_retention.py:167: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'executive', password = 'AlphaExec!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_p4_datasource_alerts" name="test_datasource_requires_evidence_and_approval_before_activation" time="28.566" /><testcase classname="tests.test_p4_datasource_alerts" name="test_external_alert_is_signed_redacted_and_idempotent" time="23.622" /><testcase classname="tests.test_p3_audit_release" name="test_governance_audit_redaction_filter_export_alert_and_immutability" time="19.967" /><testcase classname="tests.test_p3_audit_release" name="test_policy_and_procedure_cannot_activate_without_review" time="20.022" /><testcase classname="tests.test_p3_audit_release" name="test_release_state_machine_production_block_and_history_preserving_rollback" time="20.906" /><testcase classname="tests.test_p5_production_gate_registry" name="test_registry_snapshot_is_database_backed_and_no_go_by_default" time="19.750"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x70a18d2cbd50&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x70a18cff2660&gt;
+
+&gt;   ???
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\test_p5_production_gate_registry.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_p5_production_gate_registry" name="test_business_user_can_view_but_cannot_change_gate" time="21.094"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x70a18e541290&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x70a18d5d36a0&gt;
+
+&gt;   ???
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\test_p5_production_gate_registry.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'executive', password = 'AlphaExec!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_p5_production_gate_registry" name="test_pass_requires_evidence_and_records_immutable_history" time="19.565"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x70a18d2efc50&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x70a18d297f60&gt;
+
+&gt;   ???
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\test_p5_production_gate_registry.py:77: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_p5_production_gate_registry" name="test_waiver_cannot_be_fabricated_without_formal_approval" time="21.781"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x70a18d1efdd0&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x70a18cf8b100&gt;
+
+&gt;   ???
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\test_p5_production_gate_registry.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_p5_production_gate_registry" name="test_gate_scope_cannot_be_selected_from_request_body" time="21.357"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x70a18d5fe490&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x70a18cfcac00&gt;
+
+&gt;   ???
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\test_p5_production_gate_registry.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_response_composer" name="test_four_profiles_return_stable_json_contract[executive_brief]" time="0.013" /><testcase classname="tests.test_response_composer" name="test_four_profiles_return_stable_json_contract[analyst_detailed]" time="0.015" /><testcase classname="tests.test_response_composer" name="test_four_profiles_return_stable_json_contract[operation_action]" time="0.003" /><testcase classname="tests.test_response_composer" name="test_four_profiles_return_stable_json_contract[concise_query]" time="0.011" /><testcase classname="tests.test_response_composer" name="test_missing_evidence_refuses" time="0.009" /><testcase classname="tests.test_response_composer" name="test_unbound_claim_is_rejected" time="0.004" /><testcase classname="tests.test_response_composer" name="test_forbidden_claim_is_rejected" time="0.003" /><testcase classname="tests.test_scenario_packages" name="test_package_loads_all_required_files_and_15_metrics" time="15.065" /><testcase classname="tests.test_scenario_packages" name="test_package_path_and_incomplete_package_fail_closed" time="13.193" /><testcase classname="tests.test_scenario_packages" name="test_validator_rejects_secret_key_and_incompatible_platform" time="14.845" /><testcase classname="tests.test_scenario_packages" name="test_registry_lifecycle_activation_disable_and_scope" time="14.852" /><testcase classname="tests.test_scenario_packages" name="test_same_package_version_is_immutable" time="14.185" /><testcase classname="tests.test_runtime_closeout" name="test_runtime_smoke_cases_cover_both_scenarios_and_active_dates" time="0.002" /><testcase classname="tests.test_runtime_closeout" name="test_missing_model_contract_records_not_executed_runtime_evidence" time="0.003"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/tests/evaluation/nl2sql_dual_engine_v1.json'">def test_missing_model_contract_records_not_executed_runtime_evidence() -&gt; None:
+        source = json.loads(
+            (
+                ROOT / "tests" / "evaluation" / "nl2sql_dual_engine_v1.json"
+&gt;           ).read_text(encoding="utf-8")
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        )
+
+tests/test_runtime_closeout.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.11/pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tests/evaluation/nl2sql_dual_engine_v1.json'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tests/evaluation/nl2sql_dual_engine_v1.json'
+
+/usr/local/lib/python3.11/pathlib.py:1044: FileNotFoundError</failure></testcase><testcase classname="tests.test_runtime_closeout" name="test_complete_contract_still_requires_real_live_execution" time="0.002" /><testcase classname="tests.test_runtime_closeout" name="test_provider_authentication_blocker_replaces_human_config_blocker" time="0.002" /><testcase classname="tests.test_query_security" name="test_arbitrary_and_dangerous_sql_is_always_rejected[DROP TABLE fact_charging_session]" time="0.017" /><testcase classname="tests.test_query_security" name="test_arbitrary_and_dangerous_sql_is_always_rejected[DELETE FROM fact_charging_session]" time="0.011" /><testcase classname="tests.test_query_security" name="test_arbitrary_and_dangerous_sql_is_always_rejected[SELECT 1; DROP TABLE dim_user]" time="0.009" /><testcase classname="tests.test_query_security" name="test_arbitrary_and_dangerous_sql_is_always_rejected[UPDATE app_user SET role='admin']" time="0.006" /><testcase classname="tests.test_query_security" name="test_arbitrary_and_dangerous_sql_is_always_rejected[INSERT INTO audit_log VALUES (1)]" time="0.005" /><testcase classname="tests.test_query_security" name="test_arbitrary_and_dangerous_sql_is_always_rejected[TRUNCATE fact_energy_cost]" time="0.006" /><testcase classname="tests.test_query_security" name="test_arbitrary_and_dangerous_sql_is_always_rejected[SELECT pg_read_file('/etc/passwd')]" time="0.004" /><testcase classname="tests.test_query_security" name="test_arbitrary_and_dangerous_sql_is_always_rejected[SELECT * FROM pg_catalog.pg_user]" time="0.004" /><testcase classname="tests.test_query_security" name="test_arbitrary_and_dangerous_sql_is_always_rejected[SELECT pg_sleep(10)]" time="0.005" /><testcase classname="tests.test_query_security" name="test_arbitrary_and_dangerous_sql_is_always_rejected[SELECT * FROM fact_charging_session -- bypass]" time="0.025" /><testcase classname="tests.test_query_security" name="test_arbitrary_and_dangerous_sql_is_always_rejected[/*x*/ SELECT * FROM dim_user]" time="0.011" /><testcase classname="tests.test_query_security" name="test_arbitrary_and_dangerous_sql_is_always_rejected[COPY app_user TO PROGRAM 'x']" time="0.004" /><testcase classname="tests.test_query_security" name="test_plan_compiler_guard_and_readonly_execution" time="270.016" /><testcase classname="tests.test_query_security" name="test_scope_intersection_fails_closed" time="230.334" /><testcase classname="tests.test_query_security" name="test_compiled_query_tamper_is_rejected" time="0.013" /><testcase classname="tests.test_private_deployment_contract" name="test_restore_stream_remaps_schema_without_mutating_copy_data" time="0.003"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/scripts/private_deployment.py'">def test_restore_stream_remaps_schema_without_mutating_copy_data():
+&gt;       module = load_private_deployment_module()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_private_deployment_contract.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_private_deployment_contract.py:19: in load_private_deployment_module
+    spec.loader.exec_module(module)
+&lt;frozen importlib._bootstrap_external&gt;:936: in exec_module
+    ???
+&lt;frozen importlib._bootstrap_external&gt;:1073: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;_frozen_importlib_external.SourceFileLoader object at 0x70a18b8e41d0&gt;
+path = '/scripts/private_deployment.py'
+
+&gt;   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/scripts/private_deployment.py'
+
+&lt;frozen importlib._bootstrap_external&gt;:1130: FileNotFoundError</failure></testcase><testcase classname="tests.test_private_deployment_contract" name="test_private_compose_keeps_database_and_api_private" time="0.002"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/deploy/private/docker-compose.private.yml'">def test_private_compose_keeps_database_and_api_private():
+&gt;       compose = (ROOT / "deploy" / "private" / "docker-compose.private.yml").read_text(
+            encoding="utf-8"
+        )
+
+tests/test_private_deployment_contract.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.11/pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/deploy/private/docker-compose.private.yml'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/deploy/private/docker-compose.private.yml'
+
+/usr/local/lib/python3.11/pathlib.py:1044: FileNotFoundError</failure></testcase><testcase classname="tests.test_private_deployment_contract" name="test_private_proxy_enforces_https_and_hides_metrics" time="0.002"><failure message="FileNotFoundError: [Errno 2] No such file or directory: '/deploy/private/nginx.private.conf'">def test_private_proxy_enforces_https_and_hides_metrics():
+&gt;       nginx = (ROOT / "deploy" / "private" / "nginx.private.conf").read_text(
+            encoding="utf-8"
+        )
+
+tests/test_private_deployment_contract.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/local/lib/python3.11/pathlib.py:1058: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/deploy/private/nginx.private.conf'), mode = 'r'
+buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/deploy/private/nginx.private.conf'
+
+/usr/local/lib/python3.11/pathlib.py:1044: FileNotFoundError</failure></testcase><testcase classname="tests.test_chatbi" name="test_chatbi_complete_chain_and_truthful_evidence" time="213.715"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x70a18b89d3d0&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x70a18d00cb80&gt;
+
+    def test_chatbi_complete_chain_and_truthful_evidence(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=1_000)
+&gt;       headers = login()
+                  ^^^^^^^
+
+tests/test_chatbi.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'analyst', password = 'AlphaAnalyst!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase><testcase classname="tests.test_chatbi" name="test_chatbi_scope_denial_is_403" time="61.519"><failure message="assert 403 == 200&#10; +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code">client = &lt;starlette.testclient.TestClient object at 0x70a18d3ccf90&gt;
+login = &lt;function login.&lt;locals&gt;._login at 0x70a188f06ca0&gt;
+
+    def test_chatbi_scope_denial_is_403(client, login):
+        with SessionLocal() as db:
+            generate_simulated_data(db, session_count=100)
+&gt;       response = client.post("/api/v1/chat/query", headers=login("regional", "AlphaRegion!2026"), json={"question": "区域B在2026年6月充电收入是多少？"})
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_chatbi.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+username = 'regional', password = 'AlphaRegion!2026'
+
+&gt;   ???
+E   assert 403 == 200
+E    +  where 403 = &lt;Response [403 Forbidden]&gt;.status_code
+
+E:\新能源企业经营分析智能平台-p5a-remediation\backend\tests\conftest.py:43: AssertionError</failure></testcase></testsuite></testsuites>
