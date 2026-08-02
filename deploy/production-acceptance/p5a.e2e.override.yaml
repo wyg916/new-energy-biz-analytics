@@ -1,0 +1,48 @@
+name: renewable-p5a-e2e
+
+services:
+  db:
+    image: renewable-p5a-postgres:16.14
+    pull_policy: never
+    volumes: !override []
+    tmpfs:
+      - /var/lib/postgresql/data:rw,noexec,nosuid,size=2g
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U alpha -d renewable_alpha"]
+      interval: 2s
+      timeout: 3s
+      retries: 60
+
+  redis:
+    image: redis:7.4.10-alpine@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2
+    volumes: !override []
+    tmpfs:
+      - /data:rw,noexec,nosuid,size=256m
+
+  api:
+    image: renewable-p5a-api:5.0.0-p5a
+    pull_policy: never
+    build: !reset null
+    environment:
+      APP_ENV: development
+      AUTO_BOOTSTRAP_DEMO_USERS: "true"
+      SIMULATED_DATA_ONLY: "true"
+      LOCAL_AUTH_ENABLED: "true"
+      PRODUCTION_RELEASE_AUTHORIZED: "false"
+      RELEASE_VERSION: 5.0.0-p5a-e2e
+      EXPECTED_DATABASE_REVISION: p5_0001
+      QUERY_ENGINE_MODE: SHADOW
+      SQLBOT_ENGINE_ENABLED: "false"
+      SQLBOT_RUNTIME_VERIFIED: "false"
+      OIDC_ENABLED: "false"
+      VAULT_ENABLED: "false"
+      EXTERNAL_ALERT_ENABLED: "false"
+    ports: !override
+      - "18006:8000"
+
+  web:
+    image: renewable-p5a-web:5.0.0-p5a
+    pull_policy: never
+    build: !reset null
+    ports: !override
+      - "8086:80"

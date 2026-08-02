@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 const oidcPassword = process.env.P4_OIDC_PASSWORD
+const acceptanceOrigin = new URL(process.env.PLAYWRIGHT_BASE_URL ?? 'https://p4.localhost:8444').origin
 
 test.use({ viewport: { width: 1600, height: 900 } })
 test.skip(!oidcPassword, 'P4 runtime-only OIDC password was not provided to this process')
@@ -22,7 +23,7 @@ test('真实 OIDC Code + PKCE 登录并读取 P4 正式 API', async ({ page }) =
   const callback = await callbackResponse
   const callbackBody = await callback.json()
   expect(callback.ok(), JSON.stringify(callbackBody?.detail || { code: 'OIDC_CALLBACK_FAILED' })).toBeTruthy()
-  await page.waitForURL(url => url.origin === 'https://p4.localhost:8444' && url.pathname === '/')
+  await page.waitForURL(url => url.origin === acceptanceOrigin && url.pathname === '/')
 
   await page.getByRole('button', { name: '治理与生产就绪' }).click()
   const snapshotResponse = page.waitForResponse(response => response.url().includes('/api/v1/preproduction/snapshot') && response.ok())
@@ -52,7 +53,7 @@ test('真实 OIDC 未映射用户在服务端 callback 阶段被拒绝', async (
   await page.locator('#username').fill('p4.unmapped')
   await page.locator('#password').fill(oidcPassword!)
   await page.locator('#kc-login').click()
-  await page.waitForURL(url => url.origin === 'https://p4.localhost:8444' && url.pathname === '/oidc/callback')
+  await page.waitForURL(url => url.origin === acceptanceOrigin && url.pathname === '/oidc/callback')
   await expect(page.getByTestId('oidc-callback')).toContainText('企业身份登录失败')
   await expect(page.getByTestId('oidc-callback')).toContainText('预先审批')
   expect(await page.evaluate(() => localStorage.getItem('alpha_token'))).toBeNull()

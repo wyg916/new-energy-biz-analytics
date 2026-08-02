@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="3" failures="0" errors="0" time="2.585923">
+    <testsuite name="tests/format.test.ts" timestamp="2026-08-02T12:41:03.275Z" hostname="wyg_win11" tests="3" failures="0" errors="0" skipped="0" time="2.585923">
+        <testcase classname="tests/format.test.ts" name="metric formatting &gt; renders ratios as percentages" time="0.0026329">
+        </testcase>
+        <testcase classname="tests/format.test.ts" name="metric formatting &gt; keeps null truthful" time="0.0002462">
+        </testcase>
+        <testcase classname="tests/format.test.ts" name="metric formatting &gt; renders counts as integers" time="2.5802812">
+        </testcase>
+    </testsuite>
+</testsuites>

@@ -1,0 +1,342 @@
+<testsuites id="" name="" tests="23" failures="6" skipped="0" errors="0" time="1066.698754">
+<testsuite name="ai-operations-analysis.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="1" skipped="0" time="35.931" errors="0">
+<testcase name="AI经营分析在100%缩放下完整一屏并展示可信ChatBI证据" classname="ai-operations-analysis.spec.ts" time="35.931">
+<failure message="ai-operations-analysis.spec.ts:8:1 AI经营分析在100%缩放下完整一屏并展示可信ChatBI证据" type="FAILURE">
+<![CDATA[  ai-operations-analysis.spec.ts:8:1 › AI经营分析在100%缩放下完整一屏并展示可信ChatBI证据 ─────────────────────────────
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: getByLabel('经营分析问题')
+    Expected string: "2026年6月充电收入环比变化的原因？"
+    Received string: ""
+    Timeout: 30000ms
+
+    Call log:
+      - Expect "toHaveValue" with timeout 30000ms
+      - waiting for getByLabel('经营分析问题')
+        33 × locator resolved to <textarea maxlength="500" aria-label="经营分析问题"></textarea>
+           - unexpected value ""
+
+
+      15 |   await expect(page.getByRole('heading', { name: 'AI经营分析', exact: true })).toBeVisible()
+      16 |   await expect(page.getByRole('heading', { name: 'AI结论' })).toBeVisible()
+    > 17 |   await expect(page.getByLabel('经营分析问题')).toHaveValue('2026年6月充电收入环比变化的原因？')
+         |                                           ^
+      18 |   await expect(page.locator('.chat-evidence-panel code')).toContainText('CHAT-', { timeout: 120_000 })
+      19 |   await expect(page.locator('.global-data-status')).toContainText('模拟数据')
+      20 |   await expect(page.locator('.global-data-status')).toContainText('run_id：DASH-')
+        at E:\新能源企业经营分析智能平台-p5a-remediation\frontend\e2e\ai-operations-analysis.spec.ts:17:43
+
+    Error Context: ..\test-results\ai-operations-analysis-AI经营分析在100-缩放下完整一屏并展示可信ChatBI证据\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\ai-operations-analysis-AI经营分析在100-缩放下完整一屏并展示可信ChatBI证据\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\ai-operations-analysis-AI经营分析在100-缩放下完整一屏并展示可信ChatBI证据\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\..\..\frontend\test-results\ai-operations-analysis-AI经营分析在100-缩放下完整一屏并展示可信ChatBI证据\error-context.md]]
+
+[[ATTACHMENT|..\..\..\..\frontend\test-results\ai-operations-analysis-AI经营分析在100-缩放下完整一屏并展示可信ChatBI证据\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="alpha.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="1" skipped="0" time="96.723" errors="0">
+<testcase name="product alpha core journey uses live backend data" classname="alpha.spec.ts" time="96.723">
+<failure message="alpha.spec.ts:2:1 product alpha core journey uses live backend data" type="FAILURE">
+<![CDATA[  alpha.spec.ts:2:1 › product alpha core journey uses live backend data ────────────────────────────
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('.chat-evidence-panel code')
+    Expected string: "CHAT-"
+    Received string: "等待生成"
+    Timeout: 90000ms
+
+    Call log:
+      - Expect "toContainText" with timeout 90000ms
+      - waiting for locator('.chat-evidence-panel code')
+        93 × locator resolved to <code>等待生成</code>
+           - unexpected value "等待生成"
+
+
+      15 |   await page.getByRole('button', { name: 'AI经营分析' }).click()
+      16 |   await expect(page.getByRole('heading', { name: 'AI经营分析', exact: true })).toBeVisible()
+    > 17 |   await expect(page.locator('.chat-evidence-panel code')).toContainText('CHAT-', { timeout: 90_000 })
+         |                                                           ^
+      18 |   await expect(page.getByText('Query Guard：passed')).toBeVisible()
+      19 |   await expect(page.getByText('Answer Guard：passed')).toBeVisible()
+      20 |   await page.screenshot({ fullPage: true })
+        at E:\新能源企业经营分析智能平台-p5a-remediation\frontend\e2e\alpha.spec.ts:17:59
+
+    Error Context: ..\test-results\alpha-product-alpha-core-journey-uses-live-backend-data\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\alpha-product-alpha-core-journey-uses-live-backend-data\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\alpha-product-alpha-core-journey-uses-live-backend-data\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\..\..\frontend\test-results\alpha-product-alpha-core-journey-uses-live-backend-data\error-context.md]]
+
+[[ATTACHMENT|..\..\..\..\frontend\test-results\alpha-product-alpha-core-journey-uses-live-backend-data\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="business-alerts.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="0" skipped="0" time="14.516" errors="0">
+<testcase name="经营预警复刻页在100%缩放下一屏完整展示" classname="business-alerts.spec.ts" time="14.516">
+</testcase>
+</testsuite>
+<testsuite name="data-integration-fail-closed.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="0" skipped="0" time="7.569" errors="0">
+<testcase name="数据接入接口失败时显示 Blocked 且不展示跨域 fallback" classname="data-integration-fail-closed.spec.ts" time="7.569">
+</testcase>
+</testsuite>
+<testsuite name="data-integration-governance.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="0" skipped="0" time="8.611" errors="0">
+<testcase name="数据接入治理页展示已发布不可变快照和 13 步平台闭环" classname="data-integration-governance.spec.ts" time="8.611">
+</testcase>
+</testsuite>
+<testsuite name="data-lineage-ui.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="0" skipped="0" time="6.748" errors="0">
+<testcase name="所有业务页面仅使用统一数据状态区并保持正式 API 链路" classname="data-lineage-ui.spec.ts" time="6.748">
+</testcase>
+</testsuite>
+<testsuite name="device-health.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="0" skipped="0" time="12.975" errors="0">
+<testcase name="设备健康复刻页在100%缩放下一屏完整展示" classname="device-health.spec.ts" time="12.975">
+</testcase>
+</testsuite>
+<testsuite name="feature-overview.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="1" skipped="0" time="17.612" errors="0">
+<testcase name="功能总览复刻页使用后端指标并支持核心入口" classname="feature-overview.spec.ts" time="17.612">
+<failure message="feature-overview.spec.ts:8:1 功能总览复刻页使用后端指标并支持核心入口" type="FAILURE">
+<![CDATA[  feature-overview.spec.ts:8:1 › 功能总览复刻页使用后端指标并支持核心入口 ──────────────────────────────────────────────
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "Failed to load resource: the server responded with a status of 403 (Forbidden)",
+    + ]
+
+      36 |   await page.getByRole('button', { name: /生成报告/ }).click()
+      37 |   await expect(page.getByText('● 已完成')).toBeVisible({ timeout: 90_000 })
+    > 38 |   expect(consoleErrors).toEqual([])
+         |                         ^
+      39 | })
+      40 |
+        at E:\新能源企业经营分析智能平台-p5a-remediation\frontend\e2e\feature-overview.spec.ts:38:25
+
+    Error Context: ..\test-results\feature-overview-功能总览复刻页使用后端指标并支持核心入口\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\feature-overview-功能总览复刻页使用后端指标并支持核心入口\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\feature-overview-功能总览复刻页使用后端指标并支持核心入口\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\..\..\frontend\test-results\feature-overview-功能总览复刻页使用后端指标并支持核心入口\error-context.md]]
+
+[[ATTACHMENT|..\..\..\..\frontend\test-results\feature-overview-功能总览复刻页使用后端指标并支持核心入口\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="global-typography.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="0" skipped="0" time="9.687" errors="0">
+<testcase name="all primary product views use the unified readable typography scale" classname="global-typography.spec.ts" time="9.687">
+</testcase>
+</testsuite>
+<testsuite name="gross-profit-cost.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="0" skipped="0" time="16.447" errors="0">
+<testcase name="毛利与成本复刻页在100%缩放下一屏完整展示" classname="gross-profit-cost.spec.ts" time="16.447">
+</testcase>
+</testsuite>
+<testsuite name="knowledge-response.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="2" failures="0" skipped="0" time="4.519" errors="0">
+<testcase name="企业知识库展示受控生命周期与真实运行状态" classname="knowledge-response.spec.ts" time="2.312">
+</testcase>
+<testcase name="统一回答界面展示 Profile 与运行边界" classname="knowledge-response.spec.ts" time="2.207">
+</testcase>
+</testsuite>
+<testsuite name="metric-management.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="0" skipped="0" time="8.293" errors="0">
+<testcase name="指标与场景管理页在100%缩放下一屏完整展示" classname="metric-management.spec.ts" time="8.293">
+</testcase>
+</testsuite>
+<testsuite name="multi-scenario-chat.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="1" skipped="0" time="120.591" errors="0">
+<testcase name="自有 ChatBI UI 切换双场景并展示版本引擎证据" classname="multi-scenario-chat.spec.ts" time="120.591">
+<failure message="multi-scenario-chat.spec.ts:8:1 自有 ChatBI UI 切换双场景并展示版本引擎证据" type="FAILURE">
+<![CDATA[  multi-scenario-chat.spec.ts:8:1 › 自有 ChatBI UI 切换双场景并展示版本引擎证据 ────────────────────────────────────
+
+    Test timeout of 120000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 120000ms exceeded.
+    Call log:
+      - waiting for getByLabel('当前业务场景')
+        - locator resolved to <select aria-label="当前业务场景"></select>
+      - attempting select option action
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+        - waiting 20ms
+        2 × waiting for element to be visible and enabled
+          - did not find some options
+        - retrying select option action
+          - waiting 100ms
+        230 × waiting for element to be visible and enabled
+            - did not find some options
+          - retrying select option action
+            - waiting 500ms
+
+
+      18 |   const scenario = page.getByLabel('当前业务场景')
+      19 |   await expect(scenario).toBeVisible()
+    > 20 |   await scenario.selectOption('sales_ops')
+         |                  ^
+      21 |   await expect(page.getByLabel('经营分析问题')).toHaveValue(
+      22 |     '2026年6月销售收入、订单数和销售毛利率是多少？',
+      23 |   )
+        at E:\新能源企业经营分析智能平台-p5a-remediation\frontend\e2e\multi-scenario-chat.spec.ts:20:18
+
+    Error Context: ..\test-results\multi-scenario-chat-自有-ChatBI-UI-切换双场景并展示版本引擎证据\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\multi-scenario-chat-自有-ChatBI-UI-切换双场景并展示版本引擎证据\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\multi-scenario-chat-自有-ChatBI-UI-切换双场景并展示版本引擎证据\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\..\..\frontend\test-results\multi-scenario-chat-自有-ChatBI-UI-切换双场景并展示版本引擎证据\error-context.md]]
+
+[[ATTACHMENT|..\..\..\..\frontend\test-results\multi-scenario-chat-自有-ChatBI-UI-切换双场景并展示版本引擎证据\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="operations-workbench.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="0" skipped="0" time="24.927" errors="0">
+<testcase name="经营工作台在100%缩放下完整一屏并使用后端经营数据" classname="operations-workbench.spec.ts" time="24.927">
+</testcase>
+</testsuite>
+<testsuite name="p3-enterprise-governance.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="2" failures="1" skipped="0" time="141.527" errors="0">
+<testcase name="企业治理控制台读取正式 API 并展示安全边界" classname="p3-enterprise-governance.spec.ts" time="120.186">
+<failure message="p3-enterprise-governance.spec.ts:8:1 企业治理控制台读取正式 API 并展示安全边界" type="FAILURE">
+<![CDATA[  p3-enterprise-governance.spec.ts:8:1 › 企业治理控制台读取正式 API 并展示安全边界 ───────────────────────────────────
+
+    Test timeout of 120000ms exceeded.
+
+    Error: page.waitForResponse: Test timeout of 120000ms exceeded.
+
+      4 |
+      5 | test('企业治理控制台读取正式 API 并展示安全边界', async ({ page }) => {
+    > 6 |   const snapshotResponse = page.waitForResponse(
+        |                                 ^
+      7 |     response => response.url().includes('/api/v1/governance/snapshot') && response.ok(),
+      8 |   )
+      9 |   await page.goto('/')
+        at E:\新能源企业经营分析智能平台-p5a-remediation\frontend\e2e\p3-enterprise-governance.spec.ts:6:33
+
+    Error Context: ..\test-results\p3-enterprise-governance-企业治理控制台读取正式-API-并展示安全边界\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\p3-enterprise-governance-企业治理控制台读取正式-API-并展示安全边界\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\p3-enterprise-governance-企业治理控制台读取正式-API-并展示安全边界\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\..\..\frontend\test-results\p3-enterprise-governance-企业治理控制台读取正式-API-并展示安全边界\error-context.md]]
+
+[[ATTACHMENT|..\..\..\..\frontend\test-results\p3-enterprise-governance-企业治理控制台读取正式-API-并展示安全边界\trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="普通业务用户访问治理中心时明确显示 Forbidden 且无虚构 fallback" classname="p3-enterprise-governance.spec.ts" time="21.341">
+</testcase>
+</testsuite>
+<testsuite name="platform-foundation-fail-closed.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="3" failures="0" skipped="0" time="16.152" errors="0">
+<testcase name="平台状态 Unauthorized 时清除会话，Forbidden 时显示 Blocked 且无 fallback" classname="platform-foundation-fail-closed.spec.ts" time="3.521">
+</testcase>
+<testcase name="空 Schema、字段发现失败、连接失败和 DQ 失败均显式呈现" classname="platform-foundation-fail-closed.spec.ts" time="8.608">
+</testcase>
+<testcase name="审批驳回、激活失败与回滚均以数据库响应为准" classname="platform-foundation-fail-closed.spec.ts" time="4.023">
+</testcase>
+</testsuite>
+<testsuite name="revenue-orders.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="0" skipped="0" time="13.832" errors="0">
+<testcase name="收入与订单复刻页在100%缩放下一屏完整展示" classname="revenue-orders.spec.ts" time="13.832">
+</testcase>
+</testsuite>
+<testsuite name="station-operations.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="0" skipped="0" time="5.127" errors="0">
+<testcase name="场站经营复刻页在100%缩放下一屏完整展示" classname="station-operations.spec.ts" time="5.127">
+</testcase>
+</testsuite>
+<testsuite name="v2_p0_0_evidence.spec.ts" timestamp="2026-08-02T11:55:29.492Z" hostname="" tests="1" failures="1" skipped="0" time="119.34" errors="0">
+<testcase name="capture current Alpha product pages without changing business data" classname="v2_p0_0_evidence.spec.ts" time="119.34">
+<failure message="v2_p0_0_evidence.spec.ts:9:1 capture current Alpha product pages without changing business data" type="FAILURE">
+<![CDATA[  v2_p0_0_evidence.spec.ts:9:1 › capture current Alpha product pages without changing business data
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('.chat-evidence-panel code')
+    Expected string: "CHAT-"
+    Received string: "等待生成"
+    Timeout: 90000ms
+
+    Call log:
+      - Expect "toContainText" with timeout 90000ms
+      - waiting for locator('.chat-evidence-panel code')
+        92 × locator resolved to <code>等待生成</code>
+           - unexpected value "等待生成"
+
+
+      43 |   await page.getByRole('button', { name: 'AI经营分析' }).click()
+      44 |   await expect(page.getByRole('heading', { name: 'AI经营分析', exact: true })).toBeVisible()
+    > 45 |   await expect(page.locator('.chat-evidence-panel code')).toContainText('CHAT-', { timeout: 90_000 })
+         |                                                           ^
+      46 |   await expect(page.getByText('Query Guard：passed')).toBeVisible()
+      47 |   await expect(page.getByText('Answer Guard：passed')).toBeVisible()
+      48 |   await capture('AI经营分析 / ChatBI', '08-chatbi.png')
+        at E:\新能源企业经营分析智能平台-p5a-remediation\frontend\e2e\v2_p0_0_evidence.spec.ts:45:59
+
+    Error Context: ..\test-results\v2_p0_0_evidence-capture-c-7761b-hout-changing-business-data\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\v2_p0_0_evidence-capture-c-7761b-hout-changing-business-data\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\v2_p0_0_evidence-capture-c-7761b-hout-changing-business-data\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\..\..\frontend\test-results\v2_p0_0_evidence-capture-c-7761b-hout-changing-business-data\error-context.md]]
+
+[[ATTACHMENT|..\..\..\..\frontend\test-results\v2_p0_0_evidence-capture-c-7761b-hout-changing-business-data\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

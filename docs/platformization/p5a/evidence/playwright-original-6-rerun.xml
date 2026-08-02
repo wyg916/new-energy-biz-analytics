@@ -1,0 +1,28 @@
+<testsuites id="" name="" tests="7" failures="0" skipped="0" errors="0" time="140.050791">
+<testsuite name="ai-operations-analysis.spec.ts" timestamp="2026-08-02T12:19:19.784Z" hostname="" tests="1" failures="0" skipped="0" time="13.256" errors="0">
+<testcase name="AI经营分析在100%缩放下完整一屏并展示可信ChatBI证据" classname="ai-operations-analysis.spec.ts" time="13.256">
+</testcase>
+</testsuite>
+<testsuite name="alpha.spec.ts" timestamp="2026-08-02T12:19:19.784Z" hostname="" tests="1" failures="0" skipped="0" time="16.51" errors="0">
+<testcase name="product alpha core journey uses live backend data" classname="alpha.spec.ts" time="16.51">
+</testcase>
+</testsuite>
+<testsuite name="feature-overview.spec.ts" timestamp="2026-08-02T12:19:19.784Z" hostname="" tests="1" failures="0" skipped="0" time="18.873" errors="0">
+<testcase name="功能总览复刻页使用后端指标并支持核心入口" classname="feature-overview.spec.ts" time="18.873">
+</testcase>
+</testsuite>
+<testsuite name="multi-scenario-chat.spec.ts" timestamp="2026-08-02T12:19:19.784Z" hostname="" tests="1" failures="0" skipped="0" time="11.939" errors="0">
+<testcase name="自有 ChatBI UI 切换双场景并展示版本引擎证据" classname="multi-scenario-chat.spec.ts" time="11.939">
+</testcase>
+</testsuite>
+<testsuite name="p3-enterprise-governance.spec.ts" timestamp="2026-08-02T12:19:19.784Z" hostname="" tests="2" failures="0" skipped="0" time="6.338" errors="0">
+<testcase name="企业治理控制台读取正式 API 并展示安全边界" classname="p3-enterprise-governance.spec.ts" time="3.213">
+</testcase>
+<testcase name="普通业务用户访问治理中心时明确显示 Forbidden 且无虚构 fallback" classname="p3-enterprise-governance.spec.ts" time="3.125">
+</testcase>
+</testsuite>
+<testsuite name="v2_p0_0_evidence.spec.ts" timestamp="2026-08-02T12:19:19.784Z" hostname="" tests="1" failures="0" skipped="0" time="39.154" errors="0">
+<testcase name="capture current Alpha product pages without changing business data" classname="v2_p0_0_evidence.spec.ts" time="39.154">
+</testcase>
+</testsuite>
+</testsuites>

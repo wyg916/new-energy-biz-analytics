@@ -1,0 +1,41 @@
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="11.717527">
+<testsuite name="p5-production-acceptance.spec.ts" timestamp="2026-08-02T12:38:16.964Z" hostname="" tests="1" failures="1" skipped="0" time="3.886" errors="0">
+<testcase name="P5 Production Gate Registry 来自正式 API 且保持 No-Go" classname="p5-production-acceptance.spec.ts" time="3.886">
+<failure message="p5-production-acceptance.spec.ts:11:1 P5 Production Gate Registry 来自正式 API 且保持 No-Go" type="FAILURE">
+<![CDATA[  p5-production-acceptance.spec.ts:11:1 › P5 Production Gate Registry 来自正式 API 且保持 No-Go ───────────
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Expected substring: "code_challenge_method=S256"
+    Received string:    "https://p5a.localhost:8445/"
+
+      11 |     await expect(page.getByTestId('oidc-login')).toBeEnabled()
+      12 |     await page.getByTestId('oidc-login').click()
+    > 13 |     expect(page.url()).toContain('code_challenge_method=S256')
+         |                        ^
+      14 |     await page.locator('#username').fill('p4.analyst')
+      15 |     await page.locator('#password').fill(oidcPassword)
+      16 |     const callbackResponse = page.waitForResponse(
+        at E:\新能源企业经营分析智能平台-p5a-remediation\frontend\e2e\p5-production-acceptance.spec.ts:13:24
+
+    Error Context: ..\test-results\p5-production-acceptance-P-8ae8d-Registry-来自正式-API-且保持-No-Go\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\p5-production-acceptance-P-8ae8d-Registry-来自正式-API-且保持-No-Go\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\p5-production-acceptance-P-8ae8d-Registry-来自正式-API-且保持-No-Go\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\..\..\frontend\test-results\p5-production-acceptance-P-8ae8d-Registry-来自正式-API-且保持-No-Go\error-context.md]]
+
+[[ATTACHMENT|..\..\..\..\frontend\test-results\p5-production-acceptance-P-8ae8d-Registry-来自正式-API-且保持-No-Go\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

@@ -1,0 +1,10 @@
+<testsuites id="" name="" tests="3" failures="0" skipped="0" errors="0" time="94.416998">
+<testsuite name="p4-preproduction-oidc.spec.ts" timestamp="2026-08-02T12:36:15.842Z" hostname="" tests="3" failures="0" skipped="0" time="61.053" errors="0">
+<testcase name="真实 OIDC Code + PKCE 登录并读取 P4 正式 API" classname="p4-preproduction-oidc.spec.ts" time="57.107">
+</testcase>
+<testcase name="真实 OIDC 未映射用户在服务端 callback 阶段被拒绝" classname="p4-preproduction-oidc.spec.ts" time="2.014">
+</testcase>
+<testcase name="真实 OIDC 禁用用户无法取得授权码" classname="p4-preproduction-oidc.spec.ts" time="1.932">
+</testcase>
+</testsuite>
+</testsuites>

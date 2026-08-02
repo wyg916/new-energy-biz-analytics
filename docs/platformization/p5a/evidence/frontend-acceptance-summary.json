@@ -1,0 +1,71 @@
+{
+  "evidence_type": "p5a_frontend_and_browser_acceptance",
+  "generated_at": "2026-08-02T12:45:45.7872439Z",
+  "environment": "isolated_p5a_postgresql_and_keycloak_acceptance",
+  "data_classification": "simulated",
+  "e2e_database": {
+    "database": "renewable_alpha",
+    "revision": "p5_0001",
+    "charging_sessions": 300000,
+    "sales_orders": 50000,
+    "sales_order_items": 82514,
+    "source_database_modified": false,
+    "evidence": "e2e-database-preparation.json",
+    "sha256": "ce9e185a3c3f448308ab910da90365f485d3adb7a1dc43cbd70d97b9765310c6"
+  },
+  "docker_smoke": {
+    "tests": 6,
+    "passed": 6,
+    "failed": 0,
+    "evidence": "docker-smoke.json",
+    "sha256": "234c28fed14061e0c2a48f2b5fcdc66b3fcead3e6f31dd7e4cd2d0cb39dd6bc1"
+  },
+  "playwright": {
+    "tests": 27,
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "name": "original_regression",
+        "tests": 23,
+        "evidence": "playwright-original-23-final.xml",
+        "sha256": "5724b81543ef696f3928641951a199df36c2fdf871e4e5a95c44efd309e94064"
+      },
+      {
+        "name": "keycloak_authorization_code_pkce",
+        "tests": 3,
+        "evidence": "playwright-p4-oidc-3.xml",
+        "sha256": "da47f21ecba47d58098ce595239c854204fabb13ccbece225cc1ac21f4acedaf"
+      },
+      {
+        "name": "production_gate_no_go",
+        "tests": 1,
+        "evidence": "playwright-p5-gate-1-final.xml",
+        "sha256": "a6e1474023f5a9095904c9700f870c2cb1cbc7a99bf1a41f8af5bdd122cd610d"
+      }
+    ]
+  },
+  "vitest": {
+    "tests": 3,
+    "passed": 3,
+    "failed": 0,
+    "evidence": "vitest.xml",
+    "sha256": "2aa0a9f8d09adf80fb9adef86b15b687f6a29500a7375117129e2df406452bf4"
+  },
+  "typescript_and_vite_build": {
+    "status": "PASS",
+    "evidence": "frontend-build.txt",
+    "sha256": "042cd93b3256d79a4944179a2b1dd430261fde74c26bfb4e3b3ae394722c36c4"
+  },
+  "npm_audit": {
+    "status": "PASS",
+    "vulnerabilities": 0,
+    "evidence": "npm-audit.json",
+    "sha256": "81db3f9efca17118f351a9abae3e72d062fcc10b68ca604f24becf30ec42830b",
+    "initial_network_error": "read ECONNRESET",
+    "retry_count": 1
+  },
+  "production_release_authorized": false,
+  "production_traffic_switched": false
+}
