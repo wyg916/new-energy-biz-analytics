@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0",
+  "version": "4.0.0-rc.1",
+  "release_id": "REL-8e18dac8-41d9-4d30-945e-8478637fb79e",
+  "environment": "preproduction",
+  "status": "ACTIVE",
+  "manifest_sha256": "a2937a6a7766a072304460ab40b1e12c18f4f040cb04dfb8c62f9d9525fdb186",
+  "acceptance_evidence_hash": "55a72596146b8ed59f5332412d2701cb05f04ed94815bd5041b028fe801fc5ae",
+  "release_candidate_count": 1,
+  "production_gates": {
+    "preproduction_code_complete": true,
+    "preproduction_acceptance_complete": true,
+    "release_candidate_approved": true,
+    "enterprise_idp_approved": false,
+    "external_model_approved": false,
+    "production_change_window_approved": false,
+    "production_release_authorized": false
+  },
+  "production_actions_enabled": false,
+  "query_engine_mode": "SHADOW",
+  "sqlbot_engine_enabled": false,
+  "sqlbot_canary_eligible": false,
+  "data_classification": "simulated",
+  "period_start": "2025-01-01",
+  "period_end_inclusive": "2026-06-30",
+  "secret_values_exposed": false,
+  "result": "PASS_WITH_EXTERNAL_PRODUCTION_GATES"
+}

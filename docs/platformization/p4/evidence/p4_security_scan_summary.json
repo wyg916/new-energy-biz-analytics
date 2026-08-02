@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0",
+  "captured_at": "2026-08-02T07:19:03+08:00",
+  "environment": "preproduction",
+  "data_classification": "simulated",
+  "runtime_build_source_git_sha": "f98fd63ce2c02b918d4b1cc8722033d3a6b300b5",
+  "scanners": {
+    "docker_scout": "Docker Desktop bundled scanner",
+    "trivy": {
+      "version": "0.70.0",
+      "image_digest": "sha256:be1190afcb28352bfddc4ddeb71470835d16462af68d310f9f4bca710961a41e"
+    }
+  },
+  "images": [
+    {
+      "name": "renewable-p4-rc-api:4.0.0-rc.1",
+      "image_id": "sha256:e84913d4dc185829b4a457eb529efb50d6d42190907508276521cfc34ee2bd38",
+      "scanner": "docker_scout",
+      "critical": 0,
+      "high": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "renewable-p4-rc-web:latest",
+      "image_id": "sha256:60942b45e74b986183e965ee3d4c597edbeb2f978d56a9b4edfaf1faf924ccc1",
+      "scanner": "docker_scout",
+      "critical": 0,
+      "high": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "renewable-p4-rc-postgres:16.14",
+      "image_id": "sha256:c29001564bb7d71930ca473ec66bd3210d6a30e66c94e6a1d0d231c189c356e1",
+      "scanner": "docker_scout",
+      "critical": 0,
+      "high": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "redis:7.4.10-alpine",
+      "image_id": "sha256:2a51817f79255c8b69f86a974459c2e0359aff81417d80158f2b9e541e6f4b33",
+      "scanner": "docker_scout",
+      "critical": 0,
+      "high": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "hashicorp/vault:2.0.3",
+      "image_id": "sha256:1747a4ab1e1bea8938269b23827165c5d80eecbdb5c115fd58e6380569537c84",
+      "scanner": "docker_scout",
+      "critical": 0,
+      "high": 1,
+      "status": "PRODUCTION_GATE_OPEN",
+      "finding": "GHSA-hrxh-6v49-42gf in the Vault binary gRPC dependency"
+    },
+    {
+      "name": "renewable-p4-rc-oidc:26.7.0",
+      "image_id": "sha256:554f24ab011a14dd86616d8a62cfed5de3470f02123927326265e457e1c18b55",
+      "scanner": "trivy",
+      "critical": 0,
+      "high": 15,
+      "unique_high": 12,
+      "full_report_sha256": "cc8e9f6618ae4d5a395280f030d2fab02ed9000177e2dc548ae4d19759dbdaf5",
+      "status": "PRODUCTION_GATE_OPEN",
+      "finding_families": ["OpenJDK", "Microsoft JDBC", "PostgreSQL JDBC", "Jackson", "Netty"]
+    },
+    {
+      "name": "dataease/sqlbot:v1.8.0",
+      "registry_digest": "sha256:c4ca3acc34f0c63a64f3f3e7bb909760f17d184959635542278710144347d9e0",
+      "image_id": "sha256:5065baf17703cfad0407261c16d15c0aecb237877011e1603f59fb70a1f58abf",
+      "scanner": "not_executed",
+      "status": "DISABLED_PROFILE_PRODUCTION_GATE_OPEN",
+      "reason": "SQLBot profile is disabled and no authorized external credential exists; the image is inventoried but is not part of the accepted running stack"
+    },
+    {
+      "name": "nginx:1.31.3-alpine",
+      "image_id": "sha256:f0ba77f796e57c6fa89ae7f4fdad1665d6fcbd8e3f211535120542b337f9959e",
+      "scanner": "docker_scout",
+      "critical": 0,
+      "high": 0,
+      "status": "PASS"
+    }
+  ],
+  "tracked_secret_scan": {
+    "high_confidence_matches": 0,
+    "env_files_scanned": false,
+    "secret_values_printed": false,
+    "status": "PASS"
+  },
+  "preproduction_rc_eligible": true,
+  "production_release_authorized": false,
+  "overall_status": "PASS_WITH_PRODUCTION_GATES"
+}

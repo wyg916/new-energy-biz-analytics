@@ -1,0 +1,15 @@
+{
+  "data_classification": "simulated",
+  "disabled_user_denied": true,
+  "flow": "authorization_code_pkce",
+  "forged_identity_successes": 0,
+  "local_bearer_accepted": false,
+  "mapped_login_passed": true,
+  "period_end_inclusive": "2026-06-30",
+  "period_start": "2025-01-01",
+  "playwright_passed": 3,
+  "playwright_total": 3,
+  "provider": "OIDC_PREPROD_KEYCLOAK_26.7.0",
+  "secret_values_exposed": false,
+  "unmapped_user_denied": true
+}

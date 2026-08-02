@@ -1,0 +1,71 @@
+{
+  "api_memory": {
+    "final_rss_bytes": 153190400,
+    "growth_bytes": 1474560,
+    "initial_rss_bytes": 151715840,
+    "sample_count": 6,
+    "sustained_growth_detected": false
+  },
+  "audit_events_lost": false,
+  "authentication_mode": "server_mapped_oidc_session",
+  "concurrency": 2,
+  "configured_duration_seconds": 60,
+  "connection_pool_exhausted": false,
+  "duration_clock": "monotonic",
+  "environment_boundary": "preproduction_not_production_sla",
+  "error_count": 0,
+  "error_rate": 0.0,
+  "evidence_type": "p4_preproduction_capacity_soak",
+  "finished_at": "2026-08-01T23:15:36.912695+00:00",
+  "p50_ms": 63.693,
+  "p95_ms": 667.714,
+  "p99_ms": 1340.992,
+  "postgresql": {
+    "final": {
+      "connections": 10,
+      "governance_audit_events": 4581,
+      "size_bytes": 261012503
+    },
+    "growth_bytes": 819200,
+    "initial": {
+      "connections": 9,
+      "governance_audit_events": 4541,
+      "size_bytes": 260193303
+    }
+  },
+  "redis": {
+    "final": {
+      "connected_clients": 1,
+      "ping": true
+    },
+    "initial": {
+      "connected_clients": 1,
+      "ping": true
+    }
+  },
+  "run_id": "P4-SOAK-20260801T231436Z",
+  "secret_values_exposed": false,
+  "security_violation_successes": 0,
+  "sqlbot_failure_impacted_deterministic_answers": 0,
+  "started_at": "2026-08-01T23:14:36.434310+00:00",
+  "status": "PASS",
+  "status_counts": {
+    "200": 877
+  },
+  "timeout_count": 0,
+  "timeout_rate": 0.0,
+  "token_refresh_seconds": 300,
+  "total_requests": 877,
+  "workloads": {
+    "audit_release_credential": 135,
+    "deterministic": 136,
+    "identity": 136,
+    "memory": 40,
+    "oidc": 40,
+    "policy": 40,
+    "preproduction": 135,
+    "rag": 40,
+    "skill": 135,
+    "sqlbot_shadow_fallback": 40
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "actual_external_requests": 0,
+  "cost": null,
+  "credential_values_exposed": false,
+  "evaluated_at": "2026-08-01T18:43:01.523850+00:00",
+  "evidence_type": "p4_sqlbot_secure_external_reevaluation_gate",
+  "field_hallucinations": null,
+  "guard_pass_rate": null,
+  "model_response_reused": false,
+  "p50_latency_ms": null,
+  "p95_latency_ms": null,
+  "provider_errors": 0,
+  "query_engine_mode": "SHADOW",
+  "reason": "No explicitly authorized external model CredentialReference was supplied.",
+  "representative_golden_30": {
+    "requested": 0,
+    "status": "NOT_EXECUTED",
+    "successful": 0
+  },
+  "request_gate": "EXITED_BEFORE_NETWORK_REQUEST",
+  "run_id": "P4-SQLBOT-EXTERNAL-GATE-20260801",
+  "security_violations": 0,
+  "shadow_20": {
+    "requested": 0,
+    "status": "NOT_EXECUTED",
+    "successful": 0
+  },
+  "smoke_10": {
+    "requested": 0,
+    "status": "NOT_EXECUTED",
+    "successful": 0
+  },
+  "source_binding_version": "P4-SIMULATED-SOURCE-BINDING-v1",
+  "sql_generation_rate": null,
+  "sqlbot_canary_eligible": false,
+  "sqlbot_engine_enabled": false,
+  "sqlbot_runtime_verified": false,
+  "status": "CONDITIONAL",
+  "table_hallucinations": null,
+  "timeouts": 0,
+  "token_usage": null
+}

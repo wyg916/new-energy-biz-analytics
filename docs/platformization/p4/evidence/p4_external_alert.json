@@ -1,0 +1,13 @@
+{
+  "circuit_breaker_tested": true,
+  "data_classification": "simulated",
+  "delivery_status": "DELIVERED",
+  "destination": "local_preproduction_test_receiver",
+  "external_enterprise_messages_sent": 0,
+  "idempotency_tested": true,
+  "payload_redacted": true,
+  "retry_and_timeout_tested": true,
+  "secret_values_exposed": false,
+  "signature_verified": true,
+  "status": "PASS"
+}

@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "captured_at": "2026-08-02T07:24:24+08:00",
+  "environment": "preproduction",
+  "data": {
+    "classification": "simulated",
+    "period_start": "2025-01-01",
+    "period_end_inclusive": "2026-06-30",
+    "charging_sessions": 300000,
+    "sales_orders": 50000,
+    "sales_order_items": 82514,
+    "core_metric_definitions": 15,
+    "published_metric_structure": "15+12"
+  },
+  "migration_head": "p4_0001",
+  "scenario_packages": [
+    {
+      "scenario_id": "charging_ops",
+      "version": "1.0.0",
+      "status": "ACTIVE",
+      "checksum": "9d404ecb43ad2ffcfcc67d2f2a08da6870edbcffd75176ecf7a6157fd162dae1"
+    },
+    {
+      "scenario_id": "sales_ops",
+      "version": "1.0.0",
+      "status": "ACTIVE",
+      "checksum": "edb998c1ff630cd6a78478abee5b8246029aa00768869e33bbb87d62f82be713"
+    }
+  ],
+  "semantic_models": [
+    {
+      "scenario_id": "charging_ops",
+      "version": "0.1.0",
+      "status": "ACTIVE",
+      "checksum": "b4f2304247f05fb3dd6e6a3bb65223fc676d9919a924aabe036dc3d42c811b93"
+    },
+    {
+      "scenario_id": "sales_ops",
+      "version": "1.0.0",
+      "status": "ACTIVE",
+      "checksum": "32594ddf9be390c3cccac5750de2af83015f78007339541adaa9e0cc16b96bb4"
+    }
+  ],
+  "rag_release": {
+    "mode": "keyword_full_text_only",
+    "approved_sources_manifest_sha256": "4fdfed30236526e1bd46ffd906871900ac9f17ab6a94946ab6a919f7a20150d0",
+    "published_database_document_versions": 0,
+    "vector_status": "PENDING"
+  },
+  "skills": {
+    "active_enabled": 8,
+    "version": "1.0.0"
+  },
+  "procedures": {
+    "active": 5,
+    "version": "1.0.0"
+  },
+  "policy_bundle": {
+    "policy_code": "p3-platform-scope",
+    "version": 1,
+    "status": "ACTIVE",
+    "effect": "ALLOW"
+  },
+  "sqlbot_source_bindings": [
+    {"scenario_id": "charging_ops", "version": 1, "status": "ACTIVE"},
+    {"scenario_id": "sales_ops", "version": 1, "status": "ACTIVE"}
+  ],
+  "credential_reference_metadata": 9,
+  "datasource_governance_records": 3,
+  "query_engine_mode": "SHADOW",
+  "sqlbot_engine_enabled": false,
+  "sqlbot_canary_eligible": false,
+  "production_release_authorized": false,
+  "status": "VERIFIED"
+}

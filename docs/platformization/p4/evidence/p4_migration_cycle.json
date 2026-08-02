@@ -1,0 +1,15 @@
+{
+  "cycle": [
+    "base",
+    "p4_0001",
+    "base",
+    "p4_0001"
+  ],
+  "final_current": "p4_0001",
+  "final_heads": [
+    "p4_0001"
+  ],
+  "source_volume_deleted": false,
+  "status": "PASS",
+  "temporary_database_removed": true
+}

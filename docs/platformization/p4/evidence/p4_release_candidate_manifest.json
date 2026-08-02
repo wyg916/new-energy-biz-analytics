@@ -1,0 +1,102 @@
+{
+  "schema_version": "1.0",
+  "version": "4.0.0-rc.1",
+  "git_sha": "aabdeed102b39d177cb4edecb2cc813b829c4d61",
+  "environment": "preproduction",
+  "production_release_authorized": false,
+  "image_digests": {
+    "api": "sha256:e84913d4dc185829b4a457eb529efb50d6d42190907508276521cfc34ee2bd38",
+    "web": "sha256:60942b45e74b986183e965ee3d4c597edbeb2f978d56a9b4edfaf1faf924ccc1",
+    "postgresql": "sha256:c29001564bb7d71930ca473ec66bd3210d6a30e66c94e6a1d0d231c189c356e1",
+    "redis": "sha256:2a51817f79255c8b69f86a974459c2e0359aff81417d80158f2b9e541e6f4b33",
+    "proxy_nginx": "sha256:f0ba77f796e57c6fa89ae7f4fdad1665d6fcbd8e3f211535120542b337f9959e",
+    "oidc_keycloak": "sha256:554f24ab011a14dd86616d8a62cfed5de3470f02123927326265e457e1c18b55",
+    "vault": "sha256:1747a4ab1e1bea8938269b23827165c5d80eecbdb5c115fd58e6380569537c84",
+    "sqlbot_disabled_profile": "dataease/sqlbot@sha256:c4ca3acc34f0c63a64f3f3e7bb909760f17d184959635542278710144347d9e0"
+  },
+  "migration_head": "p4_0001",
+  "config_template": {
+    "version": "p4-preproduction-v1",
+    "path": "deploy/preproduction/compose.yaml",
+    "sha256": "7eac848fdb1e6a57257205edf27e1f448ecd09c53419b9ddf1c5f72483ba9da8"
+  },
+  "scenario_packages": [
+    {"scenario_id": "charging_ops", "version": "1.0.0", "status": "ACTIVE", "checksum": "9d404ecb43ad2ffcfcc67d2f2a08da6870edbcffd75176ecf7a6157fd162dae1"},
+    {"scenario_id": "sales_ops", "version": "1.0.0", "status": "ACTIVE", "checksum": "edb998c1ff630cd6a78478abee5b8246029aa00768869e33bbb87d62f82be713"}
+  ],
+  "semantic_models": [
+    {"scenario_id": "charging_ops", "version": "0.1.0", "status": "ACTIVE", "checksum": "b4f2304247f05fb3dd6e6a3bb65223fc676d9919a924aabe036dc3d42c811b93"},
+    {"scenario_id": "sales_ops", "version": "1.0.0", "status": "ACTIVE", "checksum": "32594ddf9be390c3cccac5750de2af83015f78007339541adaa9e0cc16b96bb4"}
+  ],
+  "rag_release": {
+    "mode": "keyword_full_text_only",
+    "approved_sources_manifest_sha256": "4fdfed30236526e1bd46ffd906871900ac9f17ab6a94946ab6a919f7a20150d0",
+    "published_database_document_versions": 0,
+    "vector_status": "PENDING"
+  },
+  "skill_procedure_releases": {
+    "skills": {"active_enabled": 8, "version": "1.0.0"},
+    "procedures": {"active": 5, "version": "1.0.0"}
+  },
+  "policy_bundle": {"policy_code": "p3-platform-scope", "version": 1, "status": "ACTIVE", "effect": "ALLOW"},
+  "sqlbot_source_binding": {
+    "charging_ops": {"version": 1, "status": "ACTIVE"},
+    "sales_ops": {"version": 1, "status": "ACTIVE"},
+    "external_runtime_status": "CONDITIONAL",
+    "actual_external_requests": 0
+  },
+  "sbom": {
+    "type": "dependency_inventory",
+    "path": "docs/platformization/p4/evidence/p4_dependency_inventory.json",
+    "sha256": "759433909216d5f02d0dedd9f1b0087e72809fed8e68addb895655fb53ba0283"
+  },
+  "security_scan": {
+    "path": "docs/platformization/p4/evidence/p4_security_scan_summary.json",
+    "sha256": "2bfb04a2e78d463d4388fde4d89154db52e5d3cd32666e5e23d0f08c3f1053aa",
+    "status": "PASS_WITH_PRODUCTION_GATES"
+  },
+  "test_matrix": {
+    "path": "docs/platformization/p4/12_TEST_AND_ACCEPTANCE_MATRIX.md",
+    "sha256": "128ca8cd22cb79f9e88322b5253d518630cbec93386ba2a38c30ceed53074dc8",
+    "status": "PASS_WITH_EXTERNAL_GATES"
+  },
+  "known_risks": [
+    "Enterprise IdP integration is not approved.",
+    "No authorized external model credential exists; SQLBot 10/30/20 was not executed and the profile remains disabled.",
+    "The disabled SQLBot image is digest-pinned but not vulnerability-scanned in this acceptance.",
+    "Keycloak has 0 Critical and 15 High findings (12 unique); Vault has 0 Critical and 1 High finding.",
+    "RAG vector retrieval remains pending; accepted runtime is keyword-only.",
+    "Real customer data, enterprise alerting, production capacity/SLA, and change window are not authorized."
+  ],
+  "rollback_steps": [
+    "Create and verify a logical PostgreSQL backup in an isolated temporary database.",
+    "Stop proxy, web, API, and backup services without deleting volumes.",
+    "Revert P4 commits in reverse order; never use reset --hard or force push.",
+    "Run the verified Alembic downgrade only after explicit operator confirmation.",
+    "Restore the previous configuration, release record, and SQLBot source binding through governed version history."
+  ],
+  "startup_steps": [
+    "Run scripts/Invoke-P4Preproduction.ps1 -Action start.",
+    "Verify migrate/init tasks exit 0 and API, Web, PostgreSQL, Redis, Vault, Keycloak, and proxy readiness.",
+    "Verify migration head p4_0001 and simulated-data global runtime status."
+  ],
+  "acceptance_steps": [
+    "Run the real OIDC Code + PKCE Playwright acceptance.",
+    "Run secret rotation, datasource lifecycle, SQLBot external gate, failure recovery, migration, and backup restore acceptance.",
+    "Run the 60-second capacity check and the 1800-second OIDC soak.",
+    "Validate the manifest, then explicitly activate the single preproduction release candidate."
+  ],
+  "production_gates": {
+    "enterprise_idp_approved": false,
+    "external_model_approved": false,
+    "sqlbot_image_security_approved": false,
+    "keycloak_image_security_approved": false,
+    "vault_image_security_approved": false,
+    "rag_vector_approved": false,
+    "real_customer_data_approved": false,
+    "enterprise_alerting_approved": false,
+    "production_capacity_sla_approved": false,
+    "production_change_window_approved": false,
+    "production_release_authorized": false
+  }
+}
