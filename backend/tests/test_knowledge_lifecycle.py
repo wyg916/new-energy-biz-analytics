@@ -171,7 +171,7 @@ def test_only_authorized_current_published_version_is_retrieved(db_session) -> N
     assert all(item.document_version_id == version.document_version_id for item in allowed.citations)
     assert denied_role.citations == ()
     assert denied_scenario.citations == ()
-    assert allowed.vector_status == "VECTOR_PENDING"
+    assert allowed.vector_status == "VECTOR_DEFERRED_POST_P5"
     assert allowed.retrieval_mode == "keyword_full_text_only"
 
 

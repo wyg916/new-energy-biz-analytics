@@ -165,7 +165,7 @@ export function KnowledgePage({ token }: { token: string }) {
       <article><span>Knowledge Service</span><b>{runtime?.knowledge_service || '检查中'}</b><small>独立生命周期与权限边界</small></article>
       <article><span>Model Gateway</span><b className={runtime?.model_gateway.status === 'READY' ? 'ok' : 'pending'}>{runtime?.model_gateway.status || '检查中'}</b><small>凭据仅显示引用，不返回值</small></article>
       <article><span>SQLBot Runtime</span><b className="pending">{runtime?.sqlbot_runtime || '检查中'}</b><small>固定 v1.8.0；不可用时确定性引擎不受影响</small></article>
-      <article><span>RAG 检索</span><b>{runtime?.retrieval_mode || '检查中'}</b><small>{runtime?.vector_status || '检查中'}</small></article>
+      <article><span>RAG 检索</span><b>{runtime?.retrieval_mode || '检查中'}</b><small>{runtime?.vector_status || '检查中'} · P5 keyword-only 正式合同</small></article>
     </section>
 
     {error && <div className="notice error">{error}</div>}
@@ -183,7 +183,7 @@ export function KnowledgePage({ token }: { token: string }) {
       </article>
 
       <article className="knowledge-card retrieval">
-        <header><div><h2>检索与引用测试</h2><p>权限、场景、状态和有效期在检索前过滤。</p></div><span>{runtime?.vector_status || 'VECTOR_PENDING'}</span></header>
+        <header><div><h2>检索与引用测试</h2><p>权限、场景、状态和有效期在检索前过滤；Vector 已明确延后，不冒充混合检索。</p></div><span>{runtime?.vector_status || 'VECTOR_DEFERRED_POST_P5'}</span></header>
         <textarea value={query} onChange={event => setQuery(event.target.value)} maxLength={1000} />
         <button onClick={() => void testRetrieval()} disabled={loading}>执行受控检索</button>
         {retrieval && <div className="retrieval-result"><p><b>{retrieval.citations.length}</b> 个引用 · {retrieval.retrieval_mode}</p>{retrieval.warnings.map((item: string) => <small key={item}>{item}</small>)}{retrieval.citations.map((item: any) => <details key={item.chunk_id}><summary>{item.title} · {item.section || '未标注章节'} · {Number(item.retrieval_score).toFixed(3)}</summary><p>{item.citation_text}</p><code>{item.document_version_id} / {item.chunk_id}</code></details>)}</div>}

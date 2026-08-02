@@ -40,7 +40,7 @@ def knowledge() -> KnowledgeEvidence:
         ),),
         citations=(citation(),),
         retrieval_mode="keyword_full_text_only",
-        vector_status="VECTOR_PENDING",
+        vector_status="VECTOR_DEFERRED_POST_P5",
         warnings=("向量检索待启用。",),
     )
 

@@ -8,7 +8,7 @@ test('企业知识库展示受控生命周期与真实运行状态', async ({ pa
   await page.getByRole('button', { name: '企业知识库' }).click()
   await expect(page.getByRole('heading', { name: '企业知识库', exact: true })).toBeVisible()
   await expect(page.getByRole('heading', { name: '知识源接入' })).toBeVisible()
-  await expect(page.getByText('VECTOR_PENDING', { exact: true }).first()).toBeVisible()
+  await expect(page.getByText(/VECTOR_DEFERRED_POST_P5/).first()).toBeVisible()
   await expect(page.getByRole('button', { name: '本地文件上传未开放' })).toBeDisabled()
   await expect(page.getByText('4 份未跟踪用户源文档不会被扫描、读取或自动进入 RAG。')).toBeVisible()
 })

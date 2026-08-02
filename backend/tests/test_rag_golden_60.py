@@ -319,6 +319,6 @@ def test_rag_golden_60_manifest_and_runtime_evaluation(db_session, tmp_path) -> 
         "p50_ms": p50,
         "p95_ms": p95,
         "token_usage": 0,
-        "vector_status": "VECTOR_PENDING",
+        "vector_status": "VECTOR_DEFERRED_POST_P5",
     }
     print("RAG_GOLDEN_60_METRICS=" + json.dumps(metrics, ensure_ascii=False, sort_keys=True))

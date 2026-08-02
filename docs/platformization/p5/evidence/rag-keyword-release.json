@@ -1,0 +1,12 @@
+{
+  "decision": "KEYWORD_ONLY",
+  "evidence_type": "p5_rag_release_decision",
+  "permission_boundary": "tenant_workspace_scenario_before_retrieval",
+  "production_blocker": false,
+  "prompt_injection_policy": "retrieved_content_is_untrusted_evidence_only",
+  "rag_runtime_mode": "KEYWORD_ONLY",
+  "rag_vector_released": false,
+  "status": "PASSED",
+  "vector_status": "VECTOR_DEFERRED_POST_P5",
+  "verified_at": "2026-08-02T13:50:00+08:00"
+}

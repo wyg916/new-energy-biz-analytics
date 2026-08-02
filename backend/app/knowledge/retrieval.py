@@ -13,7 +13,7 @@ from app.knowledge.reranker import rank_candidates
 from app.knowledge.security import prompt_injection_detected
 from app.models.knowledge import KnowledgeRetrievalEvent
 
-VECTOR_STATUS = "VECTOR_PENDING"
+VECTOR_STATUS = "VECTOR_DEFERRED_POST_P5"
 RETRIEVAL_MODE = "keyword_full_text_only"
 
 
@@ -51,7 +51,7 @@ class KnowledgeRetrievalService:
         citations = tuple(citation_from_ranked(item, at_time=now) for item in ranked)
         latency_ms = max(0, int((time.perf_counter() - started) * 1000))
         warnings = [
-            "向量扩展当前不可用；结果仅来自关键词/全文检索，未标记为混合检索。",
+            "P5 正式产品合同为 keyword-only；Vector 延后到后续版本，结果未标记为向量或混合检索。",
         ]
         if injection_rejections:
             warnings.append(f"已隔离 {injection_rejections} 个疑似 Prompt Injection 证据块。")
