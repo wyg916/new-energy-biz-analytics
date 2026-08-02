@@ -1,0 +1,39 @@
+{
+  "checked_at": "2026-08-02T14:30:00Z",
+  "method": "read-only official GitHub releases API",
+  "releases": [
+    {
+      "component": "Keycloak",
+      "repository": "keycloak/keycloak",
+      "current_image_version": "26.7.0",
+      "latest_release": "26.7.0",
+      "published_at": "2026-07-09T06:58:13Z",
+      "url": "https://github.com/keycloak/keycloak/releases/tag/26.7.0",
+      "compatible_upgrade_available": false,
+      "decision": "Keep 26.7.0 runtime and BLOCK security gate; no newer supported release was available."
+    },
+    {
+      "component": "HashiCorp Vault",
+      "repository": "hashicorp/vault",
+      "current_image_version": "2.0.3",
+      "latest_release": "v2.0.3",
+      "published_at": "2026-06-17T20:23:38Z",
+      "url": "https://github.com/hashicorp/vault/releases/tag/v2.0.3",
+      "compatible_upgrade_available": false,
+      "decision": "Keep 2.0.3 runtime and BLOCK security gate; no newer supported release was available."
+    },
+    {
+      "component": "DataEase SQLBot",
+      "repository": "dataease/SQLBot",
+      "current_image_version": "v1.8.0",
+      "latest_release": "v1.10.0",
+      "published_at": "2026-07-16T02:11:08Z",
+      "url": "https://github.com/dataease/SQLBot/releases/tag/v1.10.0",
+      "release_notes_include_security_fixes": true,
+      "compatible_upgrade_available": null,
+      "decision": "Do not replace the frozen digest without API, migration, image and offline/runtime compatibility acceptance; keep SQLBot disabled and gate BLOCKED."
+    }
+  ],
+  "enterprise_external_gates_contacted": false,
+  "credentials_used": false
+}
