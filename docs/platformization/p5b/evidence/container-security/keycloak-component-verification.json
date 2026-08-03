@@ -1,0 +1,40 @@
+{
+  "captured_at": "2026-08-03T13:59:38.311947+00:00",
+  "components": [
+    {
+      "actual_pom_version": "2.21.4",
+      "actual_sha256": "4b40a06396f239f8de2da57419adde6e94e5edc18a2171d471ea05eeed4e5c2d",
+      "component": "jackson-core",
+      "expected_fixed_version": "2.21.4",
+      "expected_sha256": "4b40a06396f239f8de2da57419adde6e94e5edc18a2171d471ea05eeed4e5c2d",
+      "filename_version_is_stale": true,
+      "image_path": "/opt/keycloak/lib/lib/main/com.fasterxml.jackson.core.jackson-core-2.21.2.jar",
+      "scanner_findings_disposition": [
+        "GHSA-r7wm-3cxj-wff9"
+      ],
+      "status": "PASS"
+    },
+    {
+      "actual_pom_version": "2.21.4",
+      "actual_sha256": "3888e9e69ab66fbacaacc9aea0e9ffbf15368288e4aca468b024dba11c09fbf9",
+      "component": "jackson-databind",
+      "expected_fixed_version": "2.21.4",
+      "expected_sha256": "3888e9e69ab66fbacaacc9aea0e9ffbf15368288e4aca468b024dba11c09fbf9",
+      "filename_version_is_stale": true,
+      "image_path": "/opt/keycloak/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar",
+      "scanner_findings_disposition": [
+        "CVE-2026-54512",
+        "CVE-2026-54513"
+      ],
+      "status": "PASS"
+    }
+  ],
+  "evidence_type": "p5b_keycloak_actual_component_verification",
+  "image": "renewable-p5b-keycloak:26.7.0-hardened",
+  "image_id": "sha256:11bf9869b68206e486c0d4d27d3d22f9fa4411575bfa0a8fc018ecf33505e051",
+  "interpretation": "The three Jackson High findings are stale Quarkus filename/metadata detections; the shipped JAR bytes and embedded Maven versions are patched. This evidence does not disposition the separate OpenJDK High finding.",
+  "schema_version": "1.0",
+  "severity_lowering": false,
+  "status": "PASS",
+  "waiver": false
+}
