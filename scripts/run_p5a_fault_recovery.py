@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import ssl
 import subprocess
 import time
@@ -15,16 +16,16 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE_COMPOSE = ROOT / "deploy" / "preproduction" / "compose.yaml"
-OVERRIDE_COMPOSE = ROOT / "deploy" / "production-acceptance" / "p5a.override.yaml"
-PROJECT = "renewable-p5a-remediation"
-BASE_URL = "https://127.0.0.1:8445/api/v1"
-HOST = "p5a.localhost"
+OVERRIDE_COMPOSE = Path(os.getenv(
+    "ACCEPTANCE_OVERRIDE_COMPOSE",
+    str(ROOT / "deploy" / "production-acceptance" / "p5a.override.yaml"),
+))
+PROJECT = os.getenv("ACCEPTANCE_COMPOSE_PROJECT", "renewable-p5a-remediation")
+BASE_URL = os.getenv("ACCEPTANCE_API_BASE_URL", "https://127.0.0.1:8445/api/v1")
+HOST = os.getenv("ACCEPTANCE_HOST", "p5a.localhost")
+SCOPE = os.getenv("ACCEPTANCE_SCOPE", "p5a")
 CONTAINERS = {
-    "api": "renewable-p5a-remediation-api-1",
-    "redis": "renewable-p5a-remediation-redis-1",
-    "db": "renewable-p5a-remediation-db-1",
-    "vault": "renewable-p5a-remediation-vault-1",
-    "oidc": "renewable-p5a-remediation-oidc-1",
+    service: f"{PROJECT}-{service}-1" for service in ("api", "redis", "db", "vault", "oidc")
 }
 
 
@@ -237,7 +238,7 @@ def acceptance_identity() -> tuple[str, str]:
         "print(json.dumps({'token': token, 'session_id': session_id}))"
     )
     output = command(
-        "docker", "exec", "renewable-p5a-remediation-api-1",
+        "docker", "exec", CONTAINERS["api"],
         "python", "scripts/p4_entrypoint.py", "python", "-c", code,
         capture=True,
     )
@@ -255,7 +256,7 @@ def revoke_acceptance_session(session_id: str) -> None:
         "print({'session_revoked': True})"
     )
     command(
-        "docker", "exec", "renewable-p5a-remediation-api-1",
+        "docker", "exec", CONTAINERS["api"],
         "python", "scripts/p4_entrypoint.py", "python", "-c", code,
         capture=True,
     )
@@ -266,7 +267,7 @@ def main() -> None:
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     if status("/health/ready") != 200 or status("/health") != 200:
-        raise SystemExit("P5A readiness and liveness must be healthy before fault injection")
+        raise SystemExit(f"{SCOPE.upper()} readiness and liveness must be healthy before fault injection")
     started_at = datetime.now(UTC)
     global_restarts_before = {service: restart_count(service) for service in CONTAINERS}
     token, session_id = acceptance_identity()
@@ -291,7 +292,8 @@ def main() -> None:
         governance_after = governance_counts()
     finally:
         revoke_acceptance_session(session_id)
-    sqlbot_containers = compose("ps", "-q", "sqlbot", capture=True).splitlines()
+    running_services = compose("ps", "--services", capture=True).splitlines()
+    sqlbot_containers = [service for service in running_services if service == "sqlbot"]
     global_restarts_after = {service: restart_count(service) for service in CONTAINERS}
     global_restart_changes = {
         service: {
@@ -359,7 +361,7 @@ def main() -> None:
         and fallback["sqlbot_container_count"] == 0
         and fallback["sqlbot_engine_enabled"] is False
         and fallback["sqlbot_canary_eligible"] is False
-        and fallback["rag_sqlbot_runtime"] == "RUNTIME_PENDING"
+        and fallback["rag_sqlbot_runtime"] in {"RUNTIME_PENDING", "NOT_INCLUDED_IN_THIS_RELEASE"}
         and fallback["sqlbot_failure_impacted_primary_answers"] == 0
         and governance["audit_event_delta"] > 0
         and governance["security_alert_count_preserved"]
@@ -367,9 +369,9 @@ def main() -> None:
         and not any(item["unexpected"] for item in global_restart_changes.values())
     )
     result = {
-        "evidence_type": "p5a_fault_recovery",
+        "evidence_type": f"{SCOPE}_fault_recovery",
         "status": "PASS" if passed else "FAIL",
-        "environment": "P5A production-acceptance, not production",
+        "environment": f"{SCOPE.upper()} production-acceptance, not production",
         "data_classification": "simulated",
         "started_at": started_at.isoformat(),
         "finished_at": datetime.now(UTC).isoformat(),

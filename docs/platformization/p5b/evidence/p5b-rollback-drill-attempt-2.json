@@ -1,0 +1,89 @@
+{
+  "actual_attempt": {
+    "failure_classification": "MEASUREMENT_DEFECT_NOT_ROLLBACK_DEFECT",
+    "original_status": "FAIL",
+    "path": "docs/platformization/p5b/evidence/p5b-rollback-drill-attempt-1.json",
+    "recovery_seconds": 143.031,
+    "rollback_seconds": 410.625,
+    "sha256": "59ec8b7eb775652e014e5fa87e44435497af4bbf2735c3ad8a832f21c31abb6c"
+  },
+  "actual_rollback_invariants_passed": true,
+  "corrected_probes": {
+    "previous_api_image": {
+      "configured_image": "renewable-p5a-api:5.0.0-p5a",
+      "image_id": "sha256:d413e1427d5b470b862a8bc21800ea053f34c7435f2f0d91dff9f9c037a0b432"
+    },
+    "previous_contract": {
+      "all_http_200": true,
+      "deterministic_engine": "deterministic",
+      "http_statuses": {
+        "deterministic_query": 200,
+        "gates": 200,
+        "knowledge": 200,
+        "memory": 200,
+        "skills": 200
+      },
+      "query_completed": true,
+      "sqlbot_runtime": "RUNTIME_PENDING"
+    },
+    "previous_ready_seconds": 13.547,
+    "recovered_api_image": {
+      "configured_image": "renewable-p5b-api:4.0.0-rc.3",
+      "image_id": "sha256:62c8f0f003fdccd0e030f5628759f5f24d938de1064119883c7a3fa6d74dd96f"
+    },
+    "recovered_contract": {
+      "all_http_200": true,
+      "deterministic_engine": "deterministic",
+      "http_statuses": {
+        "deterministic_query": 200,
+        "gates": 200,
+        "knowledge": 200,
+        "memory": 200,
+        "skills": 200
+      },
+      "query_completed": true,
+      "sqlbot_runtime": "NOT_INCLUDED_IN_THIS_RELEASE"
+    },
+    "recovered_ready_seconds": 6.594
+  },
+  "database": {
+    "changed_protected_tables_under_raw_hash": [
+      "scenario_package_release"
+    ],
+    "core_business_hash_preserved": true,
+    "isolated_migration_cycle_hash_preserved": true,
+    "revisions": [
+      "p5_0001",
+      "p4_0001",
+      "p5_0001"
+    ],
+    "scenario_package_stable_fields_after": {
+      "count": 3,
+      "hash": "cb8193f0f9ec794555224521d8e4a35b"
+    },
+    "scenario_package_stable_fields_before": {
+      "count": 3,
+      "hash": "57b3857744a675356e1dcf29b3cdfe96"
+    },
+    "scenario_package_stable_fields_preserved": false,
+    "temporary_databases_removed": true
+  },
+  "environment": "P5B local preproduction, not production",
+  "evidence_type": "p5b_actual_rollback_drill_adjudication",
+  "finished_at": "2026-08-03T17:31:25.491495+00:00",
+  "probe_corrections": {
+    "memory_query_parameter_added": "scenario_id=charging_ops",
+    "original_failure_is_probe_only": true,
+    "scenario_package_volatile_fields_excluded": [
+      "validation_json",
+      "validated_at"
+    ]
+  },
+  "production_release_authorized": false,
+  "production_traffic_switched": false,
+  "schema_version": "1.0",
+  "secret_values_printed": false,
+  "source_git_sha": "978d5954ba5eb315e78ece6cf3cf8744f2750445",
+  "status": "FAIL",
+  "volumes_deleted": false
+}

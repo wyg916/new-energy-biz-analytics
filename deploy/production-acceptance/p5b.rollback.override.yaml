@@ -1,0 +1,33 @@
+# Controlled previous-version image set used only by the non-destructive P5B
+# rollback drill. The P5B project, network and persistent volumes remain intact.
+services:
+  runtime-bootstrap:
+    image: renewable-p5a-api:5.0.0-p5a
+  db:
+    image: renewable-p5a-postgres:16.14
+  vault-permissions:
+    image: hashicorp/vault:2.0.3
+  vault:
+    image: hashicorp/vault:2.0.3
+  vault-bootstrap:
+    image: renewable-p5a-api:5.0.0-p5a
+  migrate:
+    image: renewable-p5a-migration:5.0.0-p5a
+    environment:
+      RELEASE_VERSION: 4.0.0-rc.2
+  init:
+    image: renewable-p5a-api:5.0.0-p5a
+    environment:
+      RELEASE_VERSION: 4.0.0-rc.2
+  oidc:
+    image: renewable-p5a-keycloak:26.7.0
+  alert-receiver:
+    image: renewable-p5a-alert-receiver:5.0.0-p5a
+  api:
+    image: renewable-p5a-api:5.0.0-p5a
+    environment:
+      RELEASE_VERSION: 4.0.0-rc.2
+  web:
+    image: renewable-p5a-web:5.0.0-p5a
+  backup:
+    image: renewable-p5a-backup:16.14

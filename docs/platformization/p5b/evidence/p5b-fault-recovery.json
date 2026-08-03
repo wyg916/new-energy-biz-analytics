@@ -1,0 +1,154 @@
+{
+  "data_classification": "simulated",
+  "environment": "P5B production-acceptance, not production",
+  "evidence_type": "p5b_fault_recovery",
+  "fallbacks": {
+    "deterministic_answer_completed": true,
+    "deterministic_answer_http_status": 200,
+    "rag_index_unavailable": true,
+    "rag_runtime_mode": "keyword_full_text_only",
+    "rag_sqlbot_runtime": "NOT_INCLUDED_IN_THIS_RELEASE",
+    "rag_vector_status": "VECTOR_DEFERRED_POST_P5",
+    "snapshot_http_status": 200,
+    "sqlbot_canary_eligible": false,
+    "sqlbot_container_count": 0,
+    "sqlbot_engine_enabled": false,
+    "sqlbot_failure_impacted_primary_answers": 0
+  },
+  "finished_at": "2026-08-03T17:01:20.525031+00:00",
+  "global_restart_counts": {
+    "api": {
+      "after": 0,
+      "before": 0,
+      "reset_by_manual_start": false,
+      "unexpected": false
+    },
+    "db": {
+      "after": 0,
+      "before": 0,
+      "reset_by_manual_start": false,
+      "unexpected": false
+    },
+    "oidc": {
+      "after": 0,
+      "before": 0,
+      "reset_by_manual_start": false,
+      "unexpected": false
+    },
+    "redis": {
+      "after": 0,
+      "before": 0,
+      "reset_by_manual_start": false,
+      "unexpected": false
+    },
+    "vault": {
+      "after": 0,
+      "before": 0,
+      "reset_by_manual_start": false,
+      "unexpected": false
+    }
+  },
+  "global_unexpected_restart_count": 0,
+  "governance_observability": {
+    "after": {
+      "governance_audit_events": 59,
+      "legal_holds": 0,
+      "open_security_alerts": 1,
+      "security_alerts": 1
+    },
+    "audit_event_delta": 2,
+    "before": {
+      "governance_audit_events": 57,
+      "legal_holds": 0,
+      "open_security_alerts": 0,
+      "security_alerts": 0
+    },
+    "legal_hold_count_preserved": true,
+    "security_alert_count_preserved": true
+  },
+  "production_release_authorized": false,
+  "production_traffic_switched": false,
+  "secret_values_printed": false,
+  "services": {
+    "db": {
+      "container_healthy_seconds": 5.532,
+      "container_running_before_recovery_seconds": null,
+      "fault_probe": {
+        "citation_count": 0,
+        "controlled_unavailable": true,
+        "fabricated_citation": false,
+        "http_status": 500,
+        "probe": "rag_retrieval_while_database_unavailable"
+      },
+      "liveness_http_status_during_fault": 200,
+      "liveness_process_semantics_preserved": true,
+      "readiness_failed_closed": true,
+      "readiness_failed_seconds": 3.406,
+      "readiness_recovered_seconds": 0.14,
+      "restart_count_after": 0,
+      "restart_count_before": 0,
+      "restart_count_reset_by_manual_start": false,
+      "unexpected_restart": false
+    },
+    "oidc": {
+      "container_healthy_seconds": 20.594,
+      "container_running_before_recovery_seconds": null,
+      "fault_probe": {
+        "controlled_unavailable": true,
+        "http_status": 200,
+        "probe": "oidc_provider_health_while_provider_unavailable",
+        "provider_status": "UNAVAILABLE"
+      },
+      "liveness_http_status_during_fault": 200,
+      "liveness_process_semantics_preserved": true,
+      "readiness_failed_closed": true,
+      "readiness_failed_seconds": 3.438,
+      "readiness_recovered_seconds": 0.281,
+      "restart_count_after": 0,
+      "restart_count_before": 0,
+      "restart_count_reset_by_manual_start": false,
+      "unexpected_restart": false
+    },
+    "redis": {
+      "container_healthy_seconds": 5.391,
+      "container_running_before_recovery_seconds": null,
+      "fault_probe": {
+        "controlled_unavailable": true,
+        "probe": "readiness_and_liveness_only"
+      },
+      "liveness_http_status_during_fault": 200,
+      "liveness_process_semantics_preserved": true,
+      "readiness_failed_closed": true,
+      "readiness_failed_seconds": 5.094,
+      "readiness_recovered_seconds": 0.125,
+      "restart_count_after": 0,
+      "restart_count_before": 0,
+      "restart_count_reset_by_manual_start": false,
+      "unexpected_restart": false
+    },
+    "vault": {
+      "container_healthy_seconds": 0.078,
+      "container_running_before_recovery_seconds": 0.062,
+      "fault_probe": {
+        "error_code": "VAULT_AUTH_FAILED",
+        "fail_closed": true,
+        "plaintext_fallback_used": false,
+        "probe": "credential_reference_while_vault_unavailable",
+        "secret_values_printed": false
+      },
+      "liveness_http_status_during_fault": 200,
+      "liveness_process_semantics_preserved": true,
+      "readiness_failed_closed": true,
+      "readiness_failed_seconds": 3.391,
+      "readiness_recovered_seconds": 0.094,
+      "restart_count_after": 0,
+      "restart_count_before": 0,
+      "restart_count_reset_by_manual_start": false,
+      "unexpected_restart": false
+    }
+  },
+  "source_database_reinitialized": false,
+  "started_at": "2026-08-03T16:58:36.043709+00:00",
+  "status": "PASS",
+  "volumes_deleted": false
+}

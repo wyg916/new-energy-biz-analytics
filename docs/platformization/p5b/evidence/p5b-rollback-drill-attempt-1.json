@@ -1,0 +1,488 @@
+{
+  "artifacts_sha256": {
+    "policy_bundle": "e06ddf9d39bcd09dee449450377d3099f477cb2da8e75ff885d78c9aa4474f42",
+    "rag_release": "056c6d9bed581336b6a5c651b02062a6128c1ed16e8e5ba840d6f7310e743ea9",
+    "scenario_contract": "6f0dbd4f8bb182616db6d864e8ee0c883d6d2affc66208a5dee246e8b5a7fc20",
+    "semantic_model": "d755db1b9f6d2e1139a8d25cd7ade70f596c83c9e599623593cafdcc98a36ab0"
+  },
+  "audit_history_deleted_from_source": false,
+  "backup": {
+    "path": "/backups/p5b-rollback-20260803T170232Z.dump",
+    "sha256": "ea252f010f1aa4d7f4104bf5050405f7c338fbc8486f0d7ec5d98a5f55bff921",
+    "size_bytes": 16967868
+  },
+  "configuration_sha256": {
+    "current": "3513aceaf605a5bb87b601b77df74d3fda8fac811e0edce45c91dae39477b58f",
+    "previous": "c0e4bf47b1d7098038ac36d7b517aa50889231c13ee0d3542e4b72182bc55727"
+  },
+  "current_ready_seconds": 0.109,
+  "database": {
+    "isolated_clone_after": {
+      "core_business_sha256": "fbf102e5be43cda26aab97b2c47750ac74f4a3dc5341f8cfa26a258b10ac067d",
+      "protected_metadata_sha256": "e13193638b877fd2ed7b7d17f1f39c299cff08fc2a4e2f9f11c8194e3f3157cd",
+      "sha256": "d23be7d36d20fa3095bed813b4e42ec055e69cc834331f5c3a651dfd06798a87",
+      "tables": {
+        "credential_reference": {
+          "count": 10,
+          "hash": "895ccfb470dbda78532bd04766bbf7ea"
+        },
+        "fact_charging_session": {
+          "count": 300000,
+          "hash": "9a618107ffc710de0b7e0fb7b13cd851"
+        },
+        "governance_policy": {
+          "count": 1,
+          "hash": "5c66ff9296d16a2205c6087cd2f5dedc"
+        },
+        "knowledge_document": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "knowledge_document_version": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "memory_record": {
+          "count": 1,
+          "hash": "fe69ba622f363876432e0b24fade06a5"
+        },
+        "platform_release": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "production_gate_history": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "production_gate_registry": {
+          "count": 28,
+          "hash": "a7caa471c4470dea0ec635c457a73cca"
+        },
+        "release_record": {
+          "count": 8,
+          "hash": "9464d24d118ab76c48d63fb60b593c6a"
+        },
+        "sales_order": {
+          "count": 50000,
+          "hash": "4ef2664497d81b77da073c69a9afd388"
+        },
+        "sales_order_item": {
+          "count": 82514,
+          "hash": "ea26887fa85adae73476a65b3e5fc33f"
+        },
+        "scenario_package_release": {
+          "count": 3,
+          "hash": "fa30d9764ead5df3f51b704aa9b9d5ed"
+        },
+        "semantic_model": {
+          "count": 2,
+          "hash": "1f67789f4e2782a5ad09f7ad32260064"
+        },
+        "semantic_model_version": {
+          "count": 2,
+          "hash": "81869168269b41b300913d1d8ed1e57e"
+        },
+        "skill_definition": {
+          "count": 8,
+          "hash": "d9750bb4e1be79eee084cfca05ff6502"
+        }
+      }
+    },
+    "isolated_clone_before": {
+      "core_business_sha256": "fbf102e5be43cda26aab97b2c47750ac74f4a3dc5341f8cfa26a258b10ac067d",
+      "protected_metadata_sha256": "e13193638b877fd2ed7b7d17f1f39c299cff08fc2a4e2f9f11c8194e3f3157cd",
+      "sha256": "d23be7d36d20fa3095bed813b4e42ec055e69cc834331f5c3a651dfd06798a87",
+      "tables": {
+        "credential_reference": {
+          "count": 10,
+          "hash": "895ccfb470dbda78532bd04766bbf7ea"
+        },
+        "fact_charging_session": {
+          "count": 300000,
+          "hash": "9a618107ffc710de0b7e0fb7b13cd851"
+        },
+        "governance_policy": {
+          "count": 1,
+          "hash": "5c66ff9296d16a2205c6087cd2f5dedc"
+        },
+        "knowledge_document": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "knowledge_document_version": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "memory_record": {
+          "count": 1,
+          "hash": "fe69ba622f363876432e0b24fade06a5"
+        },
+        "platform_release": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "production_gate_history": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "production_gate_registry": {
+          "count": 28,
+          "hash": "a7caa471c4470dea0ec635c457a73cca"
+        },
+        "release_record": {
+          "count": 8,
+          "hash": "9464d24d118ab76c48d63fb60b593c6a"
+        },
+        "sales_order": {
+          "count": 50000,
+          "hash": "4ef2664497d81b77da073c69a9afd388"
+        },
+        "sales_order_item": {
+          "count": 82514,
+          "hash": "ea26887fa85adae73476a65b3e5fc33f"
+        },
+        "scenario_package_release": {
+          "count": 3,
+          "hash": "fa30d9764ead5df3f51b704aa9b9d5ed"
+        },
+        "semantic_model": {
+          "count": 2,
+          "hash": "1f67789f4e2782a5ad09f7ad32260064"
+        },
+        "semantic_model_version": {
+          "count": 2,
+          "hash": "81869168269b41b300913d1d8ed1e57e"
+        },
+        "skill_definition": {
+          "count": 8,
+          "hash": "d9750bb4e1be79eee084cfca05ff6502"
+        }
+      }
+    },
+    "isolated_clone_downgraded": {
+      "core_business_sha256": "fbf102e5be43cda26aab97b2c47750ac74f4a3dc5341f8cfa26a258b10ac067d",
+      "protected_metadata_sha256": "c035a979e53f182aac685d77afe9c46e1e115544bdc61be943da7093362aab4d",
+      "sha256": "75c8af866572291281f744fcac407d375e8972845052bf8ef653f61b401965b0",
+      "tables": {
+        "credential_reference": {
+          "count": 10,
+          "hash": "895ccfb470dbda78532bd04766bbf7ea"
+        },
+        "fact_charging_session": {
+          "count": 300000,
+          "hash": "9a618107ffc710de0b7e0fb7b13cd851"
+        },
+        "governance_policy": {
+          "count": 1,
+          "hash": "5c66ff9296d16a2205c6087cd2f5dedc"
+        },
+        "knowledge_document": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "knowledge_document_version": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "memory_record": {
+          "count": 1,
+          "hash": "fe69ba622f363876432e0b24fade06a5"
+        },
+        "platform_release": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "release_record": {
+          "count": 8,
+          "hash": "9464d24d118ab76c48d63fb60b593c6a"
+        },
+        "sales_order": {
+          "count": 50000,
+          "hash": "4ef2664497d81b77da073c69a9afd388"
+        },
+        "sales_order_item": {
+          "count": 82514,
+          "hash": "ea26887fa85adae73476a65b3e5fc33f"
+        },
+        "scenario_package_release": {
+          "count": 3,
+          "hash": "fa30d9764ead5df3f51b704aa9b9d5ed"
+        },
+        "semantic_model": {
+          "count": 2,
+          "hash": "1f67789f4e2782a5ad09f7ad32260064"
+        },
+        "semantic_model_version": {
+          "count": 2,
+          "hash": "81869168269b41b300913d1d8ed1e57e"
+        },
+        "skill_definition": {
+          "count": 8,
+          "hash": "d9750bb4e1be79eee084cfca05ff6502"
+        }
+      }
+    },
+    "isolated_cycle_hash_preserved": true,
+    "revision_before": "p5_0001",
+    "revision_downgraded": "p4_0001",
+    "revision_upgraded": "p5_0001",
+    "source_after": {
+      "core_business_sha256": "fbf102e5be43cda26aab97b2c47750ac74f4a3dc5341f8cfa26a258b10ac067d",
+      "protected_metadata_sha256": "178b168f1a6d68be05e0ad1b468753cef7f7f175ded569aace336f02f7cd247e",
+      "sha256": "bc9552b1ca548f6c7e27e54c0d3fd3c90ff3f7f0775acd06290b7cba39f98f4b",
+      "tables": {
+        "credential_reference": {
+          "count": 10,
+          "hash": "895ccfb470dbda78532bd04766bbf7ea"
+        },
+        "fact_charging_session": {
+          "count": 300000,
+          "hash": "9a618107ffc710de0b7e0fb7b13cd851"
+        },
+        "governance_policy": {
+          "count": 1,
+          "hash": "5c66ff9296d16a2205c6087cd2f5dedc"
+        },
+        "knowledge_document": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "knowledge_document_version": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "memory_record": {
+          "count": 3,
+          "hash": "28c7cad6c5a6395f6e7248d77be03b45"
+        },
+        "platform_release": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "production_gate_history": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "production_gate_registry": {
+          "count": 28,
+          "hash": "a7caa471c4470dea0ec635c457a73cca"
+        },
+        "release_record": {
+          "count": 8,
+          "hash": "9464d24d118ab76c48d63fb60b593c6a"
+        },
+        "sales_order": {
+          "count": 50000,
+          "hash": "4ef2664497d81b77da073c69a9afd388"
+        },
+        "sales_order_item": {
+          "count": 82514,
+          "hash": "ea26887fa85adae73476a65b3e5fc33f"
+        },
+        "scenario_package_release": {
+          "count": 3,
+          "hash": "242d838a77cfa2614d50191bf3f3408a"
+        },
+        "semantic_model": {
+          "count": 2,
+          "hash": "1f67789f4e2782a5ad09f7ad32260064"
+        },
+        "semantic_model_version": {
+          "count": 2,
+          "hash": "81869168269b41b300913d1d8ed1e57e"
+        },
+        "skill_definition": {
+          "count": 8,
+          "hash": "d9750bb4e1be79eee084cfca05ff6502"
+        }
+      }
+    },
+    "source_before": {
+      "core_business_sha256": "fbf102e5be43cda26aab97b2c47750ac74f4a3dc5341f8cfa26a258b10ac067d",
+      "protected_metadata_sha256": "e13193638b877fd2ed7b7d17f1f39c299cff08fc2a4e2f9f11c8194e3f3157cd",
+      "sha256": "d23be7d36d20fa3095bed813b4e42ec055e69cc834331f5c3a651dfd06798a87",
+      "tables": {
+        "credential_reference": {
+          "count": 10,
+          "hash": "895ccfb470dbda78532bd04766bbf7ea"
+        },
+        "fact_charging_session": {
+          "count": 300000,
+          "hash": "9a618107ffc710de0b7e0fb7b13cd851"
+        },
+        "governance_policy": {
+          "count": 1,
+          "hash": "5c66ff9296d16a2205c6087cd2f5dedc"
+        },
+        "knowledge_document": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "knowledge_document_version": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "memory_record": {
+          "count": 1,
+          "hash": "fe69ba622f363876432e0b24fade06a5"
+        },
+        "platform_release": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "production_gate_history": {
+          "count": 0,
+          "hash": "cfcd208495d565ef66e7dff9f98764da"
+        },
+        "production_gate_registry": {
+          "count": 28,
+          "hash": "a7caa471c4470dea0ec635c457a73cca"
+        },
+        "release_record": {
+          "count": 8,
+          "hash": "9464d24d118ab76c48d63fb60b593c6a"
+        },
+        "sales_order": {
+          "count": 50000,
+          "hash": "4ef2664497d81b77da073c69a9afd388"
+        },
+        "sales_order_item": {
+          "count": 82514,
+          "hash": "ea26887fa85adae73476a65b3e5fc33f"
+        },
+        "scenario_package_release": {
+          "count": 3,
+          "hash": "fa30d9764ead5df3f51b704aa9b9d5ed"
+        },
+        "semantic_model": {
+          "count": 2,
+          "hash": "1f67789f4e2782a5ad09f7ad32260064"
+        },
+        "semantic_model_version": {
+          "count": 2,
+          "hash": "81869168269b41b300913d1d8ed1e57e"
+        },
+        "skill_definition": {
+          "count": 8,
+          "hash": "d9750bb4e1be79eee084cfca05ff6502"
+        }
+      }
+    },
+    "source_core_hash_preserved": true,
+    "source_database_modified_by_migration_cycle": false,
+    "source_protected_metadata_hash_preserved": false,
+    "temporary_database_removed": true
+  },
+  "environment": "P5B local preproduction, not production",
+  "evidence_type": "p5b_actual_rollback_drill",
+  "finished_at": "2026-08-03T17:23:11.992876+00:00",
+  "images": {
+    "before": {
+      "api": {
+        "configured_image": "renewable-p5b-api:4.0.0-rc.3",
+        "image_id": "sha256:62c8f0f003fdccd0e030f5628759f5f24d938de1064119883c7a3fa6d74dd96f"
+      },
+      "db": {
+        "configured_image": "renewable-p5b-postgres:16.14-hardened",
+        "image_id": "sha256:487cefedff04f3c7f6304e554cc14bf7220a23d513978a51b2d012c40d0cf882"
+      },
+      "oidc": {
+        "configured_image": "renewable-p5b-keycloak:26.7.0-hardened",
+        "image_id": "sha256:f1f4c1d52edef5a36be4460ffcd2c352fa9e20c33d4934b51933b6ead0b99ab5"
+      },
+      "vault": {
+        "configured_image": "hashicorp/vault:2.0.3@sha256:a296a888b118615dc01d5f1a6846e6d4a7277946caaed5b447008fff5fe06b54",
+        "image_id": "sha256:1747a4ab1e1bea8938269b23827165c5d80eecbdb5c115fd58e6380569537c84"
+      },
+      "web": {
+        "configured_image": "renewable-p5b-web:4.0.0-rc.3",
+        "image_id": "sha256:5dd2242f1423d113e4e2b4de42321c20886bce03a47d0f7e438685ac5696d60c"
+      }
+    },
+    "previous": {
+      "api": {
+        "configured_image": "renewable-p5a-api:5.0.0-p5a",
+        "image_id": "sha256:d413e1427d5b470b862a8bc21800ea053f34c7435f2f0d91dff9f9c037a0b432"
+      },
+      "db": {
+        "configured_image": "renewable-p5a-postgres:16.14",
+        "image_id": "sha256:486298eaa6cbd4830f8d1ae199e6dc9f33cee75a6bc178b0ee2d34c94b3041e3"
+      },
+      "oidc": {
+        "configured_image": "renewable-p5a-keycloak:26.7.0",
+        "image_id": "sha256:c2b643bb866cb4c297176d11e8c60065ec4628102a19256ffb65b5a8d0bfeafd"
+      },
+      "vault": {
+        "configured_image": "hashicorp/vault:2.0.3",
+        "image_id": "sha256:1747a4ab1e1bea8938269b23827165c5d80eecbdb5c115fd58e6380569537c84"
+      },
+      "web": {
+        "configured_image": "renewable-p5a-web:5.0.0-p5a",
+        "image_id": "sha256:5364a6c917fd39d37b284cdbd055d17d0b3cc0628e66b29d327f8cc3954aa43b"
+      }
+    },
+    "recovered": {
+      "api": {
+        "configured_image": "renewable-p5b-api:4.0.0-rc.3",
+        "image_id": "sha256:62c8f0f003fdccd0e030f5628759f5f24d938de1064119883c7a3fa6d74dd96f"
+      },
+      "db": {
+        "configured_image": "renewable-p5b-postgres:16.14-hardened",
+        "image_id": "sha256:487cefedff04f3c7f6304e554cc14bf7220a23d513978a51b2d012c40d0cf882"
+      },
+      "oidc": {
+        "configured_image": "renewable-p5b-keycloak:26.7.0-hardened",
+        "image_id": "sha256:f1f4c1d52edef5a36be4460ffcd2c352fa9e20c33d4934b51933b6ead0b99ab5"
+      },
+      "vault": {
+        "configured_image": "hashicorp/vault:2.0.3@sha256:a296a888b118615dc01d5f1a6846e6d4a7277946caaed5b447008fff5fe06b54",
+        "image_id": "sha256:1747a4ab1e1bea8938269b23827165c5d80eecbdb5c115fd58e6380569537c84"
+      },
+      "web": {
+        "configured_image": "renewable-p5b-web:4.0.0-rc.3",
+        "image_id": "sha256:5dd2242f1423d113e4e2b4de42321c20886bce03a47d0f7e438685ac5696d60c"
+      }
+    }
+  },
+  "previous_ready_seconds": 0.047,
+  "production_release_authorized": false,
+  "production_traffic_switched": false,
+  "recovered_ready_seconds": 0.094,
+  "recovery_seconds": 143.031,
+  "rollback_seconds": 410.625,
+  "runtime_contract": {
+    "previous": {
+      "all_http_200": false,
+      "deterministic_engine": "deterministic",
+      "http_statuses": {
+        "deterministic_query": 200,
+        "gates": 200,
+        "knowledge": 200,
+        "memory": 422,
+        "skills": 200
+      },
+      "query_completed": true,
+      "sqlbot_runtime": "RUNTIME_PENDING"
+    },
+    "recovered": {
+      "all_http_200": false,
+      "deterministic_engine": "deterministic",
+      "http_statuses": {
+        "deterministic_query": 200,
+        "gates": 200,
+        "knowledge": 200,
+        "memory": 422,
+        "skills": 200
+      },
+      "query_completed": true,
+      "sqlbot_runtime": "NOT_INCLUDED_IN_THIS_RELEASE"
+    }
+  },
+  "schema_version": "1.0",
+  "secret_values_printed": false,
+  "source_git_sha": "978d5954ba5eb315e78ece6cf3cf8744f2750445",
+  "started_at": "2026-08-03T17:02:32.052083+00:00",
+  "status": "FAIL",
+  "volumes_deleted": false,
+  "working_tree_diff_sha256": "b1704be68b6e54fd033b4acd3b07e0c76ec0560ce4cd5fe17618c0515230d73a"
+}
