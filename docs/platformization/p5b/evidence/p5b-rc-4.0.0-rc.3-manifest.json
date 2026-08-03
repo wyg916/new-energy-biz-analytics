@@ -1,0 +1,386 @@
+{
+  "acceptance_evidence": {
+    "backup_restore": {
+      "path": "docs/platformization/p5b/evidence/p5b-backup-restore.json",
+      "sha256": "e457e7f6ead617b8c8ac49a7dfd4c319e93d1b9b73d7d48a85108cca7394a7fb",
+      "status": "PASS"
+    },
+    "container_security": {
+      "path": "docs/platformization/p5b/evidence/container-security/container-security-summary.json",
+      "sha256": "8f8498738965844f77b3837d0897f7a3d40bc0e9e7065176df7a3a471a5c20e4",
+      "status": "PASS_NO_UNDISPOSITIONED_CRITICAL"
+    },
+    "docker_smoke": {
+      "path": "docs/platformization/p5b/evidence/docker-smoke-p5b-final.json",
+      "sha256": "46fe24ce8c801776c1a64305d775e0bbd0cc29153d1aa45f63678713be425003",
+      "status": "PASS"
+    },
+    "failure_recovery": {
+      "path": "docs/platformization/p5b/evidence/p5b-fault-recovery.json",
+      "sha256": "f2d4bfca3fce9629fdf9f1795cfa23462dd437b8922b04819d803aae1c4971c6",
+      "status": "PASS"
+    },
+    "gate_snapshot_pre_push": {
+      "path": "docs/platformization/p5b/evidence/p5b-gate-snapshot-pre-push.json",
+      "sha256": "e989edb5c9d9c8a1f4bce28d49b7d50c38eacb34d75f6158ce22703774421938",
+      "status": "PASS"
+    },
+    "regression": {
+      "path": "docs/platformization/p5b/evidence/p5b-final-regression-summary.json",
+      "sha256": "e2c3a32c36cdf679f3a398d3667673f7a8b372f9223e5fdc6576c809f5f13a88",
+      "status": "PASS"
+    },
+    "rollback_drill": {
+      "path": "docs/platformization/p5b/evidence/p5b-rollback-drill.json",
+      "sha256": "3e218be4c9dcfd484003057014d51c3ad218b8f94660806a7588cf2ebdc26f68",
+      "status": "PASS"
+    },
+    "sbom": {
+      "path": "docs/platformization/p5b/evidence/p5b-sbom.cdx.json",
+      "sha256": "fa17adf6b1184427e680f4d92ba16371cdaadf6c5d5d4104aadb9d7e40a24857",
+      "status": "PASS"
+    }
+  },
+  "actual_runtime_components": [
+    "alert-receiver",
+    "api",
+    "backup",
+    "keycloak",
+    "migration",
+    "nginx",
+    "postgresql",
+    "redis",
+    "vault",
+    "web"
+  ],
+  "alembic_head": "p5_0001",
+  "branch": "fix/p5b-local-gate-closure",
+  "data": {
+    "classification": "simulated",
+    "period_end": "2026-06-30",
+    "period_start": "2025-01-01",
+    "source": "fixed-seed business-rule simulation stored in PostgreSQL"
+  },
+  "environment": "local_preproduction",
+  "excluded_components": {
+    "sqlbot": {
+      "adapter_source_retained": true,
+      "external_evaluation": "DEFERRED",
+      "offline_contract": "PASS",
+      "original_scan_retained": {
+        "critical": 49,
+        "high": 802
+      },
+      "runtime": "NOT_INCLUDED"
+    }
+  },
+  "gate_registry_pre_push": {
+    "counts": {
+      "BLOCKED": 5,
+      "EXPIRED": 0,
+      "IN_PROGRESS": 0,
+      "OPEN": 15,
+      "PASSED": 8,
+      "WAIVED": 0
+    },
+    "unresolved_blockers": [
+      "BUSINESS_APPROVAL",
+      "CHANGE_WINDOW",
+      "ENTERPRISE_ALERT",
+      "ENTERPRISE_IDP",
+      "IMAGE_SECURITY",
+      "KEYCLOAK_SECURITY",
+      "MONITORING_ALERTING",
+      "OPERATIONS_APPROVAL",
+      "PRODUCTION_CAPACITY",
+      "PRODUCTION_DATA",
+      "PRODUCTION_DATA_APPROVAL",
+      "PRODUCTION_SECRET_MANAGER",
+      "REMOTE_PUSH",
+      "RISK_ACCEPTANCE",
+      "SECRET_MANAGER",
+      "SECURITY_APPROVAL",
+      "VAULT_SECURITY"
+    ],
+    "waivers": []
+  },
+  "generated_at": "2026-08-03T18:10:04.114242+00:00",
+  "go_no_go": "NO_GO",
+  "images": {
+    "alert-receiver": {
+      "content_digest": "sha256:62c8f0f003fdccd0e030f5628759f5f24d938de1064119883c7a3fa6d74dd96f",
+      "critical": 0,
+      "high": 0,
+      "image_id": "sha256:62c8f0f003fdccd0e030f5628759f5f24d938de1064119883c7a3fa6d74dd96f",
+      "included_in_rc": true,
+      "reference": "renewable-p5b-alert-receiver:4.0.0-rc.3",
+      "repo_digests": [],
+      "runtime_enabled": true,
+      "security_status": "PASS"
+    },
+    "api": {
+      "content_digest": "sha256:62c8f0f003fdccd0e030f5628759f5f24d938de1064119883c7a3fa6d74dd96f",
+      "critical": 0,
+      "high": 0,
+      "image_id": "sha256:62c8f0f003fdccd0e030f5628759f5f24d938de1064119883c7a3fa6d74dd96f",
+      "included_in_rc": true,
+      "reference": "renewable-p5b-api:4.0.0-rc.3",
+      "repo_digests": [],
+      "runtime_enabled": true,
+      "security_status": "PASS"
+    },
+    "backup": {
+      "content_digest": "sha256:487cefedff04f3c7f6304e554cc14bf7220a23d513978a51b2d012c40d0cf882",
+      "critical": 0,
+      "high": 0,
+      "image_id": "sha256:487cefedff04f3c7f6304e554cc14bf7220a23d513978a51b2d012c40d0cf882",
+      "included_in_rc": true,
+      "reference": "renewable-p5b-backup:16.14-hardened",
+      "repo_digests": [],
+      "runtime_enabled": true,
+      "security_status": "PASS"
+    },
+    "keycloak": {
+      "content_digest": "sha256:f1f4c1d52edef5a36be4460ffcd2c352fa9e20c33d4934b51933b6ead0b99ab5",
+      "critical": 0,
+      "high": 1,
+      "image_id": "sha256:f1f4c1d52edef5a36be4460ffcd2c352fa9e20c33d4934b51933b6ead0b99ab5",
+      "included_in_rc": true,
+      "reference": "renewable-p5b-keycloak:26.7.0-hardened",
+      "repo_digests": [],
+      "runtime_enabled": true,
+      "security_status": "BLOCKED_UPSTREAM_FIX_UNAVAILABLE"
+    },
+    "migration": {
+      "content_digest": "sha256:62c8f0f003fdccd0e030f5628759f5f24d938de1064119883c7a3fa6d74dd96f",
+      "critical": 0,
+      "high": 0,
+      "image_id": "sha256:62c8f0f003fdccd0e030f5628759f5f24d938de1064119883c7a3fa6d74dd96f",
+      "included_in_rc": true,
+      "reference": "renewable-p5b-migration:4.0.0-rc.3",
+      "repo_digests": [],
+      "runtime_enabled": true,
+      "security_status": "PASS"
+    },
+    "nginx": {
+      "content_digest": "sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752",
+      "critical": 0,
+      "high": 0,
+      "image_id": "sha256:f0ba77f796e57c6fa89ae7f4fdad1665d6fcbd8e3f211535120542b337f9959e",
+      "included_in_rc": true,
+      "reference": "nginx:1.31.3-alpine@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752",
+      "repo_digests": [
+        "nginx@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752"
+      ],
+      "runtime_enabled": true,
+      "security_status": "PASS"
+    },
+    "postgresql": {
+      "content_digest": "sha256:487cefedff04f3c7f6304e554cc14bf7220a23d513978a51b2d012c40d0cf882",
+      "critical": 0,
+      "high": 0,
+      "image_id": "sha256:487cefedff04f3c7f6304e554cc14bf7220a23d513978a51b2d012c40d0cf882",
+      "included_in_rc": true,
+      "reference": "renewable-p5b-postgres:16.14-hardened",
+      "repo_digests": [],
+      "runtime_enabled": true,
+      "security_status": "PASS"
+    },
+    "redis": {
+      "content_digest": "sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2",
+      "critical": 0,
+      "high": 0,
+      "image_id": "sha256:2a51817f79255c8b69f86a974459c2e0359aff81417d80158f2b9e541e6f4b33",
+      "included_in_rc": true,
+      "reference": "redis:7.4.10-alpine@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2",
+      "repo_digests": [
+        "redis@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2"
+      ],
+      "runtime_enabled": true,
+      "security_status": "PASS"
+    },
+    "vault": {
+      "content_digest": "sha256:a296a888b118615dc01d5f1a6846e6d4a7277946caaed5b447008fff5fe06b54",
+      "critical": 0,
+      "high": 3,
+      "image_id": "sha256:1747a4ab1e1bea8938269b23827165c5d80eecbdb5c115fd58e6380569537c84",
+      "included_in_rc": true,
+      "reference": "hashicorp/vault:2.0.3@sha256:a296a888b118615dc01d5f1a6846e6d4a7277946caaed5b447008fff5fe06b54",
+      "repo_digests": [
+        "hashicorp/vault@sha256:a296a888b118615dc01d5f1a6846e6d4a7277946caaed5b447008fff5fe06b54"
+      ],
+      "runtime_enabled": true,
+      "security_status": "BLOCKED"
+    },
+    "web": {
+      "content_digest": "sha256:5dd2242f1423d113e4e2b4de42321c20886bce03a47d0f7e438685ac5696d60c",
+      "critical": 0,
+      "high": 0,
+      "image_id": "sha256:5dd2242f1423d113e4e2b4de42321c20886bce03a47d0f7e438685ac5696d60c",
+      "included_in_rc": true,
+      "reference": "renewable-p5b-web:4.0.0-rc.3",
+      "repo_digests": [],
+      "runtime_enabled": true,
+      "security_status": "PASS"
+    }
+  },
+  "local_preproduction_rc": "PASS_WITH_EXTERNAL_PRODUCTION_GATES",
+  "p5b_implementation": "PASS",
+  "p6_entry": "NOT_ALLOWED",
+  "production_acceptance_ready": false,
+  "production_release_authorized": false,
+  "production_traffic_switched": false,
+  "regression": {
+    "data_classification": "simulated",
+    "data_period": {
+      "end": "2026-06-30",
+      "start": "2025-01-01"
+    },
+    "evidence_type": "p5b_final_regression",
+    "fixed_evaluations": {
+      "charging_ops": {
+        "differences": {},
+        "passed": 15,
+        "total": 15
+      },
+      "data_quality": {
+        "failures": [],
+        "passed": 20,
+        "total": 20
+      },
+      "deterministic": {
+        "passed": 40,
+        "total": 40
+      },
+      "memory": {
+        "assertion_testcases": 1,
+        "passed": 40,
+        "total": 40
+      },
+      "query_security": {
+        "passed": 15,
+        "total": 15
+      },
+      "rag_keyword": {
+        "assertion_testcases": 1,
+        "passed": 60,
+        "total": 60
+      },
+      "response_composer": {
+        "passed": 7,
+        "total": 7
+      },
+      "sales_ops": {
+        "differences": {},
+        "passed": 12,
+        "total": 12
+      },
+      "skill": {
+        "assertion_testcases": 1,
+        "passed": 40,
+        "total": 40
+      },
+      "sqlbot_offline": {
+        "passed": 46,
+        "runtime_claimed": false,
+        "total": 46
+      }
+    },
+    "frontend": {
+      "docker_smoke": {
+        "passed": 6,
+        "total": 6
+      },
+      "npm_audit_vulnerabilities": 0,
+      "playwright": {
+        "suites": {
+          "playwright-original-23-p5b-final.xml": {
+            "errors": 0,
+            "failures": 0,
+            "skipped": 0,
+            "tests": 23
+          },
+          "playwright-p4-oidc-3-p5b-final.xml": {
+            "errors": 0,
+            "failures": 0,
+            "skipped": 0,
+            "tests": 3
+          },
+          "playwright-p5-gate-1-p5b-final.xml": {
+            "errors": 0,
+            "failures": 0,
+            "skipped": 0,
+            "tests": 1
+          }
+        },
+        "totals": {
+          "errors": 0,
+          "failures": 0,
+          "skipped": 0,
+          "tests": 27
+        }
+      },
+      "typescript_vite": "PASS",
+      "vitest": {
+        "passed": 3,
+        "total": 3
+      }
+    },
+    "generated_at": "2026-08-03T17:59:52.413209+00:00",
+    "postgresql_backend": {
+      "collected": 363,
+      "corrective_sqlbot_adapter_rerun": {
+        "errors": 0,
+        "failures": 0,
+        "skipped": 0,
+        "tests": 19
+      },
+      "effective_failed": 0,
+      "effective_passed": 363,
+      "effective_skipped": 0,
+      "initial_full_run": {
+        "errors": 0,
+        "failures": 1,
+        "skipped": 0,
+        "tests": 363
+      },
+      "note": "One unchanged 30-second subprocess timeout occurred only under four-batch resource contention; its complete 19-test file passed unchanged in an isolated rerun.",
+      "single_clean_run_claimed": false
+    },
+    "runtime_contract": {
+      "deterministic_engine_only": true,
+      "production_release_authorized": false,
+      "production_traffic_switched": false,
+      "rag_runtime_mode": "KEYWORD_ONLY",
+      "sqlbot_canary_eligible": false,
+      "sqlbot_runtime": "NOT_INCLUDED"
+    },
+    "schema_version": "1.0",
+    "secret_values_printed": false,
+    "status": "PASS"
+  },
+  "release_candidate": "4.0.0-rc.3",
+  "runtime_contract": {
+    "deterministic_engine": "ONLY_FORMAL_NL2SQL_EXECUTION_PATH",
+    "rag_mode": "KEYWORD_ONLY",
+    "sqlbot_canary_eligible": false,
+    "sqlbot_image_in_bom": false,
+    "sqlbot_image_in_sbom": false,
+    "sqlbot_runtime": "NOT_INCLUDED_IN_THIS_RELEASE"
+  },
+  "schema_version": "1.0",
+  "security": {
+    "critical": 0,
+    "high": 4,
+    "roles_scanned": 10,
+    "status": "PASS_NO_UNDISPOSITIONED_CRITICAL",
+    "unique_image_ids_scanned": 7,
+    "waivers": 0
+  },
+  "sensitive_information_scan": {
+    "must_be_rerun_after_manifest_generation": true,
+    "path": "docs/platformization/p5b/evidence/p5b-secret-scan.json",
+    "secret_values_recorded": false
+  },
+  "source_git_sha": "6be9e0897b192ef65a57ad9113d0149479783acf"
+}
