@@ -1,0 +1,308 @@
+{
+  "acceptance_invariants": {
+    "all_required_services_sampled": true,
+    "audit_final_count": 10022,
+    "audit_growth_count": 6716,
+    "audit_initial_count": 3306,
+    "audit_loss_detected": false,
+    "configured_duration_met": true,
+    "security_violation_successes": 0,
+    "sqlbot_failure_impacted_primary_answers": 0
+  },
+  "api_resources": {
+    "cpu_seconds": 8257.58,
+    "final_rss_bytes": 254971904,
+    "growth_bytes": 21479424,
+    "initial_rss_bytes": 233492480
+  },
+  "audit_backlog": "must_be_correlated_with_fault_run",
+  "backup_impact": "separate_fault_step_required",
+  "concurrency": 20,
+  "configured_duration_seconds": 7200,
+  "endpoint_status_counts": {
+    "/api/v1/assistant/query": {
+      "0": 1,
+      "200": 6695,
+      "504": 20
+    },
+    "/api/v1/auth/admin-check": {
+      "401": 1678
+    },
+    "/api/v1/auth/me": {
+      "200": 1681
+    },
+    "/api/v1/auth/oidc/status": {
+      "200": 1673
+    },
+    "/api/v1/chat/scenarios": {
+      "200": 1680
+    },
+    "/api/v1/dashboard/devices?start=2026-05-01&end_exclusive=2026-07-01": {
+      "200": 1679
+    },
+    "/api/v1/dashboard/stations?start=2026-05-01&end_exclusive=2026-07-01": {
+      "200": 1681
+    },
+    "/api/v1/dashboard/summary?start=2026-01-01&end_exclusive=2026-07-01": {
+      "200": 1680
+    },
+    "/api/v1/dashboard/summary?start=2026-05-01&end_exclusive=2026-07-01": {
+      "200": 1680
+    },
+    "/api/v1/dashboard/trend?metric=charging_revenue&start=2026-05-01&end_exclusive=2026-07-01": {
+      "200": 1680
+    },
+    "/api/v1/governance/snapshot": {
+      "200": 1679
+    },
+    "/api/v1/knowledge/documents?scenario_id=charging_ops": {
+      "200": 1675
+    },
+    "/api/v1/knowledge/runtime": {
+      "200": 1676
+    },
+    "/api/v1/memory/records?scenario_id=charging_ops": {
+      "200": 1680
+    },
+    "/api/v1/memory/records?scenario_id=sales_ops": {
+      "200": 1679
+    },
+    "/api/v1/production-acceptance/snapshot": {
+      "200": 1674
+    },
+    "/api/v1/skills?scenario_id=charging_ops": {
+      "200": 1678
+    },
+    "/api/v1/skills?scenario_id=sales_ops": {
+      "200": 1677
+    }
+  },
+  "environment_boundary": "production-acceptance-not-production-sla",
+  "error_rate": 0.000596,
+  "evidence_type": "p5_production_acceptance_capacity",
+  "expected_actual_status_counts": {
+    "200:0": 1,
+    "200:200": 33547,
+    "200:504": 20,
+    "401:401": 1678
+  },
+  "finished_at": "2026-08-02T19:38:07.774961+00:00",
+  "host_monitor": {
+    "actual_duration_seconds": 7229.453,
+    "connection_pool_exhaustion_count": 0,
+    "container_resources": {
+      "api": {
+        "cpu_percent_max": 315.0,
+        "cpu_percent_mean": 124.757,
+        "pids_peak": 57,
+        "rss_final_bytes": 333971456,
+        "rss_growth_bytes": 89128960,
+        "rss_initial_bytes": 244842496,
+        "rss_peak_bytes": 389650841,
+        "samples": 581,
+        "sustained_unexplained_growth_detected": false
+      },
+      "db": {
+        "cpu_percent_max": 664.26,
+        "cpu_percent_mean": 73.34,
+        "pids_peak": 50,
+        "rss_final_bytes": 399926886,
+        "rss_growth_bytes": 124465971,
+        "rss_initial_bytes": 275460915,
+        "rss_peak_bytes": 417123532,
+        "samples": 581,
+        "sustained_unexplained_growth_detected": false
+      },
+      "oidc": {
+        "cpu_percent_max": 20.34,
+        "cpu_percent_mean": 1.535,
+        "pids_peak": 74,
+        "rss_final_bytes": 661336883,
+        "rss_growth_bytes": 1258291,
+        "rss_initial_bytes": 660078592,
+        "rss_peak_bytes": 664272896,
+        "samples": 581,
+        "sustained_unexplained_growth_detected": false
+      },
+      "redis": {
+        "cpu_percent_max": 30.8,
+        "cpu_percent_mean": 3.473,
+        "pids_peak": 14,
+        "rss_final_bytes": 6414139,
+        "rss_growth_bytes": 626000,
+        "rss_initial_bytes": 5788139,
+        "rss_peak_bytes": 9589227,
+        "samples": 581,
+        "sustained_unexplained_growth_detected": false
+      },
+      "vault": {
+        "cpu_percent_max": 22.59,
+        "cpu_percent_mean": 2.669,
+        "pids_peak": 25,
+        "rss_final_bytes": 102666076,
+        "rss_growth_bytes": 335545,
+        "rss_initial_bytes": 102330531,
+        "rss_peak_bytes": 105801318,
+        "samples": 581,
+        "sustained_unexplained_growth_detected": false
+      }
+    },
+    "finished_at": "2026-08-02T19:38:21.883181+00:00",
+    "restart_counts": {
+      "api": {
+        "after": 0,
+        "before": 0,
+        "unexpected": false
+      },
+      "db": {
+        "after": 0,
+        "before": 0,
+        "unexpected": false
+      },
+      "oidc": {
+        "after": 0,
+        "before": 0,
+        "unexpected": false
+      },
+      "redis": {
+        "after": 0,
+        "before": 0,
+        "unexpected": false
+      },
+      "vault": {
+        "after": 0,
+        "before": 0,
+        "unexpected": false
+      }
+    },
+    "sample_count": 581,
+    "sample_interval_seconds": 10.0,
+    "started_at": "2026-08-02T17:37:52.438786+00:00",
+    "unexpected_restart_count": 0,
+    "workload_exit_code": 0,
+    "workload_source_sha256": "1eb5b96ca6dc1de95f7cc6cc634f9a74862920fbd4b1bec97379ee4ae843ed49",
+    "workload_summary_line": "{\"status\": \"PASS\", \"run_id\": \"P5-CAP-20260802T173756Z\", \"sha256\": \"f5162dc8ae26b1d81a1a07e06128e0bfd98c838aa329988c9551216e09559811\"}"
+  },
+  "logical_users": 100,
+  "p50_ms": 2109.546,
+  "p95_ms": 13311.483,
+  "p99_ms": 20744.866,
+  "postgresql": {
+    "final": {
+      "connections": 33,
+      "governance_audit_events": 10022,
+      "size_bytes": 321977367
+    },
+    "growth_bytes": 82788352,
+    "initial": {
+      "connections": 23,
+      "governance_audit_events": 3306,
+      "size_bytes": 239189015
+    },
+    "peak_connections": 43
+  },
+  "production_capacity_verified": false,
+  "production_release_authorized": false,
+  "production_traffic_switched": false,
+  "redis": {
+    "final": {
+      "connected_clients": 1,
+      "ping": true
+    },
+    "initial": {
+      "connected_clients": 1,
+      "ping": true
+    },
+    "peak_connected_clients": 13
+  },
+  "resource_sample_count": 717,
+  "resource_sample_errors": [],
+  "rolling_restart": "separate_fault_step_required",
+  "run_id": "P5-CAP-20260802T173756Z",
+  "security_violation_successes": 0,
+  "session_rotation_count": 200,
+  "session_rotation_lead_seconds": 120,
+  "session_ttl_seconds": 3600,
+  "single_instance_failure": "separate_fault_step_required",
+  "started_at": "2026-08-02T17:37:56.308068+00:00",
+  "status": "PASS",
+  "status_counts": {
+    "0": 1,
+    "200": 33547,
+    "401": 1678,
+    "504": 20
+  },
+  "timeout_rate": 2.8e-05,
+  "total_requests": 35246,
+  "worker_errors": [],
+  "workload_p95_ms": {
+    "deterministic_assistant_charging_total": 18464.352,
+    "deterministic_assistant_gross_profit": 11973.935,
+    "deterministic_assistant_sales_total": 12341.086,
+    "deterministic_assistant_station_ranking": 22627.184,
+    "deterministic_dashboard": 11365.487,
+    "identity_and_policy": 2657.293,
+    "memory": 3952.253,
+    "oidc_status": 3285.953,
+    "permission_guard": 1898.209,
+    "production_acceptance": 3879.545,
+    "rag_keyword": 3093.649,
+    "skill": 3010.304
+  },
+  "workload_status_counts": {
+    "deterministic_assistant_charging_total": {
+      "200": 1672,
+      "504": 6
+    },
+    "deterministic_assistant_gross_profit": {
+      "200": 1677,
+      "504": 5
+    },
+    "deterministic_assistant_sales_total": {
+      "200": 1679
+    },
+    "deterministic_assistant_station_ranking": {
+      "0": 1,
+      "200": 1667,
+      "504": 9
+    },
+    "deterministic_dashboard": {
+      "200": 8400
+    },
+    "identity_and_policy": {
+      "200": 5040
+    },
+    "memory": {
+      "200": 3359
+    },
+    "oidc_status": {
+      "200": 1673
+    },
+    "permission_guard": {
+      "401": 1678
+    },
+    "production_acceptance": {
+      "200": 1674
+    },
+    "rag_keyword": {
+      "200": 3351
+    },
+    "skill": {
+      "200": 3355
+    }
+  },
+  "workloads": {
+    "deterministic_assistant_charging_total": 1678,
+    "deterministic_assistant_gross_profit": 1682,
+    "deterministic_assistant_sales_total": 1679,
+    "deterministic_assistant_station_ranking": 1677,
+    "deterministic_dashboard": 8400,
+    "identity_and_policy": 5040,
+    "memory": 3359,
+    "oidc_status": 1673,
+    "permission_guard": 1678,
+    "production_acceptance": 1674,
+    "rag_keyword": 3351,
+    "skill": 3355
+  }
+}

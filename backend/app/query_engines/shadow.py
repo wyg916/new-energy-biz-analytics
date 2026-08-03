@@ -257,7 +257,10 @@ class RoutingEvidenceRepository:
             trace_id=request.identity_context.request_id,
         )
         self.db.add(record)
-        if inspect(self.db.get_bind()).has_table("governance_audit_event"):
+        # Reuse the request transaction connection. Inspecting the Engine here
+        # checks out a second connection while the Session still owns one and
+        # can exhaust a correctly sized pool under concurrent shadow traffic.
+        if inspect(self.db.connection()).has_table("governance_audit_event"):
             record_governance_event(
                 self.db,
                 request.identity_context,

@@ -62,6 +62,12 @@ def test_production_configuration_accepts_private_rc_baseline():
         ("trusted_hosts", "*"),
         ("release_version", "0.6.0-dev"),
         ("simulated_data_only", False),
+        ("database_pool_size", 0),
+        ("database_pool_size", 51),
+        ("database_max_overflow", -1),
+        ("database_max_overflow", 51),
+        ("database_pool_timeout_seconds", 0),
+        ("database_pool_timeout_seconds", 121),
     ],
 )
 def test_production_configuration_rejects_unsafe_release_values(field, value):

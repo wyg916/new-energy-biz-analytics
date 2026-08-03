@@ -1,0 +1,294 @@
+{
+  "acceptance_invariants": {
+    "all_required_services_sampled": true,
+    "audit_final_count": 285,
+    "audit_growth_count": 74,
+    "audit_initial_count": 211,
+    "audit_loss_detected": false,
+    "configured_duration_met": true,
+    "security_violation_successes": 0,
+    "sqlbot_failure_impacted_primary_answers": 0
+  },
+  "api_resources": {
+    "cpu_seconds": 76.18,
+    "final_rss_bytes": 203685888,
+    "growth_bytes": 7663616,
+    "initial_rss_bytes": 196022272
+  },
+  "audit_backlog": "must_be_correlated_with_fault_run",
+  "backup_impact": "separate_fault_step_required",
+  "concurrency": 20,
+  "configured_duration_seconds": 60,
+  "endpoint_status_counts": {
+    "/api/v1/assistant/query": {
+      "200": 74
+    },
+    "/api/v1/auth/admin-check": {
+      "401": 15
+    },
+    "/api/v1/auth/me": {
+      "200": 18
+    },
+    "/api/v1/auth/oidc/status": {
+      "200": 10
+    },
+    "/api/v1/chat/scenarios": {
+      "200": 17
+    },
+    "/api/v1/dashboard/devices?start=2026-05-01&end_exclusive=2026-07-01": {
+      "200": 14
+    },
+    "/api/v1/dashboard/stations?start=2026-05-01&end_exclusive=2026-07-01": {
+      "200": 13
+    },
+    "/api/v1/dashboard/summary?start=2026-01-01&end_exclusive=2026-07-01": {
+      "200": 12
+    },
+    "/api/v1/dashboard/summary?start=2026-05-01&end_exclusive=2026-07-01": {
+      "200": 11
+    },
+    "/api/v1/dashboard/trend?metric=charging_revenue&start=2026-05-01&end_exclusive=2026-07-01": {
+      "200": 13
+    },
+    "/api/v1/governance/snapshot": {
+      "200": 16
+    },
+    "/api/v1/knowledge/documents?scenario_id=charging_ops": {
+      "200": 10
+    },
+    "/api/v1/knowledge/runtime": {
+      "200": 11
+    },
+    "/api/v1/memory/records?scenario_id=charging_ops": {
+      "200": 15
+    },
+    "/api/v1/memory/records?scenario_id=sales_ops": {
+      "200": 14
+    },
+    "/api/v1/production-acceptance/snapshot": {
+      "200": 11
+    },
+    "/api/v1/skills?scenario_id=charging_ops": {
+      "200": 13
+    },
+    "/api/v1/skills?scenario_id=sales_ops": {
+      "200": 12
+    }
+  },
+  "environment_boundary": "production-acceptance-not-production-sla",
+  "error_rate": 0.0,
+  "evidence_type": "p5_production_acceptance_capacity",
+  "expected_actual_status_counts": {
+    "200:200": 284,
+    "401:401": 15
+  },
+  "finished_at": "2026-08-02T15:31:06.305916+00:00",
+  "host_monitor": {
+    "actual_duration_seconds": 73.14,
+    "connection_pool_exhaustion_count": 0,
+    "container_resources": {
+      "api": {
+        "cpu_percent_max": 190.87,
+        "cpu_percent_mean": 128.37,
+        "pids_peak": 47,
+        "rss_final_bytes": 267596595,
+        "rss_growth_bytes": 82627789,
+        "rss_initial_bytes": 184968806,
+        "rss_peak_bytes": 267596595,
+        "samples": 10,
+        "sustained_unexplained_growth_detected": false
+      },
+      "db": {
+        "cpu_percent_max": 100.59,
+        "cpu_percent_mean": 45.464,
+        "pids_peak": 32,
+        "rss_final_bytes": 283325235,
+        "rss_growth_bytes": 18559795,
+        "rss_initial_bytes": 264765440,
+        "rss_peak_bytes": 286051532,
+        "samples": 10,
+        "sustained_unexplained_growth_detected": false
+      },
+      "oidc": {
+        "cpu_percent_max": 41.28,
+        "cpu_percent_mean": 8.177,
+        "pids_peak": 68,
+        "rss_final_bytes": 607649792,
+        "rss_growth_bytes": 209716,
+        "rss_initial_bytes": 607440076,
+        "rss_peak_bytes": 608383795,
+        "samples": 10,
+        "sustained_unexplained_growth_detected": false
+      },
+      "redis": {
+        "cpu_percent_max": 7.58,
+        "cpu_percent_mean": 2.054,
+        "pids_peak": 6,
+        "rss_final_bytes": 6869221,
+        "rss_growth_bytes": 934281,
+        "rss_initial_bytes": 5934940,
+        "rss_peak_bytes": 7933526,
+        "samples": 10,
+        "sustained_unexplained_growth_detected": false
+      },
+      "vault": {
+        "cpu_percent_max": 7.18,
+        "cpu_percent_mean": 2.413,
+        "pids_peak": 18,
+        "rss_final_bytes": 101376327,
+        "rss_growth_bytes": -671089,
+        "rss_initial_bytes": 102047416,
+        "rss_peak_bytes": 102592675,
+        "samples": 10,
+        "sustained_unexplained_growth_detected": false
+      }
+    },
+    "finished_at": "2026-08-02T15:31:09.348504+00:00",
+    "restart_counts": {
+      "api": {
+        "after": 0,
+        "before": 0,
+        "unexpected": false
+      },
+      "db": {
+        "after": 0,
+        "before": 0,
+        "unexpected": false
+      },
+      "oidc": {
+        "after": 0,
+        "before": 0,
+        "unexpected": false
+      },
+      "redis": {
+        "after": 0,
+        "before": 0,
+        "unexpected": false
+      },
+      "vault": {
+        "after": 0,
+        "before": 0,
+        "unexpected": false
+      }
+    },
+    "sample_count": 10,
+    "sample_interval_seconds": 5.0,
+    "started_at": "2026-08-02T15:29:56.197188+00:00",
+    "unexpected_restart_count": 0,
+    "workload_exit_code": 0,
+    "workload_source_sha256": "dc2cb5b8ea387d7ebc3823a4236bd744d11b4066a8956b8ba5b4b867f0ac7cc4",
+    "workload_summary_line": "{\"status\": \"PASS\", \"run_id\": \"P5-CAP-20260802T153000Z\", \"sha256\": \"bf9297e0aba118689950f65710fa5ad631e0b21f9144f08fccc4fd0e346d10c7\"}"
+  },
+  "logical_users": 100,
+  "p50_ms": 2467.396,
+  "p95_ms": 11184.255,
+  "p99_ms": 17307.702,
+  "postgresql": {
+    "final": {
+      "connections": 23,
+      "governance_audit_events": 285,
+      "size_bytes": 202046487
+    },
+    "growth_bytes": 1064960,
+    "initial": {
+      "connections": 23,
+      "governance_audit_events": 211,
+      "size_bytes": 200981527
+    },
+    "peak_connections": 25
+  },
+  "production_capacity_verified": false,
+  "production_release_authorized": false,
+  "production_traffic_switched": false,
+  "redis": {
+    "final": {
+      "connected_clients": 1,
+      "ping": true
+    },
+    "initial": {
+      "connected_clients": 1,
+      "ping": true
+    },
+    "peak_connected_clients": 6
+  },
+  "resource_sample_count": 6,
+  "resource_sample_errors": [],
+  "rolling_restart": "separate_fault_step_required",
+  "run_id": "P5-CAP-20260802T153000Z",
+  "security_violation_successes": 0,
+  "single_instance_failure": "separate_fault_step_required",
+  "started_at": "2026-08-02T15:30:00.387926+00:00",
+  "status": "PASS",
+  "status_counts": {
+    "200": 284,
+    "401": 15
+  },
+  "timeout_rate": 0.0,
+  "total_requests": 299,
+  "workload_p95_ms": {
+    "deterministic_assistant_charging_total": 11482.953,
+    "deterministic_assistant_gross_profit": 9923.709,
+    "deterministic_assistant_sales_total": 10200.612,
+    "deterministic_assistant_station_ranking": 17369.441,
+    "deterministic_dashboard": 7631.504,
+    "identity_and_policy": 2762.932,
+    "memory": 3767.267,
+    "oidc_status": 3691.618,
+    "permission_guard": 3286.179,
+    "production_acceptance": 4116.775,
+    "rag_keyword": 2200.862,
+    "skill": 2684.695
+  },
+  "workload_status_counts": {
+    "deterministic_assistant_charging_total": {
+      "200": 16
+    },
+    "deterministic_assistant_gross_profit": {
+      "200": 19
+    },
+    "deterministic_assistant_sales_total": {
+      "200": 19
+    },
+    "deterministic_assistant_station_ranking": {
+      "200": 20
+    },
+    "deterministic_dashboard": {
+      "200": 63
+    },
+    "identity_and_policy": {
+      "200": 51
+    },
+    "memory": {
+      "200": 29
+    },
+    "oidc_status": {
+      "200": 10
+    },
+    "permission_guard": {
+      "401": 15
+    },
+    "production_acceptance": {
+      "200": 11
+    },
+    "rag_keyword": {
+      "200": 21
+    },
+    "skill": {
+      "200": 25
+    }
+  },
+  "workloads": {
+    "deterministic_assistant_charging_total": 16,
+    "deterministic_assistant_gross_profit": 19,
+    "deterministic_assistant_sales_total": 19,
+    "deterministic_assistant_station_ranking": 20,
+    "deterministic_dashboard": 63,
+    "identity_and_policy": 51,
+    "memory": 29,
+    "oidc_status": 10,
+    "permission_guard": 15,
+    "production_acceptance": 11,
+    "rag_keyword": 21,
+    "skill": 25
+  }
+}

@@ -33,3 +33,9 @@ P5A 首次独立启动又暴露并修复两项部署缺陷：
 - PostgreSQL 当前固定数据量：charging sessions 300000、sales orders 50000、sales order items 82514。
 
 Docker Hub 内部 DNS 与一次实际 `busybox:1.37` 拉取成功；随后一次独立 `docker manifest inspect` 在 registry 响应头前超时，说明仓库链路仍有间歇性风险。镜像扫描与外部拉取必须以各自最终实际结果判定，不能由本节替代。
+
+## 容量修复阶段的后续构建事实
+
+容量预检暴露连接池配置后需要重建 API 镜像。此时 Compose/Bake 路径再次出现 `x-docker-expose-session-sharedkey` 含不可打印字符的 gRPC 错误，`COMPOSE_BAKE=false` 也未规避。为完成这一单镜像、锁定 Dockerfile 的本地重建，本轮仅对该条命令设置 `DOCKER_BUILDKIT=0`，使用 Docker legacy builder 成功生成 `renewable-p5a-api:5.0.0-p5a`；没有修改 Docker daemon 全局配置、没有删除镜像/容器卷，也没有改动 P4/P5 冻结环境。
+
+该构建器兼容问题仍是 Windows 中文路径下的本地工具风险，不得解释为已修复 Docker Desktop。API 当前运行镜像必须在最终提交前追加一次同标准 Trivy 复扫；旧 API 扫描不能替代重建后的镜像证据。

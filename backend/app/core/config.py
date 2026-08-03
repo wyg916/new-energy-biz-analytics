@@ -24,6 +24,9 @@ class Settings(BaseSettings):
     secret_key: str = "local-alpha-change-me"
     access_token_minutes: int = 60
     database_url: str = "sqlite:///./data/alpha.db"
+    database_pool_size: int = 5
+    database_max_overflow: int = 10
+    database_pool_timeout_seconds: float = 30.0
     redis_url: str = "redis://localhost:6379/0"
     cors_origins: str = "http://localhost:5173,http://localhost:8080"
     auto_bootstrap_demo_users: bool = True
@@ -114,6 +117,12 @@ class Settings(BaseSettings):
     def fail_closed_in_production(self) -> "Settings":
         if self.app_env in {"preproduction", "production"}:
             failures = []
+            if not 1 <= self.database_pool_size <= 50:
+                failures.append("DATABASE_POOL_SIZE must be between 1 and 50")
+            if not 0 <= self.database_max_overflow <= 50:
+                failures.append("DATABASE_MAX_OVERFLOW must be between 0 and 50")
+            if not 1 <= self.database_pool_timeout_seconds <= 120:
+                failures.append("DATABASE_POOL_TIMEOUT_SECONDS must be between 1 and 120")
             if self.secret_key == "local-alpha-change-me" or len(self.secret_key) < 32:
                 failures.append("SECRET_KEY must be non-default and at least 32 characters")
             if self.debug:
