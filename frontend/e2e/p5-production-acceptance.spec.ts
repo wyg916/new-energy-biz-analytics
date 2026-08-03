@@ -33,14 +33,18 @@ test('P5 Production Gate Registry 来自正式 API 且保持 No-Go', async ({ pa
   await page.getByRole('button', { name: 'P5 生产验收' }).click()
   const body = await (await snapshotResponse).json()
 
-  expect(body.gates.length).toBeGreaterThanOrEqual(20)
-  expect(body.gates.map((gate: { gate_code: string }) => gate.gate_code)).toEqual(expect.arrayContaining([
+  expect(body.gates).toHaveLength(28)
+  expect(body.gates.filter((gate: { external_condition: boolean }) => !gate.external_condition)).toHaveLength(13)
+  expect(body.gates.filter((gate: { external_condition: boolean }) => gate.external_condition)).toHaveLength(15)
+  expect(body.gates.map((gate: { gate_code: string }) => gate.gate_code).sort()).toEqual([
     'REMOTE_PUSH', 'DOCKER_RUNTIME', 'POSTGRES_CANONICAL_REGRESSION', 'FRONTEND_E2E',
     'IMAGE_SECURITY', 'KEYCLOAK_SECURITY', 'VAULT_SECURITY', 'SQLBOT_IMAGE_SECURITY',
     'CAPACITY_SOAK', 'BACKUP_RECOVERY', 'ENTERPRISE_IDP', 'PRODUCTION_SECRET_MANAGER',
-    'SQLBOT_EXTERNAL_RUNTIME', 'ENTERPRISE_ALERT', 'PRODUCTION_DATA', 'CHANGE_WINDOW',
+    'SECRET_MANAGER', 'SQLBOT_EXTERNAL_REVIEW', 'SQLBOT_EXTERNAL_RUNTIME', 'RAG_MODE',
+    'PRODUCTION_DATA_APPROVAL', 'PRODUCTION_DATA', 'PRODUCTION_CAPACITY', 'BACKUP_RESTORE',
+    'MONITORING_ALERTING', 'ENTERPRISE_ALERT', 'CHANGE_WINDOW', 'ROLLBACK_DRILL',
     'RISK_ACCEPTANCE', 'BUSINESS_APPROVAL', 'SECURITY_APPROVAL', 'OPERATIONS_APPROVAL',
-  ]))
+  ].sort())
   expect(body.summary.production_acceptance_ready).toBe(false)
   expect(body.summary.production_release_authorized).toBe(false)
   expect(body.summary.production_traffic_switched).toBe(false)

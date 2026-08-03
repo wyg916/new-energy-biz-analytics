@@ -12,14 +12,64 @@ from app.production_acceptance.models import ProductionGate
 
 BASELINE_GATES: tuple[dict[str, object], ...] = (
     {
+        "code": "REMOTE_PUSH", "title": "Git 远端分发完整性", "category": "delivery",
+        "owner": "release_owner", "blocker": "BLOCKER", "external": False, "status": "BLOCKED",
+        "review": "远端分支 SHA 必须等于本地冻结 SHA，ahead/behind 为 0/0，并在代码变更后复核。",
+    },
+    {
+        "code": "DOCKER_RUNTIME", "title": "Docker/WSL 标准运行环境", "category": "runtime",
+        "owner": "operations_owner", "blocker": "BLOCKER", "external": False, "status": "BLOCKED",
+        "review": "独立 P5A Compose 的运行服务、一次性任务、网络、卷、liveness 与 readiness 均须有本轮证据。",
+    },
+    {
+        "code": "POSTGRES_CANONICAL_REGRESSION", "title": "PostgreSQL 权威业务回归", "category": "data",
+        "owner": "data_owner", "blocker": "BLOCKER", "external": False, "status": "BLOCKED",
+        "review": "固定数据规模、15+12 指标、DQ 与固定评测必须在 PostgreSQL 标准环境全部通过。",
+    },
+    {
+        "code": "FRONTEND_E2E", "title": "完整浏览器关键路径", "category": "quality",
+        "owner": "quality_owner", "blocker": "BLOCKER", "external": False, "status": "BLOCKED",
+        "review": "冻结 Playwright 26 条与 P5 门禁路径 1 条必须使用正式 API、PostgreSQL 和真实 Keycloak 通过。",
+    },
+    {
         "code": "IMAGE_SECURITY", "title": "全部容器镜像安全签署", "category": "security",
         "owner": "security_owner", "blocker": "BLOCKER", "external": False, "status": "BLOCKED",
         "review": "全部运行与禁用镜像实际复扫；Critical=0，High=0 或逐项正式例外。",
     },
     {
+        "code": "KEYCLOAK_SECURITY", "title": "Keycloak 镜像安全", "category": "security",
+        "owner": "security_owner", "blocker": "BLOCKER", "external": False, "status": "BLOCKED",
+        "review": "实际镜像 Critical=0 且 High=0，或每项均有权威不适用证据或正式 waiver。",
+    },
+    {
+        "code": "VAULT_SECURITY", "title": "Vault 镜像安全", "category": "security",
+        "owner": "security_owner", "blocker": "BLOCKER", "external": False, "status": "BLOCKED",
+        "review": "实际镜像 Critical=0 且 High=0，或每项均有权威不适用证据或正式 waiver。",
+    },
+    {
+        "code": "SQLBOT_IMAGE_SECURITY", "title": "SQLBot 固定摘要镜像安全", "category": "security",
+        "owner": "security_owner", "blocker": "BLOCKER", "external": False, "status": "BLOCKED",
+        "review": "禁用镜像仍须按固定 digest 完成实际扫描；扫描不代表启用或 Canary 资格。",
+    },
+    {
+        "code": "CAPACITY_SOAK", "title": "P5A 两小时容量耐久", "category": "capacity",
+        "owner": "operations_owner", "blocker": "BLOCKER", "external": False, "status": "BLOCKED",
+        "review": "100 逻辑用户、并发 20、7200 秒，错误、超时、资源、连接、审计和重启证据完整。",
+    },
+    {
+        "code": "BACKUP_RECOVERY", "title": "P5A 故障备份恢复", "category": "resilience",
+        "owner": "operations_owner", "blocker": "BLOCKER", "external": False, "status": "BLOCKED",
+        "review": "故障、完整备份、临时库恢复、数据哈希、门禁历史和迁移循环均使用本轮证据。",
+    },
+    {
         "code": "ENTERPRISE_IDP", "title": "真实企业 IdP 联调", "category": "identity",
         "owner": "identity_owner", "blocker": "BLOCKER", "external": True, "status": "OPEN",
         "review": "企业测试租户、metadata、claims、禁用、撤权、JWKS 轮换和回滚均有真实证据。",
+    },
+    {
+        "code": "PRODUCTION_SECRET_MANAGER", "title": "托管生产 Secret Manager", "category": "secrets",
+        "owner": "security_owner", "blocker": "BLOCKER", "external": True, "status": "OPEN",
+        "review": "需用户授权的托管实例、HA、备份、CredentialReference、轮换及 fail-closed 证据。",
     },
     {
         "code": "SECRET_MANAGER", "title": "生产 Secret Manager", "category": "secrets",
@@ -30,6 +80,11 @@ BASELINE_GATES: tuple[dict[str, object], ...] = (
         "code": "SQLBOT_EXTERNAL_REVIEW", "title": "SQLBot 外部 10/30/20 安全复评", "category": "sqlbot",
         "owner": "ai_platform_owner", "blocker": "BLOCKER", "external": True, "status": "OPEN",
         "review": "仅在授权 CredentialReference 注入后按顺序执行，安全违规必须为 0。",
+    },
+    {
+        "code": "SQLBOT_EXTERNAL_RUNTIME", "title": "SQLBot 外部模型运行时", "category": "sqlbot",
+        "owner": "ai_platform_owner", "blocker": "BLOCKER", "external": True, "status": "OPEN",
+        "review": "需用户提供授权 CredentialReference；未授权时 SQLBot 保持 disabled 且不得执行 Canary。",
     },
     {
         "code": "RAG_MODE", "title": "RAG 正式运行模式", "category": "rag",
@@ -49,6 +104,11 @@ BASELINE_GATES: tuple[dict[str, object], ...] = (
         "review": "数据分类、脱敏、最小权限、只读、保留、删除、审计和断开连接全部获批。",
     },
     {
+        "code": "PRODUCTION_DATA", "title": "真实生产数据接入", "category": "data",
+        "owner": "data_owner", "blocker": "BLOCKER", "external": True, "status": "OPEN",
+        "review": "需真实授权、分类、脱敏、最小只读权限、保留删除、审计和断开连接证据。",
+    },
+    {
         "code": "PRODUCTION_CAPACITY", "title": "代表性生产容量与 SLA", "category": "capacity",
         "owner": "operations_owner", "blocker": "BLOCKER", "external": True, "status": "OPEN",
         "review": "提供生产同构规格并完成容量、耐久、故障和备份期间影响验收；本地值不替代 SLA。",
@@ -62,6 +122,11 @@ BASELINE_GATES: tuple[dict[str, object], ...] = (
         "code": "MONITORING_ALERTING", "title": "企业监控告警联调", "category": "observability",
         "owner": "operations_owner", "blocker": "BLOCKER", "external": True, "status": "OPEN",
         "review": "授权接收端完成签名、重试、幂等、熔断、超时、脱敏、限流和恢复验收。",
+    },
+    {
+        "code": "ENTERPRISE_ALERT", "title": "企业告警接收端", "category": "observability",
+        "owner": "operations_owner", "blocker": "BLOCKER", "external": True, "status": "OPEN",
+        "review": "需授权企业接收端的签名、重试、幂等、熔断、超时、脱敏、限流和恢复证据。",
     },
     {
         "code": "CHANGE_WINDOW", "title": "生产变更窗口", "category": "release",

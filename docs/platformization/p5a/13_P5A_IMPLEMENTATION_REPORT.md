@@ -10,7 +10,7 @@ P5A 只修复当前独立预生产验收环境内可关闭的门禁，不进入 
 - 独立 P5A worktree/branch 已建立，没有修改 P4/P5 冻结工作树。
 - Docker Desktop/WSL Linux Engine 恢复后，独立 `renewable-p5a-remediation` 栈完成 API、Web、PostgreSQL、Redis、Nginx、Keycloak、Vault、告警接收端、migration 和 backup 验证；liveness/readiness 通过，卷删除 0。
 - Alembic 唯一 head `p5_0001`；隔离库完成 `base → p5_0001 → p4_0001 → p5_0001`。
-- PostgreSQL 16.14 权威回归有效 353/353；Deterministic 40/40、charging 15/15、sales 12/12、DQ 20/20、Memory 40/40、Skill 40/40、RAG 60/60、Response 7/7、Query Security 15/15、SQLBot offline 46/46。
+- PostgreSQL 16.14 当前全量收集 359 项；356 项在修正资产挂载后的四路全量轮次通过，3 项仅因容器内 `docs` 路径错误失败，同文件修正复验 4/4 通过，门禁合同收紧后另行复验 5/5，因此有效 359/359，且不声称一次单轮全绿。Deterministic 40/40、charging 15/15、sales 12/12、DQ 20/20、Memory 40/40、Skill 40/40、RAG 60/60、Response 7/7、Query Security 15/15、SQLBot offline 46/46。
 - Docker Smoke 6/6、Playwright 27/27、Vitest 3/3、TypeScript/Vite build PASS、npm audit 0。
 - Trivy 0.70.0 于 2026-08-03 对 11 个运行/禁用角色、9 个唯一 image ID 完成本轮全量扫描；按角色累计 51 Critical/848 High，waiver 0，`IMAGE_SECURITY` 及相关门禁保持 BLOCKED。Keycloak 0C/15H、Vault 0C/3H、SQLBot 49C/802H；SQLBot 保持 disabled 且排除 RC。
 - 连接池预检暴露最大连接不足，已增加受控 PostgreSQL pool 配置并复用 Shadow 当前事务连接；60 秒预检 299 请求、错误/超时 0。
@@ -20,10 +20,15 @@ P5A 只修复当前独立预生产验收环境内可关闭的门禁，不进入 
 - Redis/PostgreSQL/Vault/Keycloak 串行故障注入最终 PASS；readiness 均 fail-closed、liveness 保持 200，RAG 不可用时 0 伪造引用，Vault 无明文 fallback，SQLBot 0 容器且 Deterministic 主链不受影响。
 - Vault P5A run `P5A-VAULT-20260803T101306Z` PASS，audit 增长 52,564 bytes；新备份 28,222,229 bytes，隔离恢复摘要和核心哈希一致，临时库已移除，原卷未删除。
 
-## 当前仍未完成、不得提前记为通过
+## 当前门禁快照
 
-- P5A 新增行敏感信息扫描尚待所有文件收口后执行；
-- Production Gate 本轮证据更新、最终文档提交、P5A 普通 push 和远端 0/0 尚待完成。
+- 注册表精确 28 项：本地 13、外部 15、waiver 0。
+- 本地已关闭 7 项：`DOCKER_RUNTIME`、`POSTGRES_CANONICAL_REGRESSION`、`FRONTEND_E2E`、`CAPACITY_SOAK`、`BACKUP_RECOVERY`、`RAG_MODE`、`BACKUP_RESTORE`。
+- 本地仍阻断 6 项：推送前的 `REMOTE_PUSH`，以及 `IMAGE_SECURITY`、`KEYCLOAK_SECURITY`、`VAULT_SECURITY`、`SQLBOT_IMAGE_SECURITY`、`ROLLBACK_DRILL`。
+- 15 个外部门禁均保持 `OPEN`，UI 显示 `CONDITIONAL`；未创建 waiver、未伪造审批、未修改外部门禁。
+- 推送前快照：`evidence/p5a-gate-snapshot-pre-push.json`，状态计数 PASSED 7 / BLOCKED 6 / OPEN 15。
+
+最终行敏感信息扫描将在 RC Manifest 和验收包内容冻结后执行；`REMOTE_PUSH` 只能在全部提交普通推送且远端 SHA 与本地 HEAD 相等、ahead/behind 为 0/0 后由受控 API 更新。该时序不影响其余本地证据真实性。
 
 ## 当前安全与发布结论
 

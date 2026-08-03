@@ -31,7 +31,7 @@ def test_registry_snapshot_is_database_backed_and_no_go_by_default(client, login
     response = client.get("/api/v1/production-acceptance/snapshot", headers=login())
     assert response.status_code == 200
     body = response.json()
-    assert len(body["gates"]) == 15
+    assert len(body["gates"]) == 28
     assert body["summary"]["go_no_go_recommendation"] == "NO_GO"
     assert body["summary"]["production_acceptance_ready"] is False
     assert body["runtime_contract"] == {
@@ -44,6 +44,18 @@ def test_registry_snapshot_is_database_backed_and_no_go_by_default(client, login
         "production_traffic_switched": False,
     }
     gates = {item["gate_code"]: item for item in body["gates"]}
+    assert set(gates) == {
+        "REMOTE_PUSH", "DOCKER_RUNTIME", "POSTGRES_CANONICAL_REGRESSION", "FRONTEND_E2E",
+        "IMAGE_SECURITY", "KEYCLOAK_SECURITY", "VAULT_SECURITY", "SQLBOT_IMAGE_SECURITY",
+        "CAPACITY_SOAK", "BACKUP_RECOVERY", "ENTERPRISE_IDP", "PRODUCTION_SECRET_MANAGER",
+        "SECRET_MANAGER", "SQLBOT_EXTERNAL_REVIEW", "SQLBOT_EXTERNAL_RUNTIME", "RAG_MODE",
+        "PRODUCTION_DATA_APPROVAL", "PRODUCTION_DATA", "PRODUCTION_CAPACITY", "BACKUP_RESTORE",
+        "MONITORING_ALERTING", "ENTERPRISE_ALERT", "CHANGE_WINDOW", "ROLLBACK_DRILL",
+        "RISK_ACCEPTANCE", "BUSINESS_APPROVAL", "SECURITY_APPROVAL", "OPERATIONS_APPROVAL",
+    }
+    assert sum(not item["external_condition"] for item in body["gates"]) == 13
+    assert sum(item["external_condition"] for item in body["gates"]) == 15
+    assert gates["REMOTE_PUSH"]["status"] == "BLOCKED"
     assert gates["ENTERPRISE_IDP"]["recorded_status"] == "OPEN"
     assert gates["ENTERPRISE_IDP"]["display_status"] == "CONDITIONAL"
     assert gates["ENTERPRISE_IDP"]["evidence"] == []
