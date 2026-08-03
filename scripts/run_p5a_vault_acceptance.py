@@ -17,7 +17,7 @@ AUDIT_FILE = "/vault/audit/audit.jsonl"
 COMPATIBILITY_RUN_ID = "P4-RC-20260801"
 
 
-def acceptance_code(run_id: str) -> str:
+def acceptance_code(run_id: str, scope: str) -> str:
     return f'''import hashlib
 import json
 import secrets
@@ -45,7 +45,7 @@ versions = _rotate_vault_values("http://vault:8200", Path("/run/p4-runtime"))
 with SessionLocal() as db:
     analyst = db.scalar(select(User).where(User.username == "analyst"))
     if analyst is None:
-        raise RuntimeError("P5A analyst identity is absent")
+        raise RuntimeError("acceptance analyst identity is absent")
     identity = IdentityContextFactory.from_user(analyst, request_id=run_id)
     credentials = CredentialReferenceService(db, identity)
     webhook = credentials.active_by_name("preprod-webhook-signing")
@@ -57,7 +57,7 @@ with SessionLocal() as db:
         reference_name=f"p5a-disable-proof-{{secrets.token_hex(4)}}",
         provider="VAULT_KV_V2",
         secret_identifier="preprod-kv/chatbi/acceptance#value@1",
-        purpose="P5A disable acceptance only",
+        purpose={f"{scope.upper()} disable acceptance only"!r},
         scenario_id=None,
         environment="preproduction",
         allowed_actions=["acceptance.proof"],
@@ -77,7 +77,7 @@ with SessionLocal() as db:
         .order_by(desc(PreproductionDataSourceGovernance.version))
     )
     if source is None:
-        raise RuntimeError("active P5A governed datasource is absent")
+        raise RuntimeError("active governed acceptance datasource is absent")
     service = DataSourceGovernanceService(db, identity)
 
     def publish(source_id: str):
@@ -121,7 +121,7 @@ with SessionLocal() as db:
     serialized = json.dumps(result, ensure_ascii=False, sort_keys=True)
     now = datetime.now(UTC)
     db.add(PreproductionAcceptanceRecord(
-        acceptance_id=f"ACC-P5A-{{uuid4()}}",
+        acceptance_id=f"ACC-{scope.upper()}-{{uuid4()}}",
         run_id=run_id,
         category="SECRET_PROVIDER",
         status="PASS",
@@ -131,7 +131,7 @@ with SessionLocal() as db:
         data_classification="simulated",
         started_at=now,
         finished_at=now,
-        created_by="system:p5a-acceptance",
+        created_by={f"system:{scope}-acceptance"!r},
     ))
     db.commit()
 print(json.dumps(result, ensure_ascii=False, sort_keys=True))
@@ -148,9 +148,9 @@ def command(*args: str, input_text: str | None = None) -> str:
     return process.stdout.strip()
 
 
-def audit_size() -> int:
+def audit_size(vault_container: str) -> int:
     value = command(
-        "docker", "exec", VAULT_CONTAINER, "sh", "-ec",
+        "docker", "exec", vault_container, "sh", "-ec",
         f"test -f {AUDIT_FILE} && wc -c < {AUDIT_FILE}",
     )
     return int(value)
@@ -159,20 +159,23 @@ def audit_size() -> int:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--scope", choices=("p5a", "p5b"), default="p5a")
+    parser.add_argument("--api-container", default=API_CONTAINER)
+    parser.add_argument("--vault-container", default=VAULT_CONTAINER)
     args = parser.parse_args()
     started_at = datetime.now(UTC)
-    run_id = f"P5A-VAULT-{started_at.strftime('%Y%m%dT%H%M%SZ')}"
-    before = audit_size()
+    run_id = f"{args.scope.upper()}-VAULT-{started_at.strftime('%Y%m%dT%H%M%SZ')}"
+    before = audit_size(args.vault_container)
     output = command(
-        "docker", "exec", API_CONTAINER,
+        "docker", "exec", args.api_container,
         "python", "scripts/p4_entrypoint.py",
-        "python", "-c", acceptance_code(run_id),
+        "python", "-c", acceptance_code(run_id, args.scope),
     )
     lines = [line for line in output.splitlines() if line.strip()]
     if not lines:
         raise RuntimeError("Vault compatibility acceptance returned no result")
     compatibility = json.loads(lines[-1])
-    after = audit_size()
+    after = audit_size(args.vault_container)
     passed = (
         compatibility.get("status") == "PASS"
         and compatibility.get("vault_kv_version") == 2
@@ -186,10 +189,10 @@ def main() -> None:
         and after > before
     )
     result = {
-        "evidence_type": "p5a_vault_contract_reverification",
+        "evidence_type": f"{args.scope}_vault_contract_reverification",
         "run_id": run_id,
         "status": "PASS" if passed else "FAIL",
-        "environment": "P5A production-acceptance, not production",
+        "environment": f"{args.scope.upper()} production-acceptance, not production",
         "data_classification": "simulated",
         "started_at": started_at.isoformat(),
         "finished_at": datetime.now(UTC).isoformat(),

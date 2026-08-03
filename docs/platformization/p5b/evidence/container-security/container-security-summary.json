@@ -1,0 +1,835 @@
+{
+  "environment": "P5B local preproduction, not production",
+  "evidence_type": "p5b_container_security_rescan",
+  "finished_at": "2026-08-03T17:50:43.161620+00:00",
+  "ignored_vulnerabilities": 0,
+  "images": [
+    {
+      "affected_packages": [
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2025-71176",
+          "fixed_version": "9.0.3",
+          "installed_version": "8.4.0",
+          "package": "pytest",
+          "severity": "MEDIUM",
+          "target": "Python",
+          "type": "python-pkg"
+        }
+      ],
+      "content_digest": "sha256:62c8f0f003fdccd0e030f5628759f5f24d938de1064119883c7a3fa6d74dd96f",
+      "dispositions": [],
+      "effective_critical": 0,
+      "effective_high": 0,
+      "identical_image_scan_role": null,
+      "image_id": "sha256:62c8f0f003fdccd0e030f5628759f5f24d938de1064119883c7a3fa6d74dd96f",
+      "included_in_rc": true,
+      "raw_critical": 0,
+      "raw_evidence": "trivy-api.json",
+      "raw_evidence_sha256": "288f7abc053f6806c08b60e47d994a21ba4125b40e0c2101219c4af48926ea5b",
+      "raw_high": 0,
+      "reference": "renewable-p5b-api:4.0.0-rc.3",
+      "repo_digests": [],
+      "role": "api",
+      "scan_execution": "EXECUTED",
+      "status": "PASS"
+    },
+    {
+      "affected_packages": [],
+      "content_digest": "sha256:5dd2242f1423d113e4e2b4de42321c20886bce03a47d0f7e438685ac5696d60c",
+      "dispositions": [],
+      "effective_critical": 0,
+      "effective_high": 0,
+      "identical_image_scan_role": null,
+      "image_id": "sha256:5dd2242f1423d113e4e2b4de42321c20886bce03a47d0f7e438685ac5696d60c",
+      "included_in_rc": true,
+      "raw_critical": 0,
+      "raw_evidence": "trivy-web.json",
+      "raw_evidence_sha256": "9c4ae6b0205d7d867949b2cb3c391c726454c78ddb8f07cdc4598498cf834c27",
+      "raw_high": 0,
+      "reference": "renewable-p5b-web:4.0.0-rc.3",
+      "repo_digests": [],
+      "role": "web",
+      "scan_execution": "EXECUTED",
+      "status": "PASS"
+    },
+    {
+      "affected_packages": [],
+      "content_digest": "sha256:487cefedff04f3c7f6304e554cc14bf7220a23d513978a51b2d012c40d0cf882",
+      "dispositions": [],
+      "effective_critical": 0,
+      "effective_high": 0,
+      "identical_image_scan_role": null,
+      "image_id": "sha256:487cefedff04f3c7f6304e554cc14bf7220a23d513978a51b2d012c40d0cf882",
+      "included_in_rc": true,
+      "raw_critical": 0,
+      "raw_evidence": "trivy-postgresql.json",
+      "raw_evidence_sha256": "481e474a0b2af998f2ddcfdd1ae5277f44ab575c46f357d995fcf23329c76793",
+      "raw_high": 0,
+      "reference": "renewable-p5b-postgres:16.14-hardened",
+      "repo_digests": [],
+      "role": "postgresql",
+      "scan_execution": "EXECUTED",
+      "status": "PASS"
+    },
+    {
+      "affected_packages": [],
+      "content_digest": "sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2",
+      "dispositions": [],
+      "effective_critical": 0,
+      "effective_high": 0,
+      "identical_image_scan_role": null,
+      "image_id": "sha256:2a51817f79255c8b69f86a974459c2e0359aff81417d80158f2b9e541e6f4b33",
+      "included_in_rc": true,
+      "raw_critical": 0,
+      "raw_evidence": "trivy-redis.json",
+      "raw_evidence_sha256": "bc05b51706bf4b1d606d2fa810166bff1f42cf8fe89da0f94bf951208adeb4e9",
+      "raw_high": 0,
+      "reference": "redis:7.4.10-alpine@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2",
+      "repo_digests": [
+        "redis@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2"
+      ],
+      "role": "redis",
+      "scan_execution": "EXECUTED",
+      "status": "PASS"
+    },
+    {
+      "affected_packages": [],
+      "content_digest": "sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752",
+      "dispositions": [],
+      "effective_critical": 0,
+      "effective_high": 0,
+      "identical_image_scan_role": null,
+      "image_id": "sha256:f0ba77f796e57c6fa89ae7f4fdad1665d6fcbd8e3f211535120542b337f9959e",
+      "included_in_rc": true,
+      "raw_critical": 0,
+      "raw_evidence": "trivy-nginx.json",
+      "raw_evidence_sha256": "aea9ffa9fb510d3f8366406c6eaa4aaed4dda8b115319f1577f5b607b37021bd",
+      "raw_high": 0,
+      "reference": "nginx:1.31.3-alpine@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752",
+      "repo_digests": [
+        "nginx@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752"
+      ],
+      "role": "nginx",
+      "scan_execution": "EXECUTED",
+      "status": "PASS"
+    },
+    {
+      "affected_packages": [
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2026-56391",
+          "fixed_version": "",
+          "installed_version": "8.32-41.el9_8",
+          "package": "coreutils-single",
+          "severity": "MEDIUM",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2026-56392",
+          "fixed_version": "",
+          "installed_version": "8.32-41.el9_8",
+          "package": "coreutils-single",
+          "severity": "MEDIUM",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2026-22020",
+          "fixed_version": "",
+          "installed_version": "1:21.0.12.0.8-1.2.el9",
+          "package": "java-21-openjdk-headless",
+          "severity": "HIGH",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2025-28164",
+          "fixed_version": "",
+          "installed_version": "1:21.0.12.0.8-1.2.el9",
+          "package": "java-21-openjdk-headless",
+          "severity": "MEDIUM",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2025-64505",
+          "fixed_version": "",
+          "installed_version": "1:21.0.12.0.8-1.2.el9",
+          "package": "java-21-openjdk-headless",
+          "severity": "MEDIUM",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2025-64506",
+          "fixed_version": "",
+          "installed_version": "1:21.0.12.0.8-1.2.el9",
+          "package": "java-21-openjdk-headless",
+          "severity": "MEDIUM",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2026-22693",
+          "fixed_version": "",
+          "installed_version": "1:21.0.12.0.8-1.2.el9",
+          "package": "java-21-openjdk-headless",
+          "severity": "MEDIUM",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2026-34757",
+          "fixed_version": "",
+          "installed_version": "1:21.0.12.0.8-1.2.el9",
+          "package": "java-21-openjdk-headless",
+          "severity": "MEDIUM",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2026-27171",
+          "fixed_version": "",
+          "installed_version": "1:21.0.12.0.8-1.2.el9",
+          "package": "java-21-openjdk-headless",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2026-54371",
+          "fixed_version": "",
+          "installed_version": "2.5.1-3.el9",
+          "package": "libattr",
+          "severity": "MEDIUM",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2021-46195",
+          "fixed_version": "",
+          "installed_version": "11.5.0-14.el9",
+          "package": "libgcc",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2022-27943",
+          "fixed_version": "",
+          "installed_version": "11.5.0-14.el9",
+          "package": "libgcc",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2023-50495",
+          "fixed_version": "",
+          "installed_version": "6.2-12.20210508.el9",
+          "package": "ncurses-base",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2023-50495",
+          "fixed_version": "",
+          "installed_version": "6.2-12.20210508.el9",
+          "package": "ncurses-libs",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2020-12413",
+          "fixed_version": "",
+          "installed_version": "4.36.0-8.el9_4",
+          "package": "nspr",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2024-7531",
+          "fixed_version": "",
+          "installed_version": "4.36.0-8.el9_4",
+          "package": "nspr",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2020-12413",
+          "fixed_version": "",
+          "installed_version": "3.112.0-8.el9_4",
+          "package": "nss",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2024-7531",
+          "fixed_version": "",
+          "installed_version": "3.112.0-8.el9_4",
+          "package": "nss",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2020-12413",
+          "fixed_version": "",
+          "installed_version": "3.112.0-8.el9_4",
+          "package": "nss-softokn",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2024-7531",
+          "fixed_version": "",
+          "installed_version": "3.112.0-8.el9_4",
+          "package": "nss-softokn",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2020-12413",
+          "fixed_version": "",
+          "installed_version": "3.112.0-8.el9_4",
+          "package": "nss-softokn-freebl",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2024-7531",
+          "fixed_version": "",
+          "installed_version": "3.112.0-8.el9_4",
+          "package": "nss-softokn-freebl",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2020-12413",
+          "fixed_version": "",
+          "installed_version": "3.112.0-8.el9_4",
+          "package": "nss-sysinit",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2024-7531",
+          "fixed_version": "",
+          "installed_version": "3.112.0-8.el9_4",
+          "package": "nss-sysinit",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2020-12413",
+          "fixed_version": "",
+          "installed_version": "3.112.0-8.el9_4",
+          "package": "nss-util",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2024-7531",
+          "fixed_version": "",
+          "installed_version": "3.112.0-8.el9_4",
+          "package": "nss-util",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2026-13757",
+          "fixed_version": "",
+          "installed_version": "0.26.2-1.el9",
+          "package": "p11-kit-trust",
+          "severity": "MEDIUM",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2022-41409",
+          "fixed_version": "",
+          "installed_version": "10.40-6.el9",
+          "package": "pcre2",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2022-41409",
+          "fixed_version": "",
+          "installed_version": "10.40-6.el9",
+          "package": "pcre2-syntax",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2026-5958",
+          "fixed_version": "",
+          "installed_version": "4.8-10.el9",
+          "package": "sed",
+          "severity": "MEDIUM",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2024-0232",
+          "fixed_version": "",
+          "installed_version": "3.34.1-10.el9_8",
+          "package": "sqlite-libs",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2025-70873",
+          "fixed_version": "",
+          "installed_version": "3.34.1-10.el9_8",
+          "package": "sqlite-libs",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "os-pkgs",
+          "cve": "CVE-2026-27171",
+          "fixed_version": "",
+          "installed_version": "1.2.11-40.el9",
+          "package": "zlib",
+          "severity": "LOW",
+          "target": "renewable-p5b-keycloak:26.7.0-hardened (redhat 9.8)",
+          "type": "redhat"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "GHSA-r7wm-3cxj-wff9",
+          "fixed_version": "2.18.8, 2.21.4, 2.22.1",
+          "installed_version": "2.21.2",
+          "package": "com.fasterxml.jackson.core:jackson-core",
+          "severity": "HIGH",
+          "target": "Java",
+          "type": "jar"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-54512",
+          "fixed_version": "2.18.8, 3.1.4, 2.21.4",
+          "installed_version": "2.21.2",
+          "package": "com.fasterxml.jackson.core:jackson-databind",
+          "severity": "HIGH",
+          "target": "Java",
+          "type": "jar"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-54513",
+          "fixed_version": "2.18.8, 2.21.4, 3.1.4",
+          "installed_version": "2.21.2",
+          "package": "com.fasterxml.jackson.core:jackson-databind",
+          "severity": "HIGH",
+          "target": "Java",
+          "type": "jar"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-54514",
+          "fixed_version": "2.18.8, 2.21.4, 3.1.4",
+          "installed_version": "2.21.2",
+          "package": "com.fasterxml.jackson.core:jackson-databind",
+          "severity": "MEDIUM",
+          "target": "Java",
+          "type": "jar"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-54515",
+          "fixed_version": "3.1.4, 2.18.9, 2.21.5, 2.22.1",
+          "installed_version": "2.21.2",
+          "package": "com.fasterxml.jackson.core:jackson-databind",
+          "severity": "MEDIUM",
+          "target": "Java",
+          "type": "jar"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-54516",
+          "fixed_version": "2.21.4, 3.1.4",
+          "installed_version": "2.21.2",
+          "package": "com.fasterxml.jackson.core:jackson-databind",
+          "severity": "MEDIUM",
+          "target": "Java",
+          "type": "jar"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-54517",
+          "fixed_version": "2.21.4, 3.1.4",
+          "installed_version": "2.21.2",
+          "package": "com.fasterxml.jackson.core:jackson-databind",
+          "severity": "MEDIUM",
+          "target": "Java",
+          "type": "jar"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-54518",
+          "fixed_version": "2.21.4",
+          "installed_version": "2.21.2",
+          "package": "com.fasterxml.jackson.core:jackson-databind",
+          "severity": "MEDIUM",
+          "target": "Java",
+          "type": "jar"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-59888",
+          "fixed_version": "2.18.8, 2.21.4",
+          "installed_version": "2.21.2",
+          "package": "com.fasterxml.jackson.core:jackson-databind",
+          "severity": "MEDIUM",
+          "target": "Java",
+          "type": "jar"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-59889",
+          "fixed_version": "2.21.5, 2.18.9, 2.22.1",
+          "installed_version": "2.21.2",
+          "package": "com.fasterxml.jackson.core:jackson-databind",
+          "severity": "MEDIUM",
+          "target": "Java",
+          "type": "jar"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "GHSA-mhm7-754m-9p8w",
+          "fixed_version": "2.18.9, 2.21.5",
+          "installed_version": "2.21.2",
+          "package": "com.fasterxml.jackson.core:jackson-databind",
+          "severity": "MEDIUM",
+          "target": "Java",
+          "type": "jar"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-54515",
+          "fixed_version": "3.1.4, 2.18.9, 2.21.5, 2.22.1",
+          "installed_version": "2.21.4",
+          "package": "com.fasterxml.jackson.core:jackson-databind",
+          "severity": "MEDIUM",
+          "target": "Java",
+          "type": "jar"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-59889",
+          "fixed_version": "2.21.5, 2.18.9, 2.22.1",
+          "installed_version": "2.21.4",
+          "package": "com.fasterxml.jackson.core:jackson-databind",
+          "severity": "MEDIUM",
+          "target": "Java",
+          "type": "jar"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "GHSA-mhm7-754m-9p8w",
+          "fixed_version": "2.18.9, 2.21.5",
+          "installed_version": "2.21.4",
+          "package": "com.fasterxml.jackson.core:jackson-databind",
+          "severity": "MEDIUM",
+          "target": "Java",
+          "type": "jar"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "GHSA-mfg7-5gfp-c4w3",
+          "fixed_version": "4.2.16.Final, 4.1.136.Final",
+          "installed_version": "4.1.135.Final",
+          "package": "io.netty:netty-codec-dns",
+          "severity": "MEDIUM",
+          "target": "Java",
+          "type": "jar"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-45292",
+          "fixed_version": "1.62.0",
+          "installed_version": "1.57.0",
+          "package": "io.opentelemetry:opentelemetry-api",
+          "severity": "MEDIUM",
+          "target": "Java",
+          "type": "jar"
+        }
+      ],
+      "content_digest": "sha256:f1f4c1d52edef5a36be4460ffcd2c352fa9e20c33d4934b51933b6ead0b99ab5",
+      "dispositions": [
+        {
+          "cve": "GHSA-r7wm-3cxj-wff9",
+          "disposition": "VERIFIED_NOT_AFFECTED_ACTUAL_JAR_2.21.4"
+        },
+        {
+          "cve": "CVE-2026-54512",
+          "disposition": "VERIFIED_NOT_AFFECTED_ACTUAL_JAR_2.21.4"
+        },
+        {
+          "cve": "CVE-2026-54513",
+          "disposition": "VERIFIED_NOT_AFFECTED_ACTUAL_JAR_2.21.4"
+        }
+      ],
+      "effective_critical": 0,
+      "effective_high": 1,
+      "identical_image_scan_role": null,
+      "image_id": "sha256:f1f4c1d52edef5a36be4460ffcd2c352fa9e20c33d4934b51933b6ead0b99ab5",
+      "included_in_rc": true,
+      "raw_critical": 0,
+      "raw_evidence": "trivy-keycloak.json",
+      "raw_evidence_sha256": "a2823f9e410e1612549b04b1d4c36196fb0e450cb8bed76d5a7e7aa57cfc4872",
+      "raw_high": 4,
+      "reference": "renewable-p5b-keycloak:26.7.0-hardened",
+      "repo_digests": [],
+      "role": "keycloak",
+      "scan_execution": "EXECUTED",
+      "status": "BLOCKED_UPSTREAM_FIX_UNAVAILABLE"
+    },
+    {
+      "affected_packages": [
+        {
+          "class": "lang-pkgs",
+          "cve": "GO-2026-5932",
+          "fixed_version": "",
+          "installed_version": "v0.52.0",
+          "package": "golang.org/x/crypto",
+          "severity": "UNKNOWN",
+          "target": "bin/vault",
+          "type": "gobinary"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-46600",
+          "fixed_version": "0.56.0",
+          "installed_version": "v0.55.0",
+          "package": "golang.org/x/net",
+          "severity": "UNKNOWN",
+          "target": "bin/vault",
+          "type": "gobinary"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-56852",
+          "fixed_version": "0.39.0",
+          "installed_version": "v0.37.0",
+          "package": "golang.org/x/text",
+          "severity": "HIGH",
+          "target": "bin/vault",
+          "type": "gobinary"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "GHSA-hrxh-6v49-42gf",
+          "fixed_version": "1.82.1",
+          "installed_version": "v1.81.0",
+          "package": "google.golang.org/grpc",
+          "severity": "HIGH",
+          "target": "bin/vault",
+          "type": "gobinary"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-39822",
+          "fixed_version": "1.25.12, 1.26.5, 1.27.0-rc.2",
+          "installed_version": "v1.26.4",
+          "package": "stdlib",
+          "severity": "HIGH",
+          "target": "bin/vault",
+          "type": "gobinary"
+        },
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2026-42505",
+          "fixed_version": "1.25.12, 1.26.5, 1.27.0-rc.2",
+          "installed_version": "v1.26.4",
+          "package": "stdlib",
+          "severity": "MEDIUM",
+          "target": "bin/vault",
+          "type": "gobinary"
+        }
+      ],
+      "content_digest": "sha256:a296a888b118615dc01d5f1a6846e6d4a7277946caaed5b447008fff5fe06b54",
+      "dispositions": [],
+      "effective_critical": 0,
+      "effective_high": 3,
+      "identical_image_scan_role": null,
+      "image_id": "sha256:1747a4ab1e1bea8938269b23827165c5d80eecbdb5c115fd58e6380569537c84",
+      "included_in_rc": true,
+      "raw_critical": 0,
+      "raw_evidence": "trivy-vault.json",
+      "raw_evidence_sha256": "12ad9f9bdbcb1740cd7797c25555eadca1e24d72b14c3a59dacef8bd549ccb21",
+      "raw_high": 3,
+      "reference": "hashicorp/vault:2.0.3@sha256:a296a888b118615dc01d5f1a6846e6d4a7277946caaed5b447008fff5fe06b54",
+      "repo_digests": [
+        "hashicorp/vault@sha256:a296a888b118615dc01d5f1a6846e6d4a7277946caaed5b447008fff5fe06b54"
+      ],
+      "role": "vault",
+      "scan_execution": "EXECUTED",
+      "status": "BLOCKED"
+    },
+    {
+      "affected_packages": [
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2025-71176",
+          "fixed_version": "9.0.3",
+          "installed_version": "8.4.0",
+          "package": "pytest",
+          "severity": "MEDIUM",
+          "target": "Python",
+          "type": "python-pkg"
+        }
+      ],
+      "content_digest": "sha256:62c8f0f003fdccd0e030f5628759f5f24d938de1064119883c7a3fa6d74dd96f",
+      "dispositions": [],
+      "effective_critical": 0,
+      "effective_high": 0,
+      "identical_image_scan_role": "api",
+      "image_id": "sha256:62c8f0f003fdccd0e030f5628759f5f24d938de1064119883c7a3fa6d74dd96f",
+      "included_in_rc": true,
+      "raw_critical": 0,
+      "raw_evidence": "trivy-alert-receiver.json",
+      "raw_evidence_sha256": "288f7abc053f6806c08b60e47d994a21ba4125b40e0c2101219c4af48926ea5b",
+      "raw_high": 0,
+      "reference": "renewable-p5b-alert-receiver:4.0.0-rc.3",
+      "repo_digests": [],
+      "role": "alert-receiver",
+      "scan_execution": "REUSED_IDENTICAL_IMAGE_ID",
+      "status": "PASS"
+    },
+    {
+      "affected_packages": [
+        {
+          "class": "lang-pkgs",
+          "cve": "CVE-2025-71176",
+          "fixed_version": "9.0.3",
+          "installed_version": "8.4.0",
+          "package": "pytest",
+          "severity": "MEDIUM",
+          "target": "Python",
+          "type": "python-pkg"
+        }
+      ],
+      "content_digest": "sha256:62c8f0f003fdccd0e030f5628759f5f24d938de1064119883c7a3fa6d74dd96f",
+      "dispositions": [],
+      "effective_critical": 0,
+      "effective_high": 0,
+      "identical_image_scan_role": "api",
+      "image_id": "sha256:62c8f0f003fdccd0e030f5628759f5f24d938de1064119883c7a3fa6d74dd96f",
+      "included_in_rc": true,
+      "raw_critical": 0,
+      "raw_evidence": "trivy-migration.json",
+      "raw_evidence_sha256": "288f7abc053f6806c08b60e47d994a21ba4125b40e0c2101219c4af48926ea5b",
+      "raw_high": 0,
+      "reference": "renewable-p5b-migration:4.0.0-rc.3",
+      "repo_digests": [],
+      "role": "migration",
+      "scan_execution": "REUSED_IDENTICAL_IMAGE_ID",
+      "status": "PASS"
+    },
+    {
+      "affected_packages": [],
+      "content_digest": "sha256:487cefedff04f3c7f6304e554cc14bf7220a23d513978a51b2d012c40d0cf882",
+      "dispositions": [],
+      "effective_critical": 0,
+      "effective_high": 0,
+      "identical_image_scan_role": "postgresql",
+      "image_id": "sha256:487cefedff04f3c7f6304e554cc14bf7220a23d513978a51b2d012c40d0cf882",
+      "included_in_rc": true,
+      "raw_critical": 0,
+      "raw_evidence": "trivy-backup.json",
+      "raw_evidence_sha256": "481e474a0b2af998f2ddcfdd1ae5277f44ab575c46f357d995fcf23329c76793",
+      "raw_high": 0,
+      "reference": "renewable-p5b-backup:16.14-hardened",
+      "repo_digests": [],
+      "role": "backup",
+      "scan_execution": "REUSED_IDENTICAL_IMAGE_ID",
+      "status": "PASS"
+    }
+  ],
+  "keycloak_component_verification": {
+    "path": "keycloak-component-verification.json",
+    "sha256": "1101b7fc76f67e8dac52d182ffbdabeea755b4e8121e6c2fee7911f6288dcb88",
+    "waiver": false
+  },
+  "local_rc_security": "PASS_NO_UNDISPOSITIONED_CRITICAL",
+  "production_release_authorized": false,
+  "production_traffic_switched": false,
+  "schema_version": "1.0",
+  "severity_lowering_applied": false,
+  "sqlbot": {
+    "included_in_release": false,
+    "included_in_scan_inventory": false,
+    "original_critical": 49,
+    "original_high": 802,
+    "original_scan_preserved": "docs/platformization/p5a/evidence/container-security/trivy-sqlbot.json"
+  },
+  "started_at": "2026-08-03T17:35:50.955756+00:00",
+  "totals": {
+    "blocked_roles": [
+      "keycloak",
+      "vault"
+    ],
+    "effective_critical": 0,
+    "effective_high": 4,
+    "raw_critical": 0,
+    "raw_high": 7,
+    "roles_scanned": 10,
+    "unique_image_ids_scanned": 7
+  },
+  "trivy_image": "aquasec/trivy:0.70.0",
+  "trivy_version": "Version: 0.70.0",
+  "waivers_created": 0
+}

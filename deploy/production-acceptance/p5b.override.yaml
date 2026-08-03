@@ -1,0 +1,149 @@
+name: renewable-p5b-gate-closure
+
+x-p5b-api-environment: &p5b-api-environment
+  APP_ENV: preproduction
+  DEBUG: "false"
+  AUTO_BOOTSTRAP_DEMO_USERS: "false"
+  SIMULATED_DATA_ONLY: "true"
+  LOCAL_AUTH_ENABLED: "false"
+  PRODUCTION_RELEASE_AUTHORIZED: "false"
+  PUBLIC_BASE_URL: https://p5b.localhost:8446
+  CORS_ORIGINS: https://p5b.localhost:8446
+  TRUSTED_HOSTS: p5b.localhost,localhost,api,testserver
+  RELEASE_VERSION: 4.0.0-rc.3
+  EXPECTED_DATABASE_REVISION: p5_0001
+  ACCEPTANCE_POSTGRES_DB: renewable_p5b
+  DATABASE_POOL_SIZE: "20"
+  DATABASE_MAX_OVERFLOW: "10"
+  DATABASE_POOL_TIMEOUT_SECONDS: "30"
+  ACCEPTANCE_PUBLIC_BASE_URL: https://p5b.localhost:8446
+  ACCEPTANCE_LABEL: P5B Local Gate Closure
+  QUERY_ENGINE_MODE: SHADOW
+  SQLBOT_INCLUDED_IN_V4_RELEASE: "false"
+  SQLBOT_ENGINE_ENABLED: "false"
+  SQLBOT_RUNTIME_VERIFIED: "false"
+  CHATBI_READONLY_EXECUTION_ENABLED: "false"
+  OIDC_ENABLED: "true"
+  OIDC_PROVIDER_CODE: OIDC_PREPROD
+  OIDC_ISSUER: https://p5b.localhost:8446/oidc/realms/chatbi
+  OIDC_INTERNAL_BASE_URL: http://oidc:8080/oidc/realms/chatbi
+  OIDC_CLIENT_ID: chatbi-web
+  OIDC_REDIRECT_URI: https://p5b.localhost:8446/oidc/callback
+  OIDC_SCOPES: openid profile email
+  VAULT_ENABLED: "true"
+  VAULT_ADDRESS: http://vault:8200
+  VAULT_ROLE_ID_FILE: /run/p4-runtime/vault_role_id
+  VAULT_SECRET_ID_FILE: /run/p4-runtime/vault_secret_id
+  EXTERNAL_ALERT_ENABLED: "true"
+  EXTERNAL_ALERT_WEBHOOK_URL: http://alert-receiver:8090/webhook
+  EXTERNAL_ALERT_SIGNING_REFERENCE_NAME: preprod-webhook-signing
+  PREPRODUCTION_EVIDENCE_ROOT: /app/data/preproduction-evidence
+  SECRET_ENV_ALLOWLIST: ""
+
+services:
+  runtime-bootstrap:
+    image: renewable-p5b-api:4.0.0-rc.3
+    pull_policy: never
+    environment:
+      ACCEPTANCE_PUBLIC_BASE_URL: https://p5b.localhost:8446
+      ACCEPTANCE_LABEL: P5B Local Gate Closure
+
+  db:
+    image: renewable-p5b-postgres:16.14-hardened
+    environment:
+      POSTGRES_DB: renewable_p5b
+      POSTGRES_USER: alpha
+      POSTGRES_PASSWORD_FILE: /run/p4-runtime/postgres_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U alpha -d renewable_p5b"]
+
+  vault-permissions:
+    image: hashicorp/vault:2.0.3@sha256:a296a888b118615dc01d5f1a6846e6d4a7277946caaed5b447008fff5fe06b54
+    pull_policy: never
+
+  vault:
+    image: hashicorp/vault:2.0.3@sha256:a296a888b118615dc01d5f1a6846e6d4a7277946caaed5b447008fff5fe06b54
+    pull_policy: never
+
+  vault-bootstrap:
+    image: renewable-p5b-api:4.0.0-rc.3
+    pull_policy: never
+
+  db-prepare:
+    image: renewable-p5b-postgres:16.14-hardened
+    pull_policy: never
+    command:
+      - sh
+      - -ec
+      - |
+        export PGPASSWORD="$$(cat /run/p4-runtime/postgres_password)"
+        psql -h db -U alpha -d renewable_p5b -v ON_ERROR_STOP=1 -c 'CREATE SCHEMA IF NOT EXISTS keycloak AUTHORIZATION alpha'
+
+  migrate:
+    image: renewable-p5b-migration:4.0.0-rc.3
+    environment: *p5b-api-environment
+
+  init:
+    image: renewable-p5b-api:4.0.0-rc.3
+    pull_policy: never
+    environment: *p5b-api-environment
+
+  oidc:
+    image: renewable-p5b-keycloak:26.7.0-hardened
+    pull_policy: never
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: p5b-admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/renewable_p5b
+      KC_DB_USERNAME: alpha
+      KC_DB_SCHEMA: keycloak
+      KC_HTTP_ENABLED: "true"
+      KC_HTTP_RELATIVE_PATH: /oidc
+      KC_HOSTNAME: https://p5b.localhost:8446/oidc
+      KC_PROXY_HEADERS: xforwarded
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+      KC_LOG_LEVEL: INFO
+
+  alert-receiver:
+    image: renewable-p5b-alert-receiver:4.0.0-rc.3
+
+  api:
+    image: renewable-p5b-api:4.0.0-rc.3
+    environment: *p5b-api-environment
+
+  web:
+    image: renewable-p5b-web:4.0.0-rc.3
+
+  proxy:
+    volumes: !override
+      - ../production-acceptance/nginx.p5b.conf:/etc/nginx/conf.d/default.conf:ro
+      - p4_runtime:/run/p4-runtime:ro
+    ports: !override
+      - "8086:80"
+      - "8446:443"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-check-certificate --header='Host: p5b.localhost' -q -O /dev/null https://127.0.0.1/api/v1/health"]
+    networks:
+      default:
+        aliases:
+          - p5b.localhost
+
+  backup:
+    image: renewable-p5b-backup:16.14-hardened
+    pull_policy: never
+    command:
+      - sh
+      - -ec
+      - |
+        export PGPASSWORD="$$(cat /run/p4-runtime/postgres_password)"
+        while true; do
+          target="/backups/p5b-$$(date -u +%Y%m%dT%H%M%SZ).dump"
+          pg_dump -h db -U alpha -d renewable_p5b --format=custom --no-owner --file="$$target"
+          sha256sum "$$target" > "$$target.sha256"
+          sleep 86400
+        done
+
+networks:
+  default:
+    name: renewable-p5b-gate-closure-network

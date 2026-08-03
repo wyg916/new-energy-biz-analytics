@@ -25,6 +25,10 @@ ADD --checksum=sha256:31fbf6f06b2217fb51d5100cee51b22625cc81640da0679b47914e54c1
 FROM quay.io/keycloak/keycloak:26.7.0@sha256:0f198be292568439d700cdbfb893e69a6009bb43a94a06a945b1d3d506c76b13 AS hardened-root
 
 USER 0
+ENV KC_DB=postgres \
+    KC_HEALTH_ENABLED=true \
+    KC_METRICS_ENABLED=true \
+    KC_HTTP_RELATIVE_PATH=/oidc
 COPY --from=patched-jars /jackson-core.jar /opt/keycloak/lib/lib/main/com.fasterxml.jackson.core.jackson-core-2.21.2.jar
 COPY --from=patched-jars /jackson-databind.jar /opt/keycloak/lib/lib/main/com.fasterxml.jackson.core.jackson-databind-2.21.2.jar
 COPY --from=patched-jars /netty-codec.jar /opt/keycloak/lib/lib/main/io.netty.netty-codec-4.1.135.Final.jar
