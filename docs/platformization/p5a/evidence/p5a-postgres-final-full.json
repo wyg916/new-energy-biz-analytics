@@ -1,0 +1,29 @@
+{
+  "database": "p5a_targeted_full_20260803",
+  "database_created": true,
+  "database_removed": true,
+  "errors": 0,
+  "evidence_type": "p5a_postgresql_full_regression",
+  "failures": 0,
+  "finished_at": "2026-08-03T10:51:11.909704+00:00",
+  "junit_copied": false,
+  "junit_sha256": null,
+  "main_database_modified": false,
+  "production_release_authorized": false,
+  "production_traffic_switched": false,
+  "runtime_volume_read_only": true,
+  "secret_values_printed": false,
+  "skipped": 0,
+  "started_at": "2026-08-03T10:31:54.583697+00:00",
+  "status": "FAIL",
+  "suite": "full",
+  "test_container": "renewable-p5a-targeted-tests-20260803103154",
+  "test_container_removed": true,
+  "test_exit_code": 137,
+  "test_output_sha256": "d09f0ad06d6e59b908037317d6c044f7ababd3466cb46d5b901cf6f0855baf04",
+  "test_targets": [
+    "tests"
+  ],
+  "tests": 0,
+  "traceback_disabled": true
+}

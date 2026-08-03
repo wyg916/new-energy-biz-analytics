@@ -40,6 +40,10 @@ def main() -> None:
     parser.add_argument("--database", required=True)
     parser.add_argument("--junit-output", type=Path, required=True)
     parser.add_argument("--summary-output", type=Path, required=True)
+    parser.add_argument(
+        "--full-suite", action="store_true",
+        help="Run the complete backend test suite instead of the P5A targeted pair.",
+    )
     args = parser.parse_args()
     if args.junit_output.exists() or args.summary_output.exists():
         raise RuntimeError("refusing to overwrite targeted test evidence")
@@ -50,6 +54,10 @@ def main() -> None:
     database_removed = False
     test_process: subprocess.CompletedProcess[bytes] | None = None
     junit_copied = False
+    container_removed = False
+    test_targets = ["tests"] if args.full_suite else [
+        "tests/test_auth.py", "tests/test_shadow_evidence.py",
+    ]
     try:
         manage("create", args.database)
         database_created = True
@@ -66,7 +74,7 @@ def main() -> None:
             IMAGE,
             "python", "scripts/p4_entrypoint.py",
             "python", "-m", "pytest",
-            "tests/test_auth.py", "tests/test_shadow_evidence.py",
+            *test_targets,
             "-q", "--tb=no", "--junitxml=/tmp/p5a-targeted-postgres.xml",
         )
         command("docker", "cp", f"{ROOT / 'backend' / 'tests'}/.", f"{container}:/app/tests")
@@ -81,6 +89,8 @@ def main() -> None:
         if database_created:
             manage("drop", args.database)
             database_removed = True
+        removed = command("docker", "rm", "-f", container, check=False)
+        container_removed = removed.returncode == 0
 
     counts = {"tests": 0, "failures": 0, "errors": 0, "skipped": 0}
     if junit_copied:
@@ -93,10 +103,10 @@ def main() -> None:
     passed = (
         exit_code == 0 and junit_copied and counts["tests"] > 0
         and counts["failures"] == counts["errors"] == counts["skipped"] == 0
-        and database_removed
+        and database_removed and container_removed
     )
     result = {
-        "evidence_type": "p5a_targeted_postgresql_remediation_tests",
+        "evidence_type": "p5a_postgresql_full_regression" if args.full_suite else "p5a_targeted_postgresql_remediation_tests",
         "status": "PASS" if passed else "FAIL",
         "started_at": started_at.isoformat(),
         "finished_at": datetime.now(UTC).isoformat(),
@@ -106,7 +116,9 @@ def main() -> None:
         "main_database_modified": False,
         "runtime_volume_read_only": True,
         "test_container": container,
-        "test_container_removed": False,
+        "test_container_removed": container_removed,
+        "suite": "full" if args.full_suite else "targeted",
+        "test_targets": test_targets,
         "test_exit_code": exit_code,
         "test_output_sha256": hashlib.sha256(
             test_process.stdout if test_process is not None else b""

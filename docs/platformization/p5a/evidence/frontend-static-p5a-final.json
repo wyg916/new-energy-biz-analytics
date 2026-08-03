@@ -1,0 +1,19 @@
+{
+  "evidence_type": "p5a_frontend_static_acceptance",
+  "executed_at": "2026-08-03T11:48:18.790593+00:00",
+  "npm_audit": {
+    "evidence": "npm-audit-p5a-final.json",
+    "sha256": "c7c01c66b2a1bd6501249b3b06c9152ec694598624b4533198e03b2a4fa27331",
+    "status": "PASS",
+    "vulnerabilities": 0
+  },
+  "secret_values_printed": false,
+  "typescript": {
+    "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "status": "PASS"
+  },
+  "vite_build": {
+    "output_sha256": "11af3ce5389f85ae77d7f2b39936f0066f65ee5dc8c01a4b9e65b94a50298dce",
+    "status": "PASS"
+  }
+}

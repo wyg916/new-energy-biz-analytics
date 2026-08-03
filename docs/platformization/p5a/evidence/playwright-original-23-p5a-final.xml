@@ -1,0 +1,86 @@
+<testsuites id="" name="" tests="23" failures="0" skipped="0" errors="0" time="210.487171">
+<testsuite name="ai-operations-analysis.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="5.871" errors="0">
+<testcase name="AI经营分析在100%缩放下完整一屏并展示可信ChatBI证据" classname="ai-operations-analysis.spec.ts" time="5.871">
+</testcase>
+</testsuite>
+<testsuite name="alpha.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="15.819" errors="0">
+<testcase name="product alpha core journey uses live backend data" classname="alpha.spec.ts" time="15.819">
+</testcase>
+</testsuite>
+<testsuite name="business-alerts.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="8.802" errors="0">
+<testcase name="经营预警复刻页在100%缩放下一屏完整展示" classname="business-alerts.spec.ts" time="8.802">
+</testcase>
+</testsuite>
+<testsuite name="data-integration-fail-closed.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="1.305" errors="0">
+<testcase name="数据接入接口失败时显示 Blocked 且不展示跨域 fallback" classname="data-integration-fail-closed.spec.ts" time="1.305">
+</testcase>
+</testsuite>
+<testsuite name="data-integration-governance.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="2.955" errors="0">
+<testcase name="数据接入治理页展示已发布不可变快照和 13 步平台闭环" classname="data-integration-governance.spec.ts" time="2.955">
+</testcase>
+</testsuite>
+<testsuite name="data-lineage-ui.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="8.418" errors="0">
+<testcase name="所有业务页面仅使用统一数据状态区并保持正式 API 链路" classname="data-lineage-ui.spec.ts" time="8.418">
+</testcase>
+</testsuite>
+<testsuite name="device-health.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="7.005" errors="0">
+<testcase name="设备健康复刻页在100%缩放下一屏完整展示" classname="device-health.spec.ts" time="7.005">
+</testcase>
+</testsuite>
+<testsuite name="feature-overview.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="20.047" errors="0">
+<testcase name="功能总览复刻页使用后端指标并支持核心入口" classname="feature-overview.spec.ts" time="20.047">
+</testcase>
+</testsuite>
+<testsuite name="global-typography.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="3.802" errors="0">
+<testcase name="all primary product views use the unified readable typography scale" classname="global-typography.spec.ts" time="3.802">
+</testcase>
+</testsuite>
+<testsuite name="gross-profit-cost.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="6.518" errors="0">
+<testcase name="毛利与成本复刻页在100%缩放下一屏完整展示" classname="gross-profit-cost.spec.ts" time="6.518">
+</testcase>
+</testsuite>
+<testsuite name="knowledge-response.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="2" failures="0" skipped="0" time="4.233" errors="0">
+<testcase name="企业知识库展示受控生命周期与真实运行状态" classname="knowledge-response.spec.ts" time="2.264">
+</testcase>
+<testcase name="统一回答界面展示 Profile 与运行边界" classname="knowledge-response.spec.ts" time="1.969">
+</testcase>
+</testsuite>
+<testsuite name="metric-management.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="4.603" errors="0">
+<testcase name="指标与场景管理页在100%缩放下一屏完整展示" classname="metric-management.spec.ts" time="4.603">
+</testcase>
+</testsuite>
+<testsuite name="multi-scenario-chat.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="7.964" errors="0">
+<testcase name="自有 ChatBI UI 切换双场景并展示版本引擎证据" classname="multi-scenario-chat.spec.ts" time="7.964">
+</testcase>
+</testsuite>
+<testsuite name="operations-workbench.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="20.15" errors="0">
+<testcase name="经营工作台在100%缩放下完整一屏并使用后端经营数据" classname="operations-workbench.spec.ts" time="20.15">
+</testcase>
+</testsuite>
+<testsuite name="p3-enterprise-governance.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="2" failures="0" skipped="0" time="3.932" errors="0">
+<testcase name="企业治理控制台读取正式 API 并展示安全边界" classname="p3-enterprise-governance.spec.ts" time="2.024">
+</testcase>
+<testcase name="普通业务用户访问治理中心时明确显示 Forbidden 且无虚构 fallback" classname="p3-enterprise-governance.spec.ts" time="1.908">
+</testcase>
+</testsuite>
+<testsuite name="platform-foundation-fail-closed.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="3" failures="0" skipped="0" time="12.806" errors="0">
+<testcase name="平台状态 Unauthorized 时清除会话，Forbidden 时显示 Blocked 且无 fallback" classname="platform-foundation-fail-closed.spec.ts" time="3.82">
+</testcase>
+<testcase name="空 Schema、字段发现失败、连接失败和 DQ 失败均显式呈现" classname="platform-foundation-fail-closed.spec.ts" time="5.979">
+</testcase>
+<testcase name="审批驳回、激活失败与回滚均以数据库响应为准" classname="platform-foundation-fail-closed.spec.ts" time="3.007">
+</testcase>
+</testsuite>
+<testsuite name="revenue-orders.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="6.551" errors="0">
+<testcase name="收入与订单复刻页在100%缩放下一屏完整展示" classname="revenue-orders.spec.ts" time="6.551">
+</testcase>
+</testsuite>
+<testsuite name="station-operations.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="5.137" errors="0">
+<testcase name="场站经营复刻页在100%缩放下一屏完整展示" classname="station-operations.spec.ts" time="5.137">
+</testcase>
+</testsuite>
+<testsuite name="v2_p0_0_evidence.spec.ts" timestamp="2026-08-03T11:37:32.996Z" hostname="" tests="1" failures="0" skipped="0" time="33.645" errors="0">
+<testcase name="capture current Alpha product pages without changing business data" classname="v2_p0_0_evidence.spec.ts" time="33.645">
+</testcase>
+</testsuite>
+</testsuites>

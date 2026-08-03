@@ -1,0 +1,18 @@
+{
+  "executed_at": "2026-08-03T11:33:44.356403+00:00",
+  "base_url": "https://proxy/api/v1",
+  "authentication": {
+    "positive_checks": "server_oidc",
+    "regional_negative_check": "existing_local_principal_with_login_disabled"
+  },
+  "regional_denial_http_status": 401,
+  "checks": {
+    "health": true,
+    "dashboard_15_metrics": true,
+    "chatbi_guarded": true,
+    "diagnostic_reconciled": true,
+    "report_traceable": true,
+    "regional_scope_denied": true
+  },
+  "passed": true
+}

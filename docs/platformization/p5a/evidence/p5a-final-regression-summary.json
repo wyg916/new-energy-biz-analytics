@@ -1,0 +1,161 @@
+{
+  "data_classification": "simulated",
+  "data_period": {
+    "end": "2026-06-30",
+    "start": "2025-01-01"
+  },
+  "evidence_type": "p5a_current_final_regression",
+  "fixed_evaluations": {
+    "charging_ops": {
+      "differences": {},
+      "passed": 15,
+      "total": 15
+    },
+    "data_quality": {
+      "failures": [],
+      "passed": 20,
+      "total": 20
+    },
+    "deterministic": {
+      "passed": 40,
+      "total": 40
+    },
+    "memory": {
+      "assertion_testcases": 1,
+      "passed": 40,
+      "total": 40
+    },
+    "query_security": {
+      "passed": 15,
+      "total": 15
+    },
+    "rag_keyword": {
+      "assertion_testcases": 1,
+      "passed": 60,
+      "total": 60
+    },
+    "response_composer": {
+      "passed": 7,
+      "total": 7
+    },
+    "sales_ops": {
+      "differences": {},
+      "passed": 12,
+      "total": 12
+    },
+    "skill": {
+      "assertion_testcases": 1,
+      "passed": 40,
+      "total": 40
+    },
+    "sqlbot_offline": {
+      "external_runtime_claimed": false,
+      "passed": 46,
+      "total": 46
+    }
+  },
+  "frontend": {
+    "docker_smoke": {
+      "evidence": "docker-smoke-p5a-final.json",
+      "passed": 6,
+      "total": 6
+    },
+    "playwright": {
+      "passed": 27,
+      "suites": {
+        "gate": {
+          "errors": 0,
+          "failures": 0,
+          "skipped": 0,
+          "tests": 1
+        },
+        "oidc": {
+          "errors": 0,
+          "failures": 0,
+          "skipped": 0,
+          "tests": 3
+        },
+        "original": {
+          "errors": 0,
+          "failures": 0,
+          "skipped": 0,
+          "tests": 23
+        }
+      },
+      "total": 27
+    },
+    "static": {
+      "evidence_type": "p5a_frontend_static_acceptance",
+      "executed_at": "2026-08-03T11:48:18.790593+00:00",
+      "npm_audit": {
+        "evidence": "npm-audit-p5a-final.json",
+        "sha256": "c7c01c66b2a1bd6501249b3b06c9152ec694598624b4533198e03b2a4fa27331",
+        "status": "PASS",
+        "vulnerabilities": 0
+      },
+      "secret_values_printed": false,
+      "typescript": {
+        "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "status": "PASS"
+      },
+      "vite_build": {
+        "output_sha256": "11af3ce5389f85ae77d7f2b39936f0066f65ee5dc8c01a4b9e65b94a50298dce",
+        "status": "PASS"
+      }
+    },
+    "vitest": {
+      "assertions_changed": false,
+      "final": {
+        "errors": 0,
+        "failures": 0,
+        "skipped": 0,
+        "tests": 3
+      },
+      "initial_resource_contention_run": {
+        "errors": 0,
+        "failures": 1,
+        "skipped": 0,
+        "tests": 3
+      },
+      "passed": 3,
+      "total": 3
+    }
+  },
+  "generated_at": "2026-08-03T11:49:22.307823+00:00",
+  "postgresql_backend": {
+    "collected": 359,
+    "corrective_asset_rerun": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 4
+    },
+    "corrective_gate_contract_rerun": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 5
+    },
+    "effective_failed": 0,
+    "effective_passed": 359,
+    "effective_skipped": 0,
+    "full_rerun": {
+      "errors": 0,
+      "failures": 3,
+      "skipped": 0,
+      "tests": 359
+    },
+    "note": "Three full-rerun failures were caused only by a missing docs copy in the disposable test container; the corrected four-case file rerun passed. The tightened 28-gate file then passed 5/5.",
+    "single_clean_run_claimed": false
+  },
+  "runtime_contract": {
+    "production_release_authorized": false,
+    "production_traffic_switched": false,
+    "query_engine_mode": "DETERMINISTIC_ONLY",
+    "rag_runtime_mode": "KEYWORD_ONLY",
+    "sqlbot_canary_eligible": false,
+    "sqlbot_runtime": "DISABLED"
+  },
+  "secret_values_printed": false,
+  "status": "PASS"
+}
