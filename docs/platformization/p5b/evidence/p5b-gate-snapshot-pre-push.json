@@ -1,0 +1,1717 @@
+{
+  "captured_at": "2026-08-03T18:05:53.919045+00:00",
+  "checks": {
+    "acceptance_not_ready": true,
+    "external_gate_count_15": true,
+    "external_gates_remain_open_conditional": true,
+    "gate_count_28": true,
+    "local_gate_count_13": true,
+    "no_go": true,
+    "passed_gates_have_evidence": true,
+    "release_not_authorized": true,
+    "sqlbot_canary_false": true,
+    "traffic_not_switched": true,
+    "waivers_zero": true
+  },
+  "counts": {
+    "BLOCKED": 5,
+    "EXPIRED": 0,
+    "IN_PROGRESS": 0,
+    "OPEN": 15,
+    "PASSED": 8,
+    "WAIVED": 0
+  },
+  "evidence_type": "p5b_production_gate_pre_push_snapshot",
+  "external_gate_codes": [
+    "BUSINESS_APPROVAL",
+    "CHANGE_WINDOW",
+    "ENTERPRISE_ALERT",
+    "ENTERPRISE_IDP",
+    "MONITORING_ALERTING",
+    "OPERATIONS_APPROVAL",
+    "PRODUCTION_CAPACITY",
+    "PRODUCTION_DATA",
+    "PRODUCTION_DATA_APPROVAL",
+    "PRODUCTION_SECRET_MANAGER",
+    "RISK_ACCEPTANCE",
+    "SECRET_MANAGER",
+    "SECURITY_APPROVAL",
+    "SQLBOT_EXTERNAL_REVIEW",
+    "SQLBOT_EXTERNAL_RUNTIME"
+  ],
+  "external_gates_modified": false,
+  "local_gate_codes": [
+    "BACKUP_RECOVERY",
+    "BACKUP_RESTORE",
+    "CAPACITY_SOAK",
+    "DOCKER_RUNTIME",
+    "FRONTEND_E2E",
+    "IMAGE_SECURITY",
+    "KEYCLOAK_SECURITY",
+    "POSTGRES_CANONICAL_REGRESSION",
+    "RAG_MODE",
+    "REMOTE_PUSH",
+    "ROLLBACK_DRILL",
+    "SQLBOT_IMAGE_SECURITY",
+    "VAULT_SECURITY"
+  ],
+  "local_histories": {
+    "BACKUP_RECOVERY": [
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:05:41.867272Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.828023Z",
+            "sha256": "f2d4bfca3fce9629fdf9f1795cfa23462dd437b8922b04819d803aae1c4971c6",
+            "summary": "P5B controlled evidence: p5b-fault-recovery.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-fault-recovery.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.828982Z",
+            "sha256": "e457e7f6ead617b8c8ac49a7dfd4c319e93d1b9b73d7d48a85108cca7394a7fb",
+            "summary": "P5B controlled evidence: p5b-backup-restore.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-backup-restore.json"
+          }
+        ],
+        "evidence_hash": "e7472cfbab26c7667a5320b75955d4b1eda1b5bcae86cd02e3d0393b9a27e685",
+        "gate_code": "BACKUP_RECOVERY",
+        "history_id": "GATEH-bd7e16fe-f11e-4967-a0bd-55ff7870c0a0",
+        "previous_status": "PASSED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 3
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:04:48.159269Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:04:48.122767Z",
+            "sha256": "f2d4bfca3fce9629fdf9f1795cfa23462dd437b8922b04819d803aae1c4971c6",
+            "summary": "P5B controlled evidence: p5b-fault-recovery.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-fault-recovery.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:04:48.123060Z",
+            "sha256": "e457e7f6ead617b8c8ac49a7dfd4c319e93d1b9b73d7d48a85108cca7394a7fb",
+            "summary": "P5B controlled evidence: p5b-backup-restore.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-backup-restore.json"
+          }
+        ],
+        "evidence_hash": "1d147e285a25af504b344a4e0af02c15869211b7b46c265b7f0bba248498a6cd",
+        "gate_code": "BACKUP_RECOVERY",
+        "history_id": "GATEH-bca75bcd-731e-40dc-9348-04ae5802f90d",
+        "previous_status": "BLOCKED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 2
+      }
+    ],
+    "BACKUP_RESTORE": [
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:05:41.956015Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.901024Z",
+            "sha256": "e457e7f6ead617b8c8ac49a7dfd4c319e93d1b9b73d7d48a85108cca7394a7fb",
+            "summary": "P5B controlled evidence: p5b-backup-restore.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-backup-restore.json"
+          }
+        ],
+        "evidence_hash": "6a6b634f7a3df507d63473ee9204bc10b149b0586873e3fdbdb9fd933181ebff",
+        "gate_code": "BACKUP_RESTORE",
+        "history_id": "GATEH-86df981b-742e-4638-b1d9-223e9037fb84",
+        "previous_status": "PASSED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 3
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:04:48.493759Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:04:48.456477Z",
+            "sha256": "e457e7f6ead617b8c8ac49a7dfd4c319e93d1b9b73d7d48a85108cca7394a7fb",
+            "summary": "P5B controlled evidence: p5b-backup-restore.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-backup-restore.json"
+          }
+        ],
+        "evidence_hash": "ad0a7639d66591c514289b871c64c73694127835b16a23072a31383566964bcd",
+        "gate_code": "BACKUP_RESTORE",
+        "history_id": "GATEH-05e20371-f2c6-4fce-862d-bc9790069d00",
+        "previous_status": "OPEN",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 2
+      }
+    ],
+    "CAPACITY_SOAK": [
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:05:41.783734Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.734724Z",
+            "sha256": "44977aac406a3e7c2630ab90f640dded3e1811b0ea50a0f89a1b8ec215a4db44",
+            "summary": "P5B controlled evidence: p5a-capacity-soak.json",
+            "uri": "docs/platformization/p5a/evidence/p5a-capacity-soak.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.734724Z",
+            "sha256": "6f7fe4a54d2bbab6c20f3acbe6aed185f97608e68cda0c87743340065c9445ab",
+            "summary": "P5B controlled evidence: p5a-capacity-verification.json",
+            "uri": "docs/platformization/p5a/evidence/p5a-capacity-verification.json"
+          }
+        ],
+        "evidence_hash": "2b4b4f4ab830bc2fda3f92864059eadba3de44a34a658e40bc2a7f2c04e99db9",
+        "gate_code": "CAPACITY_SOAK",
+        "history_id": "GATEH-c8659167-01c1-4136-ad00-a85bd4d20879",
+        "previous_status": "PASSED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 3
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:04:47.964097Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:04:47.906538Z",
+            "sha256": "44977aac406a3e7c2630ab90f640dded3e1811b0ea50a0f89a1b8ec215a4db44",
+            "summary": "P5B controlled evidence: p5a-capacity-soak.json",
+            "uri": "docs/platformization/p5a/evidence/p5a-capacity-soak.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:04:47.906538Z",
+            "sha256": "6f7fe4a54d2bbab6c20f3acbe6aed185f97608e68cda0c87743340065c9445ab",
+            "summary": "P5B controlled evidence: p5a-capacity-verification.json",
+            "uri": "docs/platformization/p5a/evidence/p5a-capacity-verification.json"
+          }
+        ],
+        "evidence_hash": "4ff4bcf221fb2a8a87cff437fbe210b87e66241e3a3e46d227dc0087760d803d",
+        "gate_code": "CAPACITY_SOAK",
+        "history_id": "GATEH-28f8d564-85da-44f5-8bbd-469a506ce4d8",
+        "previous_status": "BLOCKED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 2
+      }
+    ],
+    "DOCKER_RUNTIME": [
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:05:40.742612Z",
+        "evidence": [
+          {
+            "evidence_type": "runtime_probe",
+            "observed_at": "2026-08-03T18:05:40.677932Z",
+            "sha256": "46fe24ce8c801776c1a64305d775e0bbd0cc29153d1aa45f63678713be425003",
+            "summary": "P5B controlled evidence: docker-smoke-p5b-final.json",
+            "uri": "docs/platformization/p5b/evidence/docker-smoke-p5b-final.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:40.678493Z",
+            "sha256": "f2d4bfca3fce9629fdf9f1795cfa23462dd437b8922b04819d803aae1c4971c6",
+            "summary": "P5B controlled evidence: p5b-fault-recovery.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-fault-recovery.json"
+          }
+        ],
+        "evidence_hash": "e14a0e16c552e63ad319815e5266d88477d5d92fd17c5177b0730f4c0cf5fd99",
+        "gate_code": "DOCKER_RUNTIME",
+        "history_id": "GATEH-39a4918e-e520-4796-8128-a5708134196c",
+        "previous_status": "PASSED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 4
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:04:46.223973Z",
+        "evidence": [
+          {
+            "evidence_type": "runtime_probe",
+            "observed_at": "2026-08-03T18:04:46.169905Z",
+            "sha256": "46fe24ce8c801776c1a64305d775e0bbd0cc29153d1aa45f63678713be425003",
+            "summary": "P5B controlled evidence: docker-smoke-p5b-final.json",
+            "uri": "docs/platformization/p5b/evidence/docker-smoke-p5b-final.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:04:46.170905Z",
+            "sha256": "f2d4bfca3fce9629fdf9f1795cfa23462dd437b8922b04819d803aae1c4971c6",
+            "summary": "P5B controlled evidence: p5b-fault-recovery.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-fault-recovery.json"
+          }
+        ],
+        "evidence_hash": "4cc66c3eafe335cde0536305d992bc55f55e4824d3ba136588aef477ff4590d0",
+        "gate_code": "DOCKER_RUNTIME",
+        "history_id": "GATEH-7b78f5c1-7491-4e47-920e-39b8e9f96e45",
+        "previous_status": "PASSED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 3
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:02:50.138115Z",
+        "evidence": [
+          {
+            "evidence_type": "runtime_probe",
+            "observed_at": "2026-08-03T18:02:49.779673Z",
+            "sha256": "46fe24ce8c801776c1a64305d775e0bbd0cc29153d1aa45f63678713be425003",
+            "summary": "P5B controlled evidence: docker-smoke-p5b-final.json",
+            "uri": "docs/platformization/p5b/evidence/docker-smoke-p5b-final.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:02:49.780214Z",
+            "sha256": "f2d4bfca3fce9629fdf9f1795cfa23462dd437b8922b04819d803aae1c4971c6",
+            "summary": "P5B controlled evidence: p5b-fault-recovery.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-fault-recovery.json"
+          }
+        ],
+        "evidence_hash": "bd6422df7bed373a4634672368870507084d927f9b557a9aa4f2b2cdb589a4cb",
+        "gate_code": "DOCKER_RUNTIME",
+        "history_id": "GATEH-f3a58cab-1afa-4435-abd1-9beb9c12373c",
+        "previous_status": "BLOCKED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 2
+      }
+    ],
+    "FRONTEND_E2E": [
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:05:40.957336Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:40.896925Z",
+            "sha256": "e2c3a32c36cdf679f3a398d3667673f7a8b372f9223e5fdc6576c809f5f13a88",
+            "summary": "P5B controlled evidence: p5b-final-regression-summary.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-final-regression-summary.json"
+          }
+        ],
+        "evidence_hash": "09bf8ac4061032cb4437924a9d9d45da6df383f43888712708214cdfd019f79d",
+        "gate_code": "FRONTEND_E2E",
+        "history_id": "GATEH-ae6a784f-3e81-4a49-99c7-ff714fa1859f",
+        "previous_status": "PASSED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 4
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:04:46.580797Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:04:46.510380Z",
+            "sha256": "e2c3a32c36cdf679f3a398d3667673f7a8b372f9223e5fdc6576c809f5f13a88",
+            "summary": "P5B controlled evidence: p5b-final-regression-summary.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-final-regression-summary.json"
+          }
+        ],
+        "evidence_hash": "db29d4bf6f06d4f1e40179f8f5fee14b582ee8c6e97377621838c757cf45b90c",
+        "gate_code": "FRONTEND_E2E",
+        "history_id": "GATEH-2155c580-7223-47da-b7b1-05fb56b913de",
+        "previous_status": "PASSED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 3
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:02:50.825918Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:02:50.753938Z",
+            "sha256": "e2c3a32c36cdf679f3a398d3667673f7a8b372f9223e5fdc6576c809f5f13a88",
+            "summary": "P5B controlled evidence: p5b-final-regression-summary.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-final-regression-summary.json"
+          }
+        ],
+        "evidence_hash": "b926b67d0ec2979205c263491941d402e3312e0305a25c474d3e43e15602f133",
+        "gate_code": "FRONTEND_E2E",
+        "history_id": "GATEH-ca5de1bb-632c-4cfe-a9e8-b5c32eb5b777",
+        "previous_status": "BLOCKED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 2
+      }
+    ],
+    "IMAGE_SECURITY": [
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:05:41.046132Z",
+        "evidence": [
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:05:41.002180Z",
+            "sha256": "8f8498738965844f77b3837d0897f7a3d40bc0e9e7065176df7a3a471a5c20e4",
+            "summary": "P5B controlled evidence: container-security-summary.json",
+            "uri": "docs/platformization/p5b/evidence/container-security/container-security-summary.json"
+          }
+        ],
+        "evidence_hash": "fadf6751a1be67f8c307af6962918a437c4ec58c94f9490f20db8b1f55d74e8f",
+        "gate_code": "IMAGE_SECURITY",
+        "history_id": "GATEH-5bb61dab-a4db-4f9f-ba37-dd2aaa28518f",
+        "previous_status": "BLOCKED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "BLOCKED",
+        "version": 4
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:04:46.761051Z",
+        "evidence": [
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:04:46.715489Z",
+            "sha256": "8f8498738965844f77b3837d0897f7a3d40bc0e9e7065176df7a3a471a5c20e4",
+            "summary": "P5B controlled evidence: container-security-summary.json",
+            "uri": "docs/platformization/p5b/evidence/container-security/container-security-summary.json"
+          }
+        ],
+        "evidence_hash": "5a6d0bf05208e88de3834c5219eedfd0dfcc74a14330e9aa43a420c5b02e8c5d",
+        "gate_code": "IMAGE_SECURITY",
+        "history_id": "GATEH-9d6ad7c8-6462-4bf2-8988-14ae88d07c20",
+        "previous_status": "BLOCKED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "BLOCKED",
+        "version": 3
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:02:50.989253Z",
+        "evidence": [
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:02:50.925774Z",
+            "sha256": "8f8498738965844f77b3837d0897f7a3d40bc0e9e7065176df7a3a471a5c20e4",
+            "summary": "P5B controlled evidence: container-security-summary.json",
+            "uri": "docs/platformization/p5b/evidence/container-security/container-security-summary.json"
+          }
+        ],
+        "evidence_hash": "114f1bde5849ac7e97240f52bbe61085a9ac69a0e2e05d232a757cd03249ac8e",
+        "gate_code": "IMAGE_SECURITY",
+        "history_id": "GATEH-0dfc072f-01a4-4574-9af4-0ec429fc4747",
+        "previous_status": "BLOCKED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "BLOCKED",
+        "version": 2
+      }
+    ],
+    "KEYCLOAK_SECURITY": [
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:05:41.135148Z",
+        "evidence": [
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:05:41.092926Z",
+            "sha256": "a2823f9e410e1612549b04b1d4c36196fb0e450cb8bed76d5a7e7aa57cfc4872",
+            "summary": "P5B controlled evidence: trivy-keycloak.json",
+            "uri": "docs/platformization/p5b/evidence/container-security/trivy-keycloak.json"
+          },
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:05:41.093480Z",
+            "sha256": "1101b7fc76f67e8dac52d182ffbdabeea755b4e8121e6c2fee7911f6288dcb88",
+            "summary": "P5B controlled evidence: keycloak-component-verification.json",
+            "uri": "docs/platformization/p5b/evidence/container-security/keycloak-component-verification.json"
+          }
+        ],
+        "evidence_hash": "3676f6687e2a83ee63f8807c61bc9b8dd6de352c3338688ea93fbdca1872c4d0",
+        "gate_code": "KEYCLOAK_SECURITY",
+        "history_id": "GATEH-57ffd7de-0a27-43d8-a995-e67c6661d778",
+        "previous_status": "BLOCKED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "BLOCKED",
+        "version": 3
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:04:47.003641Z",
+        "evidence": [
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:04:46.960522Z",
+            "sha256": "a2823f9e410e1612549b04b1d4c36196fb0e450cb8bed76d5a7e7aa57cfc4872",
+            "summary": "P5B controlled evidence: trivy-keycloak.json",
+            "uri": "docs/platformization/p5b/evidence/container-security/trivy-keycloak.json"
+          },
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:04:46.960522Z",
+            "sha256": "1101b7fc76f67e8dac52d182ffbdabeea755b4e8121e6c2fee7911f6288dcb88",
+            "summary": "P5B controlled evidence: keycloak-component-verification.json",
+            "uri": "docs/platformization/p5b/evidence/container-security/keycloak-component-verification.json"
+          }
+        ],
+        "evidence_hash": "341d7268b6ef8afb9613669e10eb7001a5ecf58dafa876776e70c6527c70c17d",
+        "gate_code": "KEYCLOAK_SECURITY",
+        "history_id": "GATEH-06570249-1f06-4b43-b59c-850eb9519ae2",
+        "previous_status": "BLOCKED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "BLOCKED",
+        "version": 2
+      }
+    ],
+    "POSTGRES_CANONICAL_REGRESSION": [
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:05:40.824234Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:40.773558Z",
+            "sha256": "e2c3a32c36cdf679f3a398d3667673f7a8b372f9223e5fdc6576c809f5f13a88",
+            "summary": "P5B controlled evidence: p5b-final-regression-summary.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-final-regression-summary.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:40.773558Z",
+            "sha256": "e457e7f6ead617b8c8ac49a7dfd4c319e93d1b9b73d7d48a85108cca7394a7fb",
+            "summary": "P5B controlled evidence: p5b-backup-restore.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-backup-restore.json"
+          }
+        ],
+        "evidence_hash": "a5f07cda97cf59dab435e25dae8f22ca0dcf1b8f086228e12efc84f128531cf0",
+        "gate_code": "POSTGRES_CANONICAL_REGRESSION",
+        "history_id": "GATEH-ba605d34-e055-4ff2-af2c-0972400dd0cc",
+        "previous_status": "PASSED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 4
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:04:46.386477Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:04:46.348425Z",
+            "sha256": "e2c3a32c36cdf679f3a398d3667673f7a8b372f9223e5fdc6576c809f5f13a88",
+            "summary": "P5B controlled evidence: p5b-final-regression-summary.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-final-regression-summary.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:04:46.348425Z",
+            "sha256": "e457e7f6ead617b8c8ac49a7dfd4c319e93d1b9b73d7d48a85108cca7394a7fb",
+            "summary": "P5B controlled evidence: p5b-backup-restore.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-backup-restore.json"
+          }
+        ],
+        "evidence_hash": "f67afcfe9915bbbfe66897b6e98366b61b7ec8e5477ca9db187ee626d15ca2ed",
+        "gate_code": "POSTGRES_CANONICAL_REGRESSION",
+        "history_id": "GATEH-0e8325f6-5c66-4caa-a7d6-ebb676e8b688",
+        "previous_status": "PASSED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 3
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:02:50.511667Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:02:50.391085Z",
+            "sha256": "e2c3a32c36cdf679f3a398d3667673f7a8b372f9223e5fdc6576c809f5f13a88",
+            "summary": "P5B controlled evidence: p5b-final-regression-summary.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-final-regression-summary.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:02:50.391345Z",
+            "sha256": "e457e7f6ead617b8c8ac49a7dfd4c319e93d1b9b73d7d48a85108cca7394a7fb",
+            "summary": "P5B controlled evidence: p5b-backup-restore.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-backup-restore.json"
+          }
+        ],
+        "evidence_hash": "d2cebd250c76d756eb5d3d02b2aceb16dcf115d207145bb58b2cd24ec0f1f121",
+        "gate_code": "POSTGRES_CANONICAL_REGRESSION",
+        "history_id": "GATEH-003f23ae-6c97-4b73-981b-cd8163f3bdb6",
+        "previous_status": "BLOCKED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 2
+      }
+    ],
+    "RAG_MODE": [
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:05:42.063886Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.995868Z",
+            "sha256": "e2c3a32c36cdf679f3a398d3667673f7a8b372f9223e5fdc6576c809f5f13a88",
+            "summary": "P5B controlled evidence: p5b-final-regression-summary.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-final-regression-summary.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.996424Z",
+            "sha256": "056c6d9bed581336b6a5c651b02062a6128c1ed16e8e5ba840d6f7310e743ea9",
+            "summary": "P5B controlled evidence: rag-keyword-release.json",
+            "uri": "docs/platformization/p5/evidence/rag-keyword-release.json"
+          }
+        ],
+        "evidence_hash": "cf65c14b0fccbb32f45e649f56899ad862aa473da71a54bad0a57a78100724dd",
+        "gate_code": "RAG_MODE",
+        "history_id": "GATEH-4929ce62-edac-4b34-899d-6e8e4e800387",
+        "previous_status": "PASSED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 3
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:04:48.669351Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:04:48.627808Z",
+            "sha256": "e2c3a32c36cdf679f3a398d3667673f7a8b372f9223e5fdc6576c809f5f13a88",
+            "summary": "P5B controlled evidence: p5b-final-regression-summary.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-final-regression-summary.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:04:48.628365Z",
+            "sha256": "056c6d9bed581336b6a5c651b02062a6128c1ed16e8e5ba840d6f7310e743ea9",
+            "summary": "P5B controlled evidence: rag-keyword-release.json",
+            "uri": "docs/platformization/p5/evidence/rag-keyword-release.json"
+          }
+        ],
+        "evidence_hash": "3f4fd3b03d21b7098895ae0fab82c9efec1cee3a3dab555f2873c13207bd7115",
+        "gate_code": "RAG_MODE",
+        "history_id": "GATEH-dfd26047-fb75-43bc-b368-d8a87a0f9c2b",
+        "previous_status": "PASSED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 2
+      }
+    ],
+    "REMOTE_PUSH": [
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:04:56.148233Z",
+        "evidence": [],
+        "evidence_hash": null,
+        "gate_code": "REMOTE_PUSH",
+        "history_id": "GATEH-b0577599-ab01-410d-a42e-d8705b455b1c",
+        "previous_status": "BLOCKED",
+        "reason": "P5B remote push cannot pass before the final local commit is published and 0/0 divergence is reverified.",
+        "status": "BLOCKED",
+        "version": 3
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:02:59.430625Z",
+        "evidence": [],
+        "evidence_hash": null,
+        "gate_code": "REMOTE_PUSH",
+        "history_id": "GATEH-cced3103-b39f-4a98-84f2-53a81cc9f0c1",
+        "previous_status": "BLOCKED",
+        "reason": "P5B remote push cannot pass before the final local commit is published and 0/0 divergence is reverified.",
+        "status": "BLOCKED",
+        "version": 2
+      }
+    ],
+    "ROLLBACK_DRILL": [
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:05:42.168012Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:42.102674Z",
+            "sha256": "3e218be4c9dcfd484003057014d51c3ad218b8f94660806a7588cf2ebdc26f68",
+            "summary": "P5B controlled evidence: p5b-rollback-drill.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-rollback-drill.json"
+          }
+        ],
+        "evidence_hash": "ccd24737eba41e9ce850083515852591e210a84d728e76e213615ccfd8a3ddcb",
+        "gate_code": "ROLLBACK_DRILL",
+        "history_id": "GATEH-52d3d31f-797d-465d-8949-2797dcc13949",
+        "previous_status": "BLOCKED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "PASSED",
+        "version": 3
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:04:48.827449Z",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:04:48.780071Z",
+            "sha256": "3e218be4c9dcfd484003057014d51c3ad218b8f94660806a7588cf2ebdc26f68",
+            "summary": "P5B controlled evidence: p5b-rollback-drill.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-rollback-drill.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:04:48.780291Z",
+            "sha256": "59ec8b7eb775652e014e5fa87e44435497af4bbf2735c3ad8a832f21c31abb6c",
+            "summary": "P5B controlled evidence: p5b-rollback-drill-attempt-1.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-rollback-drill-attempt-1.json"
+          }
+        ],
+        "evidence_hash": "dc3e3d1ce79753e3b72d40cfb95aee808eacc3eac7496740184c9cf2d4666043",
+        "gate_code": "ROLLBACK_DRILL",
+        "history_id": "GATEH-69943952-0722-4f0d-bc3b-9ce6b2b83329",
+        "previous_status": "OPEN",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "BLOCKED",
+        "version": 2
+      }
+    ],
+    "SQLBOT_IMAGE_SECURITY": [
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:05:41.696843Z",
+        "evidence": [
+          {
+            "evidence_type": "manifest",
+            "observed_at": "2026-08-03T18:05:41.555215Z",
+            "sha256": "8046c1571354aee37b23ba01a9f6bed4c02b1d89b54ea680fee95ccddaa1acdd",
+            "summary": "P5B controlled evidence: p5b-release-component-scope.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-release-component-scope.json"
+          },
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:05:41.637740Z",
+            "sha256": "21f0f1481451482cc0a702c7eeea96fdd587f40e47b8fa4ad8a6a6d18a070f9f",
+            "summary": "P5B controlled evidence: trivy-sqlbot.json",
+            "uri": "docs/platformization/p5a/evidence/container-security/trivy-sqlbot.json"
+          }
+        ],
+        "evidence_hash": "1e3a9f2d98bb7be6a65a2ff055ee2f7050c2e9c05b9921779e5dbba39e7d2a2f",
+        "gate_code": "SQLBOT_IMAGE_SECURITY",
+        "history_id": "GATEH-ab5b668f-dc88-4619-bc32-b3c2343b4b2c",
+        "previous_status": "BLOCKED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "BLOCKED",
+        "version": 3
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:04:47.794004Z",
+        "evidence": [
+          {
+            "evidence_type": "manifest",
+            "observed_at": "2026-08-03T18:04:47.701143Z",
+            "sha256": "8046c1571354aee37b23ba01a9f6bed4c02b1d89b54ea680fee95ccddaa1acdd",
+            "summary": "P5B controlled evidence: p5b-release-component-scope.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-release-component-scope.json"
+          },
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:04:47.761407Z",
+            "sha256": "21f0f1481451482cc0a702c7eeea96fdd587f40e47b8fa4ad8a6a6d18a070f9f",
+            "summary": "P5B controlled evidence: trivy-sqlbot.json",
+            "uri": "docs/platformization/p5a/evidence/container-security/trivy-sqlbot.json"
+          }
+        ],
+        "evidence_hash": "162a8a5541d878a11221c30cb7a4c0cf6b949212016eaa5e1481fafdf5a46119",
+        "gate_code": "SQLBOT_IMAGE_SECURITY",
+        "history_id": "GATEH-ecbacd11-bced-42da-8632-8ccd23045144",
+        "previous_status": "BLOCKED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "BLOCKED",
+        "version": 2
+      }
+    ],
+    "VAULT_SECURITY": [
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:05:41.218360Z",
+        "evidence": [
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:05:41.181722Z",
+            "sha256": "12ad9f9bdbcb1740cd7797c25555eadca1e24d72b14c3a59dacef8bd549ccb21",
+            "summary": "P5B controlled evidence: trivy-vault.json",
+            "uri": "docs/platformization/p5b/evidence/container-security/trivy-vault.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.181722Z",
+            "sha256": "23766c72f2d2b45d3f2fa4b2e670db78ee8ba785b32ba822374982b37dc0fb51",
+            "summary": "P5B controlled evidence: p5b-vault-acceptance.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-vault-acceptance.json"
+          }
+        ],
+        "evidence_hash": "dd1e483be82de028c3061b0982e623051cff3f9bbf3118c72f8530877f2f4f9f",
+        "gate_code": "VAULT_SECURITY",
+        "history_id": "GATEH-5627d504-63b3-48bb-b7ff-09e613eb491a",
+        "previous_status": "BLOCKED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "BLOCKED",
+        "version": 3
+      },
+      {
+        "actor_subject_id": "principal:PRN-P4-OIDC-ANALYST",
+        "created_at": "2026-08-03T18:04:47.585033Z",
+        "evidence": [
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:04:47.551388Z",
+            "sha256": "12ad9f9bdbcb1740cd7797c25555eadca1e24d72b14c3a59dacef8bd549ccb21",
+            "summary": "P5B controlled evidence: trivy-vault.json",
+            "uri": "docs/platformization/p5b/evidence/container-security/trivy-vault.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:04:47.551972Z",
+            "sha256": "23766c72f2d2b45d3f2fa4b2e670db78ee8ba785b32ba822374982b37dc0fb51",
+            "summary": "P5B controlled evidence: p5b-vault-acceptance.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-vault-acceptance.json"
+          }
+        ],
+        "evidence_hash": "d40415872857dd100f0d26c277ddb747e806a05fe6349e7c846918be0e0b7921",
+        "gate_code": "VAULT_SECURITY",
+        "history_id": "GATEH-dea38cf5-90d5-440d-b45e-d01fd17f19c0",
+        "previous_status": "BLOCKED",
+        "reason": "P5B local gate evidence was reverified; external gates and release authorization remain unchanged.",
+        "status": "BLOCKED",
+        "version": 2
+      }
+    ]
+  },
+  "passed_without_evidence": [],
+  "snapshot": {
+    "data": {
+      "classification": "simulated",
+      "period": {
+        "end_inclusive": "2026-06-30",
+        "start": "2025-01-01"
+      },
+      "run_id_location": "gate evidence and global runtime status",
+      "source": "fixed-seed business-rule simulation stored in the governed database"
+    },
+    "environment": "production-acceptance",
+    "gates": [
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "approval",
+        "display_status": "CONDITIONAL",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-09-02T15:00:50.597774Z",
+        "external_condition": true,
+        "gate_code": "BUSINESS_APPROVAL",
+        "gate_id": "GATE-P5-BUSINESS_APPROVAL",
+        "last_verified_at": null,
+        "owner": "business_owner",
+        "recorded_status": "OPEN",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "业务负责人基于唯一 P5 验收包明确签署。",
+        "status": "OPEN",
+        "title": "业务负责人批准",
+        "updated_at": "2026-08-03T15:00:50.597774Z",
+        "version": 1,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "approval",
+        "display_status": "CONDITIONAL",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-09-02T15:00:50.597774Z",
+        "external_condition": true,
+        "gate_code": "OPERATIONS_APPROVAL",
+        "gate_id": "GATE-P5-OPERATIONS_APPROVAL",
+        "last_verified_at": null,
+        "owner": "operations_owner",
+        "recorded_status": "OPEN",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "运维负责人基于容量、监控、备份、变更窗口和回滚证据明确签署。",
+        "status": "OPEN",
+        "title": "运维负责人批准",
+        "updated_at": "2026-08-03T15:00:50.597774Z",
+        "version": 1,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "approval",
+        "display_status": "CONDITIONAL",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-09-02T15:00:50.597774Z",
+        "external_condition": true,
+        "gate_code": "SECURITY_APPROVAL",
+        "gate_id": "GATE-P5-SECURITY_APPROVAL",
+        "last_verified_at": null,
+        "owner": "security_owner",
+        "recorded_status": "OPEN",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "安全负责人基于镜像、Secret、越权和残余风险证据明确签署。",
+        "status": "OPEN",
+        "title": "安全负责人批准",
+        "updated_at": "2026-08-03T15:00:50.597774Z",
+        "version": 1,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "capacity",
+        "display_status": "PASSED",
+        "environment": "production",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.734724Z",
+            "sha256": "44977aac406a3e7c2630ab90f640dded3e1811b0ea50a0f89a1b8ec215a4db44",
+            "summary": "P5B controlled evidence: p5a-capacity-soak.json",
+            "uri": "docs/platformization/p5a/evidence/p5a-capacity-soak.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.734724Z",
+            "sha256": "6f7fe4a54d2bbab6c20f3acbe6aed185f97608e68cda0c87743340065c9445ab",
+            "summary": "P5B controlled evidence: p5a-capacity-verification.json",
+            "uri": "docs/platformization/p5a/evidence/p5a-capacity-verification.json"
+          }
+        ],
+        "evidence_hash": "2b4b4f4ab830bc2fda3f92864059eadba3de44a34a658e40bc2a7f2c04e99db9",
+        "expires_at": "2026-08-17T18:05:41.734724Z",
+        "external_condition": false,
+        "gate_code": "CAPACITY_SOAK",
+        "gate_id": "GATE-P5-CAPACITY_SOAK",
+        "last_verified_at": "2026-08-03T18:05:41.783734Z",
+        "owner": "operations_owner",
+        "recorded_status": "PASSED",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "100 逻辑用户、并发 20、7200 秒，错误、超时、资源、连接、审计和重启证据完整。",
+        "status": "PASSED",
+        "title": "P5A 两小时容量耐久",
+        "updated_at": "2026-08-03T18:05:41.783734Z",
+        "version": 3,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "capacity",
+        "display_status": "CONDITIONAL",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-09-02T15:00:50.597774Z",
+        "external_condition": true,
+        "gate_code": "PRODUCTION_CAPACITY",
+        "gate_id": "GATE-P5-PRODUCTION_CAPACITY",
+        "last_verified_at": null,
+        "owner": "operations_owner",
+        "recorded_status": "OPEN",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "提供生产同构规格并完成容量、耐久、故障和备份期间影响验收；本地值不替代 SLA。",
+        "status": "OPEN",
+        "title": "代表性生产容量与 SLA",
+        "updated_at": "2026-08-03T15:00:50.597774Z",
+        "version": 1,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "data",
+        "display_status": "PASSED",
+        "environment": "production",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:40.773558Z",
+            "sha256": "e2c3a32c36cdf679f3a398d3667673f7a8b372f9223e5fdc6576c809f5f13a88",
+            "summary": "P5B controlled evidence: p5b-final-regression-summary.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-final-regression-summary.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:40.773558Z",
+            "sha256": "e457e7f6ead617b8c8ac49a7dfd4c319e93d1b9b73d7d48a85108cca7394a7fb",
+            "summary": "P5B controlled evidence: p5b-backup-restore.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-backup-restore.json"
+          }
+        ],
+        "evidence_hash": "a5f07cda97cf59dab435e25dae8f22ca0dcf1b8f086228e12efc84f128531cf0",
+        "expires_at": "2026-08-17T18:05:40.773558Z",
+        "external_condition": false,
+        "gate_code": "POSTGRES_CANONICAL_REGRESSION",
+        "gate_id": "GATE-P5-POSTGRES_CANONICAL_REGRESSION",
+        "last_verified_at": "2026-08-03T18:05:40.824234Z",
+        "owner": "data_owner",
+        "recorded_status": "PASSED",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "固定数据规模、15+12 指标、DQ 与固定评测必须在 PostgreSQL 标准环境全部通过。",
+        "status": "PASSED",
+        "title": "PostgreSQL 权威业务回归",
+        "updated_at": "2026-08-03T18:05:40.824234Z",
+        "version": 4,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "data",
+        "display_status": "CONDITIONAL",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-09-02T15:00:50.597774Z",
+        "external_condition": true,
+        "gate_code": "PRODUCTION_DATA",
+        "gate_id": "GATE-P5-PRODUCTION_DATA",
+        "last_verified_at": null,
+        "owner": "data_owner",
+        "recorded_status": "OPEN",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "需真实授权、分类、脱敏、最小只读权限、保留删除、审计和断开连接证据。",
+        "status": "OPEN",
+        "title": "真实生产数据接入",
+        "updated_at": "2026-08-03T15:00:50.597774Z",
+        "version": 1,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "data",
+        "display_status": "CONDITIONAL",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-09-02T15:00:50.597774Z",
+        "external_condition": true,
+        "gate_code": "PRODUCTION_DATA_APPROVAL",
+        "gate_id": "GATE-P5-PRODUCTION_DATA_APPROVAL",
+        "last_verified_at": null,
+        "owner": "data_owner",
+        "recorded_status": "OPEN",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "数据分类、脱敏、最小权限、只读、保留、删除、审计和断开连接全部获批。",
+        "status": "OPEN",
+        "title": "生产数据接入审批",
+        "updated_at": "2026-08-03T15:00:50.597774Z",
+        "version": 1,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "delivery",
+        "display_status": "BLOCKED",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-08-17T18:04:56.097880Z",
+        "external_condition": false,
+        "gate_code": "REMOTE_PUSH",
+        "gate_id": "GATE-P5-REMOTE_PUSH",
+        "last_verified_at": null,
+        "owner": "release_owner",
+        "recorded_status": "BLOCKED",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "远端分支 SHA 必须等于本地冻结 SHA，ahead/behind 为 0/0，并在代码变更后复核。",
+        "status": "BLOCKED",
+        "title": "Git 远端分发完整性",
+        "updated_at": "2026-08-03T18:04:56.148233Z",
+        "version": 3,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "identity",
+        "display_status": "CONDITIONAL",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-09-02T15:00:50.597774Z",
+        "external_condition": true,
+        "gate_code": "ENTERPRISE_IDP",
+        "gate_id": "GATE-P5-ENTERPRISE_IDP",
+        "last_verified_at": null,
+        "owner": "identity_owner",
+        "recorded_status": "OPEN",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "企业测试租户、metadata、claims、禁用、撤权、JWKS 轮换和回滚均有真实证据。",
+        "status": "OPEN",
+        "title": "真实企业 IdP 联调",
+        "updated_at": "2026-08-03T15:00:50.597774Z",
+        "version": 1,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "observability",
+        "display_status": "CONDITIONAL",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-09-02T15:00:50.597774Z",
+        "external_condition": true,
+        "gate_code": "ENTERPRISE_ALERT",
+        "gate_id": "GATE-P5-ENTERPRISE_ALERT",
+        "last_verified_at": null,
+        "owner": "operations_owner",
+        "recorded_status": "OPEN",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "需授权企业接收端的签名、重试、幂等、熔断、超时、脱敏、限流和恢复证据。",
+        "status": "OPEN",
+        "title": "企业告警接收端",
+        "updated_at": "2026-08-03T15:00:50.597774Z",
+        "version": 1,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "observability",
+        "display_status": "CONDITIONAL",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-09-02T15:00:50.597774Z",
+        "external_condition": true,
+        "gate_code": "MONITORING_ALERTING",
+        "gate_id": "GATE-P5-MONITORING_ALERTING",
+        "last_verified_at": null,
+        "owner": "operations_owner",
+        "recorded_status": "OPEN",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "授权接收端完成签名、重试、幂等、熔断、超时、脱敏、限流和恢复验收。",
+        "status": "OPEN",
+        "title": "企业监控告警联调",
+        "updated_at": "2026-08-03T15:00:50.597774Z",
+        "version": 1,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "quality",
+        "display_status": "PASSED",
+        "environment": "production",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:40.896925Z",
+            "sha256": "e2c3a32c36cdf679f3a398d3667673f7a8b372f9223e5fdc6576c809f5f13a88",
+            "summary": "P5B controlled evidence: p5b-final-regression-summary.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-final-regression-summary.json"
+          }
+        ],
+        "evidence_hash": "09bf8ac4061032cb4437924a9d9d45da6df383f43888712708214cdfd019f79d",
+        "expires_at": "2026-08-17T18:05:40.896925Z",
+        "external_condition": false,
+        "gate_code": "FRONTEND_E2E",
+        "gate_id": "GATE-P5-FRONTEND_E2E",
+        "last_verified_at": "2026-08-03T18:05:40.957336Z",
+        "owner": "quality_owner",
+        "recorded_status": "PASSED",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "冻结 Playwright 26 条与 P5 门禁路径 1 条必须使用正式 API、PostgreSQL 和真实 Keycloak 通过。",
+        "status": "PASSED",
+        "title": "完整浏览器关键路径",
+        "updated_at": "2026-08-03T18:05:40.957336Z",
+        "version": 4,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "rag",
+        "display_status": "PASSED",
+        "environment": "production",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.995868Z",
+            "sha256": "e2c3a32c36cdf679f3a398d3667673f7a8b372f9223e5fdc6576c809f5f13a88",
+            "summary": "P5B controlled evidence: p5b-final-regression-summary.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-final-regression-summary.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.996424Z",
+            "sha256": "056c6d9bed581336b6a5c651b02062a6128c1ed16e8e5ba840d6f7310e743ea9",
+            "summary": "P5B controlled evidence: rag-keyword-release.json",
+            "uri": "docs/platformization/p5/evidence/rag-keyword-release.json"
+          }
+        ],
+        "evidence_hash": "cf65c14b0fccbb32f45e649f56899ad862aa473da71a54bad0a57a78100724dd",
+        "expires_at": "2026-08-17T18:05:41.996424Z",
+        "external_condition": false,
+        "gate_code": "RAG_MODE",
+        "gate_id": "GATE-P5-RAG_MODE",
+        "last_verified_at": "2026-08-03T18:05:42.063886Z",
+        "owner": "knowledge_owner",
+        "recorded_status": "PASSED",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "明确发布 Vector 或冻结 keyword-only，UI、API、文档和 Manifest 一致。",
+        "status": "PASSED",
+        "title": "RAG 正式运行模式",
+        "updated_at": "2026-08-03T18:05:42.063886Z",
+        "version": 3,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "release",
+        "display_status": "CONDITIONAL",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-09-02T15:00:50.597774Z",
+        "external_condition": true,
+        "gate_code": "CHANGE_WINDOW",
+        "gate_id": "GATE-P5-CHANGE_WINDOW",
+        "last_verified_at": null,
+        "owner": "change_manager",
+        "recorded_status": "OPEN",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "具名变更单、批准人、窗口、回滚责任人和现场验收记录齐全。",
+        "status": "OPEN",
+        "title": "生产变更窗口",
+        "updated_at": "2026-08-03T15:00:50.597774Z",
+        "version": 1,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "resilience",
+        "display_status": "PASSED",
+        "environment": "production",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.828023Z",
+            "sha256": "f2d4bfca3fce9629fdf9f1795cfa23462dd437b8922b04819d803aae1c4971c6",
+            "summary": "P5B controlled evidence: p5b-fault-recovery.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-fault-recovery.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.828982Z",
+            "sha256": "e457e7f6ead617b8c8ac49a7dfd4c319e93d1b9b73d7d48a85108cca7394a7fb",
+            "summary": "P5B controlled evidence: p5b-backup-restore.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-backup-restore.json"
+          }
+        ],
+        "evidence_hash": "e7472cfbab26c7667a5320b75955d4b1eda1b5bcae86cd02e3d0393b9a27e685",
+        "expires_at": "2026-08-17T18:05:41.828982Z",
+        "external_condition": false,
+        "gate_code": "BACKUP_RECOVERY",
+        "gate_id": "GATE-P5-BACKUP_RECOVERY",
+        "last_verified_at": "2026-08-03T18:05:41.867272Z",
+        "owner": "operations_owner",
+        "recorded_status": "PASSED",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "故障、完整备份、临时库恢复、数据哈希、门禁历史和迁移循环均使用本轮证据。",
+        "status": "PASSED",
+        "title": "P5A 故障备份恢复",
+        "updated_at": "2026-08-03T18:05:41.867272Z",
+        "version": 3,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "resilience",
+        "display_status": "PASSED",
+        "environment": "production",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.901024Z",
+            "sha256": "e457e7f6ead617b8c8ac49a7dfd4c319e93d1b9b73d7d48a85108cca7394a7fb",
+            "summary": "P5B controlled evidence: p5b-backup-restore.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-backup-restore.json"
+          }
+        ],
+        "evidence_hash": "6a6b634f7a3df507d63473ee9204bc10b149b0586873e3fdbdb9fd933181ebff",
+        "expires_at": "2026-08-17T18:05:41.901024Z",
+        "external_condition": false,
+        "gate_code": "BACKUP_RESTORE",
+        "gate_id": "GATE-P5-BACKUP_RESTORE",
+        "last_verified_at": "2026-08-03T18:05:41.956015Z",
+        "owner": "operations_owner",
+        "recorded_status": "PASSED",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "P5 head 下完成源/恢复摘要、业务哈希、Secret 边界和源卷保留复验。",
+        "status": "PASSED",
+        "title": "备份恢复复验",
+        "updated_at": "2026-08-03T18:05:41.956015Z",
+        "version": 3,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "resilience",
+        "display_status": "PASSED",
+        "environment": "production",
+        "evidence": [
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:42.102674Z",
+            "sha256": "3e218be4c9dcfd484003057014d51c3ad218b8f94660806a7588cf2ebdc26f68",
+            "summary": "P5B controlled evidence: p5b-rollback-drill.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-rollback-drill.json"
+          }
+        ],
+        "evidence_hash": "ccd24737eba41e9ce850083515852591e210a84d728e76e213615ccfd8a3ddcb",
+        "expires_at": "2026-08-17T18:05:42.102674Z",
+        "external_condition": false,
+        "gate_code": "ROLLBACK_DRILL",
+        "gate_id": "GATE-P5-ROLLBACK_DRILL",
+        "last_verified_at": "2026-08-03T18:05:42.168012Z",
+        "owner": "operations_owner",
+        "recorded_status": "PASSED",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "在 P5 版本完成不删卷、显式确认、配置与数据库可回滚演练。",
+        "status": "PASSED",
+        "title": "生产回滚演练",
+        "updated_at": "2026-08-03T18:05:42.168012Z",
+        "version": 3,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "risk",
+        "display_status": "CONDITIONAL",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-09-02T15:00:50.597774Z",
+        "external_condition": true,
+        "gate_code": "RISK_ACCEPTANCE",
+        "gate_id": "GATE-P5-RISK_ACCEPTANCE",
+        "last_verified_at": null,
+        "owner": "security_owner",
+        "recorded_status": "OPEN",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "如存在例外，必须有正式批准人、依据、补偿控制、到期日和复核要求。",
+        "status": "OPEN",
+        "title": "残余风险接受",
+        "updated_at": "2026-08-03T15:00:50.597774Z",
+        "version": 1,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "runtime",
+        "display_status": "PASSED",
+        "environment": "production",
+        "evidence": [
+          {
+            "evidence_type": "runtime_probe",
+            "observed_at": "2026-08-03T18:05:40.677932Z",
+            "sha256": "46fe24ce8c801776c1a64305d775e0bbd0cc29153d1aa45f63678713be425003",
+            "summary": "P5B controlled evidence: docker-smoke-p5b-final.json",
+            "uri": "docs/platformization/p5b/evidence/docker-smoke-p5b-final.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:40.678493Z",
+            "sha256": "f2d4bfca3fce9629fdf9f1795cfa23462dd437b8922b04819d803aae1c4971c6",
+            "summary": "P5B controlled evidence: p5b-fault-recovery.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-fault-recovery.json"
+          }
+        ],
+        "evidence_hash": "e14a0e16c552e63ad319815e5266d88477d5d92fd17c5177b0730f4c0cf5fd99",
+        "expires_at": "2026-08-17T18:05:40.678493Z",
+        "external_condition": false,
+        "gate_code": "DOCKER_RUNTIME",
+        "gate_id": "GATE-P5-DOCKER_RUNTIME",
+        "last_verified_at": "2026-08-03T18:05:40.742612Z",
+        "owner": "operations_owner",
+        "recorded_status": "PASSED",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "独立 P5A Compose 的运行服务、一次性任务、网络、卷、liveness 与 readiness 均须有本轮证据。",
+        "status": "PASSED",
+        "title": "Docker/WSL 标准运行环境",
+        "updated_at": "2026-08-03T18:05:40.742612Z",
+        "version": 4,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "secrets",
+        "display_status": "CONDITIONAL",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-09-02T15:00:50.597774Z",
+        "external_condition": true,
+        "gate_code": "PRODUCTION_SECRET_MANAGER",
+        "gate_id": "GATE-P5-PRODUCTION_SECRET_MANAGER",
+        "last_verified_at": null,
+        "owner": "security_owner",
+        "recorded_status": "OPEN",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "需用户授权的托管实例、HA、备份、CredentialReference、轮换及 fail-closed 证据。",
+        "status": "OPEN",
+        "title": "托管生产 Secret Manager",
+        "updated_at": "2026-08-03T15:00:50.597774Z",
+        "version": 1,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "secrets",
+        "display_status": "CONDITIONAL",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-09-02T15:00:50.597774Z",
+        "external_condition": true,
+        "gate_code": "SECRET_MANAGER",
+        "gate_id": "GATE-P5-SECRET_MANAGER",
+        "last_verified_at": null,
+        "owner": "security_owner",
+        "recorded_status": "OPEN",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "生产托管实例、HA、备份、CredentialReference、轮换和 fail-closed 有授权证据。",
+        "status": "OPEN",
+        "title": "生产 Secret Manager",
+        "updated_at": "2026-08-03T15:00:50.597774Z",
+        "version": 1,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "security",
+        "display_status": "BLOCKED",
+        "environment": "production",
+        "evidence": [
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:05:41.002180Z",
+            "sha256": "8f8498738965844f77b3837d0897f7a3d40bc0e9e7065176df7a3a471a5c20e4",
+            "summary": "P5B controlled evidence: container-security-summary.json",
+            "uri": "docs/platformization/p5b/evidence/container-security/container-security-summary.json"
+          }
+        ],
+        "evidence_hash": "fadf6751a1be67f8c307af6962918a437c4ec58c94f9490f20db8b1f55d74e8f",
+        "expires_at": "2026-08-17T18:05:41.002180Z",
+        "external_condition": false,
+        "gate_code": "IMAGE_SECURITY",
+        "gate_id": "GATE-P5-IMAGE_SECURITY",
+        "last_verified_at": "2026-08-03T18:05:41.046132Z",
+        "owner": "security_owner",
+        "recorded_status": "BLOCKED",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "全部运行与禁用镜像实际复扫；Critical=0，High=0 或逐项正式例外。",
+        "status": "BLOCKED",
+        "title": "全部容器镜像安全签署",
+        "updated_at": "2026-08-03T18:05:41.046132Z",
+        "version": 4,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "security",
+        "display_status": "BLOCKED",
+        "environment": "production",
+        "evidence": [
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:05:41.092926Z",
+            "sha256": "a2823f9e410e1612549b04b1d4c36196fb0e450cb8bed76d5a7e7aa57cfc4872",
+            "summary": "P5B controlled evidence: trivy-keycloak.json",
+            "uri": "docs/platformization/p5b/evidence/container-security/trivy-keycloak.json"
+          },
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:05:41.093480Z",
+            "sha256": "1101b7fc76f67e8dac52d182ffbdabeea755b4e8121e6c2fee7911f6288dcb88",
+            "summary": "P5B controlled evidence: keycloak-component-verification.json",
+            "uri": "docs/platformization/p5b/evidence/container-security/keycloak-component-verification.json"
+          }
+        ],
+        "evidence_hash": "3676f6687e2a83ee63f8807c61bc9b8dd6de352c3338688ea93fbdca1872c4d0",
+        "expires_at": "2026-08-17T18:05:41.093480Z",
+        "external_condition": false,
+        "gate_code": "KEYCLOAK_SECURITY",
+        "gate_id": "GATE-P5-KEYCLOAK_SECURITY",
+        "last_verified_at": "2026-08-03T18:05:41.135148Z",
+        "owner": "security_owner",
+        "recorded_status": "BLOCKED",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "实际镜像 Critical=0 且 High=0，或每项均有权威不适用证据或正式 waiver。",
+        "status": "BLOCKED",
+        "title": "Keycloak 镜像安全",
+        "updated_at": "2026-08-03T18:05:41.135148Z",
+        "version": 3,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": false,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "future_sqlbot_release",
+        "category": "security",
+        "display_status": "BLOCKED",
+        "environment": "production",
+        "evidence": [
+          {
+            "evidence_type": "manifest",
+            "observed_at": "2026-08-03T18:05:41.555215Z",
+            "sha256": "8046c1571354aee37b23ba01a9f6bed4c02b1d89b54ea680fee95ccddaa1acdd",
+            "summary": "P5B controlled evidence: p5b-release-component-scope.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-release-component-scope.json"
+          },
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:05:41.637740Z",
+            "sha256": "21f0f1481451482cc0a702c7eeea96fdd587f40e47b8fa4ad8a6a6d18a070f9f",
+            "summary": "P5B controlled evidence: trivy-sqlbot.json",
+            "uri": "docs/platformization/p5a/evidence/container-security/trivy-sqlbot.json"
+          }
+        ],
+        "evidence_hash": "1e3a9f2d98bb7be6a65a2ff055ee2f7050c2e9c05b9921779e5dbba39e7d2a2f",
+        "expires_at": "2026-08-17T18:05:41.637740Z",
+        "external_condition": false,
+        "gate_code": "SQLBOT_IMAGE_SECURITY",
+        "gate_id": "GATE-P5-SQLBOT_IMAGE_SECURITY",
+        "last_verified_at": "2026-08-03T18:05:41.696843Z",
+        "owner": "security_owner",
+        "recorded_status": "BLOCKED",
+        "release_disposition": "DEFERRED",
+        "review_requirement": "禁用镜像仍须按固定 digest 完成实际扫描；扫描不代表启用或 Canary 资格。",
+        "status": "BLOCKED",
+        "title": "SQLBot 固定摘要镜像安全",
+        "updated_at": "2026-08-03T18:05:41.696843Z",
+        "version": 3,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": true,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "current_release",
+        "category": "security",
+        "display_status": "BLOCKED",
+        "environment": "production",
+        "evidence": [
+          {
+            "evidence_type": "security_scan",
+            "observed_at": "2026-08-03T18:05:41.181722Z",
+            "sha256": "12ad9f9bdbcb1740cd7797c25555eadca1e24d72b14c3a59dacef8bd549ccb21",
+            "summary": "P5B controlled evidence: trivy-vault.json",
+            "uri": "docs/platformization/p5b/evidence/container-security/trivy-vault.json"
+          },
+          {
+            "evidence_type": "test_result",
+            "observed_at": "2026-08-03T18:05:41.181722Z",
+            "sha256": "23766c72f2d2b45d3f2fa4b2e670db78ee8ba785b32ba822374982b37dc0fb51",
+            "summary": "P5B controlled evidence: p5b-vault-acceptance.json",
+            "uri": "docs/platformization/p5b/evidence/p5b-vault-acceptance.json"
+          }
+        ],
+        "evidence_hash": "dd1e483be82de028c3061b0982e623051cff3f9bbf3118c72f8530877f2f4f9f",
+        "expires_at": "2026-08-17T18:05:41.181722Z",
+        "external_condition": false,
+        "gate_code": "VAULT_SECURITY",
+        "gate_id": "GATE-P5-VAULT_SECURITY",
+        "last_verified_at": "2026-08-03T18:05:41.218360Z",
+        "owner": "security_owner",
+        "recorded_status": "BLOCKED",
+        "release_disposition": "IN_SCOPE",
+        "review_requirement": "实际镜像 Critical=0 且 High=0，或每项均有权威不适用证据或正式 waiver。",
+        "status": "BLOCKED",
+        "title": "Vault 镜像安全",
+        "updated_at": "2026-08-03T18:05:41.218360Z",
+        "version": 3,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": false,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "future_sqlbot_release",
+        "category": "sqlbot",
+        "display_status": "CONDITIONAL",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-09-02T15:00:50.597774Z",
+        "external_condition": true,
+        "gate_code": "SQLBOT_EXTERNAL_REVIEW",
+        "gate_id": "GATE-P5-SQLBOT_EXTERNAL_REVIEW",
+        "last_verified_at": null,
+        "owner": "ai_platform_owner",
+        "recorded_status": "OPEN",
+        "release_disposition": "DEFERRED",
+        "review_requirement": "仅在授权 CredentialReference 注入后按顺序执行，安全违规必须为 0。",
+        "status": "OPEN",
+        "title": "SQLBot 外部 10/30/20 安全复评",
+        "updated_at": "2026-08-03T15:00:50.597774Z",
+        "version": 1,
+        "waiver": null
+      },
+      {
+        "applicable_to_release": false,
+        "blocker_level": "BLOCKER",
+        "blocking_scope": "future_sqlbot_release",
+        "category": "sqlbot",
+        "display_status": "CONDITIONAL",
+        "environment": "production",
+        "evidence": [],
+        "evidence_hash": null,
+        "expires_at": "2026-09-02T15:00:50.597774Z",
+        "external_condition": true,
+        "gate_code": "SQLBOT_EXTERNAL_RUNTIME",
+        "gate_id": "GATE-P5-SQLBOT_EXTERNAL_RUNTIME",
+        "last_verified_at": null,
+        "owner": "ai_platform_owner",
+        "recorded_status": "OPEN",
+        "release_disposition": "DEFERRED",
+        "review_requirement": "需用户提供授权 CredentialReference；未授权时 SQLBot 保持 disabled 且不得执行 Canary。",
+        "status": "OPEN",
+        "title": "SQLBot 外部模型运行时",
+        "updated_at": "2026-08-03T15:00:50.597774Z",
+        "version": 1,
+        "waiver": null
+      }
+    ],
+    "generated_at": "2026-08-03T18:05:49.830053+00:00",
+    "runtime_contract": {
+      "production_release_authorized": false,
+      "production_traffic_switched": false,
+      "query_engine_mode": "SHADOW",
+      "rag_runtime_mode": "KEYWORD_ONLY",
+      "rag_vector_released": false,
+      "sqlbot_canary_eligible": false,
+      "sqlbot_engine_enabled": false,
+      "sqlbot_external_evaluation": "DEFERRED",
+      "sqlbot_image_in_bom": false,
+      "sqlbot_release_scope": "NOT_INCLUDED_IN_V4_RELEASE"
+    },
+    "summary": {
+      "counts": {
+        "BLOCKED": 5,
+        "EXPIRED": 0,
+        "IN_PROGRESS": 0,
+        "OPEN": 15,
+        "PASSED": 8,
+        "WAIVED": 0
+      },
+      "go_no_go_recommendation": "NO_GO",
+      "not_applicable_to_v4": [
+        "SQLBOT_EXTERNAL_REVIEW",
+        "SQLBOT_EXTERNAL_RUNTIME",
+        "SQLBOT_IMAGE_SECURITY"
+      ],
+      "production_acceptance_ready": false,
+      "production_release_authorized": false,
+      "production_traffic_switched": false,
+      "sqlbot_canary_eligible": false,
+      "unresolved_blockers": [
+        "BUSINESS_APPROVAL",
+        "CHANGE_WINDOW",
+        "ENTERPRISE_ALERT",
+        "ENTERPRISE_IDP",
+        "IMAGE_SECURITY",
+        "KEYCLOAK_SECURITY",
+        "MONITORING_ALERTING",
+        "OPERATIONS_APPROVAL",
+        "PRODUCTION_CAPACITY",
+        "PRODUCTION_DATA",
+        "PRODUCTION_DATA_APPROVAL",
+        "PRODUCTION_SECRET_MANAGER",
+        "REMOTE_PUSH",
+        "RISK_ACCEPTANCE",
+        "SECRET_MANAGER",
+        "SECURITY_APPROVAL",
+        "VAULT_SECURITY"
+      ],
+      "waived_gates": []
+    }
+  },
+  "status": "PASS",
+  "token_printed": false,
+  "unresolved_blockers": [
+    "BUSINESS_APPROVAL",
+    "CHANGE_WINDOW",
+    "ENTERPRISE_ALERT",
+    "ENTERPRISE_IDP",
+    "IMAGE_SECURITY",
+    "KEYCLOAK_SECURITY",
+    "MONITORING_ALERTING",
+    "OPERATIONS_APPROVAL",
+    "PRODUCTION_CAPACITY",
+    "PRODUCTION_DATA",
+    "PRODUCTION_DATA_APPROVAL",
+    "PRODUCTION_SECRET_MANAGER",
+    "REMOTE_PUSH",
+    "RISK_ACCEPTANCE",
+    "SECRET_MANAGER",
+    "SECURITY_APPROVAL",
+    "VAULT_SECURITY"
+  ],
+  "waived_gate_codes": []
+}

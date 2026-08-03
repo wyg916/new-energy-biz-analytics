@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import ssl
 import subprocess
 import urllib.request
@@ -13,9 +14,10 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-API_CONTAINER = "renewable-p5a-remediation-api-1"
-BASE_URL = "https://127.0.0.1:8445/api/v1"
-HOST = "p5a.localhost"
+SCOPE = os.getenv("ACCEPTANCE_SCOPE", "p5a").lower()
+API_CONTAINER = os.getenv("ACCEPTANCE_API_CONTAINER", "renewable-p5a-remediation-api-1")
+BASE_URL = os.getenv("ACCEPTANCE_API_BASE_URL", "https://127.0.0.1:8445/api/v1")
+HOST = os.getenv("ACCEPTANCE_HOST", "p5a.localhost")
 LOCAL_CODES = (
     "REMOTE_PUSH", "DOCKER_RUNTIME", "POSTGRES_CANONICAL_REGRESSION", "FRONTEND_E2E",
     "IMAGE_SECURITY", "KEYCLOAK_SECURITY", "VAULT_SECURITY", "SQLBOT_IMAGE_SECURITY",
@@ -108,7 +110,7 @@ def main() -> None:
         "sqlbot_canary_false": snapshot["runtime_contract"]["sqlbot_canary_eligible"] is False,
     }
     payload = {
-        "evidence_type": "p5a_production_gate_pre_push_snapshot",
+        "evidence_type": f"{SCOPE}_production_gate_pre_push_snapshot",
         "status": "PASS" if all(checks.values()) else "FAIL",
         "captured_at": datetime.now(UTC).isoformat(),
         "checks": checks,

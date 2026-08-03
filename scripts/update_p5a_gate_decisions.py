@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import ssl
 import subprocess
 import urllib.error
@@ -14,9 +15,10 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-API_CONTAINER = "renewable-p5a-remediation-api-1"
-BASE_URL = "https://127.0.0.1:8445/api/v1"
-HOST = "p5a.localhost"
+SCOPE = os.getenv("ACCEPTANCE_SCOPE", "p5a").lower()
+API_CONTAINER = os.getenv("ACCEPTANCE_API_CONTAINER", "renewable-p5a-remediation-api-1")
+BASE_URL = os.getenv("ACCEPTANCE_API_BASE_URL", "https://127.0.0.1:8445/api/v1")
+HOST = os.getenv("ACCEPTANCE_HOST", "p5a.localhost")
 
 
 LOCAL_DECISIONS = {
@@ -62,6 +64,54 @@ LOCAL_DECISIONS = {
     ]),
 }
 
+if SCOPE == "p5b":
+    LOCAL_DECISIONS = {
+        "DOCKER_RUNTIME": ("PASSED", [
+            ("runtime_probe", "docs/platformization/p5b/evidence/docker-smoke-p5b-final.json"),
+            ("test_result", "docs/platformization/p5b/evidence/p5b-fault-recovery.json"),
+        ]),
+        "POSTGRES_CANONICAL_REGRESSION": ("PASSED", [
+            ("test_result", "docs/platformization/p5b/evidence/p5b-final-regression-summary.json"),
+            ("test_result", "docs/platformization/p5b/evidence/p5b-backup-restore.json"),
+        ]),
+        "FRONTEND_E2E": ("PASSED", [
+            ("test_result", "docs/platformization/p5b/evidence/p5b-final-regression-summary.json"),
+        ]),
+        "IMAGE_SECURITY": ("BLOCKED", [
+            ("security_scan", "docs/platformization/p5b/evidence/container-security/container-security-summary.json"),
+        ]),
+        "KEYCLOAK_SECURITY": ("BLOCKED", [
+            ("security_scan", "docs/platformization/p5b/evidence/container-security/trivy-keycloak.json"),
+            ("security_scan", "docs/platformization/p5b/evidence/container-security/keycloak-component-verification.json"),
+        ]),
+        "VAULT_SECURITY": ("BLOCKED", [
+            ("security_scan", "docs/platformization/p5b/evidence/container-security/trivy-vault.json"),
+            ("test_result", "docs/platformization/p5b/evidence/p5b-vault-acceptance.json"),
+        ]),
+        "SQLBOT_IMAGE_SECURITY": ("BLOCKED", [
+            ("manifest", "docs/platformization/p5b/evidence/p5b-release-component-scope.json"),
+            ("security_scan", "docs/platformization/p5a/evidence/container-security/trivy-sqlbot.json"),
+        ]),
+        "CAPACITY_SOAK": ("PASSED", [
+            ("test_result", "docs/platformization/p5a/evidence/p5a-capacity-soak.json"),
+            ("test_result", "docs/platformization/p5a/evidence/p5a-capacity-verification.json"),
+        ]),
+        "BACKUP_RECOVERY": ("PASSED", [
+            ("test_result", "docs/platformization/p5b/evidence/p5b-fault-recovery.json"),
+            ("test_result", "docs/platformization/p5b/evidence/p5b-backup-restore.json"),
+        ]),
+        "BACKUP_RESTORE": ("PASSED", [
+            ("test_result", "docs/platformization/p5b/evidence/p5b-backup-restore.json"),
+        ]),
+        "RAG_MODE": ("PASSED", [
+            ("test_result", "docs/platformization/p5b/evidence/p5b-final-regression-summary.json"),
+            ("test_result", "docs/platformization/p5/evidence/rag-keyword-release.json"),
+        ]),
+        "ROLLBACK_DRILL": ("PASSED", [
+            ("test_result", "docs/platformization/p5b/evidence/p5b-rollback-drill.json"),
+        ]),
+    }
+
 
 def command(*args: str) -> str:
     process = subprocess.run(
@@ -106,7 +156,7 @@ def evidence(evidence_type: str, relative_path: str) -> dict:
         "uri": relative_path.replace("\\", "/"),
         "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
         "observed_at": datetime.now(UTC).isoformat(),
-        "summary": f"P5A controlled evidence: {path.name}",
+        "summary": f"{SCOPE.upper()} controlled evidence: {path.name}",
     }
 
 
@@ -145,7 +195,7 @@ def local_decisions(token: str) -> list[dict]:
                 payload = json.loads((ROOT / path).read_text(encoding="utf-8"))
                 if payload.get("status") != "PASS":
                     decision_status = "BLOCKED"
-        if gate_code in {"BACKUP_RECOVERY", "BACKUP_RESTORE"}:
+        if gate_code in {"BACKUP_RECOVERY", "BACKUP_RESTORE", "ROLLBACK_DRILL"}:
             for _, path in specs:
                 payload = json.loads((ROOT / path).read_text(encoding="utf-8"))
                 if payload.get("status") != "PASS":
@@ -153,7 +203,7 @@ def local_decisions(token: str) -> list[dict]:
         items = [evidence(kind, path) for kind, path in specs]
         gate = post_decision(
             token, gate_code, decision_status, items,
-            "P5A local remediation evidence was reverified; external gates and release authorization remain unchanged.",
+            f"{SCOPE.upper()} local gate evidence was reverified; external gates and release authorization remain unchanged.",
         )
         results.append({
             "gate_code": gate_code,
@@ -167,7 +217,7 @@ def local_decisions(token: str) -> list[dict]:
 def pre_push(token: str) -> list[dict]:
     gate = post_decision(
         token, "REMOTE_PUSH", "BLOCKED", [],
-        "P5A remote push cannot pass before the final local commit is published and 0/0 divergence is reverified.",
+        f"{SCOPE.upper()} remote push cannot pass before the final local commit is published and 0/0 divergence is reverified.",
     )
     return [{"gate_code": "REMOTE_PUSH", "status": gate["status"], "version": gate["version"]}]
 
@@ -189,11 +239,11 @@ def post_push(token: str) -> list[dict]:
         "uri": f"registry://origin/{branch}@{local_sha}",
         "sha256": hashlib.sha256(proof.encode("utf-8")).hexdigest(),
         "observed_at": datetime.now(UTC).isoformat(),
-        "summary": "Final P5A local and remote branch heads match with ahead/behind 0/0.",
+        "summary": f"Final {SCOPE.upper()} local and remote branch heads match with ahead/behind 0/0.",
     }]
     gate = post_decision(
         token, "REMOTE_PUSH", "PASSED", items,
-        "Final P5A branch was pushed normally and remote equality was verified after all commits.",
+        f"Final {SCOPE.upper()} branch was pushed normally and remote equality was verified after all commits.",
     )
     return [{
         "gate_code": "REMOTE_PUSH", "status": gate["status"],

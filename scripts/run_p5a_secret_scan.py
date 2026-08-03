@@ -1,4 +1,4 @@
-"""Scan the P5A worktree for committed-candidate secrets without reading .env files."""
+"""Scan a release worktree for committed-candidate secrets without reading .env files."""
 
 from __future__ import annotations
 
@@ -68,6 +68,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--baseline", default=DEFAULT_BASELINE)
+    parser.add_argument("--scope", default="P5A")
+    parser.add_argument("--cache-volume", default=TRIVY_CACHE)
     args = parser.parse_args()
 
     tracked = command("git", "ls-files", "--", ".env", ".env.*", "**/.env", "**/.env.*")
@@ -81,12 +83,12 @@ def main() -> None:
         raise RuntimeError("tracked .env-style files are forbidden; contents were not read")
     candidate_lines, diff_sha256 = added_lines(args.baseline)
 
-    command("docker", "volume", "create", TRIVY_CACHE)
+    command("docker", "volume", "create", args.cache_volume)
     version = command("docker", "run", "--rm", TRIVY_IMAGE, "--version")
     scan = command(
         "docker", "run", "--rm",
         "-v", f"{ROOT}:/src:ro",
-        "-v", f"{TRIVY_CACHE}:/root/.cache/trivy",
+        "-v", f"{args.cache_volume}:/root/.cache/trivy",
         TRIVY_IMAGE,
         "fs", "--scanners", "secret", "--skip-version-check", "--format", "json",
         "--skip-dirs", "/src/.git",
@@ -119,10 +121,10 @@ def main() -> None:
             })
     new_findings = [item for item in findings if item["introduced_after_baseline"]]
     payload = {
-        "evidence_type": "p5a_sensitive_information_scan",
+        "evidence_type": f"{args.scope.lower()}_sensitive_information_scan",
         "status": "PASS" if not new_findings else "BLOCKED",
         "scanned_at": datetime.now(UTC).isoformat(),
-        "scope": "P5A worktree excluding forbidden .env-style files, Git internals, and dependency trees",
+        "scope": f"{args.scope} worktree excluding forbidden .env-style files, Git internals, and dependency trees",
         "tracked_env_file_count": len(tracked_env_names),
         "tracked_env_template_count": len(tracked_env_templates),
         "forbidden_tracked_env_file_count": 0,
