@@ -28,7 +28,7 @@ P5A 只修复当前独立预生产验收环境内可关闭的门禁，不进入 
 - 15 个外部门禁均保持 `OPEN`，UI 显示 `CONDITIONAL`；未创建 waiver、未伪造审批、未修改外部门禁。
 - 推送前快照：`evidence/p5a-gate-snapshot-pre-push.json`，状态计数 PASSED 7 / BLOCKED 6 / OPEN 15。
 
-最终行敏感信息扫描将在 RC Manifest 和验收包内容冻结后执行；`REMOTE_PUSH` 只能在全部提交普通推送且远端 SHA 与本地 HEAD 相等、ahead/behind 为 0/0 后由受控 API 更新。该时序不影响其余本地证据真实性。
+最终行敏感信息扫描以内容冻结后生成的 `evidence/p5a-secret-scan.json` 为唯一结论依据；`REMOTE_PUSH` 只能在全部提交普通推送且远端 SHA 与本地 HEAD 相等、ahead/behind 为 0/0 后由受控 API 更新。该时序不影响其余本地证据真实性。
 
 ## 当前安全与发布结论
 

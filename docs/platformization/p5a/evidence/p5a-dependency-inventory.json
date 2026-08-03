@@ -1,0 +1,142 @@
+{
+  "actual_runtime_components": [
+    "api",
+    "web",
+    "postgresql",
+    "redis",
+    "nginx",
+    "keycloak",
+    "vault",
+    "alert_receiver",
+    "migration",
+    "backup"
+  ],
+  "captured_at": "2026-08-03T11:58:41.664994+00:00",
+  "dependency_manifests": {
+    "backend_lock": {
+      "path": "backend/requirements.lock",
+      "sha256": "5e62c9cc4da52e70fc13ea0c228cc89a55e359cfd8b0f5a6fa848e4825578dbd"
+    },
+    "backend_project": {
+      "path": "backend/pyproject.toml",
+      "sha256": "6547043e9739643ff06b8094c14d47b6e3a4519f4e001dde3d3db3a409a0a7a9"
+    },
+    "frontend_lock": {
+      "path": "frontend/package-lock.json",
+      "sha256": "46c52f96c76993b3d850ee9ca9691b5a3648c777de2c9aa04b70fa70e9c12fac"
+    }
+  },
+  "environment": "local_preproduction",
+  "evidence_type": "p5a_dependency_and_image_inventory",
+  "excluded_components": [
+    "sqlbot"
+  ],
+  "images": {
+    "alert_receiver": {
+      "content_digest": "sha256:42abcf52fdc4162f83bd4b188928e0d11a6b6afa9225eea6efff7dbd1a448205",
+      "image_id": "sha256:42abcf52fdc4162f83bd4b188928e0d11a6b6afa9225eea6efff7dbd1a448205",
+      "included_in_rc": true,
+      "reference": "renewable-p5a-alert-receiver:5.0.0-p5a",
+      "repo_digests": [],
+      "runtime_enabled": true
+    },
+    "api": {
+      "content_digest": "sha256:d413e1427d5b470b862a8bc21800ea053f34c7435f2f0d91dff9f9c037a0b432",
+      "image_id": "sha256:d413e1427d5b470b862a8bc21800ea053f34c7435f2f0d91dff9f9c037a0b432",
+      "included_in_rc": true,
+      "reference": "renewable-p5a-api:5.0.0-p5a",
+      "repo_digests": [],
+      "runtime_enabled": true
+    },
+    "backup": {
+      "content_digest": "sha256:486298eaa6cbd4830f8d1ae199e6dc9f33cee75a6bc178b0ee2d34c94b3041e3",
+      "image_id": "sha256:486298eaa6cbd4830f8d1ae199e6dc9f33cee75a6bc178b0ee2d34c94b3041e3",
+      "included_in_rc": true,
+      "reference": "renewable-p5a-backup:16.14",
+      "repo_digests": [],
+      "runtime_enabled": true
+    },
+    "keycloak": {
+      "content_digest": "sha256:c2b643bb866cb4c297176d11e8c60065ec4628102a19256ffb65b5a8d0bfeafd",
+      "image_id": "sha256:c2b643bb866cb4c297176d11e8c60065ec4628102a19256ffb65b5a8d0bfeafd",
+      "included_in_rc": true,
+      "reference": "renewable-p5a-keycloak:26.7.0",
+      "repo_digests": [],
+      "runtime_enabled": true
+    },
+    "migration": {
+      "content_digest": "sha256:42abcf52fdc4162f83bd4b188928e0d11a6b6afa9225eea6efff7dbd1a448205",
+      "image_id": "sha256:42abcf52fdc4162f83bd4b188928e0d11a6b6afa9225eea6efff7dbd1a448205",
+      "included_in_rc": true,
+      "reference": "renewable-p5a-migration:5.0.0-p5a",
+      "repo_digests": [],
+      "runtime_enabled": true
+    },
+    "nginx": {
+      "content_digest": "sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752",
+      "image_id": "sha256:f0ba77f796e57c6fa89ae7f4fdad1665d6fcbd8e3f211535120542b337f9959e",
+      "included_in_rc": true,
+      "reference": "nginx:1.31.3-alpine@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752",
+      "repo_digests": [
+        "nginx@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752"
+      ],
+      "runtime_enabled": true
+    },
+    "postgresql": {
+      "content_digest": "sha256:486298eaa6cbd4830f8d1ae199e6dc9f33cee75a6bc178b0ee2d34c94b3041e3",
+      "image_id": "sha256:486298eaa6cbd4830f8d1ae199e6dc9f33cee75a6bc178b0ee2d34c94b3041e3",
+      "included_in_rc": true,
+      "reference": "renewable-p5a-postgres:16.14",
+      "repo_digests": [],
+      "runtime_enabled": true
+    },
+    "redis": {
+      "content_digest": "sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2",
+      "image_id": "sha256:2a51817f79255c8b69f86a974459c2e0359aff81417d80158f2b9e541e6f4b33",
+      "included_in_rc": true,
+      "reference": "redis:7.4.10-alpine@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2",
+      "repo_digests": [
+        "redis@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2"
+      ],
+      "runtime_enabled": true
+    },
+    "sqlbot": {
+      "content_digest": "sha256:c4ca3acc34f0c63a64f3f3e7bb909760f17d184959635542278710144347d9e0",
+      "image_id": "sha256:5065baf17703cfad0407261c16d15c0aecb237877011e1603f59fb70a1f58abf",
+      "included_in_rc": false,
+      "reference": "dataease/sqlbot:v1.8.0@sha256:c4ca3acc34f0c63a64f3f3e7bb909760f17d184959635542278710144347d9e0",
+      "repo_digests": [
+        "dataease/sqlbot@sha256:c4ca3acc34f0c63a64f3f3e7bb909760f17d184959635542278710144347d9e0"
+      ],
+      "runtime_enabled": false
+    },
+    "vault": {
+      "content_digest": "sha256:a296a888b118615dc01d5f1a6846e6d4a7277946caaed5b447008fff5fe06b54",
+      "image_id": "sha256:1747a4ab1e1bea8938269b23827165c5d80eecbdb5c115fd58e6380569537c84",
+      "included_in_rc": true,
+      "reference": "hashicorp/vault:2.0.3",
+      "repo_digests": [
+        "hashicorp/vault@sha256:a296a888b118615dc01d5f1a6846e6d4a7277946caaed5b447008fff5fe06b54"
+      ],
+      "runtime_enabled": true
+    },
+    "web": {
+      "content_digest": "sha256:5364a6c917fd39d37b284cdbd055d17d0b3cc0628e66b29d327f8cc3954aa43b",
+      "image_id": "sha256:5364a6c917fd39d37b284cdbd055d17d0b3cc0628e66b29d327f8cc3954aa43b",
+      "included_in_rc": true,
+      "reference": "renewable-p5a-web:5.0.0-p5a",
+      "repo_digests": [],
+      "runtime_enabled": true
+    }
+  },
+  "production_release_authorized": false,
+  "sbom": {
+    "env_files_excluded": true,
+    "format": "CycloneDX",
+    "generator": "Trivy 0.70.0 filesystem vulnerability inventory",
+    "path": "docs/platformization/p5a/evidence/p5a-sbom.cdx.json",
+    "sha256": "32250006f64a39a12c03861999c77833e0ef5195b375642987f7beee988ddb1a"
+  },
+  "schema_version": "1.0",
+  "status": "COMPLETE_LOCAL_PREPRODUCTION_INVENTORY"
+}
