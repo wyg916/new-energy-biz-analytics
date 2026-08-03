@@ -3,10 +3,10 @@
   "Trivy": {
     "Version": "0.70.0"
   },
-  "ReportID": "019fc290-4918-778d-9606-00d65622a22c",
-  "CreatedAt": "2026-08-02T13:01:03.640500094Z",
-  "ArtifactID": "sha256:3bd1118f31ddf84a6b473f355cd2fdf576d4cae4049675afff794c4dd5c88aed",
-  "ArtifactName": "renewable-p5a-api:5.0.0-p5a",
+  "ReportID": "019fc727-c185-77f3-9628-ad68c5572d9f",
+  "CreatedAt": "2026-08-03T10:24:59.269527636Z",
+  "ArtifactID": "sha256:eb5621b5752560cc49f8d3bc82979ca2a396d5129f9ee914cf04619bba4f45be",
+  "ArtifactName": "renewable-p5a-alert-receiver:5.0.0-p5a",
   "ArtifactType": "container_image",
   "Metadata": {
     "Size": 193278976,
@@ -32,10 +32,9 @@
     ],
     "RepoTags": [
       "renewable-p5a-alert-receiver:5.0.0-p5a",
-      "renewable-p5a-api:5.0.0-p5a",
       "renewable-p5a-migration:5.0.0-p5a"
     ],
-    "Reference": "renewable-p5a-api:5.0.0-p5a",
+    "Reference": "renewable-p5a-alert-receiver:5.0.0-p5a",
     "ImageConfig": {
       "architecture": "amd64",
       "created": "2026-08-02T09:54:43.459352955Z",
@@ -256,7 +255,7 @@
   },
   "Results": [
     {
-      "Target": "renewable-p5a-api:5.0.0-p5a (alpine 3.24.1)",
+      "Target": "renewable-p5a-alert-receiver:5.0.0-p5a (alpine 3.24.1)",
       "Class": "os-pkgs",
       "Type": "alpine",
       "Packages": [
@@ -3055,7 +3054,7 @@
             "Name": "GitHub Security Advisory pip",
             "URL": "https://github.com/advisories?query=type%3Areviewed+ecosystem%3Apip"
           },
-          "Fingerprint": "sha256:d783dd1478b29f4ddadfc0f806c132ae44bf821585f754a974536b579ce1b96d",
+          "Fingerprint": "sha256:2a89434464fb100664037328459a29fd455162720c3bc40ddf4e03428a42aae5",
           "Title": "pytest: pytest: Denial of Service or Privilege Escalation via insecure temporary directory handling",
           "Description": "pytest through 9.0.2 on UNIX relies on directories with the /tmp/pytest-of-{user} name pattern, which allows local users to cause a denial of service or possibly gain privileges.",
           "Severity": "MEDIUM",

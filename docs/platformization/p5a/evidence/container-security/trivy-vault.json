@@ -3,8 +3,8 @@
   "Trivy": {
     "Version": "0.70.0"
   },
-  "ReportID": "019fc2ab-8ae8-773e-9fed-7a872daf60b5",
-  "CreatedAt": "2026-08-02T13:30:49.960479521Z",
+  "ReportID": "019fc727-8564-782d-a3b7-a306597848f7",
+  "CreatedAt": "2026-08-03T10:24:43.876539605Z",
   "ArtifactID": "sha256:04fb8e35cbad62c62ea801e66f203b287560922c507a8ebab558bafcc86821b7",
   "ArtifactName": "hashicorp/vault:2.0.3",
   "ArtifactType": "container_image",
@@ -8564,13 +8564,15 @@
             }
           },
           "References": [
-            "https://access.redhat.com/errata/RHSA-2026:38878",
+            "https://access.redhat.com/errata/RHSA-2026:38995",
             "https://access.redhat.com/security/cve/CVE-2026-39822",
+            "https://bugzilla.redhat.com/2480756",
+            "https://bugzilla.redhat.com/2484207",
             "https://bugzilla.redhat.com/2498152",
             "https://bugzilla.redhat.com/show_bug.cgi?id=2498152",
             "https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2026-39822",
-            "https://errata.almalinux.org/9/ALSA-2026-38878.html",
-            "https://errata.rockylinux.org/RLSA-2026:38495",
+            "https://errata.almalinux.org/8/ALSA-2026-38995.html",
+            "https://errata.rockylinux.org/RLSA-2026:38878",
             "https://go.dev/cl/797880",
             "https://go.dev/issue/79005",
             "https://groups.google.com/g/golang-announce/c/OrmQE_Yp5Sc",

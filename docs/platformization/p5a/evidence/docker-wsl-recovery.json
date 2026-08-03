@@ -1,10 +1,26 @@
 {
-  "captured_at": "2026-08-02T09:47:51Z",
+  "captured_at": "2026-08-03T10:27:38.0198086Z",
   "previous_blocker": "WSL HCS connection timeout caused Docker Linux Engine API to be unavailable during P5",
+  "p5a_closeout_recovery": {
+    "initial_docker_desktop_status": "stopped_then_starting",
+    "observed_engine_condition": "dockerd restored existing container shims and synchronized the existing data disk after abnormal host shutdown",
+    "disk_full_detected": false,
+    "normal_desktop_stop_used": true,
+    "wsl_shutdown_used": true,
+    "normal_desktop_start_used": true,
+    "postgres_existing_data_recovery_seconds_observed": 630,
+    "postgres_ready_after_recovery": true,
+    "vault_existing_volume_unsealed": true,
+    "containers_deleted": false,
+    "images_deleted": false,
+    "caches_deleted": false,
+    "volumes_deleted": false
+  },
   "current_runtime": {
     "wsl_distribution": "docker-desktop",
     "wsl_version": 2,
     "wsl_state": "Running",
+    "docker_desktop_status": "running",
     "docker_desktop_version": "4.84.0",
     "docker_client_version": "29.6.2",
     "docker_server_version": "29.6.2",
@@ -39,7 +55,7 @@
     "sales_order_items": 82514
   },
   "images": {
-    "api": "sha256:f487774a4db5a890116c9f7427bae40c2791287f47a45ac17bd4cb242d399c8d",
+    "api": "sha256:d413e1427d5b470b862a8bc21800ea053f34c7435f2f0d91dff9f9c037a0b432",
     "web": "sha256:5364a6c917fd39d37b284cdbd055d17d0b3cc0628e66b29d327f8cc3954aa43b",
     "postgresql": "sha256:486298eaa6cbd4830f8d1ae199e6dc9f33cee75a6bc178b0ee2d34c94b3041e3",
     "keycloak": "sha256:c2b643bb866cb4c297176d11e8c60065ec4628102a19256ffb65b5a8d0bfeafd"

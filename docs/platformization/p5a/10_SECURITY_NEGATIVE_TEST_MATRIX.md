@@ -22,7 +22,7 @@
 | Production Gate 伪 PASS/WAIVED | 无证据的 PASSED/WAIVED、伪批准人、哈希不匹配均拒绝 | `evidence/p5a-postgres-regression.json` 及 P5 Gate 聚焦测试 |
 | SQLBot Canary/生产发布/生产切流 | UI 按钮禁用，API 运行合同均为 false | `evidence/playwright-p5-gate-1-final.xml` |
 | OIDC 服务端会话过期 | 第一轮两小时测试在 3600 秒 TTL 后真实返回 401，证明过期会话 fail-closed；测试客户端随后改为 TTL 前轮换，没有延长系统 TTL | `07_TWO_HOUR_CAPACITY_AND_SOAK.md`、`evidence/p5a-capacity-session-rotation-preflight.json` |
-| 运行数据库凭据诊断暴露处置 | 临时 pytest 连接失败曾把运行连接参数渲染到仓库外诊断输出；未提交、未写入证据，按已暴露处理并再次轮换，最终 Vault datasource version 3，API/Keycloak/backup 恢复 | `evidence/p5a-runtime-credential-rotation.json` |
+| 运行数据库凭据诊断暴露处置 | 临时 pytest 连接失败曾把运行连接参数渲染到仓库外诊断输出；未提交、未写入证据，按已暴露处理并再次轮换到 version 3；本轮 Vault 复验以同值新版本完成有效绑定/轮换/回滚，最终验收 version 6 | `evidence/p5a-runtime-credential-rotation.json`、`evidence/p5a-vault-acceptance.json` |
 | Redis 依赖故障 | readiness 503、liveness 200，恢复后 healthy/readiness 200 | `evidence/p5a-fault-recovery.json` |
 | PostgreSQL/RAG 故障 | readiness fail-closed；RAG 请求 HTTP 500、引用数 0、未伪造引用 | `evidence/p5a-fault-recovery.json` |
 | Vault/CredentialReference 故障 | `VAULT_AUTH_FAILED`，明文 fallback false；解封后 KV v2/readiness 恢复 | `evidence/p5a-fault-recovery.json`、`evidence/p5a-vault-acceptance.json` |

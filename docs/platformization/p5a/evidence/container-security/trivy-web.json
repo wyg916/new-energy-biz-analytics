@@ -3,8 +3,8 @@
   "Trivy": {
     "Version": "0.70.0"
   },
-  "ReportID": "019fc291-7a36-7171-bf04-976907ecf061",
-  "CreatedAt": "2026-08-02T13:02:21.750097955Z",
+  "ReportID": "019fc726-4944-7640-ade0-3eb2d9214dd0",
+  "CreatedAt": "2026-08-03T10:23:22.948412511Z",
   "ArtifactID": "sha256:1c2d2ebd3b04209aec971625b471c66ea4c6af54f4ecbccaf6fcdbb39f885c1b",
   "ArtifactName": "renewable-p5a-web:5.0.0-p5a",
   "ArtifactType": "container_image",

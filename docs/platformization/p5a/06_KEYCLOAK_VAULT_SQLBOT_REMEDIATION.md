@@ -22,15 +22,15 @@
 - 官方发布核对：Vault 最新非预发布仍为 [v2.0.3](https://github.com/hashicorp/vault/releases/tag/v2.0.3)，发布日期 2026-06-17；
 - 处置：上游尚无更高受支持版本，不能自行重编译官方二进制后仍宣称为受支持镜像；`VAULT_SECURITY=BLOCKED`。
 
-AppRole、KV v2、审计、轮换、禁用和故障恢复由本轮后续故障脚本复验；即便功能通过，在无修复版本/waiver 时安全门禁仍不能通过。
+AppRole、KV v2、审计、轮换、禁用和故障恢复已由 `P5A-VAULT-20260803T101306Z` 复验通过；即便功能通过，在无修复版本/waiver 时安全门禁仍不能通过。
 
 ## SQLBot
 
 - 固定禁用镜像：`dataease/sqlbot:v1.8.0@sha256:c4ca3acc34f0c63a64f3f3e7bb909760f17d184959635542278710144347d9e0`；
-- 实扫：49 Critical、801 High；24 个唯一 Critical、627 个唯一 High；
+- 实扫：49 Critical、802 High；24 个唯一 Critical、628 个唯一 High；
 - 主要风险集中于 Debian `linux-libc-dev 6.1.158-1`、Perl 5.36、Node 18.20.4、OpenSSL 3.0.17、Python 3.11.2，以及 Pillow 12.2.0、NLTK 3.9.4 和多个 Go stdlib；完整 installed/fixed version 在原始 JSON 与汇总中；
 - 官方发布核对：当前最新非预发布为 [v1.10.0](https://github.com/dataease/SQLBot/releases/tag/v1.10.0)，发布日期 2026-07-16，发布说明明确包含 SQL 注入、提示注入、权限提升和跨工作空间等安全修复；
-- 处置：v1.10.0 比冻结 v1.8.0 新，但本轮没有 v1.10.0 的固定 digest、数据库迁移/API 兼容、全镜像复扫和 SQLBot 运行时验收。直接替换会绕过已冻结适配合同，因此不宣称“兼容修复版本已验证”。保持 `SQLBOT_ENGINE_ENABLED=false`、`SQLBOT_RUNTIME_VERIFIED=false`、`SQLBOT_CANARY_ELIGIBLE=false`，`SQLBOT_IMAGE_SECURITY=BLOCKED`。
+- 处置：v1.10.0 比冻结 v1.8.0 新，但本轮没有 v1.10.0 的固定 digest、数据库迁移/API 兼容、全镜像复扫和 SQLBot 运行时验收。直接替换会绕过已冻结适配合同，因此不宣称“兼容修复版本已验证”。保持 `SQLBOT_ENGINE_ENABLED=false`、`SQLBOT_RUNTIME_VERIFIED=false`、`SQLBOT_CANARY_ELIGIBLE=false`，`SQLBOT_IMAGE_SECURITY=BLOCKED`；镜像明确 `included_in_rc=false`，Compose profile 保持默认不启用且 `pull_policy=never`。
 
 离线安全聚焦有效 46/46、主链在 SQLBot 不可用时继续工作，只能证明确定性主链隔离，不能接受 SQLBot 镜像的 Critical/High。
 

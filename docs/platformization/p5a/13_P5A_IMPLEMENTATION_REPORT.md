@@ -12,7 +12,7 @@ P5A 只修复当前独立预生产验收环境内可关闭的门禁，不进入 
 - Alembic 唯一 head `p5_0001`；隔离库完成 `base → p5_0001 → p4_0001 → p5_0001`。
 - PostgreSQL 16.14 权威回归有效 353/353；Deterministic 40/40、charging 15/15、sales 12/12、DQ 20/20、Memory 40/40、Skill 40/40、RAG 60/60、Response 7/7、Query Security 15/15、SQLBot offline 46/46。
 - Docker Smoke 6/6、Playwright 27/27、Vitest 3/3、TypeScript/Vite build PASS、npm audit 0。
-- Trivy 0.70.0 对 11 个运行/禁用角色、8 个唯一 image ID 完成全量扫描；按角色累计 51 Critical/847 High，waiver 0，`IMAGE_SECURITY` 及相关门禁保持 BLOCKED。Keycloak 0C/15H、Vault 0C/3H、SQLBot 49C/801H；SQLBot 保持 disabled。
+- Trivy 0.70.0 于 2026-08-03 对 11 个运行/禁用角色、9 个唯一 image ID 完成本轮全量扫描；按角色累计 51 Critical/848 High，waiver 0，`IMAGE_SECURITY` 及相关门禁保持 BLOCKED。Keycloak 0C/15H、Vault 0C/3H、SQLBot 49C/802H；SQLBot 保持 disabled 且排除 RC。
 - 连接池预检暴露最大连接不足，已增加受控 PostgreSQL pool 配置并复用 Shadow 当前事务连接；60 秒预检 299 请求、错误/超时 0。
 - 第一轮 7200 秒真实暴露 OIDC 服务端会话 TTL 处理缺陷：TTL 后预期外 401，结果判 FAIL，未生成或复用成功 JSON。修复后 180 秒边界预检完成 200 次轮换、1089 请求、错误/超时 0。
 - 第二轮按原参数完成 7200 秒容量验收：实际 7229.453 秒、35,246 请求、错误率 0.059581%、超时率 0.002837%，P50/P95/P99 为 2109.546/13311.483/20744.866 ms；越权成功、异常重启、连接池耗尽均为 0。原始证据和独立验证均为 PASS。
@@ -22,7 +22,6 @@ P5A 只修复当前独立预生产验收环境内可关闭的门禁，不进入 
 
 ## 当前仍未完成、不得提前记为通过
 
-- 当前 API 重建镜像的补充 Trivy 扫描尚待容量结束后执行；
 - P5A 新增行敏感信息扫描尚待所有文件收口后执行；
 - Production Gate 本轮证据更新、最终文档提交、P5A 普通 push 和远端 0/0 尚待完成。
 

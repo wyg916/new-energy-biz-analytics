@@ -74,6 +74,10 @@ def vulnerabilities(payload: dict) -> list[dict]:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument(
+        "--role", action="append", choices=tuple(item[0] for item in IMAGES),
+        help="Rescan only an explicitly named role; omit to scan all roles.",
+    )
     args = parser.parse_args()
     output_dir = args.output_dir.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -83,7 +87,11 @@ def main() -> None:
     started_at = datetime.now(UTC)
     entries = []
     scan_cache: dict[str, tuple[str, bytes]] = {}
-    for role, reference, runtime_enabled in IMAGES:
+    selected_images = (
+        tuple(item for item in IMAGES if item[0] in set(args.role))
+        if args.role else IMAGES
+    )
+    for role, reference, runtime_enabled in selected_images:
         identity = image_identity(reference)
         raw_name = f"trivy-{role}.json"
         raw_path = output_dir / raw_name
@@ -117,6 +125,7 @@ def main() -> None:
         entries.append({
             "role": role,
             "runtime_enabled": runtime_enabled,
+            "included_in_rc": runtime_enabled,
             **identity,
             "scan_completed_at": datetime.now(UTC).isoformat(),
             "trivy_version": trivy_version,
@@ -152,12 +161,19 @@ def main() -> None:
             "blocked_roles": [item["role"] for item in entries if item["status"] != "PASS"],
         },
         "image_security_gate": "PASSED" if all(item["status"] == "PASS" for item in entries) else "BLOCKED",
+        "sqlbot_rc_exclusion": {
+            "included_in_rc": False,
+            "runtime_enabled": False,
+            "security_gate_status": next(
+                item["status"] for item in entries if item["role"] == "sqlbot"
+            ) if any(item["role"] == "sqlbot" for item in entries) else "NOT_SCANNED",
+        },
         "production_release_authorized": False,
         "production_traffic_switched": False,
     }
     serialized = json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
     summary_path = output_dir / "container-security-summary.json"
-    summary_path.write_text(serialized, encoding="utf-8")
+    summary_path.write_bytes(serialized.encode("utf-8"))
     print(json.dumps({
         "status": summary["image_security_gate"],
         "roles_scanned": len(entries),

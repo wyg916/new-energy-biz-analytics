@@ -152,6 +152,10 @@ services:
           sleep 86400
         done
 
+  sqlbot:
+    profiles: ["sqlbot"]
+    pull_policy: never
+
 networks:
   default:
     name: renewable-p5a-remediation-network

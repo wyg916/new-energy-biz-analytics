@@ -24,7 +24,7 @@
 | Vitest | 3/3 | `evidence/vitest.xml` |
 | TypeScript / Vite build | PASS | `evidence/frontend-build.txt` |
 | npm audit | PASS，0 vulnerabilities；首次网络 `ECONNRESET` 后重试成功 | `evidence/npm-audit.json` |
-| 镜像安全 | 11 个角色完成；51 Critical / 847 High（按角色计）；0 waiver；门禁 BLOCKED | `evidence/container-security/container-security-summary.json` |
+| 镜像安全 | 11 个角色、9 个唯一 image ID；51 Critical / 848 High（按角色计）；0 waiver；门禁 BLOCKED；SQLBot 排除 RC | `evidence/container-security/container-security-summary.json` |
 | 60 秒容量预检 | PASS，100 逻辑用户 / 并发 20 | `evidence/p5a-capacity-preflight.json` |
 | 第一轮 7200 秒容量浸泡 | FAIL；3600 秒 OIDC 服务端会话到期后出现预期外 401，收尾未生成本轮 JSON；基础设施无 OOM/重启 | `07_TWO_HOUR_CAPACITY_AND_SOAK.md` 失败记录 |
 | 会话轮换边界预检 | PASS；180 秒、100 用户、并发 20、200 次轮换、1089 请求、0 错误/超时 | `evidence/p5a-capacity-session-rotation-preflight.json` |

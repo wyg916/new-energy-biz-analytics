@@ -1,10 +1,12 @@
 # Docker/WSL 恢复与独立标准环境
 
-核验时间：2026-08-02T09:47:51Z。
+首次核验时间：2026-08-02T09:47:51Z；P5A 收口恢复复验：2026-08-03T10:27:38Z。
 
 ## 现场根因与恢复边界
 
-P5 期间的直接阻断是 WSL HCS connection timeout，Docker Linux Engine API 无响应。本轮接管时 WSL2 `docker-desktop` 已重新处于 Running，Docker Desktop Engine 已恢复；没有证据支持把该瞬时宿主故障归因到仓库代码，因此未伪造一次不存在的宿主修复动作。
+P5 期间的直接阻断是 WSL HCS connection timeout，Docker Linux Engine API 无响应。2026-08-03 收口接管时 Windows `com.docker.service` 仍在运行，但 `docker-desktop` 分发版为 Stopped，Engine pipe 不可用；第一次普通启动长时间停留在 `starting`。检查确认 C/D/E/F 盘均有可用空间，Docker data mount 使用率约 3%，不是磁盘满。`dockerd` 处于数据同步并持续恢复历史 container shim，说明是宿主异常停机后的 runtime/volume 恢复，而不是仓库代码错误。
+
+恢复只使用 Docker Desktop 正常 stop、`wsl --shutdown` 和正常 start；没有删除容器、镜像、缓存或卷。Engine 恢复后 PostgreSQL 对已有数据目录执行约 630 秒 fsync/WAL 恢复并进入 `ready to accept connections`，Vault 在原卷上呈 sealed/fail-closed，随后由既有 bootstrap 解封。最终 Docker Desktop 为 `running`，Engine 29.6.2、Compose 5.3.1，P5A 9 个运行服务恢复，readiness/liveness 均为 200。
 
 恢复后的冻结 P4 栈显示了重启后真实的 fail-closed 行为：Vault 重新密封，API readiness 返回 503，告警接收端因 Vault AppRole 登录 503 而拒绝启动。P4 卷保持原状；P5A 没有删除、重置或复用这些卷。
 
@@ -16,7 +18,7 @@ P5A 首次独立启动又暴露并修复两项部署缺陷：
 
 ## 当前标准环境
 
-- Docker Desktop：4.84.0；Client/Server Engine：29.6.2；Linux context：`desktop-linux`。
+- Docker Desktop：4.84.0；Client/Server Engine：29.6.2；Linux context：`desktop-linux`；2026-08-03 复验状态 `running`。
 - Docker Compose：5.3.1；WSL2 kernel：6.18.33.2-microsoft-standard-WSL2。
 - 独立 project：`renewable-p5a-remediation`。
 - 独立 network：`renewable-p5a-remediation-network`。
