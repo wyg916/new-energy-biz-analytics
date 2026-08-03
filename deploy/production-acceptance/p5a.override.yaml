@@ -19,9 +19,9 @@ x-p5a-api-environment: &p5a-api-environment
   ACCEPTANCE_PUBLIC_BASE_URL: https://p5a.localhost:8445
   ACCEPTANCE_LABEL: P5A Remediation
   QUERY_ENGINE_MODE: SHADOW
+  SQLBOT_INCLUDED_IN_V4_RELEASE: "false"
   SQLBOT_ENGINE_ENABLED: "false"
   SQLBOT_RUNTIME_VERIFIED: "false"
-  SQLBOT_BASE_URL: http://sqlbot:8000/api/v1
   CHATBI_READONLY_EXECUTION_ENABLED: "false"
   OIDC_ENABLED: "true"
   OIDC_PROVIDER_CODE: OIDC_PREPROD
@@ -151,10 +151,6 @@ services:
           sha256sum "$$target" > "$$target.sha256"
           sleep 86400
         done
-
-  sqlbot:
-    profiles: ["sqlbot"]
-    pull_policy: never
 
 networks:
   default:

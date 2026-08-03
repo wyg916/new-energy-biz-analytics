@@ -36,8 +36,11 @@ def test_registry_snapshot_is_database_backed_and_no_go_by_default(client, login
     assert body["summary"]["production_acceptance_ready"] is False
     assert body["runtime_contract"] == {
         "query_engine_mode": "SHADOW",
+        "sqlbot_release_scope": "NOT_INCLUDED_IN_V4_RELEASE",
         "sqlbot_engine_enabled": False,
+        "sqlbot_image_in_bom": False,
         "sqlbot_canary_eligible": False,
+        "sqlbot_external_evaluation": "DEFERRED",
         "rag_runtime_mode": "KEYWORD_ONLY",
         "rag_vector_released": False,
         "production_release_authorized": False,
@@ -60,6 +63,14 @@ def test_registry_snapshot_is_database_backed_and_no_go_by_default(client, login
     assert gates["ENTERPRISE_IDP"]["display_status"] == "CONDITIONAL"
     assert gates["ENTERPRISE_IDP"]["evidence"] == []
     assert gates["IMAGE_SECURITY"]["status"] == "BLOCKED"
+    assert gates["SQLBOT_IMAGE_SECURITY"]["recorded_status"] == "BLOCKED"
+    assert gates["SQLBOT_IMAGE_SECURITY"]["applicable_to_release"] is False
+    assert gates["SQLBOT_IMAGE_SECURITY"]["blocking_scope"] == "future_sqlbot_release"
+    assert gates["SQLBOT_EXTERNAL_RUNTIME"]["release_disposition"] == "DEFERRED"
+    assert "SQLBOT_IMAGE_SECURITY" not in body["summary"]["unresolved_blockers"]
+    assert body["summary"]["not_applicable_to_v4"] == [
+        "SQLBOT_EXTERNAL_REVIEW", "SQLBOT_EXTERNAL_RUNTIME", "SQLBOT_IMAGE_SECURITY",
+    ]
     assert gates["RAG_MODE"]["status"] == "PASSED"
     assert gates["RAG_MODE"]["evidence"][0]["sha256"] == "a59c871188aba4216a82281790a7bb1e3064ed0dc28f83e11fff144e35eccd8e"
     assert all(item["owner"] and item["expires_at"] and item["review_requirement"] for item in body["gates"])

@@ -18,6 +18,11 @@ from app.production_acceptance.models import ProductionGate, ProductionGateHisto
 GATE_STATUSES = {"OPEN", "IN_PROGRESS", "PASSED", "WAIVED", "BLOCKED", "EXPIRED"}
 BLOCKING_LEVELS = {"BLOCKER", "MAJOR", "ADVISORY"}
 PROHIBITED_APPROVER_VALUES = {"", "tbd", "unknown", "none", "n/a", "system", "auto"}
+V4_EXCLUDED_GATE_CODES = {
+    "SQLBOT_IMAGE_SECURITY",
+    "SQLBOT_EXTERNAL_REVIEW",
+    "SQLBOT_EXTERNAL_RUNTIME",
+}
 
 
 class ProductionGateError(RuntimeError):
@@ -151,18 +156,32 @@ class ProductionGateRegistry:
         statuses = {row.gate_code: self.effective_status(row) for row in rows}
         unresolved_blockers = [
             row.gate_code for row in rows
-            if row.blocker_level == "BLOCKER" and statuses[row.gate_code] not in {"PASSED", "WAIVED"}
+            if (
+                row.blocker_level == "BLOCKER"
+                and row.gate_code not in V4_EXCLUDED_GATE_CODES
+                and statuses[row.gate_code] not in {"PASSED", "WAIVED"}
+            )
         ]
         waived = [row.gate_code for row in rows if statuses[row.gate_code] == "WAIVED"]
         return {
             "counts": {status: sum(value == status for value in statuses.values()) for status in sorted(GATE_STATUSES)},
             "unresolved_blockers": sorted(unresolved_blockers),
             "waived_gates": sorted(waived),
+            "not_applicable_to_v4": sorted(V4_EXCLUDED_GATE_CODES.intersection(statuses)),
             "production_acceptance_ready": not unresolved_blockers,
             "go_no_go_recommendation": "GO_REVIEW_REQUIRED" if not unresolved_blockers else "NO_GO",
             "production_release_authorized": False,
             "production_traffic_switched": False,
             "sqlbot_canary_eligible": False,
+        }
+
+    @staticmethod
+    def release_scope(gate_code: str) -> dict[str, object]:
+        excluded = gate_code in V4_EXCLUDED_GATE_CODES
+        return {
+            "applicable_to_release": not excluded,
+            "blocking_scope": "future_sqlbot_release" if excluded else "current_release",
+            "release_disposition": "DEFERRED" if excluded else "IN_SCOPE",
         }
 
     @staticmethod

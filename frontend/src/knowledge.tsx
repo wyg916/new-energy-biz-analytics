@@ -164,7 +164,7 @@ export function KnowledgePage({ token }: { token: string }) {
     <section className="knowledge-runtime">
       <article><span>Knowledge Service</span><b>{runtime?.knowledge_service || '检查中'}</b><small>独立生命周期与权限边界</small></article>
       <article><span>Model Gateway</span><b className={runtime?.model_gateway.status === 'READY' ? 'ok' : 'pending'}>{runtime?.model_gateway.status || '检查中'}</b><small>凭据仅显示引用，不返回值</small></article>
-      <article><span>SQLBot Runtime</span><b className="pending">{runtime?.sqlbot_runtime || '检查中'}</b><small>固定 v1.8.0；不可用时确定性引擎不受影响</small></article>
+      <article><span>SQLBot Runtime</span><b className="pending">{runtime?.sqlbot_runtime || '检查中'}</b><small>未包含在本版本；重新启用需独立版本与安全验收</small></article>
       <article><span>RAG 检索</span><b>{runtime?.retrieval_mode || '检查中'}</b><small>{runtime?.vector_status || '检查中'} · P5 keyword-only 正式合同</small></article>
     </section>
 

@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "p5b_release_component_scope",
+  "release_family": "4.0",
+  "release_candidate": "4.0.0-rc.3",
+  "components": {
+    "deterministic_engine": {
+      "included_in_release": true,
+      "runtime_role": "only_formal_nl2sql_execution_path"
+    },
+    "rag": {
+      "included_in_release": true,
+      "runtime_mode": "KEYWORD_ONLY",
+      "vector_released": false
+    },
+    "sqlbot": {
+      "adapter_in_source": true,
+      "offline_contract_retained": true,
+      "included_in_release": false,
+      "runtime": "NOT_INCLUDED",
+      "image_in_bom": false,
+      "image_in_sbom": false,
+      "external_evaluation": "DEFERRED",
+      "canary_eligible": false,
+      "original_scan": {
+        "critical": 49,
+        "high": 802,
+        "disposition": "UNRESOLVED_AND_RETAINED_AS_HISTORICAL_EVIDENCE"
+      }
+    }
+  },
+  "gate_scope": {
+    "SQLBOT_IMAGE_SECURITY": {
+      "recorded_status_unchanged": "BLOCKED",
+      "applicable_to_release": false,
+      "blocking_scope": "future_sqlbot_release"
+    },
+    "SQLBOT_EXTERNAL_REVIEW": {
+      "recorded_status_unchanged": "OPEN",
+      "applicable_to_release": false,
+      "blocking_scope": "future_sqlbot_release"
+    },
+    "SQLBOT_EXTERNAL_RUNTIME": {
+      "recorded_status_unchanged": "OPEN",
+      "applicable_to_release": false,
+      "blocking_scope": "future_sqlbot_release"
+    }
+  },
+  "compose_validation": {
+    "sqlbot_service_present": false,
+    "sqlbot_image_present": false,
+    "sqlbot_base_url_present": false,
+    "status": "PASS"
+  },
+  "production_release_authorized": false,
+  "production_traffic_switched": false
+}

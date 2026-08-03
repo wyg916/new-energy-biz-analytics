@@ -16,9 +16,9 @@ x-api-environment: &api-environment
   PLATFORM_ORG_ID: org-alpha
   PLATFORM_WORKSPACE_ID: workspace-alpha
   QUERY_ENGINE_MODE: SHADOW
+  SQLBOT_INCLUDED_IN_V4_RELEASE: "false"
   SQLBOT_ENGINE_ENABLED: "false"
   SQLBOT_RUNTIME_VERIFIED: "false"
-  SQLBOT_BASE_URL: http://sqlbot:8000/api/v1
   CHATBI_READONLY_EXECUTION_ENABLED: "false"
   OIDC_ENABLED: "true"
   OIDC_PROVIDER_CODE: OIDC_PREPROD
@@ -288,12 +288,6 @@ services:
     depends_on:
       init: {condition: service_completed_successfully}
     restart: unless-stopped
-    logging: *bounded-logs
-
-  sqlbot:
-    image: dataease/sqlbot:v1.8.0@sha256:c4ca3acc34f0c63a64f3f3e7bb909760f17d184959635542278710144347d9e0
-    profiles: ["sqlbot"]
-    restart: "no"
     logging: *bounded-logs
 
 volumes:

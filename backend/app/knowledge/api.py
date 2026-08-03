@@ -110,7 +110,9 @@ def runtime(_: User = Depends(current_user)) -> dict:
         "retrieval_mode": "keyword_full_text_only",
         "vector_status": "VECTOR_DEFERRED_POST_P5",
         "sqlbot_runtime": (
-            "READY" if settings.sqlbot_runtime_verified else "RUNTIME_PENDING"
+            "NOT_INCLUDED_IN_THIS_RELEASE"
+            if not settings.sqlbot_included_in_v4_release
+            else "READY" if settings.sqlbot_runtime_verified else "RUNTIME_PENDING"
         ),
         "model_gateway": runtime_model_status(),
         "data_classification": "simulated",

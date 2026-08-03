@@ -55,6 +55,34 @@ def test_production_configuration_accepts_private_rc_baseline():
 
 
 @pytest.mark.parametrize(
+    "override",
+    [
+        {"sqlbot_engine_enabled": True, "sqlbot_runtime_verified": True, "chatbi_readonly_execution_enabled": True,
+         "chatbi_readonly_database_url": "postgresql+psycopg://readonly:strong-password@db:5432/renewable_private"},
+        {"sqlbot_runtime_verified": True},
+        {"query_engine_mode": "CANARY"},
+        {"query_engine_mode": "SQLBOT_ENABLED"},
+    ],
+)
+def test_v4_release_rejects_sqlbot_runtime_configuration(override):
+    values = {
+        "app_env": "production",
+        "database_url": "postgresql+psycopg://renewable:strong-db-password@db:5432/renewable_private",
+        "redis_url": "redis://redis:6379/0",
+        "secret_key": "a-secure-private-release-secret-key",
+        "auto_bootstrap_demo_users": False,
+        "public_base_url": "https://analytics.example.internal",
+        "cors_origins": "https://analytics.example.internal",
+        "trusted_hosts": "analytics.example.internal",
+        "release_version": "4.0.0-rc.3",
+        "simulated_data_only": True,
+        **override,
+    }
+    with pytest.raises(ValidationError, match="not included in the v4 release"):
+        Settings(**values)
+
+
+@pytest.mark.parametrize(
     ("field", "value"),
     [
         ("public_base_url", "http://analytics.example.internal"),

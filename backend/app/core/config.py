@@ -47,6 +47,7 @@ class Settings(BaseSettings):
     platform_version_routing_enabled: bool | None = None
     sqlbot_engine_enabled: bool = False
     sqlbot_runtime_verified: bool = False
+    sqlbot_included_in_v4_release: bool = False
     sqlbot_base_url: str = "http://sqlbot:8000/api/v1"
     sqlbot_username_env_key: str = "SQLBOT_SERVICE_USERNAME"
     sqlbot_password_env_key: str = "SQLBOT_SERVICE_PASSWORD"
@@ -166,6 +167,14 @@ class Settings(BaseSettings):
                     failures.append(
                         "CHATBI_READONLY_EXECUTION_ENABLED must be true before enabling SQLBot in production"
                     )
+            if not self.sqlbot_included_in_v4_release and (
+                self.sqlbot_engine_enabled
+                or self.sqlbot_runtime_verified
+                or self.effective_query_engine_mode in {"CANARY", "SQLBOT_ENABLED"}
+            ):
+                failures.append(
+                    "SQLBot runtime is not included in the v4 release and cannot be enabled by configuration"
+                )
             if self.production_release_authorized:
                 failures.append("PRODUCTION_RELEASE_AUTHORIZED must remain false until explicit post-acceptance authorization")
             if not 0 <= self.oidc_clock_skew_seconds <= 120:
