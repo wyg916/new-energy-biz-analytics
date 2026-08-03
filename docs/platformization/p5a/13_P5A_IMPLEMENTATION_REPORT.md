@@ -16,14 +16,13 @@ P5A 只修复当前独立预生产验收环境内可关闭的门禁，不进入 
 - 连接池预检暴露最大连接不足，已增加受控 PostgreSQL pool 配置并复用 Shadow 当前事务连接；60 秒预检 299 请求、错误/超时 0。
 - 第一轮 7200 秒真实暴露 OIDC 服务端会话 TTL 处理缺陷：TTL 后预期外 401，结果判 FAIL，未生成或复用成功 JSON。修复后 180 秒边界预检完成 200 次轮换、1089 请求、错误/超时 0。
 - 第二轮按原参数完成 7200 秒容量验收：实际 7229.453 秒、35,246 请求、错误率 0.059581%、超时率 0.002837%，P50/P95/P99 为 2109.546/13311.483/20744.866 ms；越权成功、异常重启、连接池耗尽均为 0。原始证据和独立验证均为 PASS。
-- 临时 PostgreSQL 测试诊断曾在仓库外输出运行连接参数；未提交、未写入证据，按暴露处理并再次轮换，最终 Vault datasource version 3，API/Keycloak/backup 恢复。
+- 临时 PostgreSQL 测试诊断曾在仓库外输出运行连接参数；未提交、未写入证据，按暴露处理并再次轮换，Vault datasource version 3 后 API/Keycloak/backup 恢复。本轮 Vault 复验又以不输出 Secret 的方式生成同值新版本并完成有效绑定、轮换和回滚，最终验收版本为 6。
+- Redis/PostgreSQL/Vault/Keycloak 串行故障注入最终 PASS；readiness 均 fail-closed、liveness 保持 200，RAG 不可用时 0 伪造引用，Vault 无明文 fallback，SQLBot 0 容器且 Deterministic 主链不受影响。
+- Vault P5A run `P5A-VAULT-20260803T101306Z` PASS，audit 增长 52,564 bytes；新备份 28,222,229 bytes，隔离恢复摘要和核心哈希一致，临时库已移除，原卷未删除。
 
 ## 当前仍未完成、不得提前记为通过
 
 - 当前 API 重建镜像的补充 Trivy 扫描尚待容量结束后执行；
-- Redis/PostgreSQL/Vault/Keycloak 串行故障恢复、RAG/SQLBot fallback 尚待执行；
-- Vault AppRole/KV v2/audit/轮换/禁用复验尚待执行；
-- 新完整备份、隔离恢复、Memory/Audit/Release/Gate 历史与核心数据哈希核对尚待执行；
 - P5A 新增行敏感信息扫描尚待所有文件收口后执行；
 - Production Gate 本轮证据更新、最终文档提交、P5A 普通 push 和远端 0/0 尚待完成。
 

@@ -29,7 +29,8 @@
 | 第一轮 7200 秒容量浸泡 | FAIL；3600 秒 OIDC 服务端会话到期后出现预期外 401，收尾未生成本轮 JSON；基础设施无 OOM/重启 | `07_TWO_HOUR_CAPACITY_AND_SOAK.md` 失败记录 |
 | 会话轮换边界预检 | PASS；180 秒、100 用户、并发 20、200 次轮换、1089 请求、0 错误/超时 | `evidence/p5a-capacity-session-rotation-preflight.json` |
 | 第二轮 7200 秒容量浸泡 | PASS；100 用户、并发 20、实际 7229.453 秒、35,246 请求、错误率 0.059581%、超时率 0.002837%、P50/P95/P99 2109.546/13311.483/20744.866 ms、越权/异常重启/连接池耗尽 0 | `evidence/p5a-capacity-soak.json`、`evidence/p5a-capacity-verification.json` |
-| Redis/PostgreSQL/Keycloak/Vault 故障恢复 | 尚未执行；不得与容量并行 | 完成后写入 `evidence/p5a-fault-recovery.json` |
-| 新备份与隔离恢复 | 尚未执行 | 完成后写入 `evidence/p5a-backup-restore.json` |
+| Redis/PostgreSQL/Keycloak/Vault 故障恢复 | PASS；逐项 readiness 503/liveness 200/恢复 200；RAG 0 伪造引用；Vault 无明文 fallback；SQLBot 0 容器且 Deterministic 主链完成 | `evidence/p5a-fault-recovery.json` |
+| Vault 生命周期复验 | PASS；AppRole/KV v2/禁用/绑定修复/轮换/回滚/只读连接，audit +52,564 bytes | `evidence/p5a-vault-acceptance.json` |
+| 新备份与隔离恢复 | PASS；28,222,229 bytes；源/恢复摘要和核心哈希一致；临时库已移除；Secret 明文禁止项 0 | `evidence/p5a-backup-restore.json` |
 
-当前已知最终发布阻断不依赖后续两项结果：镜像 Critical/High 未清零且没有正式 waiver，15 个外部门禁也未关闭。因此当前推荐始终为 `NO_GO`。
+当前最终发布阻断不依赖上述本地 PASS：镜像 Critical/High 未清零且没有正式 waiver，15 个外部门禁也未关闭。因此当前推荐始终为 `NO_GO`。
