@@ -1,0 +1,23 @@
+{
+  "build_image": "renewable-p5b-web-build:4.0.0-rc.3",
+  "build_image_id": "sha256:f3780b478a37ec22e18f680f89c6d9cd477c4cfa058b2d0ae89d40b316af5180",
+  "evidence_type": "p5b_frontend_static_acceptance",
+  "executed_at": "2026-08-03T17:59:52.399469+00:00",
+  "npm_audit": {
+    "sha256": "c7c01c66b2a1bd6501249b3b06c9152ec694598624b4533198e03b2a4fa27331",
+    "status": "PASS",
+    "vulnerabilities": 0
+  },
+  "typescript": {
+    "status": "PASS",
+    "verified_by": "locked Docker build stage"
+  },
+  "vite_build": {
+    "status": "PASS",
+    "verified_by": "locked Docker build stage"
+  },
+  "vitest": {
+    "passed": 3,
+    "total": 3
+  }
+}

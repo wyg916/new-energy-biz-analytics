@@ -1,0 +1,129 @@
+{
+  "data_classification": "simulated",
+  "data_period": {
+    "end": "2026-06-30",
+    "start": "2025-01-01"
+  },
+  "evidence_type": "p5b_final_regression",
+  "fixed_evaluations": {
+    "charging_ops": {
+      "differences": {},
+      "passed": 15,
+      "total": 15
+    },
+    "data_quality": {
+      "failures": [],
+      "passed": 20,
+      "total": 20
+    },
+    "deterministic": {
+      "passed": 40,
+      "total": 40
+    },
+    "memory": {
+      "assertion_testcases": 1,
+      "passed": 40,
+      "total": 40
+    },
+    "query_security": {
+      "passed": 15,
+      "total": 15
+    },
+    "rag_keyword": {
+      "assertion_testcases": 1,
+      "passed": 60,
+      "total": 60
+    },
+    "response_composer": {
+      "passed": 7,
+      "total": 7
+    },
+    "sales_ops": {
+      "differences": {},
+      "passed": 12,
+      "total": 12
+    },
+    "skill": {
+      "assertion_testcases": 1,
+      "passed": 40,
+      "total": 40
+    },
+    "sqlbot_offline": {
+      "passed": 46,
+      "runtime_claimed": false,
+      "total": 46
+    }
+  },
+  "frontend": {
+    "docker_smoke": {
+      "passed": 6,
+      "total": 6
+    },
+    "npm_audit_vulnerabilities": 0,
+    "playwright": {
+      "suites": {
+        "playwright-original-23-p5b-final.xml": {
+          "errors": 0,
+          "failures": 0,
+          "skipped": 0,
+          "tests": 23
+        },
+        "playwright-p4-oidc-3-p5b-final.xml": {
+          "errors": 0,
+          "failures": 0,
+          "skipped": 0,
+          "tests": 3
+        },
+        "playwright-p5-gate-1-p5b-final.xml": {
+          "errors": 0,
+          "failures": 0,
+          "skipped": 0,
+          "tests": 1
+        }
+      },
+      "totals": {
+        "errors": 0,
+        "failures": 0,
+        "skipped": 0,
+        "tests": 27
+      }
+    },
+    "typescript_vite": "PASS",
+    "vitest": {
+      "passed": 3,
+      "total": 3
+    }
+  },
+  "generated_at": "2026-08-03T17:59:52.413209+00:00",
+  "postgresql_backend": {
+    "collected": 363,
+    "corrective_sqlbot_adapter_rerun": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 19
+    },
+    "effective_failed": 0,
+    "effective_passed": 363,
+    "effective_skipped": 0,
+    "initial_full_run": {
+      "errors": 0,
+      "failures": 1,
+      "skipped": 0,
+      "tests": 363
+    },
+    "note": "One unchanged 30-second subprocess timeout occurred only under four-batch resource contention; its complete 19-test file passed unchanged in an isolated rerun.",
+    "single_clean_run_claimed": false
+  },
+  "runtime_contract": {
+    "deterministic_engine_only": true,
+    "production_release_authorized": false,
+    "production_traffic_switched": false,
+    "rag_runtime_mode": "KEYWORD_ONLY",
+    "sqlbot_canary_eligible": false,
+    "sqlbot_runtime": "NOT_INCLUDED"
+  },
+  "schema_version": "1.0",
+  "secret_values_printed": false,
+  "status": "PASS"
+}

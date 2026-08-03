@@ -85,10 +85,12 @@ def wait_postgres(container: str, database: str, timeout: float = 180) -> float:
 
 def run_batch(
     index: int, files: tuple[str, ...], output_dir: Path, stamp: str, label: str,
+    *, api_image: str, postgres_image: str, network: str, runtime_volume: str,
+    container_prefix: str,
 ) -> dict:
-    db_container = f"renewable-p5a-final-db-{index}-{stamp.lower()}"
-    test_container = f"renewable-p5a-final-tests-{index}-{stamp.lower()}"
-    database = f"p5a_final_batch_{index}"
+    db_container = f"{container_prefix}-db-{index}-{stamp.lower()}"
+    test_container = f"{container_prefix}-tests-{index}-{stamp.lower()}"
+    database = f"{container_prefix.replace('-', '_')}_batch_{index}"
     junit = output_dir / f"{label}-batch-{index}.xml"
     started_at = datetime.now(UTC)
     postgres_ready_seconds = None
@@ -97,28 +99,28 @@ def run_batch(
     try:
         command(
             "docker", "create", "--name", db_container,
-            "--network", NETWORK,
-            "-v", f"{RUNTIME_VOLUME}:/run/p4-runtime:ro",
+            "--network", network,
+            "-v", f"{runtime_volume}:/run/p4-runtime:ro",
             "--tmpfs", "/var/lib/postgresql/data:rw,noexec,nosuid,size=2147483648",
             "-e", f"POSTGRES_DB={database}",
             "-e", "POSTGRES_USER=alpha",
             "-e", "POSTGRES_PASSWORD_FILE=/run/p4-runtime/postgres_password",
-            POSTGRES_IMAGE,
+            postgres_image,
         )
         command("docker", "start", db_container)
         postgres_ready_seconds = wait_postgres(db_container, database)
         targets = [f"backend/tests/{name}" for name in files]
         command(
             "docker", "create", "--name", test_container,
-            "--network", NETWORK,
-            "-v", f"{RUNTIME_VOLUME}:/run/p4-runtime:ro",
+            "--network", network,
+            "-v", f"{runtime_volume}:/run/p4-runtime:ro",
             "-e", "APP_ENV=test",
             "-e", "AUTO_BOOTSTRAP_DEMO_USERS=true",
             "-e", f"ACCEPTANCE_POSTGRES_HOST={db_container}",
             "-e", f"ACCEPTANCE_POSTGRES_DB={database}",
             "-e", "ACCEPTANCE_TEST_DATABASE_URL_FROM_RUNTIME=true",
             "-w", "/app",
-            API_IMAGE,
+            api_image,
             "python", "scripts/p4_entrypoint.py", "python", "-m", "pytest",
             *targets,
             "-q", "--tb=no", f"--junitxml=/tmp/{junit.name}",
@@ -170,6 +172,12 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--summary-output", type=Path, required=True)
     parser.add_argument("--label", required=True)
+    parser.add_argument("--api-image", default=API_IMAGE)
+    parser.add_argument("--postgres-image", default=POSTGRES_IMAGE)
+    parser.add_argument("--network", default=NETWORK)
+    parser.add_argument("--runtime-volume", default=RUNTIME_VOLUME)
+    parser.add_argument("--container-prefix", default="renewable-p5a-final")
+    parser.add_argument("--expected-tests", type=int)
     parser.add_argument(
         "--knowledge-rerun", action="store_true",
         help="Rerun the one knowledge lifecycle file after correcting test asset layout.",
@@ -178,11 +186,17 @@ def main() -> None:
         "--gate-rerun", action="store_true",
         help="Rerun the production gate registry file after tightening the 28-gate contract.",
     )
+    parser.add_argument(
+        "--sqlbot-rerun", action="store_true",
+        help="Rerun the SQLBot adapter file after a resource-contention timeout.",
+    )
     args = parser.parse_args()
-    if args.knowledge_rerun and args.gate_rerun:
+    if sum((args.knowledge_rerun, args.gate_rerun, args.sqlbot_rerun)) > 1:
         parser.error("choose only one focused rerun")
-    if not LABEL.fullmatch(args.label):
-        parser.error("label must use the p5a-postgres- prefix")
+    if not re.fullmatch(r"^p5[ab]-postgres-[a-z0-9-]{4,48}$", args.label):
+        parser.error("label must use the p5a-postgres- or p5b-postgres- prefix")
+    if not re.fullmatch(r"^renewable-p5[ab]-final$", args.container_prefix):
+        parser.error("container prefix must identify the isolated P5A/P5B final run")
     paths = [args.output_dir / f"{args.label}-batch-{index}.xml" for index in range(1, 5)]
     if args.summary_output.exists() or any(path.exists() for path in paths):
         raise RuntimeError("refusing to overwrite final PostgreSQL regression evidence")
@@ -193,11 +207,18 @@ def main() -> None:
         jobs = [(1, ("test_knowledge_lifecycle.py",))]
     elif args.gate_rerun:
         jobs = [(1, ("test_p5_production_gate_registry.py",))]
+    elif args.sqlbot_rerun:
+        jobs = [(1, ("test_sqlbot_adapter.py",))]
     else:
         jobs = list(enumerate(BATCHES, start=1))
     with ThreadPoolExecutor(max_workers=len(jobs)) as pool:
         futures = [
-            pool.submit(run_batch, index, files, args.output_dir, stamp, args.label)
+            pool.submit(
+                run_batch, index, files, args.output_dir, stamp, args.label,
+                api_image=args.api_image, postgres_image=args.postgres_image,
+                network=args.network, runtime_volume=args.runtime_volume,
+                container_prefix=args.container_prefix,
+            )
             for index, files in jobs
         ]
         batches = [future.result() for future in futures]
@@ -209,8 +230,11 @@ def main() -> None:
         expected_totals = {"tests": 4, "failures": 0, "errors": 0, "skipped": 0}
     elif args.gate_rerun:
         expected_totals = {"tests": 5, "failures": 0, "errors": 0, "skipped": 0}
+    elif args.sqlbot_rerun:
+        expected_totals = {"tests": 19, "failures": 0, "errors": 0, "skipped": 0}
     else:
-        expected_totals = {"tests": 359, "failures": 0, "errors": 0, "skipped": 0}
+        expected = args.expected_tests or (363 if args.label.startswith("p5b-") else 359)
+        expected_totals = {"tests": expected, "failures": 0, "errors": 0, "skipped": 0}
     passed = (
         all(batch["status"] == "PASS" for batch in batches)
         and totals == expected_totals
@@ -220,7 +244,10 @@ def main() -> None:
             "p5a_postgresql_knowledge_asset_corrective_rerun"
             if args.knowledge_rerun else (
                 "p5a_postgresql_gate_contract_corrective_rerun"
-                if args.gate_rerun else "p5a_postgresql_final_full_regression"
+                if args.gate_rerun else (
+                    "p5b_postgresql_sqlbot_timeout_corrective_rerun"
+                    if args.sqlbot_rerun else "p5a_postgresql_final_full_regression"
+                )
             )
         ),
         "status": "PASS" if passed else "FAIL",
@@ -228,8 +255,8 @@ def main() -> None:
         "finished_at": datetime.now(UTC).isoformat(),
         "environment": "four isolated tmpfs PostgreSQL 16.14 databases",
         "data_classification": "simulated",
-        "application_image": API_IMAGE,
-        "postgres_image": POSTGRES_IMAGE,
+        "application_image": args.api_image,
+        "postgres_image": args.postgres_image,
         "batches": batches,
         "totals": totals,
         "main_database_modified": False,

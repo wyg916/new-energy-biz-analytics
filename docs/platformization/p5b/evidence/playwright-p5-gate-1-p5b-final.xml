@@ -1,0 +1,6 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="7.906494">
+<testsuite name="p5-production-acceptance.spec.ts" timestamp="2026-08-03T16:41:28.351Z" hostname="" tests="1" failures="0" skipped="0" time="6.396" errors="0">
+<testcase name="P5 Production Gate Registry 来自正式 API 且保持 No-Go" classname="p5-production-acceptance.spec.ts" time="6.396">
+</testcase>
+</testsuite>
+</testsuites>

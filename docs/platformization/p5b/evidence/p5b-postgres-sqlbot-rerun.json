@@ -1,0 +1,47 @@
+{
+  "application_image": "renewable-p5b-api:4.0.0-rc.3",
+  "batches": [
+    {
+      "batch": 1,
+      "database": "renewable_p5b_final_batch_1",
+      "database_container_removed": true,
+      "errors": 0,
+      "failures": 0,
+      "finished_at": "2026-08-03T15:55:30.859643+00:00",
+      "junit": "p5b-postgres-sqlbot-rerun-batch-1.xml",
+      "junit_sha256": "939708ce88ba17a978b8516b730e7932272e88c35083a736d5ebf65be5a4c9e6",
+      "persistent_volume_attached": false,
+      "postgres_ready_seconds": 7.421,
+      "skipped": 0,
+      "started_at": "2026-08-03T15:54:36.672774+00:00",
+      "status": "PASS",
+      "test_container_removed": true,
+      "test_exit_code": 0,
+      "test_files": [
+        "test_sqlbot_adapter.py"
+      ],
+      "test_output_sha256": "8fa45ee415c46c441e056183949f8bdf18cc2c64f9eb0c2412f20f028a583ba2",
+      "tests": 19,
+      "tmpfs_postgresql": true
+    }
+  ],
+  "data_classification": "simulated",
+  "environment": "four isolated tmpfs PostgreSQL 16.14 databases",
+  "evidence_type": "p5b_postgresql_sqlbot_timeout_corrective_rerun",
+  "finished_at": "2026-08-03T15:55:30.860207+00:00",
+  "main_database_modified": false,
+  "persistent_test_volume_created": false,
+  "postgres_image": "renewable-p5b-postgres:16.14-hardened",
+  "production_release_authorized": false,
+  "production_traffic_switched": false,
+  "secret_values_printed": false,
+  "started_at": "2026-08-03T15:54:36.671775+00:00",
+  "status": "PASS",
+  "temporary_containers_removed": true,
+  "totals": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 19
+  }
+}

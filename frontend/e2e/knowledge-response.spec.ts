@@ -21,5 +21,5 @@ test('统一回答界面展示 Profile 与运行边界', async ({ page }) => {
   await page.getByRole('button', { name: 'AI经营分析' }).click()
   await expect(page.getByLabel('回答风格')).toBeVisible({ timeout: 120_000 })
   await expect(page.getByText('MODEL_RUNTIME_PENDING', { exact: true })).toBeVisible()
-  await expect(page.getByText('RUNTIME_PENDING', { exact: true })).toBeVisible()
+  await expect(page.getByText('NOT_INCLUDED_IN_THIS_RELEASE', { exact: true })).toBeVisible()
 })
