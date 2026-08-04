@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "p5b_remote_push_gate_decision",
+  "status": "PASS",
+  "gate_decision": {
+    "gate_code": "REMOTE_PUSH",
+    "previous_status": "BLOCKED",
+    "status": "PASSED",
+    "owner": "release_owner",
+    "remote": "origin",
+    "remote_branch": "fix/p5b-local-gate-closure",
+    "local_sha": "f173783dd5ba516e5cf7c376042dfc31da06a5a3",
+    "remote_sha": "f173783dd5ba516e5cf7c376042dfc31da06a5a3",
+    "ahead": 0,
+    "behind": 0,
+    "upstream": "origin/fix/p5b-local-gate-closure",
+    "push_timestamp": "2026-08-04T12:48:42.7256980+08:00",
+    "last_verified_at": "2026-08-04T12:49:18.1172700+08:00",
+    "expires_at": "2026-08-18T12:49:18.1172700+08:00",
+    "review_rule": "Reverify local SHA, remote SHA, upstream, and ahead/behind 0/0 after any new commit or no later than expires_at.",
+    "evidence_sha256": "79733cdfe5665debebc1ffb35cb3923aa7f72482ba4f6ae0083180af27dfd8e5",
+    "evidence_uri": "registry://origin/fix/p5b-local-gate-closure@f173783dd5ba516e5cf7c376042dfc31da06a5a3",
+    "reason": "The frozen P5B implementation branch was pushed normally and local/remote equality was verified at ahead/behind 0/0."
+  },
+  "canonical_proof": {
+    "ahead": 0,
+    "behind": 0,
+    "branch": "fix/p5b-local-gate-closure",
+    "local_sha": "f173783dd5ba516e5cf7c376042dfc31da06a5a3",
+    "remote": "origin",
+    "remote_sha": "f173783dd5ba516e5cf7c376042dfc31da06a5a3",
+    "upstream": "origin/fix/p5b-local-gate-closure",
+    "verified_at": "2026-08-04T12:49:18.1172700+08:00"
+  },
+  "registry_update": {
+    "mode": "DECISION_SEED_AND_EVIDENCE_SNAPSHOT",
+    "database_modified": false,
+    "external_gates_modified": false,
+    "other_gate_statuses_modified": false
+  },
+  "unchanged_release_contract": {
+    "image_security": "BLOCKED",
+    "keycloak_security": "BLOCKED",
+    "vault_security": "BLOCKED",
+    "sqlbot_image_security": "BLOCKED",
+    "sqlbot_image_applicable_to_release": false,
+    "production_acceptance_ready": false,
+    "production_release_authorized": false,
+    "production_traffic_switched": false,
+    "sqlbot_canary_eligible": false,
+    "go_no_go": "NO_GO",
+    "p6_entry": "NOT_ALLOWED"
+  },
+  "secrets_recorded": false
+}

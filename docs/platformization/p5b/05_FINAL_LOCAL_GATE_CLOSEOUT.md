@@ -1,8 +1,8 @@
-# P5B 最终本地门禁收口
+# P5B 最终本地门禁与远端分发收口
 
 ## 结论
 
-`P5B_IMPLEMENTATION=PASS`，`LOCAL_PREPRODUCTION_RC=PASS_WITH_EXTERNAL_PRODUCTION_GATES`。该结论仅适用于本地预生产 RC3；正式生产验收、发布授权和流量切换均为 false，`GO_NO_GO=NO_GO`，不得进入 P6。
+`P5B_IMPLEMENTATION=PASS`，`LOCAL_PREPRODUCTION_RC=PASS_WITH_BLOCKED_PRODUCTION_GATES`。该结论仅适用于本地预生产 RC3；正式生产验收、发布授权和流量切换均为 false，`GO_NO_GO=NO_GO`，不得进入 P6。
 
 数据均为固定随机种子和已批准业务规则生成的模拟数据，期间为 2025-01-01 至 2026-06-30；来源为 P5B PostgreSQL，运行标识位于各证据 JSON 的 `run_id` 或时间戳字段。
 
@@ -37,6 +37,10 @@
 推送前精确 28 项：本地 13、外部 15；PASSED 8、BLOCKED 5、OPEN 15、WAIVED 0。已关闭本地门禁为 Docker Runtime、PostgreSQL 回归、Frontend E2E、容量、故障/备份恢复、RAG、备份恢复复验和 Rollback Drill。
 
 推送前 BLOCKED 为 `REMOTE_PUSH`、`IMAGE_SECURITY`、`KEYCLOAK_SECURITY`、`VAULT_SECURITY`、`SQLBOT_IMAGE_SECURITY`。其中 SQLBot 镜像仅阻断未来 SQLBot 版本，不适用于 v4；普通推送并验证 0/0 后才可将 `REMOTE_PUSH` 写为 PASSED。
+
+首次普通推送于 2026-08-04T12:48:42.7256980+08:00 发起并成功创建 `origin/fix/p5b-local-gate-closure`。冻结实现本地与远端 SHA 均为 `f173783dd5ba516e5cf7c376042dfc31da06a5a3`，ahead/behind 为 `0/0`，upstream 为 `origin/fix/p5b-local-gate-closure`。`REMOTE_PUSH` decision seed 与最终快照据此从 BLOCKED 更新为 PASSED；owner 为 `release_owner`，最后核验时间为 2026-08-04T12:49:18.1172700+08:00，证据 SHA-256 为 `79733cdfe5665debebc1ffb35cb3923aa7f72482ba4f6ae0083180af27dfd8e5`，最迟于 2026-08-18T12:49:18.1172700+08:00 或任何新提交后复核。本任务按冻结约束未修改数据库。
+
+推送后精确 28 项：本地 13、外部 15；PASSED 9、BLOCKED 4、OPEN 15、WAIVED 0。仍为 BLOCKED 的本地门禁仅为 `IMAGE_SECURITY`、`KEYCLOAK_SECURITY`、`VAULT_SECURITY`、`SQLBOT_IMAGE_SECURITY`；其中 `SQLBOT_IMAGE_APPLICABLE_TO_RELEASE=false`。`PRODUCTION_ACCEPTANCE_READY=false`、`PRODUCTION_RELEASE_AUTHORIZED=false`、`PRODUCTION_TRAFFIC_SWITCHED=false`、`SQLBOT_CANARY_ELIGIBLE=false`、`GO_NO_GO=NO_GO`、`P6_ENTRY=NOT_ALLOWED` 均未改变。
 
 15 个外部门禁继续 OPEN/CONDITIONAL：真实企业 IdP、生产 Secret Manager、Secret Manager、SQLBot 外部评审与运行时、真实生产数据及批准、生产容量、监控告警、企业告警、变更窗口、风险接受、业务/安全/运维批准。不得以本地证据替代。
 

@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "p5b_gate_snapshot_post_push",
+  "status": "PASS",
+  "captured_at": "2026-08-04T12:49:18.1172700+08:00",
+  "source_git_sha": "f173783dd5ba516e5cf7c376042dfc31da06a5a3",
+  "remote_branch": "origin/fix/p5b-local-gate-closure",
+  "source_snapshot": {
+    "path": "docs/platformization/p5b/evidence/p5b-gate-snapshot-pre-push.json",
+    "sha256": "e989edb5c9d9c8a1f4bce28d49b7d50c38eacb34d75f6158ce22703774421938",
+    "remote_push_status": "BLOCKED"
+  },
+  "remote_push_gate": {
+    "gate_code": "REMOTE_PUSH",
+    "previous_status": "BLOCKED",
+    "status": "PASSED",
+    "owner": "release_owner",
+    "local_sha": "f173783dd5ba516e5cf7c376042dfc31da06a5a3",
+    "remote_sha": "f173783dd5ba516e5cf7c376042dfc31da06a5a3",
+    "ahead": 0,
+    "behind": 0,
+    "upstream": "origin/fix/p5b-local-gate-closure",
+    "push_timestamp": "2026-08-04T12:48:42.7256980+08:00",
+    "last_verified_at": "2026-08-04T12:49:18.1172700+08:00",
+    "expires_at": "2026-08-18T12:49:18.1172700+08:00",
+    "review_rule": "Reverify local SHA, remote SHA, upstream, and ahead/behind 0/0 after any new commit or no later than expires_at.",
+    "evidence_sha256": "79733cdfe5665debebc1ffb35cb3923aa7f72482ba4f6ae0083180af27dfd8e5",
+    "evidence": {
+      "path": "docs/platformization/p5b/evidence/p5b-remote-push.json",
+      "file_sha256": "f7d44636d438356aef8941c0b1480c4a33ba26f84c89f73f77a887f8f333b3ad"
+    }
+  },
+  "counts": {
+    "PASSED": 9,
+    "BLOCKED": 4,
+    "OPEN": 15,
+    "IN_PROGRESS": 0,
+    "EXPIRED": 0,
+    "WAIVED": 0,
+    "TOTAL": 28
+  },
+  "blocked_gate_codes": [
+    "IMAGE_SECURITY",
+    "KEYCLOAK_SECURITY",
+    "SQLBOT_IMAGE_SECURITY",
+    "VAULT_SECURITY"
+  ],
+  "unresolved_blockers": [
+    "BUSINESS_APPROVAL",
+    "CHANGE_WINDOW",
+    "ENTERPRISE_ALERT",
+    "ENTERPRISE_IDP",
+    "IMAGE_SECURITY",
+    "KEYCLOAK_SECURITY",
+    "MONITORING_ALERTING",
+    "OPERATIONS_APPROVAL",
+    "PRODUCTION_CAPACITY",
+    "PRODUCTION_DATA",
+    "PRODUCTION_DATA_APPROVAL",
+    "PRODUCTION_SECRET_MANAGER",
+    "RISK_ACCEPTANCE",
+    "SECRET_MANAGER",
+    "SECURITY_APPROVAL",
+    "VAULT_SECURITY"
+  ],
+  "unchanged_gate_assertions": {
+    "IMAGE_SECURITY": "BLOCKED",
+    "KEYCLOAK_SECURITY": "BLOCKED",
+    "VAULT_SECURITY": "BLOCKED",
+    "SQLBOT_IMAGE_SECURITY": "BLOCKED",
+    "SQLBOT_IMAGE_APPLICABLE_TO_RELEASE": false,
+    "external_gate_count": 15,
+    "external_gate_status": "OPEN_OR_CONDITIONAL"
+  },
+  "release_contract": {
+    "p5b_implementation": "PASS",
+    "local_preproduction_rc": "PASS_WITH_BLOCKED_PRODUCTION_GATES",
+    "production_acceptance_ready": false,
+    "production_release_authorized": false,
+    "production_traffic_switched": false,
+    "sqlbot_canary_eligible": false,
+    "go_no_go": "NO_GO",
+    "p6_entry": "NOT_ALLOWED"
+  },
+  "registry_update": {
+    "mode": "DECISION_SEED_AND_EVIDENCE_SNAPSHOT",
+    "database_modified": false,
+    "external_gates_modified": false,
+    "other_gate_statuses_modified": false
+  },
+  "secrets_recorded": false
+}
