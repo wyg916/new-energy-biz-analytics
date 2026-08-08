@@ -1,8 +1,10 @@
-# 新能源企业经营分析智能平台（产品级 Alpha）
+# 新能源企业经营分析智能平台（AI 增强 BI）
 
-> 状态：新能源充电运营产品级 Alpha；Phase 1—8 有历史自动化验收证据。2026-07-30 起正在执行 ChatBI 平台化 P0，当前通过情况以 [`docs/platformization/p0/12_ACCEPTANCE_TEST_MATRIX.md`](docs/platformization/p0/12_ACCEPTANCE_TEST_MATRIX.md) 为准。
+> 当前本地运行候选：P5B `4.0.0-rc.3`，Alembic `p5_0001`；P5C 正在收敛唯一后续开发基线。当前阶段证据见 [`docs/platformization/p5c/04_P5C_ACCEPTANCE.md`](docs/platformization/p5c/04_P5C_ACCEPTANCE.md)。
 >
 > 数据边界：仅使用固定种子生成的模拟数据；未接入企业真实数据，不代表生产部署或真实经营收益。
+>
+> 发布边界：本地预生产候选不等于生产准入。生产发布授权、生产流量切换和真实企业验收均为 false。
 
 本项目是面向新能源充电运营的模块化单体经营分析平台。它以统一的 15 项指标语义层为基础，提供数据库驱动的经营驾驶舱、受控 ChatBI、有限多轮会话状态、异常与经营拆解，以及可回溯的周报/月报草稿。
 
@@ -13,28 +15,26 @@
           → 只读执行 → 结构化结果 → Answer Guard → 证据面板
 ```
 
-系统不开放自由 SQL，不包含多 Agent、自动交易、自动邮件/工单、生产级多租户、SSO 或真实企业数据接入。
+P5B RC3 不开放自由 SQL，SQLBot runtime/Canary 不在该候选中；受治理的开放式 NL2SQL 是后续 4.1 规划能力，仍必须经过授权 Schema、统一 Query Guard 和只读执行。系统不包含多 Agent 自主写库、自动交易、自动邮件/跨系统工单或真实企业数据接入。
 
 ## Docker Compose 启动（推荐）
 
-前置：Docker Desktop / Docker Engine 与 Compose v2。
+前置：Docker Desktop / Docker Engine 与 Compose v2，以及 P5B 验收生成并固定的本地加固镜像。缺少冻结镜像时启动会 fail-closed，不会用普通 Dockerfile 覆盖安全标签。
 
-Windows 用户可直接双击根目录的 [`一键启动.bat`](一键启动.bat)。脚本会检查 Docker、创建本地 `.env`、构建并启动四个服务、幂等生成完整模拟数据，成功后打开产品页面。成功或失败时窗口都会停留，不会闪退；首次生成 30 万条会话可能需要数分钟。
+Windows 用户可直接双击根目录唯一入口 [`一键启动.bat`](一键启动.bat)。脚本会校验 Compose 和冻结镜像，启动 P5B PostgreSQL、Redis、Vault、Keycloak、API、Web、Nginx、备份及幂等初始化任务，并验证 API、Web、OIDC 和迁移 head。运行报告写入 `runtime/p5c-startup-report.json`，不记录秘密值。
 
-也可以手动执行：
+自动化或命令行启动：
 
 ```powershell
-Copy-Item .env.example .env
-docker compose up -d --build
-docker compose exec api python -m app.data.seed --session-count 300000
+powershell.exe -NoProfile -ExecutionPolicy Bypass `
+  -File scripts/release/start-project.ps1 -NoBrowser
 ```
 
-- Web：<http://localhost:8080>
-- API 文档：<http://localhost:18000/docs>
-- 健康检查：<http://localhost:18000/api/v1/health>
-- 开发演示用户：`admin / AlphaAdmin!2026`、`analyst / AlphaAnalyst!2026`、`regional / AlphaRegion!2026`
+- Web：<https://p5b.localhost:8446>
+- 健康检查：<https://p5b.localhost:8446/api/v1/health/ready>
+- 身份：本地隔离 Keycloak OIDC；运行凭据只保存在项目专用 Docker volume，不写入仓库或启动报告。
 
-以上账号只在 `APP_ENV=development` 且 `AUTO_BOOTSTRAP_DEMO_USERS=true` 时创建。生产配置使用示例密钥、空密钥或自动演示账号会 fail-closed。
+根目录 `docker-compose.yml` 和 `.env.example` 仍用于历史 Alpha 开发环境，不是 P5B RC3 发布编排。生产配置使用示例密钥、空密钥或自动演示账号会 fail-closed。
 
 数据生成具有幂等批次保护：相同批次会返回现有计数，非空数据库不会混入另一模拟批次。完整批次为 `SIM-20260722-v010-n300000`，覆盖 2025-01-01 至 2026-06-30。
 

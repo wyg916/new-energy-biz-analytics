@@ -1,0 +1,117 @@
+{
+  "captured_at": "2026-08-08T09:11:35.116226+00:00",
+  "checks": {
+    "compose_release_is_4_0_0_rc_3": true,
+    "governance_commit_count_153": true,
+    "governance_diff_is_evidence_only": true,
+    "implementation_commit_count_152": true,
+    "implementation_is_parent_of_governance": true,
+    "launcher_is_unique": true,
+    "manifest_release_is_4_0_0_rc_3": true,
+    "migration_head_is_p5_0001": true,
+    "p5c_control_branch": true,
+    "tracking_ref_matches_pushed_implementation": true,
+    "tracking_relation_is_remote_0_local_1": true
+  },
+  "evidence_type": "p5c_baseline_adjudication",
+  "git": {
+    "ahead": 1,
+    "behind": 0,
+    "branch": "codex/p5c-baseline-convergence",
+    "governance_commit_count": 153,
+    "governance_diff_files": [
+      "docs/platformization/p5b/05_FINAL_LOCAL_GATE_CLOSEOUT.md",
+      "docs/platformization/p5b/06_ACCEPTANCE_PACKAGE_4.0.0-rc.3.md",
+      "docs/platformization/p5b/evidence/p5b-gate-snapshot-post-push.json",
+      "docs/platformization/p5b/evidence/p5b-rc-4.0.0-rc.3-manifest.json",
+      "docs/platformization/p5b/evidence/p5b-remote-push.json"
+    ],
+    "head_at_capture": "6ee3ccc9e893960f11d4a147d676de1ba0b00e6f",
+    "implementation_commit_count": 152,
+    "pushed_implementation_sha": "f173783dd5ba516e5cf7c376042dfc31da06a5a3",
+    "remote_tracking_ref": "origin/fix/p5b-local-gate-closure",
+    "remote_tracking_sha": "f173783dd5ba516e5cf7c376042dfc31da06a5a3",
+    "selected_start_reason": "latest complete P5B implementation plus local distribution-governance evidence",
+    "selected_start_sha": "6ee3ccc9e893960f11d4a147d676de1ba0b00e6f",
+    "status_entries": [
+      "M .gitignore",
+      " M AGENTS.md",
+      " M README.md",
+      " M \"\\344\\270\\200\\351\\224\\256\\345\\220\\257\\345\\212\\250.bat\"",
+      "?? docs/platformization/p5c/",
+      "?? scripts/capture_p5c_baseline.py",
+      "?? scripts/finalize_p5c_acceptance.py",
+      "?? scripts/release/",
+      "?? \"\\351\\241\\271\\347\\233\\256\\344\\272\\214_ChatBI_NL2SQL_\\344\\270\\200\\345\\221\\250\\345\\205\\250\\351\\235\\242\\350\\220\\275\\345\\234\\260\\345\\256\\236\\346\\226\\275\\346\\200\\273\\346\\226\\271\\346\\241\\210_v2.0(1).docx\""
+    ],
+    "worktree": "E:\\新能源企业经营分析智能平台-p5b-gate-closure",
+    "worktrees": [
+      "worktree E:/新能源企业经营分析智能平台",
+      "HEAD ba732d9759d1a37642708af839992609224349a4",
+      "branch refs/heads/feat/p2a-sqlbot-runtime-rag-response",
+      "",
+      "worktree E:/新能源企业经营分析智能平台-p2a-runtime",
+      "HEAD 044a0b39920b64a81e8a2771569d69770929a1c6",
+      "branch refs/heads/feat/p2a-runtime-closeout",
+      "",
+      "worktree E:/新能源企业经营分析智能平台-p2b-memory",
+      "HEAD 7ea31fcc7c81106c5a0c169c5b06efdbc791e1d0",
+      "branch refs/heads/feat/p2b-agent-memory-skills",
+      "",
+      "worktree E:/新能源企业经营分析智能平台-p3-governance",
+      "HEAD 36ad33810031c52869d88de7cf35dbdaaaa10446",
+      "branch refs/heads/feat/p3-enterprise-governance-readiness",
+      "",
+      "worktree E:/新能源企业经营分析智能平台-p4-rc",
+      "HEAD a28b92b5e83545bf8b0bb47bf2f3efa3c9d8d39d",
+      "branch refs/heads/feat/p4-preproduction-rc",
+      "",
+      "worktree E:/新能源企业经营分析智能平台-p5-acceptance",
+      "HEAD cf37a43c444515f2c92530aab050410efac4b544",
+      "branch refs/heads/feat/p5-production-acceptance-gates",
+      "",
+      "worktree E:/新能源企业经营分析智能平台-p5a-remediation",
+      "HEAD d8c077d7c5ee72ca8a7bf5f0dccc861b17253cea",
+      "branch refs/heads/fix/p5a-production-gate-remediation",
+      "",
+      "worktree E:/新能源企业经营分析智能平台-p5b-gate-closure",
+      "HEAD 6ee3ccc9e893960f11d4a147d676de1ba0b00e6f",
+      "branch refs/heads/codex/p5c-baseline-convergence"
+    ]
+  },
+  "input_document": {
+    "included_in_candidate_commit": false,
+    "path": "项目二_ChatBI_NL2SQL_一周全面落地实施总方案_v2.0(1).docx",
+    "tracked": false
+  },
+  "launcher": {
+    "compose_base": "deploy/preproduction/compose.yaml",
+    "compose_override": "deploy/production-acceptance/p5b.override.yaml",
+    "implementation": "scripts/release/start-project.ps1",
+    "rebuilds_frozen_images": false,
+    "user_entry": "一键启动.bat"
+  },
+  "remote_verification": {
+    "adjudication": "remote branch remains at the 152-commit implementation baseline; no push performed",
+    "git_transport": "UNAVAILABLE_CONNECTION_RESET",
+    "git_transport_attempts": 2,
+    "github_branch_page_checked_at": "2026-08-08",
+    "github_branch_page_commit_count": 152
+  },
+  "schema_version": "1.0",
+  "secret_values_recorded": false,
+  "source_manifest_sha256": "b5692f127a4876a6fe8d01f9ee57eb67b5129d41af897fdc4af365f875e8814d",
+  "status": "PASS",
+  "version_truth": {
+    "current_compose_release": "4.0.0-rc.3",
+    "current_migration_heads": [
+      "p5_0001"
+    ],
+    "current_runtime_release": "4.0.0-rc.3",
+    "current_runtime_source_sha": "f173783dd5ba516e5cf7c376042dfc31da06a5a3",
+    "next_release_status": "PLANNED_NOT_YET_RC",
+    "next_release_stream": "4.1.0",
+    "production_release_authorized": false,
+    "production_traffic_switched": false
+  }
+}

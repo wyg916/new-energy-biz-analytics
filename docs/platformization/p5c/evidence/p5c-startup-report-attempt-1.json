@@ -1,0 +1,75 @@
+﻿{
+    "schema_version":  "1.0",
+    "evidence_type":  "p5c_cold_start",
+    "status":  "FAIL",
+    "started_at":  "2026-08-08T08:58:19.4812412+00:00",
+    "finished_at":  "2026-08-08T08:58:22.2320009+00:00",
+    "git":  {
+                "branch":  "codex/p5c-baseline-convergence",
+                "head":  "6ee3ccc9e893960f11d4a147d676de1ba0b00e6f"
+            },
+    "runtime":  {
+                    "compose_project":  "renewable-p5b-gate-closure",
+                    "release_version":  "4.0.0-rc.3",
+                    "expected_migration_head":  "p5_0001",
+                    "sqlbot_runtime":  "NOT_INCLUDED_IN_P5B_RC3",
+                    "rag_mode":  "KEYWORD_ONLY",
+                    "production_release_authorized":  false,
+                    "production_traffic_switched":  false
+                },
+    "data":  {
+                 "classification":  "simulated",
+                 "period_start":  "2025-01-01",
+                 "period_end":  "2026-06-30",
+                 "source":  "fixed-seed business-rule simulation stored in PostgreSQL",
+                 "run_id_location":  "API responses and audit/evidence records"
+             },
+    "urls":  {
+                 "business":  "https://p5b.localhost:8446",
+                 "api_health":  "https://p5b.localhost:8446/api/v1/health",
+                 "oidc":  "https://p5b.localhost:8446/oidc/realms/chatbi/.well-known/openid-configuration"
+             },
+    "required_images":  [
+                            "renewable-p5b-api:4.0.0-rc.3",
+                            "renewable-p5b-web:4.0.0-rc.3",
+                            "renewable-p5b-postgres:16.14-hardened",
+                            "renewable-p5b-keycloak:26.7.0-hardened",
+                            "renewable-p5b-migration:4.0.0-rc.3",
+                            "renewable-p5b-alert-receiver:4.0.0-rc.3",
+                            "renewable-p5b-backup:16.14-hardened",
+                            "hashicorp/vault:2.0.3",
+                            "redis:7.4.10-alpine",
+                            "nginx:1.31.3-alpine"
+                        ],
+    "steps":  [
+                  {
+                      "name":  "Docker engine",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-08T08:58:19.4923768+00:00",
+                      "finished_at":  "2026-08-08T08:58:20.8917503+00:00",
+                      "elapsed_seconds":  1.405,
+                      "detail":  "29.6.2"
+                  },
+                  {
+                      "name":  "Compose contract",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-08T08:58:20.9191937+00:00",
+                      "finished_at":  "2026-08-08T08:58:21.1373114+00:00",
+                      "elapsed_seconds":  0.218,
+                      "detail":  ""
+                  },
+                  {
+                      "name":  "Frozen image inventory",
+                      "status":  "FAIL",
+                      "started_at":  "2026-08-08T08:58:21.1395852+00:00",
+                      "finished_at":  "2026-08-08T08:58:21.9885559+00:00",
+                      "elapsed_seconds":  0.849,
+                      "detail":  "Error response from daemon: No such image: redis:7.4.10-alpine"
+                  }
+              ],
+    "failure":  {
+                    "type":  "RemoteException",
+                    "message":  "Error response from daemon: No such image: redis:7.4.10-alpine"
+                },
+    "secret_values_recorded":  false
+}

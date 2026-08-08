@@ -1,0 +1,138 @@
+<testsuites id="" name="" tests="4" failures="4" skipped="0" errors="0" time="20.936904">
+<testsuite name="p4-preproduction-oidc.spec.ts" timestamp="2026-08-08T09:07:05.591Z" hostname="" tests="3" failures="3" skipped="0" time="2.388" errors="0">
+<testcase name="真实 OIDC Code + PKCE 登录并读取 P4 正式 API" classname="p4-preproduction-oidc.spec.ts" time="1.8">
+<failure message="p4-preproduction-oidc.spec.ts:9:1 真实 OIDC Code + PKCE 登录并读取 P4 正式 API" type="FAILURE">
+<![CDATA[  p4-preproduction-oidc.spec.ts:9:1 › 真实 OIDC Code + PKCE 登录并读取 P4 正式 API ──────────────────────────
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at https://p5b.localhost:8446/
+    Call log:
+      - navigating to "https://p5b.localhost:8446/", waiting until "load"
+
+
+       8 |
+       9 | test('真实 OIDC Code + PKCE 登录并读取 P4 正式 API', async ({ page }) => {
+    > 10 |   await page.goto('/')
+         |              ^
+      11 |   await expect(page.getByTestId('oidc-login')).toBeEnabled()
+      12 |   await Promise.all([
+      13 |     page.waitForURL(/\/protocol\/openid-connect\/auth/),
+        at /work/e2e/p4-preproduction-oidc.spec.ts:10:14
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/p4-preproduction-oidc-真实-OIDC-Code-PKCE-登录并读取-P4-正式-API/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/p4-preproduction-oidc-真实-OIDC-Code-PKCE-登录并读取-P4-正式-API/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../work/test-results/p4-preproduction-oidc-真实-OIDC-Code-PKCE-登录并读取-P4-正式-API/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="真实 OIDC 未映射用户在服务端 callback 阶段被拒绝" classname="p4-preproduction-oidc.spec.ts" time="0.246">
+<failure message="p4-preproduction-oidc.spec.ts:50:1 真实 OIDC 未映射用户在服务端 callback 阶段被拒绝" type="FAILURE">
+<![CDATA[  p4-preproduction-oidc.spec.ts:50:1 › 真实 OIDC 未映射用户在服务端 callback 阶段被拒绝 ────────────────────────────
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at https://p5b.localhost:8446/
+    Call log:
+      - navigating to "https://p5b.localhost:8446/", waiting until "load"
+
+
+      49 |
+      50 | test('真实 OIDC 未映射用户在服务端 callback 阶段被拒绝', async ({ page }) => {
+    > 51 |   await page.goto('/')
+         |              ^
+      52 |   await page.getByTestId('oidc-login').click()
+      53 |   await page.locator('#username').fill('p4.unmapped')
+      54 |   await page.locator('#password').fill(oidcPassword!)
+        at /work/e2e/p4-preproduction-oidc.spec.ts:51:14
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/p4-preproduction-oidc-真实-OIDC-未映射用户在服务端-callback-阶段被拒绝/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/p4-preproduction-oidc-真实-OIDC-未映射用户在服务端-callback-阶段被拒绝/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../work/test-results/p4-preproduction-oidc-真实-OIDC-未映射用户在服务端-callback-阶段被拒绝/trace.zip]]
+]]>
+</system-out>
+</testcase>
+<testcase name="真实 OIDC 禁用用户无法取得授权码" classname="p4-preproduction-oidc.spec.ts" time="0.342">
+<failure message="p4-preproduction-oidc.spec.ts:62:1 真实 OIDC 禁用用户无法取得授权码" type="FAILURE">
+<![CDATA[  p4-preproduction-oidc.spec.ts:62:1 › 真实 OIDC 禁用用户无法取得授权码 ─────────────────────────────────────────
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at https://p5b.localhost:8446/
+    Call log:
+      - navigating to "https://p5b.localhost:8446/", waiting until "load"
+
+
+      61 |
+      62 | test('真实 OIDC 禁用用户无法取得授权码', async ({ page }) => {
+    > 63 |   await page.goto('/')
+         |              ^
+      64 |   await page.getByTestId('oidc-login').click()
+      65 |   await page.locator('#username').fill('p4.disabled')
+      66 |   await page.locator('#password').fill(oidcPassword!)
+        at /work/e2e/p4-preproduction-oidc.spec.ts:63:14
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/p4-preproduction-oidc-真实-OIDC-禁用用户无法取得授权码/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/p4-preproduction-oidc-真实-OIDC-禁用用户无法取得授权码/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../work/test-results/p4-preproduction-oidc-真实-OIDC-禁用用户无法取得授权码/trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="p5-production-acceptance.spec.ts" timestamp="2026-08-08T09:07:05.591Z" hostname="" tests="1" failures="1" skipped="0" time="0.354" errors="0">
+<testcase name="P5 Production Gate Registry 来自正式 API 且保持 No-Go" classname="p5-production-acceptance.spec.ts" time="0.354">
+<failure message="p5-production-acceptance.spec.ts:8:1 P5 Production Gate Registry 来自正式 API 且保持 No-Go" type="FAILURE">
+<![CDATA[  p5-production-acceptance.spec.ts:8:1 › P5 Production Gate Registry 来自正式 API 且保持 No-Go ────────────
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at https://p5b.localhost:8446/
+    Call log:
+      - navigating to "https://p5b.localhost:8446/", waiting until "load"
+
+
+       7 |
+       8 | test('P5 Production Gate Registry 来自正式 API 且保持 No-Go', async ({ page }) => {
+    >  9 |   await page.goto('/')
+         |              ^
+      10 |   if (oidcPassword) {
+      11 |     await expect(page.getByTestId('oidc-login')).toBeEnabled()
+      12 |     await Promise.all([
+        at /work/e2e/p5-production-acceptance.spec.ts:9:14
+
+    attachment #1: trace (application/zip) ─────────────────────────────────────────────────────────
+    ../test-results/p5-production-acceptance-P-8ae8d-Registry-来自正式-API-且保持-No-Go/trace.zip
+    Usage:
+
+        npx playwright show-trace ../test-results/p5-production-acceptance-P-8ae8d-Registry-来自正式-API-且保持-No-Go/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|../work/test-results/p5-production-acceptance-P-8ae8d-Registry-来自正式-API-且保持-No-Go/trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

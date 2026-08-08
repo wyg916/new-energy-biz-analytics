@@ -1,0 +1,13 @@
+
+> renewable-operations-alpha-web@0.1.0 build
+> tsc -b && vite build
+
+vite v6.4.3 building for production...
+transforming...
+✓ 49 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.47 kB │ gzip:   0.34 kB
+dist/assets/index-Bhsss-RE.css  208.36 kB │ gzip:  37.92 kB
+dist/assets/index-DWgXpHLb.js   421.19 kB │ gzip: 120.57 kB
+✓ built in 1.86s

@@ -1,0 +1,129 @@
+{
+  "artifacts": {
+    "p5c-backend-regression.json": {
+      "path": "docs/platformization/p5c/evidence/p5c-backend-regression.json",
+      "sha256": "95784365aaa0d56e2bcc847ada6dc04bf6103970265077ae9353106dc7a52a78"
+    },
+    "p5c-baseline-adjudication.json": {
+      "path": "docs/platformization/p5c/evidence/p5c-baseline-adjudication.json",
+      "sha256": "8849fe9b91a36645c6a3df04d7bd1e67d80d67715a4690f97f98d3dd2855f9ac"
+    },
+    "p5c-frontend-build.txt": {
+      "path": "docs/platformization/p5c/evidence/p5c-frontend-build.txt",
+      "sha256": "4503cd5545e976cc80b7d1db7dd3d01c56b8eb13a7f816a37eafa58842680839"
+    },
+    "p5c-playwright-live-attempt-1.xml": {
+      "path": "docs/platformization/p5c/evidence/p5c-playwright-live-attempt-1.xml",
+      "sha256": "2bc6459e31dc716d229573887bd4a2a252ca35f40c4d6b27152d0a7779b06e51"
+    },
+    "p5c-playwright-live.xml": {
+      "path": "docs/platformization/p5c/evidence/p5c-playwright-live.xml",
+      "sha256": "e133c12f5e905cb124c8cc1f1d9ef9a02b3179ebe0da96299665636ef5f3925d"
+    },
+    "p5c-secret-scan.json": {
+      "path": "docs/platformization/p5c/evidence/p5c-secret-scan.json",
+      "sha256": "d5ada077a8506538f6261a40c4804585f359b3f9a27eb18aa31a17020264f42c"
+    },
+    "p5c-startup-report-attempt-1.json": {
+      "path": "docs/platformization/p5c/evidence/p5c-startup-report-attempt-1.json",
+      "sha256": "f92859965f3292347f1050a259553efeb7fade78d0eaef08bb20ec4a8c744f7f"
+    },
+    "p5c-startup-report-attempt-2.json": {
+      "path": "docs/platformization/p5c/evidence/p5c-startup-report-attempt-2.json",
+      "sha256": "881bfc4c6795666a54cc8b8414360652a321f781a94dace8284a72fc75acde9a"
+    },
+    "p5c-startup-report.json": {
+      "path": "docs/platformization/p5c/evidence/p5c-startup-report.json",
+      "sha256": "1ddba6bd2858a6ada1e121fb1fdffc2163d28964ab6800339793dbc2cbb9438d"
+    },
+    "p5c-vitest.json": {
+      "path": "docs/platformization/p5c/evidence/p5c-vitest.json",
+      "sha256": "b109f9af30f96facb01664aa2080dcdc5bda58eb3bb52ee3ac27be48e6199a3f"
+    }
+  },
+  "checks": {
+    "backend_regression_363": true,
+    "backend_temporary_resources_removed": true,
+    "baseline_adjudication": true,
+    "cold_start": true,
+    "control_branch": true,
+    "failed_attempts_preserved": true,
+    "live_oidc_and_gate_e2e_4": true,
+    "migration_head": true,
+    "production_not_authorized": true,
+    "release_version": true,
+    "secret_scan": true,
+    "typescript_vite_build": true,
+    "vitest_3": true
+  },
+  "data": {
+    "classification": "simulated",
+    "period_end": "2026-06-30",
+    "period_start": "2025-01-01",
+    "run_id_location": "API responses and audit/evidence records",
+    "source": "fixed-seed business-rule simulation stored in PostgreSQL"
+  },
+  "database_schema_changed": false,
+  "evidence_type": "p5c_acceptance_summary",
+  "generated_at": "2026-08-08T09:14:25.764257+00:00",
+  "git": {
+    "branch": "codex/p5c-baseline-convergence",
+    "commit_binding": "THIS_SUMMARY_IS_VALID_ONLY_INSIDE_THE_P5C_STAGE_COMMIT",
+    "head_at_acceptance": "6ee3ccc9e893960f11d4a147d676de1ba0b00e6f",
+    "start_sha": "6ee3ccc9e893960f11d4a147d676de1ba0b00e6f",
+    "worktree": "E:\\新能源企业经营分析智能平台-p5b-gate-closure"
+  },
+  "known_limits": [
+    "Git HTTPS CLI live verification failed twice with connection reset; GitHub branch page and local tracking evidence were used read-only.",
+    "The owner-supplied DOCX could not be rendered because LibreOffice is unavailable; structured paragraphs and all 46 tables were read.",
+    "Remote branch was not pushed and no RC tag was created in P5C.",
+    "P5B production gates remain open or blocked; P5C does not authorize production or implement 4.1 features."
+  ],
+  "main_database_destructively_modified": false,
+  "next_allowed_action": "COMMIT_P5C_THEN_START_DATA_OR_MUTUALLY_EXCLUSIVE_WORKTREES_FROM_THE_SAME_SHA",
+  "phase": "P5C_FACT_SECURITY_RELEASE_TRUTH_CONVERGENCE",
+  "preserved_failures": {
+    "playwright_attempt_1": "container-to-host port mapping",
+    "product_assertion_failures": 0,
+    "startup_attempt_1": "missing mutable tag alias in inventory check",
+    "startup_attempt_2": "Windows PowerShell native stderr handling"
+  },
+  "release_truth": {
+    "migration_head": "p5_0001",
+    "next_release_status": "PLANNED_NOT_YET_RC",
+    "next_release_stream": "4.1.0",
+    "production_release_authorized": false,
+    "production_traffic_switched": false,
+    "runtime_release": "4.0.0-rc.3"
+  },
+  "schema_version": "1.0",
+  "secret_values_recorded": false,
+  "status": "PASS",
+  "tests": {
+    "backend": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 363
+    },
+    "cold_start": {
+      "status": "PASS",
+      "steps": 9
+    },
+    "playwright_live": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 4
+    },
+    "secret_scan": {
+      "new_leakage_findings": 0,
+      "status": "PASS"
+    },
+    "typescript_vite": "PASS",
+    "vitest": {
+      "passed": 3,
+      "total": 3
+    }
+  }
+}
