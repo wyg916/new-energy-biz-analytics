@@ -51,6 +51,9 @@ class CitationEvidence(BaseModel):
     title: str
     page: int | None = None
     section: str | None = None
+    paragraph_start: int | None = None
+    paragraph_end: int | None = None
+    locator: str = "document"
     source: str
     published_at: str
     citation_text: str

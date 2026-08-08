@@ -28,11 +28,13 @@ from app.models.sales import (
 )
 from app.models.knowledge import (
     KnowledgeChunk,
+    KnowledgeChunkIndex,
     KnowledgeDocument,
     KnowledgeDocumentAcl,
     KnowledgeDocumentVersion,
     KnowledgePublicationEvent,
     KnowledgeRetrievalEvent,
+    KnowledgeGovernanceEvent,
 )
 from app.memory.models import (
     MemoryAuditEvent,
@@ -77,7 +79,7 @@ __all__ = [
     "SalesRegion",
     "KnowledgeChunk", "KnowledgeDocument", "KnowledgeDocumentAcl",
     "KnowledgeDocumentVersion", "KnowledgePublicationEvent",
-    "KnowledgeRetrievalEvent",
+    "KnowledgeRetrievalEvent", "KnowledgeChunkIndex", "KnowledgeGovernanceEvent",
     "MemoryAuditEvent", "MemoryDeletionAudit", "MemoryRecord",
     "MemoryWriteCandidateRecord", "ProcedureDefinition", "SkillDefinition",
     "SkillExecutionRecord", "SQLBotSourceBindingRelease",

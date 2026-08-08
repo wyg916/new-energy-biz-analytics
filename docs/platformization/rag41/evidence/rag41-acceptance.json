@@ -1,0 +1,79 @@
+{
+  "schema_version": "rag41-acceptance-v1",
+  "generated_at": "2026-08-08T23:37:00+08:00",
+  "status": "PASS",
+  "branch": "codex/rag-hybrid-41",
+  "baseline": "75160df433bbf9273e10a87bae6a7aef29af9744",
+  "migration": {
+    "revision": "rag_0001",
+    "down_revision": "data_0001",
+    "sqlite_cycle": "PASS",
+    "postgresql_16_9_cycle": "PASS",
+    "rollback_preserves_base_knowledge_tables": true
+  },
+  "parsers": ["markdown", "txt_utf8", "docx", "text_pdf"],
+  "index": {
+    "keyword": "equivalent_bm25_v1",
+    "embedding_model": "deterministic_multilingual_feature_hash_v1",
+    "embedding_version": "1.0.0",
+    "dimensions": 256,
+    "pgvector_installed": false,
+    "pgvector_claimed": false,
+    "postgres_chunk_count": 142,
+    "postgres_vector_count": 142
+  },
+  "retrieval": {
+    "mode": "hybrid_bm25_vector_rrf_rerank",
+    "fusion": "RRF",
+    "rrf_k": 60,
+    "query_rewrite": "controlled_synonym_map_v1",
+    "acl_before_materialization": true,
+    "version_filtering": true
+  },
+  "golden": {
+    "base_cases": 60,
+    "extension_cases": 60,
+    "total_cases": 120,
+    "recall_at_10": 1.0,
+    "mean_reciprocal_rank": 0.8298,
+    "deterministic_repeat_runs": 2,
+    "citation_accuracy": 1.0,
+    "citation_contract_checks": 299,
+    "unauthorized_retrievals": 0,
+    "cross_scenario_retrievals": 0,
+    "prompt_injection_effects": 0,
+    "document_injection_effects": 0,
+    "no_evidence_refusal": "NO_PUBLISHED_EVIDENCE"
+  },
+  "citation": {
+    "version_pinned": true,
+    "locators": ["page", "section", "paragraph_start", "paragraph_end"]
+  },
+  "governance": {
+    "allowlisted_system_roles": ["system_reviewer", "rag_quality_agent"],
+    "system_publish_denied": true,
+    "actor_type_is_explicit": true,
+    "postgres_governance_events": 24,
+    "postgres_system_actor_events": 24,
+    "postgres_review_required_events": 5,
+    "review_flags_preserved_as_non_human": true
+  },
+  "tests": {
+    "sqlite_focused": {"passed": 19, "failed": 0},
+    "postgres_focused": {"passed": 19, "failed": 0},
+    "http_cold_start_e2e": {"passed": 1, "failed": 0},
+    "backend_full_initial": {"passed": 375, "failed": 2, "reason": "windows_crlf_snapshot_checkout"},
+    "data_hash_remediation": {"passed": 2, "failed": 0},
+    "backend_full_final": {"passed": 377, "failed": 0, "errors": 0, "skipped": 0}
+  },
+  "cold_start": {
+    "legacy_index_backfill_required": true,
+    "missing_index_behavior": "fail_closed",
+    "rebuild_command": "python scripts/rebuild_rag_indexes.py --output docs/platformization/rag41/evidence/rebuild.json"
+  },
+  "truth_boundary": {
+    "production_claimed": false,
+    "real_customer_data_used": false,
+    "data41_business_facts_changed": false
+  }
+}

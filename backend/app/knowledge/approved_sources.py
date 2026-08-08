@@ -15,4 +15,7 @@ APPROVED_SOURCE_PATHS = frozenset({
     "docs/adr/ADR-002-SCENARIO-PACKAGE-BOUNDARY.md",
     "docs/adr/ADR-003-DETERMINISTIC-QUERY-ENGINE.md",
     "docs/adr/ADR-005-IDENTITY-AND-PERMISSION-BEFORE-RETRIEVAL.md",
+    "docs/platformization/rag41/00_SCOPE_AND_FACT_BOUNDARY.md",
+    "docs/platformization/rag41/01_ARCHITECTURE_SECURITY_AND_GOVERNANCE.md",
+    "docs/platformization/rag41/02_MIGRATION_COLD_START_AND_ROLLBACK.md",
 })

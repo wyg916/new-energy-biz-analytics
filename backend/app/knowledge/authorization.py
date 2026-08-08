@@ -3,8 +3,10 @@ from datetime import datetime
 from sqlalchemy import and_, exists, or_, select
 
 from app.knowledge.models import RetrievalIdentity
+from app.knowledge.indexer import EMBEDDING_MODEL, EMBEDDING_VERSION
 from app.models.knowledge import (
     KnowledgeChunk,
+    KnowledgeChunkIndex,
     KnowledgeDocument,
     KnowledgeDocumentAcl,
     KnowledgeDocumentVersion,
@@ -40,7 +42,7 @@ def authorized_candidate_query(
         .exists()
     )
     return (
-        select(KnowledgeChunk, KnowledgeDocumentVersion, KnowledgeDocument)
+        select(KnowledgeChunk, KnowledgeDocumentVersion, KnowledgeDocument, KnowledgeChunkIndex)
         .join(
             KnowledgeDocumentVersion,
             KnowledgeChunk.document_version_id
@@ -49,6 +51,14 @@ def authorized_candidate_query(
         .join(
             KnowledgeDocument,
             KnowledgeDocumentVersion.document_id == KnowledgeDocument.document_id,
+        )
+        .outerjoin(
+            KnowledgeChunkIndex,
+            and_(
+                KnowledgeChunkIndex.chunk_id == KnowledgeChunk.chunk_id,
+                KnowledgeChunkIndex.embedding_model == EMBEDDING_MODEL,
+                KnowledgeChunkIndex.embedding_version == EMBEDDING_VERSION,
+            ),
         )
         .where(
             KnowledgeDocument.tenant_id == identity.tenant_id,

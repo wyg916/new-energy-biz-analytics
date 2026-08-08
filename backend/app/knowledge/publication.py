@@ -19,6 +19,7 @@ class KnowledgePublicationService:
         self.identity = identity
 
     def publish(self, version_id: str, *, reason: str | None = None) -> KnowledgeDocumentVersion:
+        self._require_human_approval()
         target = self._scoped_version(version_id)
         if target.status != DocumentStatus.READY:
             raise KnowledgePublicationError("only READY versions can be published")
@@ -41,6 +42,7 @@ class KnowledgePublicationService:
         return target
 
     def retire(self, version_id: str, *, reason: str | None = None) -> KnowledgeDocumentVersion:
+        self._require_human_approval()
         target = self._scoped_version(version_id)
         if target.status != DocumentStatus.PUBLISHED:
             raise KnowledgePublicationError("only PUBLISHED versions can be retired")
@@ -58,6 +60,7 @@ class KnowledgePublicationService:
     ) -> KnowledgeDocumentVersion:
         """Governed logical deletion that preserves the immutable audit evidence."""
 
+        self._require_human_approval()
         target = self._scoped_version(version_id)
         if target.status not in {
             DocumentStatus.READY,
@@ -80,6 +83,7 @@ class KnowledgePublicationService:
         *,
         reason: str,
     ) -> KnowledgeDocumentVersion:
+        self._require_human_approval()
         current = self._scoped_version(current_version_id)
         target = self._scoped_version(target_version_id)
         if current.document_id != target.document_id:
@@ -113,6 +117,12 @@ class KnowledgePublicationService:
         if target is None:
             raise KnowledgePublicationError("knowledge version not found in caller scope")
         return target
+
+    def _require_human_approval(self) -> None:
+        if self.identity.subject_id.startswith("system:"):
+            raise KnowledgePublicationError(
+                "automated governance identities cannot publish, retire, delete or rollback"
+            )
 
     def _event(
         self,

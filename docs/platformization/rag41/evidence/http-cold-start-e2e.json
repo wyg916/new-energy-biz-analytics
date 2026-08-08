@@ -1,0 +1,21 @@
+{
+  "schema_version": "rag41-http-cold-start-e2e-v1",
+  "generated_at": "2026-08-08T23:36:38+08:00",
+  "status": "PASS",
+  "start_state": "fully_stopped",
+  "database": "isolated_sqlite_migration_cycle_database",
+  "health_status": "ok",
+  "knowledge_service": "READY",
+  "retrieval_mode": "hybrid_bm25_vector_rrf_rerank",
+  "vector_status": "EQUIVALENT_VECTOR_READY",
+  "published_chunk_count": 28,
+  "indexed_chunk_count": 28,
+  "query_encoding": "utf-8",
+  "query_language": "zh-CN",
+  "citation_count": 5,
+  "first_locator": "section:2. 指标总表;paragraph:7",
+  "refusal_reason": null,
+  "answer_guard_status": "PASSED",
+  "server_stopped_after_test": true,
+  "production_claimed": false
+}

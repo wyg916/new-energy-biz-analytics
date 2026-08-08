@@ -1,0 +1,13 @@
+{
+  "generated_at": "2026-08-08T15:06:01.400027+00:00",
+  "embedding_model": "deterministic_multilingual_feature_hash_v1",
+  "embedding_version": "1.0.0",
+  "chunk_count": 28,
+  "vector_count": 28,
+  "reviewed_version_count": 1,
+  "system_actor_type": "SYSTEM",
+  "governance_role": "rag_quality_agent",
+  "index_rebuild_passed": true,
+  "quality_reviews_all_passed": true,
+  "review_required_count": 0
+}

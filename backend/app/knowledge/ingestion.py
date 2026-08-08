@@ -1,4 +1,5 @@
 import hashlib
+import json
 from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
@@ -7,7 +8,13 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.knowledge.approved_sources import APPROVED_SOURCE_PATHS
-from app.knowledge.chunker import chunk_document
+from app.knowledge.chunker import chunk_parsed_blocks
+from app.knowledge.governance import AutomatedKnowledgeGovernance
+from app.knowledge.indexer import (
+    EMBEDDING_DIMENSIONS,
+    EMBEDDING_MODEL,
+    index_for_chunk,
+)
 from app.knowledge.models import DocumentStatus, IngestionRequest
 from app.knowledge.normalizer import normalize_content
 from app.knowledge.parser import KnowledgeParseError, parse_document
@@ -60,6 +67,12 @@ class KnowledgeIngestionService:
             created_at=datetime.now(UTC),
             published_at=None,
             retired_at=None,
+            parser_name="pending",
+            parser_version="pending",
+            chunking_version="hybrid-v1",
+            embedding_model=EMBEDDING_MODEL,
+            embedding_dimensions=EMBEDDING_DIMENSIONS,
+            metadata_json="{}",
         )
         self.db.add(version)
         self.db.flush()
@@ -69,32 +82,69 @@ class KnowledgeIngestionService:
             version.raw_content = parsed.content
             version.mime_type = parsed.mime_type
             version.size_bytes = parsed.size_bytes
+            version.parser_name = parsed.parser_name
+            version.parser_version = parsed.parser_version
             version.content_sha256 = hashlib.sha256(parsed.content.encode("utf-8")).hexdigest()
+            version.metadata_json = json.dumps({
+                "source_suffix": path.suffix.lower(),
+                "parser_name": parsed.parser_name,
+                "parser_version": parsed.parser_version,
+                "parsed_block_count": len(parsed.blocks),
+                "locator_fields": ["page", "section", "paragraph_start", "paragraph_end"],
+            }, ensure_ascii=False, sort_keys=True)
             version.status = DocumentStatus.PARSED
             normalized = normalize_content(parsed.content)
             if not normalized:
                 raise KnowledgeParseError("normalized document is empty")
             version.normalized_content = normalized
-            drafts = chunk_document(normalized)
+            normalized_blocks = tuple(
+                type(block)(
+                    text=normalize_content(block.text),
+                    page=block.page,
+                    section=normalize_content(block.section) if block.section else None,
+                    paragraph=block.paragraph,
+                )
+                for block in parsed.blocks
+                if normalize_content(block.text)
+            )
+            drafts = chunk_parsed_blocks(normalized_blocks)
             if not drafts:
                 raise KnowledgeParseError("document produced no chunks")
             for draft in drafts:
-                self.db.add(KnowledgeChunk(
+                chunk = KnowledgeChunk(
                     chunk_id=f"kch-{uuid4().hex}",
                     document_version_id=version.document_version_id,
                     ordinal=draft.ordinal,
                     section=draft.section,
-                    page=None,
+                    page=draft.page,
+                    paragraph_start=draft.paragraph_start,
+                    paragraph_end=draft.paragraph_end,
+                    locator_json=json.dumps({
+                        "page": draft.page,
+                        "section": draft.section,
+                        "paragraph_start": draft.paragraph_start,
+                        "paragraph_end": draft.paragraph_end,
+                    }, ensure_ascii=False, sort_keys=True),
                     content=draft.content,
                     content_sha256=hashlib.sha256(draft.content.encode("utf-8")).hexdigest(),
                     token_estimate=max(1, len(draft.content) // 4),
                     created_at=datetime.now(UTC),
-                ))
+                )
+                self.db.add(chunk)
+                self.db.flush()
+                self.db.add(index_for_chunk(chunk, title=document.title))
             version.status = DocumentStatus.CHUNKED
             self._add_acl(version.document_version_id, "role", request.roles)
             self._add_acl(version.document_version_id, "data_scope", request.data_scopes)
             version.status = DocumentStatus.INDEXING
-            # P2A keyword index is represented by immutable chunks. Vector is explicitly pending.
+            self.db.flush()
+            AutomatedKnowledgeGovernance(
+                self.db, role="rag_quality_agent"
+            ).review(
+                version.document_version_id,
+                action="INDEX_QUALITY_REVIEW",
+                reason_code="INGESTION_AUTOMATED_CHECK",
+            )
             version.status = DocumentStatus.VALIDATING
             version.status = DocumentStatus.READY
             self.db.commit()
