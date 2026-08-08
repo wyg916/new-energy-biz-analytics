@@ -27,6 +27,7 @@ from app.response.contracts import (
     KnowledgeEvidence,
     ResponseProfileName,
 )
+from app.data.truth import current_data_truth
 
 
 class CompositeRoute(StrEnum):
@@ -143,6 +144,7 @@ class CompositeQueryOrchestrator:
             )
             knowledge_evidence = self._adapt_knowledge_evidence(question, knowledge_result)
 
+        truth = current_data_truth(self.db)
         response = ResponseComposer().compose(CompositionRequest(
             question=question,
             profile=profile,
@@ -151,7 +153,7 @@ class CompositeQueryOrchestrator:
             trace_id=trace_id,
             run_id=run_id,
             can_show_sql=self.user.role == "analyst_admin",
-            data_classification="simulated",
+            data_classification=truth["data_classification"],
         ))
         self.db.add(AuditLog(
             actor_user_id=self.user.id,
@@ -302,7 +304,7 @@ class CompositeQueryOrchestrator:
             drivers=(),
             risks=(),
             recommended_actions=(),
-            data_source=str(evidence.get("source") or "ACTIVE DatasetVersion / simulated"),
+            data_source=str(evidence.get("source") or "ACTIVE published DatasetVersion"),
             metric_definition=tuple(
                 f"{code} {version}"
                 for code, version in (evidence.get("metric_versions") or {}).items()

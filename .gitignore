@@ -27,6 +27,7 @@ coverage/
 playwright-report/
 test-results/
 .playwright-browsers/
+docs/platformization/data41/evidence/playwright-temp/
 
 # IDE and OS files
 .idea/

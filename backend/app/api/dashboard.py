@@ -15,8 +15,8 @@ router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 def validate_range(start: date, end_exclusive: date) -> None:
     if start >= end_exclusive:
         raise HTTPException(status_code=422, detail={"code": "INVALID_TIME_RANGE", "message": "开始日期必须早于结束日期"})
-    if start < date(2025, 1, 1) or end_exclusive > date(2026, 7, 1):
-        raise HTTPException(status_code=422, detail={"code": "OUT_OF_DATA_RANGE", "message": "查询超出模拟数据时间范围"})
+    if start < date(2010, 1, 1) or end_exclusive > date(2026, 7, 1):
+        raise HTTPException(status_code=422, detail={"code": "OUT_OF_DATA_RANGE", "message": "查询超出可支持的数据时间范围"})
 
 
 @router.get("/summary")

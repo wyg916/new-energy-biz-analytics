@@ -1,0 +1,80 @@
+name: renewable-data41
+
+x-data41-api-environment: &data41-api-environment
+  APP_ENV: preproduction
+  DEBUG: "false"
+  AUTO_BOOTSTRAP_DEMO_USERS: "false"
+  SIMULATED_DATA_ONLY: "false"
+  DATA41_OPEN_SOURCE_ENABLED: "true"
+  ACTIVE_SALES_RUN_ID: DATA41-UCI-ONLINE-RETAIL-352-V1
+  LOCAL_AUTH_ENABLED: "false"
+  PRODUCTION_RELEASE_AUTHORIZED: "false"
+  PUBLIC_BASE_URL: https://p5b.localhost:8446
+  CORS_ORIGINS: https://p5b.localhost:8446
+  TRUSTED_HOSTS: p5b.localhost,localhost,api,testserver
+  RELEASE_VERSION: 4.1.0-data.1
+  EXPECTED_DATABASE_REVISION: data_0001
+  ACCEPTANCE_POSTGRES_DB: renewable_p5b
+  DATABASE_POOL_SIZE: "20"
+  DATABASE_MAX_OVERFLOW: "10"
+  DATABASE_POOL_TIMEOUT_SECONDS: "30"
+  ACCEPTANCE_PUBLIC_BASE_URL: https://p5b.localhost:8446
+  ACCEPTANCE_LABEL: DATA-4.1 Open Source Baseline
+  QUERY_ENGINE_MODE: SHADOW
+  SQLBOT_INCLUDED_IN_V4_RELEASE: "false"
+  SQLBOT_ENGINE_ENABLED: "false"
+  SQLBOT_RUNTIME_VERIFIED: "false"
+  CHATBI_READONLY_EXECUTION_ENABLED: "false"
+  OIDC_ENABLED: "true"
+  OIDC_PROVIDER_CODE: OIDC_PREPROD
+  OIDC_ISSUER: https://p5b.localhost:8446/oidc/realms/chatbi
+  OIDC_INTERNAL_BASE_URL: http://oidc:8080/oidc/realms/chatbi
+  OIDC_CLIENT_ID: chatbi-web
+  OIDC_REDIRECT_URI: https://p5b.localhost:8446/oidc/callback
+  OIDC_SCOPES: openid profile email
+  VAULT_ENABLED: "true"
+  VAULT_ADDRESS: http://vault:8200
+  VAULT_ROLE_ID_FILE: /run/p4-runtime/vault_role_id
+  VAULT_SECRET_ID_FILE: /run/p4-runtime/vault_secret_id
+  EXTERNAL_ALERT_ENABLED: "true"
+  EXTERNAL_ALERT_WEBHOOK_URL: http://alert-receiver:8090/webhook
+  EXTERNAL_ALERT_SIGNING_REFERENCE_NAME: preprod-webhook-signing
+  PREPRODUCTION_EVIDENCE_ROOT: /app/data/preproduction-evidence
+  SECRET_ENV_ALLOWLIST: ""
+
+services:
+  runtime-bootstrap:
+    image: renewable-data41-api:4.1.0-data.1
+    pull_policy: never
+
+  vault-bootstrap:
+    image: renewable-data41-api:4.1.0-data.1
+    pull_policy: never
+
+  migrate:
+    image: renewable-data41-api:4.1.0-data.1
+    pull_policy: never
+    environment: *data41-api-environment
+
+  init:
+    image: renewable-data41-api:4.1.0-data.1
+    pull_policy: never
+    command: ["python", "scripts/p4_entrypoint.py", "python", "scripts/prepare_data41.py"]
+    environment: *data41-api-environment
+
+  alert-receiver:
+    image: renewable-data41-api:4.1.0-data.1
+    pull_policy: never
+
+  api:
+    image: renewable-data41-api:4.1.0-data.1
+    pull_policy: never
+    environment: *data41-api-environment
+
+  web:
+    image: renewable-data41-web:4.1.0-data.1
+    pull_policy: never
+
+networks:
+  default:
+    name: renewable-data41-network

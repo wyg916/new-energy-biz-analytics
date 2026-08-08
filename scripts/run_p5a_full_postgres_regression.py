@@ -47,6 +47,7 @@ BATCHES = (
         "test_knowledge_lifecycle.py", "test_shadow_evidence.py", "test_multi_scenario_chat.py",
         "test_live_model_provider_validation.py", "test_model_gateway.py", "test_memory_evaluation_expansion.py",
         "test_memory.py", "test_dashboard.py", "test_diagnostics.py", "test_revenue.py", "test_reports.py",
+        "test_data41_open_source.py",
     ),
 )
 LABEL = re.compile(r"^p5a-postgres-[a-z0-9-]{4,48}$")
@@ -190,8 +191,12 @@ def main() -> None:
         "--sqlbot-rerun", action="store_true",
         help="Rerun the SQLBot adapter file after a resource-contention timeout.",
     )
+    parser.add_argument(
+        "--data41-rerun", action="store_true",
+        help="Run the DATA-4.1 open-source and Schema Catalog acceptance file in isolation.",
+    )
     args = parser.parse_args()
-    if sum((args.knowledge_rerun, args.gate_rerun, args.sqlbot_rerun)) > 1:
+    if sum((args.knowledge_rerun, args.gate_rerun, args.sqlbot_rerun, args.data41_rerun)) > 1:
         parser.error("choose only one focused rerun")
     if not re.fullmatch(r"^p5[ab]-postgres-[a-z0-9-]{4,48}$", args.label):
         parser.error("label must use the p5a-postgres- or p5b-postgres- prefix")
@@ -209,6 +214,8 @@ def main() -> None:
         jobs = [(1, ("test_p5_production_gate_registry.py",))]
     elif args.sqlbot_rerun:
         jobs = [(1, ("test_sqlbot_adapter.py",))]
+    elif args.data41_rerun:
+        jobs = [(1, ("test_data41_open_source.py",))]
     else:
         jobs = list(enumerate(BATCHES, start=1))
     with ThreadPoolExecutor(max_workers=len(jobs)) as pool:
@@ -232,6 +239,8 @@ def main() -> None:
         expected_totals = {"tests": 5, "failures": 0, "errors": 0, "skipped": 0}
     elif args.sqlbot_rerun:
         expected_totals = {"tests": 19, "failures": 0, "errors": 0, "skipped": 0}
+    elif args.data41_rerun:
+        expected_totals = {"tests": 5, "failures": 0, "errors": 0, "skipped": 0}
     else:
         expected = args.expected_tests or (363 if args.label.startswith("p5b-") else 359)
         expected_totals = {"tests": expected, "failures": 0, "errors": 0, "skipped": 0}
@@ -239,22 +248,22 @@ def main() -> None:
         all(batch["status"] == "PASS" for batch in batches)
         and totals == expected_totals
     )
+    evidence_type = "p5a_postgresql_final_full_regression"
+    if args.knowledge_rerun:
+        evidence_type = "p5a_postgresql_knowledge_asset_corrective_rerun"
+    elif args.gate_rerun:
+        evidence_type = "p5a_postgresql_gate_contract_corrective_rerun"
+    elif args.sqlbot_rerun:
+        evidence_type = "p5b_postgresql_sqlbot_timeout_corrective_rerun"
+    elif args.data41_rerun:
+        evidence_type = "data41_postgresql_open_source_catalog_acceptance"
     result = {
-        "evidence_type": (
-            "p5a_postgresql_knowledge_asset_corrective_rerun"
-            if args.knowledge_rerun else (
-                "p5a_postgresql_gate_contract_corrective_rerun"
-                if args.gate_rerun else (
-                    "p5b_postgresql_sqlbot_timeout_corrective_rerun"
-                    if args.sqlbot_rerun else "p5a_postgresql_final_full_regression"
-                )
-            )
-        ),
+        "evidence_type": evidence_type,
         "status": "PASS" if passed else "FAIL",
         "started_at": started_at.isoformat(),
         "finished_at": datetime.now(UTC).isoformat(),
-        "environment": "four isolated tmpfs PostgreSQL 16.14 databases",
-        "data_classification": "simulated",
+        "environment": "isolated tmpfs PostgreSQL 16.14 database" if args.data41_rerun else "four isolated tmpfs PostgreSQL 16.14 databases",
+        "data_classification": "open_source_real_data" if args.data41_rerun else "simulated",
         "application_image": args.api_image,
         "postgres_image": args.postgres_image,
         "batches": batches,

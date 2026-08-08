@@ -20,6 +20,7 @@ from app.scenarios.charging_ops.runtime import (
     platform_version_metadata,
     resolve_charging_ops_context,
 )
+from app.data.truth import current_data_truth
 
 
 def _digest(value: str) -> str:
@@ -51,8 +52,10 @@ class ReportService:
         diagnostic = DiagnosticService(self.db, self.user).decompose("gross_profit", start, end_exclusive, "mom", 5)
         run_id = f"REPORT-{uuid4()}"
         batch = published_charging_ops_batch(self.db)
+        truth = current_data_truth(self.db)
         title = f"新能源经营分析{'周报' if report_type == 'weekly' else '月报'}草稿"
-        lines = [f"# {title}", "", "> 模拟数据 · 可审核草稿 · 不代表真实企业经营结论", "", f"数据时间：{start.isoformat()} 至 {end_exclusive.isoformat()}（右开）", f"来源：平台数据库 / 批次 {batch.batch_id if batch else '无可用批次'}", f"analysis_run_id：{run_id}", "", "## 核心指标", "", "| 指标 | 值 | 单位 |", "|---|---:|---|"]
+        nature = "公开数据样本" if truth["is_open_source"] else "模拟数据"
+        lines = [f"# {title}", "", f"> {nature} · 可审核草稿 · 不代表企业生产经营结论", "", f"数据时间：{start.isoformat()} 至 {end_exclusive.isoformat()}（右开）", f"来源：{truth['source']} / 批次 {batch.batch_id if batch else '无可用批次'}", f"analysis_run_id：{run_id}", "", "## 核心指标", "", "| 指标 | 值 | 单位 |", "|---|---:|---|"]
         if self.platform_context:
             lines[7:7] = [
                 f"scenario_version：{self.platform_context.scenario_version}",
@@ -75,7 +78,7 @@ class ReportService:
         self.db.add(run)
         self.db.add(AuditLog(actor_user_id=self.user.id, action="report.draft", resource="report_draft", outcome="success", detail_json=json.dumps({"analysis_run_id": run_id, "report_type": report_type})))
         self.db.commit()
-        metadata = {"analysis_run_id": run_id, "data_classification": "simulated", "data_time_range": {"start": start.isoformat(), "end_exclusive": end_exclusive.isoformat()}, "source": "platform_database", "batch_id": batch.batch_id if batch else None, "metric_versions": {key: "0.1.0" for key in METRICS}, "status": "draft"}
+        metadata = {"analysis_run_id": run_id, "data_classification": truth["data_classification"], "data_time_range": {"start": start.isoformat(), "end_exclusive": end_exclusive.isoformat()}, "source": truth["source"], "source_name": truth["source_name"], "source_dataset_version": truth["dataset_version"], "batch_id": batch.batch_id if batch else None, "metric_versions": {key: "0.1.0" for key in METRICS}, "status": "draft"}
         if self.platform_context:
             metadata.update(platform_version_metadata(self.platform_context))
         return {"title": title, "report_type": report_type, "metrics": metrics, "diagnostic": diagnostic, "markdown": markdown, "metadata": metadata}
@@ -84,7 +87,7 @@ class ReportService:
     def csv_bytes(report: dict) -> bytes:
         output = io.StringIO()
         writer = csv.writer(output)
-        writer.writerow(["data_classification", "simulated"])
+        writer.writerow(["data_classification", report["metadata"]["data_classification"]])
         writer.writerow(["analysis_run_id", report["metadata"]["analysis_run_id"]])
         writer.writerow(["source", report["metadata"]["source"]])
         writer.writerow(["batch_id", report["metadata"]["batch_id"]])

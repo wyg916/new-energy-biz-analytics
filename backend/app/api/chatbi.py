@@ -27,6 +27,7 @@ from app.core.config import get_settings
 from app.governance.audit import record_governance_event
 from app.governance.authorization import AuthorizationDenied, AuthorizationService, request_context
 from app.platform.identity import IdentityContext
+from app.data.truth import current_data_truth
 
 router = APIRouter(prefix="/chat", tags=["chatbi"])
 
@@ -67,7 +68,7 @@ def scenarios(
     except AuthorizationDenied as exc:
         raise HTTPException(403, detail={"code": exc.code, "message": str(exc)}) from exc
     return {
-        "data_classification": "simulated",
+        "data_classification": current_data_truth(db)["data_classification"],
         "scenarios": get_scenario_chat_registry().catalog(db, user),
     }
 

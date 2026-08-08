@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from app.models.auth import AuditLog, User
 from app.models.business import DataGenerationRun, Station
 from app.services.dashboard import allowed_station_ids
+from app.data.truth import current_data_truth
 from app.services.metric_catalog import METRICS
 from app.scenarios.registry import published_charging_ops_batch
 from app.services.metrics import MetricService
@@ -41,7 +42,8 @@ class DiagnosticService:
 
     def _metadata(self, run_id: str, start: date, end: date, previous_start: date, previous_end: date) -> dict:
         batch = published_charging_ops_batch(self.db)
-        metadata = {"analysis_run_id": run_id, "data_classification": "simulated", "source": "platform_database", "batch_id": batch.batch_id if batch else None, "current_period": [start.isoformat(), end.isoformat()], "comparison_period": [previous_start.isoformat(), previous_end.isoformat()], "causality_boundary": "关联因素说明，不构成因果结论"}
+        truth = current_data_truth(self.db)
+        metadata = {"analysis_run_id": run_id, "data_classification": truth["data_classification"], "source": truth["source"], "source_name": truth["source_name"], "source_dataset_version": truth["dataset_version"], "batch_id": batch.batch_id if batch else None, "current_period": [start.isoformat(), end.isoformat()], "comparison_period": [previous_start.isoformat(), previous_end.isoformat()], "causality_boundary": "关联因素说明，不构成因果结论"}
         if self.platform_context:
             metadata.update(platform_version_metadata(self.platform_context))
         return metadata
@@ -110,4 +112,5 @@ class DiagnosticService:
         median = statistics.median(numeric) if numeric else None
         percentile = None if station_value is None or not numeric else round(sum(value <= station_value for value in numeric) / len(numeric), 4)
         run_id = f"PEER-{uuid4()}"
-        return {"station_id": station_id, "metric_id": metric_id, "value": station_value, "peer_median": median, "peer_percentile": percentile, "peer_count": len(numeric), "metadata": {"analysis_run_id": run_id, "data_classification": "simulated", "source": "platform_database", "causality_boundary": "同群差异不等于因果"}}
+        truth = current_data_truth(self.db)
+        return {"station_id": station_id, "metric_id": metric_id, "value": station_value, "peer_median": median, "peer_percentile": percentile, "peer_count": len(numeric), "metadata": {"analysis_run_id": run_id, "data_classification": truth["data_classification"], "source": truth["source"], "source_name": truth["source_name"], "causality_boundary": "同群差异不等于因果"}}

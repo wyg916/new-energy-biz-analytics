@@ -1,0 +1,2361 @@
+{
+  "catalog_version": "data41-schema-catalog-v2",
+  "generated_at": "2026-08-08T13:14:24.129283+00:00",
+  "database": "PostgreSQL",
+  "purpose": "Governed Schema Catalog input for a future SQLBot phase; SQLBot is disabled in DATA-4.1.",
+  "sqlbot_enabled": false,
+  "tables": [
+    {
+      "name": "open_data_source",
+      "layer": "lineage",
+      "description": "Registered public source and license",
+      "query_policy": "lineage_admin_only",
+      "columns": [
+        {
+          "name": "source_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": true,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Registered public-source identifier",
+          "business_meaning": "Registered public-source identifier",
+          "sensitivity": "internal_business",
+          "example_value": "example_source_id",
+          "synonym": [
+            "source id"
+          ]
+        },
+        {
+          "name": "source_name",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Source name",
+          "business_meaning": "source name",
+          "sensitivity": "internal_business",
+          "example_value": "example_source_name",
+          "synonym": [
+            "source name"
+          ]
+        },
+        {
+          "name": "source_url",
+          "type": "TEXT",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Source url",
+          "business_meaning": "source url",
+          "sensitivity": "internal_business",
+          "example_value": "example_source_url",
+          "synonym": [
+            "source url"
+          ]
+        },
+        {
+          "name": "source_identifier",
+          "type": "VARCHAR(160)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Source identifier",
+          "business_meaning": "source identifier",
+          "sensitivity": "internal_business",
+          "example_value": "example_source_identifier",
+          "synonym": [
+            "source identifier"
+          ]
+        },
+        {
+          "name": "license_name",
+          "type": "VARCHAR(96)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "License name",
+          "business_meaning": "license name",
+          "sensitivity": "internal_business",
+          "example_value": "example_license_name",
+          "synonym": [
+            "license name"
+          ]
+        },
+        {
+          "name": "publisher",
+          "type": "VARCHAR(200)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Publisher",
+          "business_meaning": "publisher",
+          "sensitivity": "internal_business",
+          "example_value": "example_publisher",
+          "synonym": [
+            "publisher"
+          ]
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(24)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Status",
+          "business_meaning": "status",
+          "sensitivity": "internal_business",
+          "example_value": "example_status",
+          "synonym": [
+            "status"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Created at",
+          "business_meaning": "created at",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09T08:15:00+00:00",
+          "synonym": [
+            "created at"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "open_data_snapshot",
+      "layer": "lineage",
+      "description": "Immutable downloaded or selected source snapshot",
+      "query_policy": "lineage_admin_only",
+      "columns": [
+        {
+          "name": "snapshot_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": true,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Immutable source snapshot identifier",
+          "business_meaning": "Immutable source snapshot identifier",
+          "sensitivity": "internal_business",
+          "example_value": "example_snapshot_id",
+          "synonym": [
+            "snapshot id"
+          ]
+        },
+        {
+          "name": "source_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "open_data_source.source_id"
+          ],
+          "relation": [
+            "open_data_snapshot.source_id -> open_data_source.source_id"
+          ],
+          "description": "Registered public-source identifier",
+          "business_meaning": "Registered public-source identifier",
+          "sensitivity": "internal_business",
+          "example_value": "example_source_id",
+          "synonym": [
+            "source id"
+          ]
+        },
+        {
+          "name": "dataset_version",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Dataset version",
+          "business_meaning": "dataset version",
+          "sensitivity": "internal_business",
+          "example_value": "example_dataset_version",
+          "synonym": [
+            "dataset version"
+          ]
+        },
+        {
+          "name": "source_hash",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "SHA-256 of the downloaded source artifact",
+          "business_meaning": "SHA-256 of the downloaded source artifact",
+          "sensitivity": "internal_business",
+          "example_value": "sha256:64-hex-characters",
+          "synonym": [
+            "source hash"
+          ]
+        },
+        {
+          "name": "snapshot_hash",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "SHA-256 of the committed deterministic snapshot",
+          "business_meaning": "SHA-256 of the committed deterministic snapshot",
+          "sensitivity": "internal_business",
+          "example_value": "sha256:64-hex-characters",
+          "synonym": [
+            "snapshot hash"
+          ]
+        },
+        {
+          "name": "source_row_count",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Source row count",
+          "business_meaning": "source row count",
+          "sensitivity": "internal_business",
+          "example_value": 1,
+          "synonym": [
+            "source row count"
+          ]
+        },
+        {
+          "name": "snapshot_row_count",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Snapshot row count",
+          "business_meaning": "snapshot row count",
+          "sensitivity": "internal_business",
+          "example_value": 1,
+          "synonym": [
+            "snapshot row count"
+          ]
+        },
+        {
+          "name": "period_start",
+          "type": "DATETIME",
+          "nullable": true,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Period start",
+          "business_meaning": "period start",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09",
+          "synonym": [
+            "period start"
+          ]
+        },
+        {
+          "name": "period_end",
+          "type": "DATETIME",
+          "nullable": true,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Period end",
+          "business_meaning": "period end",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09",
+          "synonym": [
+            "period end"
+          ]
+        },
+        {
+          "name": "local_path",
+          "type": "VARCHAR(240)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Local path",
+          "business_meaning": "local path",
+          "sensitivity": "internal_business",
+          "example_value": "example_local_path",
+          "synonym": [
+            "local path"
+          ]
+        },
+        {
+          "name": "selection_method",
+          "type": "TEXT",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Selection method",
+          "business_meaning": "selection method",
+          "sensitivity": "internal_business",
+          "example_value": "example_selection_method",
+          "synonym": [
+            "selection method"
+          ]
+        },
+        {
+          "name": "ingested_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Ingested at",
+          "business_meaning": "ingested at",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09T08:15:00+00:00",
+          "synonym": [
+            "ingested at"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "open_data_ingestion_run",
+      "layer": "lineage",
+      "description": "Idempotent raw-to-core ingestion execution",
+      "query_policy": "lineage_admin_only",
+      "columns": [
+        {
+          "name": "run_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": true,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Auditable execution identifier",
+          "business_meaning": "Auditable execution identifier",
+          "sensitivity": "internal_business",
+          "example_value": "DATA41-ACN-ORNL-26-V1",
+          "synonym": [
+            "ingestion run",
+            "批次",
+            "运行ID"
+          ]
+        },
+        {
+          "name": "source_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "open_data_source.source_id"
+          ],
+          "relation": [
+            "open_data_ingestion_run.source_id -> open_data_source.source_id"
+          ],
+          "description": "Registered public-source identifier",
+          "business_meaning": "Registered public-source identifier",
+          "sensitivity": "internal_business",
+          "example_value": "example_source_id",
+          "synonym": [
+            "source id"
+          ]
+        },
+        {
+          "name": "snapshot_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "open_data_snapshot.snapshot_id"
+          ],
+          "relation": [
+            "open_data_ingestion_run.snapshot_id -> open_data_snapshot.snapshot_id"
+          ],
+          "description": "Immutable source snapshot identifier",
+          "business_meaning": "Immutable source snapshot identifier",
+          "sensitivity": "internal_business",
+          "example_value": "example_snapshot_id",
+          "synonym": [
+            "snapshot id"
+          ]
+        },
+        {
+          "name": "transformation_version",
+          "type": "VARCHAR(96)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Transformation version",
+          "business_meaning": "transformation version",
+          "sensitivity": "internal_business",
+          "example_value": "example_transformation_version",
+          "synonym": [
+            "transformation version"
+          ]
+        },
+        {
+          "name": "ingestion_time",
+          "type": "DATETIME",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Ingestion time",
+          "business_meaning": "ingestion time",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09T08:15:00+00:00",
+          "synonym": [
+            "ingestion time"
+          ]
+        },
+        {
+          "name": "raw_row_count",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Raw row count",
+          "business_meaning": "raw row count",
+          "sensitivity": "internal_business",
+          "example_value": 1,
+          "synonym": [
+            "raw row count"
+          ]
+        },
+        {
+          "name": "staging_row_count",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Staging row count",
+          "business_meaning": "staging row count",
+          "sensitivity": "internal_business",
+          "example_value": 1,
+          "synonym": [
+            "staging row count"
+          ]
+        },
+        {
+          "name": "core_row_count",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Core row count",
+          "business_meaning": "core row count",
+          "sensitivity": "internal_business",
+          "example_value": 1,
+          "synonym": [
+            "core row count"
+          ]
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(24)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Status",
+          "business_meaning": "status",
+          "sensitivity": "internal_business",
+          "example_value": "example_status",
+          "synonym": [
+            "status"
+          ]
+        },
+        {
+          "name": "error_summary",
+          "type": "TEXT",
+          "nullable": true,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Error summary",
+          "business_meaning": "error summary",
+          "sensitivity": "internal_business",
+          "example_value": "example_error_summary",
+          "synonym": [
+            "error summary"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "open_data_quality_check",
+      "layer": "lineage",
+      "description": "Machine-verifiable quality result per ingestion run",
+      "query_policy": "lineage_admin_only",
+      "columns": [
+        {
+          "name": "quality_check_id",
+          "type": "VARCHAR(96)",
+          "nullable": false,
+          "primary_key": true,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Quality check id",
+          "business_meaning": "quality check id",
+          "sensitivity": "internal_business",
+          "example_value": "example_quality_check_id",
+          "synonym": [
+            "quality check id"
+          ]
+        },
+        {
+          "name": "run_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "open_data_ingestion_run.run_id"
+          ],
+          "relation": [
+            "open_data_quality_check.run_id -> open_data_ingestion_run.run_id"
+          ],
+          "description": "Auditable execution identifier",
+          "business_meaning": "Auditable execution identifier",
+          "sensitivity": "internal_business",
+          "example_value": "DATA41-ACN-ORNL-26-V1",
+          "synonym": [
+            "ingestion run",
+            "批次",
+            "运行ID"
+          ]
+        },
+        {
+          "name": "check_name",
+          "type": "VARCHAR(96)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Check name",
+          "business_meaning": "check name",
+          "sensitivity": "internal_business",
+          "example_value": "example_check_name",
+          "synonym": [
+            "check name"
+          ]
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Status",
+          "business_meaning": "status",
+          "sensitivity": "internal_business",
+          "example_value": "example_status",
+          "synonym": [
+            "status"
+          ]
+        },
+        {
+          "name": "observed_value",
+          "type": "TEXT",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Observed value",
+          "business_meaning": "observed value",
+          "sensitivity": "internal_business",
+          "example_value": "example_observed_value",
+          "synonym": [
+            "observed value"
+          ]
+        },
+        {
+          "name": "expected_value",
+          "type": "TEXT",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Expected value",
+          "business_meaning": "expected value",
+          "sensitivity": "internal_business",
+          "example_value": "example_expected_value",
+          "synonym": [
+            "expected value"
+          ]
+        },
+        {
+          "name": "checked_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Checked at",
+          "business_meaning": "checked at",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09T08:15:00+00:00",
+          "synonym": [
+            "checked at"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "raw_acn_session",
+      "layer": "raw",
+      "description": "Original ORNL ACN record payload and hash",
+      "query_policy": "lineage_admin_only",
+      "columns": [
+        {
+          "name": "raw_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": true,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Raw id",
+          "business_meaning": "raw id",
+          "sensitivity": "internal_business",
+          "example_value": "example_raw_id",
+          "synonym": [
+            "raw id"
+          ]
+        },
+        {
+          "name": "run_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "open_data_ingestion_run.run_id"
+          ],
+          "relation": [
+            "raw_acn_session.run_id -> open_data_ingestion_run.run_id"
+          ],
+          "description": "Auditable execution identifier",
+          "business_meaning": "Auditable execution identifier",
+          "sensitivity": "internal_business",
+          "example_value": "DATA41-ACN-ORNL-26-V1",
+          "synonym": [
+            "ingestion run",
+            "批次",
+            "运行ID"
+          ]
+        },
+        {
+          "name": "source_record_id",
+          "type": "VARCHAR(96)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Source record id",
+          "business_meaning": "source record id",
+          "sensitivity": "internal_business",
+          "example_value": "example_source_record_id",
+          "synonym": [
+            "source record id"
+          ]
+        },
+        {
+          "name": "source_row_hash",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "SHA-256 of the canonical source record",
+          "business_meaning": "SHA-256 of the canonical source record",
+          "sensitivity": "internal_business",
+          "example_value": "sha256:64-hex-characters",
+          "synonym": [
+            "record hash",
+            "行哈希"
+          ]
+        },
+        {
+          "name": "payload_json",
+          "type": "TEXT",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Lossless original source fields serialized as JSON",
+          "business_meaning": "Lossless original source fields serialized as JSON",
+          "sensitivity": "restricted_raw_payload",
+          "example_value": "example_payload_json",
+          "synonym": [
+            "payload json"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "stg_acn_session",
+      "layer": "staging",
+      "description": "Normalized ACN charging session",
+      "query_policy": "lineage_admin_only",
+      "columns": [
+        {
+          "name": "session_key",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": true,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Session key",
+          "business_meaning": "session key",
+          "sensitivity": "internal_business",
+          "example_value": "example_session_key",
+          "synonym": [
+            "session key"
+          ]
+        },
+        {
+          "name": "run_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "open_data_ingestion_run.run_id"
+          ],
+          "relation": [
+            "stg_acn_session.run_id -> open_data_ingestion_run.run_id"
+          ],
+          "description": "Auditable execution identifier",
+          "business_meaning": "Auditable execution identifier",
+          "sensitivity": "internal_business",
+          "example_value": "DATA41-ACN-ORNL-26-V1",
+          "synonym": [
+            "ingestion run",
+            "批次",
+            "运行ID"
+          ]
+        },
+        {
+          "name": "source_record_id",
+          "type": "VARCHAR(96)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Source record id",
+          "business_meaning": "source record id",
+          "sensitivity": "internal_business",
+          "example_value": "example_source_record_id",
+          "synonym": [
+            "source record id"
+          ]
+        },
+        {
+          "name": "site_id",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Site id",
+          "business_meaning": "site id",
+          "sensitivity": "internal_business",
+          "example_value": "example_site_id",
+          "synonym": [
+            "site id"
+          ]
+        },
+        {
+          "name": "station_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Station id",
+          "business_meaning": "station id",
+          "sensitivity": "internal_business",
+          "example_value": "example_station_id",
+          "synonym": [
+            "site",
+            "charging station",
+            "场站"
+          ]
+        },
+        {
+          "name": "space_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Space id",
+          "business_meaning": "space id",
+          "sensitivity": "internal_business",
+          "example_value": "example_space_id",
+          "synonym": [
+            "space id"
+          ]
+        },
+        {
+          "name": "source_user_id",
+          "type": "VARCHAR(64)",
+          "nullable": true,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Source user id",
+          "business_meaning": "source user id",
+          "sensitivity": "restricted_pseudonymous",
+          "example_value": "example_source_user_id",
+          "synonym": [
+            "source user id"
+          ]
+        },
+        {
+          "name": "connection_time",
+          "type": "DATETIME",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Connection time",
+          "business_meaning": "connection time",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09T08:15:00+00:00",
+          "synonym": [
+            "connection time"
+          ]
+        },
+        {
+          "name": "disconnect_time",
+          "type": "DATETIME",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Disconnect time",
+          "business_meaning": "disconnect time",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09T08:15:00+00:00",
+          "synonym": [
+            "disconnect time"
+          ]
+        },
+        {
+          "name": "done_charging_time",
+          "type": "DATETIME",
+          "nullable": true,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Done charging time",
+          "business_meaning": "done charging time",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09T08:15:00+00:00",
+          "synonym": [
+            "done charging time"
+          ]
+        },
+        {
+          "name": "energy_kwh",
+          "type": "NUMERIC(18, 4)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Session energy delivered in kWh",
+          "business_meaning": "Session energy delivered in kWh",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "energy",
+            "charging volume",
+            "充电量"
+          ]
+        },
+        {
+          "name": "payment_required",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Payment required",
+          "business_meaning": "payment required",
+          "sensitivity": "internal_business",
+          "example_value": 1,
+          "synonym": [
+            "payment required"
+          ]
+        },
+        {
+          "name": "source_row_hash",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "SHA-256 of the canonical source record",
+          "business_meaning": "SHA-256 of the canonical source record",
+          "sensitivity": "internal_business",
+          "example_value": "sha256:64-hex-characters",
+          "synonym": [
+            "record hash",
+            "行哈希"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "raw_uci_retail_line",
+      "layer": "raw",
+      "description": "Original selected UCI workbook row and hash",
+      "query_policy": "lineage_admin_only",
+      "columns": [
+        {
+          "name": "raw_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": true,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Raw id",
+          "business_meaning": "raw id",
+          "sensitivity": "internal_business",
+          "example_value": "example_raw_id",
+          "synonym": [
+            "raw id"
+          ]
+        },
+        {
+          "name": "run_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "open_data_ingestion_run.run_id"
+          ],
+          "relation": [
+            "raw_uci_retail_line.run_id -> open_data_ingestion_run.run_id"
+          ],
+          "description": "Auditable execution identifier",
+          "business_meaning": "Auditable execution identifier",
+          "sensitivity": "internal_business",
+          "example_value": "DATA41-ACN-ORNL-26-V1",
+          "synonym": [
+            "ingestion run",
+            "批次",
+            "运行ID"
+          ]
+        },
+        {
+          "name": "source_row_number",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Source row number",
+          "business_meaning": "source row number",
+          "sensitivity": "internal_business",
+          "example_value": 1,
+          "synonym": [
+            "source row number"
+          ]
+        },
+        {
+          "name": "source_row_hash",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "SHA-256 of the canonical source record",
+          "business_meaning": "SHA-256 of the canonical source record",
+          "sensitivity": "internal_business",
+          "example_value": "sha256:64-hex-characters",
+          "synonym": [
+            "record hash",
+            "行哈希"
+          ]
+        },
+        {
+          "name": "payload_json",
+          "type": "TEXT",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Lossless original source fields serialized as JSON",
+          "business_meaning": "Lossless original source fields serialized as JSON",
+          "sensitivity": "restricted_raw_payload",
+          "example_value": "example_payload_json",
+          "synonym": [
+            "payload json"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "stg_uci_retail_line",
+      "layer": "staging",
+      "description": "Normalized UCI retail invoice line",
+      "query_policy": "lineage_admin_only",
+      "columns": [
+        {
+          "name": "line_key",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": true,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Line key",
+          "business_meaning": "line key",
+          "sensitivity": "internal_business",
+          "example_value": "example_line_key",
+          "synonym": [
+            "line key"
+          ]
+        },
+        {
+          "name": "run_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "open_data_ingestion_run.run_id"
+          ],
+          "relation": [
+            "stg_uci_retail_line.run_id -> open_data_ingestion_run.run_id"
+          ],
+          "description": "Auditable execution identifier",
+          "business_meaning": "Auditable execution identifier",
+          "sensitivity": "internal_business",
+          "example_value": "DATA41-ACN-ORNL-26-V1",
+          "synonym": [
+            "ingestion run",
+            "批次",
+            "运行ID"
+          ]
+        },
+        {
+          "name": "source_row_number",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Source row number",
+          "business_meaning": "source row number",
+          "sensitivity": "internal_business",
+          "example_value": 1,
+          "synonym": [
+            "source row number"
+          ]
+        },
+        {
+          "name": "invoice_no",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Invoice no",
+          "business_meaning": "invoice no",
+          "sensitivity": "internal_business",
+          "example_value": "example_invoice_no",
+          "synonym": [
+            "order number",
+            "订单号"
+          ]
+        },
+        {
+          "name": "stock_code",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Stock code",
+          "business_meaning": "stock code",
+          "sensitivity": "internal_business",
+          "example_value": "example_stock_code",
+          "synonym": [
+            "stock code"
+          ]
+        },
+        {
+          "name": "description",
+          "type": "VARCHAR(240)",
+          "nullable": true,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Description",
+          "business_meaning": "description",
+          "sensitivity": "internal_business",
+          "example_value": "example_description",
+          "synonym": [
+            "description"
+          ]
+        },
+        {
+          "name": "quantity",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Quantity",
+          "business_meaning": "quantity",
+          "sensitivity": "internal_business",
+          "example_value": 1,
+          "synonym": [
+            "quantity"
+          ]
+        },
+        {
+          "name": "invoice_time",
+          "type": "DATETIME",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Invoice time",
+          "business_meaning": "invoice time",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09T08:15:00+00:00",
+          "synonym": [
+            "invoice time"
+          ]
+        },
+        {
+          "name": "unit_price",
+          "type": "NUMERIC(18, 4)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Unit price",
+          "business_meaning": "unit price",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "unit price"
+          ]
+        },
+        {
+          "name": "customer_id",
+          "type": "VARCHAR(32)",
+          "nullable": true,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Customer id",
+          "business_meaning": "customer id",
+          "sensitivity": "restricted_pseudonymous",
+          "example_value": "example_customer_id",
+          "synonym": [
+            "customer id"
+          ]
+        },
+        {
+          "name": "country",
+          "type": "VARCHAR(96)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Country",
+          "business_meaning": "country",
+          "sensitivity": "internal_business",
+          "example_value": "example_country",
+          "synonym": [
+            "country"
+          ]
+        },
+        {
+          "name": "is_cancellation",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Is cancellation",
+          "business_meaning": "is cancellation",
+          "sensitivity": "internal_business",
+          "example_value": 1,
+          "synonym": [
+            "is cancellation"
+          ]
+        },
+        {
+          "name": "source_row_hash",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "SHA-256 of the canonical source record",
+          "business_meaning": "SHA-256 of the canonical source record",
+          "sensitivity": "internal_business",
+          "example_value": "sha256:64-hex-characters",
+          "synonym": [
+            "record hash",
+            "行哈希"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "fact_charging_session",
+      "layer": "core",
+      "description": "Published charging session business fact",
+      "query_policy": "semantic_readonly",
+      "columns": [
+        {
+          "name": "session_id",
+          "type": "VARCHAR(48)",
+          "nullable": false,
+          "primary_key": true,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Session id",
+          "business_meaning": "session id",
+          "sensitivity": "internal_business",
+          "example_value": "example_session_id",
+          "synonym": [
+            "session id"
+          ]
+        },
+        {
+          "name": "station_id",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "dim_station.station_id"
+          ],
+          "relation": [
+            "fact_charging_session.station_id -> dim_station.station_id"
+          ],
+          "description": "Station id",
+          "business_meaning": "station id",
+          "sensitivity": "internal_business",
+          "example_value": "example_station_id",
+          "synonym": [
+            "site",
+            "charging station",
+            "场站"
+          ]
+        },
+        {
+          "name": "device_id",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "dim_device.device_id"
+          ],
+          "relation": [
+            "fact_charging_session.device_id -> dim_device.device_id"
+          ],
+          "description": "Device id",
+          "business_meaning": "device id",
+          "sensitivity": "internal_business",
+          "example_value": "example_device_id",
+          "synonym": [
+            "device id"
+          ]
+        },
+        {
+          "name": "connector_no",
+          "type": "SMALLINT",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Connector no",
+          "business_meaning": "connector no",
+          "sensitivity": "internal_business",
+          "example_value": 1,
+          "synonym": [
+            "connector no"
+          ]
+        },
+        {
+          "name": "user_id",
+          "type": "VARCHAR(40)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "dim_user.user_id"
+          ],
+          "relation": [
+            "fact_charging_session.user_id -> dim_user.user_id"
+          ],
+          "description": "User id",
+          "business_meaning": "user id",
+          "sensitivity": "restricted_pseudonymous",
+          "example_value": "example_user_id",
+          "synonym": [
+            "user id"
+          ]
+        },
+        {
+          "name": "start_time",
+          "type": "DATETIME",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Start time",
+          "business_meaning": "start time",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09T08:15:00+00:00",
+          "synonym": [
+            "start time"
+          ]
+        },
+        {
+          "name": "end_time",
+          "type": "DATETIME",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "End time",
+          "business_meaning": "end time",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09T08:15:00+00:00",
+          "synonym": [
+            "end time"
+          ]
+        },
+        {
+          "name": "settlement_time",
+          "type": "DATETIME",
+          "nullable": true,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Settlement time",
+          "business_meaning": "settlement time",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09T08:15:00+00:00",
+          "synonym": [
+            "settlement time"
+          ]
+        },
+        {
+          "name": "charging_duration_seconds",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Charging duration seconds",
+          "business_meaning": "charging duration seconds",
+          "sensitivity": "internal_business",
+          "example_value": 1,
+          "synonym": [
+            "charging duration seconds"
+          ]
+        },
+        {
+          "name": "energy_kwh",
+          "type": "NUMERIC(18, 4)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Session energy delivered in kWh",
+          "business_meaning": "Session energy delivered in kWh",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "energy",
+            "charging volume",
+            "充电量"
+          ]
+        },
+        {
+          "name": "electricity_fee_net_amount",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Electricity fee net amount",
+          "business_meaning": "electricity fee net amount",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "electricity fee net amount"
+          ]
+        },
+        {
+          "name": "service_fee_net_amount",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Service fee net amount",
+          "business_meaning": "service fee net amount",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "charging revenue",
+            "充电收入"
+          ]
+        },
+        {
+          "name": "session_status",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Session status",
+          "business_meaning": "session status",
+          "sensitivity": "internal_business",
+          "example_value": "example_session_status",
+          "synonym": [
+            "session status"
+          ]
+        },
+        {
+          "name": "batch_id",
+          "type": "VARCHAR(48)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Published charging dataset run identifier",
+          "business_meaning": "Published charging dataset run identifier",
+          "sensitivity": "internal_business",
+          "example_value": "DATA41-ACN-ORNL-26-V1",
+          "synonym": [
+            "batch id"
+          ]
+        },
+        {
+          "name": "source_type",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Source type",
+          "business_meaning": "source type",
+          "sensitivity": "internal_business",
+          "example_value": "example_source_type",
+          "synonym": [
+            "source type"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Created at",
+          "business_meaning": "created at",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09T08:15:00+00:00",
+          "synonym": [
+            "created at"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "fact_energy_cost",
+      "layer": "core",
+      "description": "Published station-day energy-cost fact",
+      "query_policy": "semantic_readonly",
+      "columns": [
+        {
+          "name": "station_id",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": true,
+          "foreign_key": [
+            "dim_station.station_id"
+          ],
+          "relation": [
+            "fact_energy_cost.station_id -> dim_station.station_id"
+          ],
+          "description": "Station id",
+          "business_meaning": "station id",
+          "sensitivity": "internal_business",
+          "example_value": "example_station_id",
+          "synonym": [
+            "site",
+            "charging station",
+            "场站"
+          ]
+        },
+        {
+          "name": "cost_date",
+          "type": "DATE",
+          "nullable": false,
+          "primary_key": true,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Cost date",
+          "business_meaning": "cost date",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09",
+          "synonym": [
+            "cost date"
+          ]
+        },
+        {
+          "name": "tariff_period",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "primary_key": true,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Tariff period",
+          "business_meaning": "tariff period",
+          "sensitivity": "internal_business",
+          "example_value": "example_tariff_period",
+          "synonym": [
+            "tariff period"
+          ]
+        },
+        {
+          "name": "purchase_price_per_kwh",
+          "type": "NUMERIC(12, 6)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Purchase price per kwh",
+          "business_meaning": "purchase price per kwh",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "purchase price per kwh"
+          ]
+        },
+        {
+          "name": "settled_energy_kwh",
+          "type": "NUMERIC(18, 4)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Settled energy kwh",
+          "business_meaning": "settled energy kwh",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "settled energy kwh"
+          ]
+        },
+        {
+          "name": "energy_cost",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Energy cost",
+          "business_meaning": "energy cost",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "energy cost"
+          ]
+        },
+        {
+          "name": "batch_id",
+          "type": "VARCHAR(48)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Published charging dataset run identifier",
+          "business_meaning": "Published charging dataset run identifier",
+          "sensitivity": "internal_business",
+          "example_value": "DATA41-ACN-ORNL-26-V1",
+          "synonym": [
+            "batch id"
+          ]
+        },
+        {
+          "name": "source_type",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Source type",
+          "business_meaning": "source type",
+          "sensitivity": "internal_business",
+          "example_value": "example_source_type",
+          "synonym": [
+            "source type"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sales_order",
+      "layer": "core",
+      "description": "Published sales order business fact",
+      "query_policy": "semantic_readonly",
+      "columns": [
+        {
+          "name": "order_id",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": true,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Order id",
+          "business_meaning": "order id",
+          "sensitivity": "internal_business",
+          "example_value": "example_order_id",
+          "synonym": [
+            "order id"
+          ]
+        },
+        {
+          "name": "order_date",
+          "type": "DATE",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "sales_business_date.business_date"
+          ],
+          "relation": [
+            "sales_order.order_date -> sales_business_date.business_date"
+          ],
+          "description": "Order date",
+          "business_meaning": "order date",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09",
+          "synonym": [
+            "order date"
+          ]
+        },
+        {
+          "name": "customer_id",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "sales_customer.customer_id"
+          ],
+          "relation": [
+            "sales_order.customer_id -> sales_customer.customer_id"
+          ],
+          "description": "Customer id",
+          "business_meaning": "customer id",
+          "sensitivity": "restricted_pseudonymous",
+          "example_value": "example_customer_id",
+          "synonym": [
+            "customer id"
+          ]
+        },
+        {
+          "name": "channel_id",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "sales_channel.channel_id"
+          ],
+          "relation": [
+            "sales_order.channel_id -> sales_channel.channel_id"
+          ],
+          "description": "Channel id",
+          "business_meaning": "channel id",
+          "sensitivity": "internal_business",
+          "example_value": "example_channel_id",
+          "synonym": [
+            "channel id"
+          ]
+        },
+        {
+          "name": "region_id",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "sales_region.region_id"
+          ],
+          "relation": [
+            "sales_order.region_id -> sales_region.region_id"
+          ],
+          "description": "Region id",
+          "business_meaning": "region id",
+          "sensitivity": "internal_business",
+          "example_value": "example_region_id",
+          "synonym": [
+            "region id"
+          ]
+        },
+        {
+          "name": "salesperson_id",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "salesperson.salesperson_id"
+          ],
+          "relation": [
+            "sales_order.salesperson_id -> salesperson.salesperson_id"
+          ],
+          "description": "Salesperson id",
+          "business_meaning": "salesperson id",
+          "sensitivity": "internal_business",
+          "example_value": "example_salesperson_id",
+          "synonym": [
+            "salesperson id"
+          ]
+        },
+        {
+          "name": "organization_code",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Organization code",
+          "business_meaning": "organization code",
+          "sensitivity": "internal_business",
+          "example_value": "example_organization_code",
+          "synonym": [
+            "organization code"
+          ]
+        },
+        {
+          "name": "gross_amount",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Gross amount",
+          "business_meaning": "gross amount",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "gross amount"
+          ]
+        },
+        {
+          "name": "discount_amount",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Discount amount",
+          "business_meaning": "discount amount",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "discount amount"
+          ]
+        },
+        {
+          "name": "refund_amount",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Refund amount",
+          "business_meaning": "refund amount",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "refund amount"
+          ]
+        },
+        {
+          "name": "net_revenue",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Revenue after discount and refund",
+          "business_meaning": "Revenue after discount and refund",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "sales revenue",
+            "销售收入"
+          ]
+        },
+        {
+          "name": "cost_amount",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Cost amount",
+          "business_meaning": "cost amount",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "cost amount"
+          ]
+        },
+        {
+          "name": "gross_profit",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Net revenue less derived cost",
+          "business_meaning": "Net revenue less derived cost",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "gross profit"
+          ]
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(24)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Status",
+          "business_meaning": "status",
+          "sensitivity": "internal_business",
+          "example_value": "example_status",
+          "synonym": [
+            "status"
+          ]
+        },
+        {
+          "name": "is_new_customer",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Is new customer",
+          "business_meaning": "is new customer",
+          "sensitivity": "internal_business",
+          "example_value": 1,
+          "synonym": [
+            "is new customer"
+          ]
+        },
+        {
+          "name": "data_classification",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Truth classification of the stored business row",
+          "business_meaning": "Truth classification of the stored business row",
+          "sensitivity": "internal_business",
+          "example_value": "example_data_classification",
+          "synonym": [
+            "data classification"
+          ]
+        },
+        {
+          "name": "seed_run_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Published sales dataset run identifier retained for compatibility",
+          "business_meaning": "Published sales dataset run identifier retained for compatibility",
+          "sensitivity": "internal_business",
+          "example_value": "DATA41-ACN-ORNL-26-V1",
+          "synonym": [
+            "seed run id"
+          ]
+        },
+        {
+          "name": "created_at",
+          "type": "DATETIME",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Created at",
+          "business_meaning": "created at",
+          "sensitivity": "internal_business",
+          "example_value": "2020-05-09T08:15:00+00:00",
+          "synonym": [
+            "created at"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sales_order_item",
+      "layer": "core",
+      "description": "Published sales order-line business fact",
+      "query_policy": "semantic_readonly",
+      "columns": [
+        {
+          "name": "order_item_id",
+          "type": "VARCHAR(40)",
+          "nullable": false,
+          "primary_key": true,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Order item id",
+          "business_meaning": "order item id",
+          "sensitivity": "internal_business",
+          "example_value": "example_order_item_id",
+          "synonym": [
+            "order item id"
+          ]
+        },
+        {
+          "name": "order_id",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "sales_order.order_id"
+          ],
+          "relation": [
+            "sales_order_item.order_id -> sales_order.order_id"
+          ],
+          "description": "Order id",
+          "business_meaning": "order id",
+          "sensitivity": "internal_business",
+          "example_value": "example_order_id",
+          "synonym": [
+            "order id"
+          ]
+        },
+        {
+          "name": "line_number",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Line number",
+          "business_meaning": "line number",
+          "sensitivity": "internal_business",
+          "example_value": 1,
+          "synonym": [
+            "line number"
+          ]
+        },
+        {
+          "name": "product_id",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [
+            "sales_product.product_id"
+          ],
+          "relation": [
+            "sales_order_item.product_id -> sales_product.product_id"
+          ],
+          "description": "Product id",
+          "business_meaning": "product id",
+          "sensitivity": "internal_business",
+          "example_value": "example_product_id",
+          "synonym": [
+            "product id"
+          ]
+        },
+        {
+          "name": "quantity",
+          "type": "INTEGER",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Quantity",
+          "business_meaning": "quantity",
+          "sensitivity": "internal_business",
+          "example_value": 1,
+          "synonym": [
+            "quantity"
+          ]
+        },
+        {
+          "name": "unit_price",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Unit price",
+          "business_meaning": "unit price",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "unit price"
+          ]
+        },
+        {
+          "name": "gross_amount",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Gross amount",
+          "business_meaning": "gross amount",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "gross amount"
+          ]
+        },
+        {
+          "name": "discount_amount",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Discount amount",
+          "business_meaning": "discount amount",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "discount amount"
+          ]
+        },
+        {
+          "name": "refund_amount",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Refund amount",
+          "business_meaning": "refund amount",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "refund amount"
+          ]
+        },
+        {
+          "name": "net_revenue",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Revenue after discount and refund",
+          "business_meaning": "Revenue after discount and refund",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "sales revenue",
+            "销售收入"
+          ]
+        },
+        {
+          "name": "cost_amount",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Cost amount",
+          "business_meaning": "cost amount",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "cost amount"
+          ]
+        },
+        {
+          "name": "gross_profit",
+          "type": "NUMERIC(18, 2)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Net revenue less derived cost",
+          "business_meaning": "Net revenue less derived cost",
+          "sensitivity": "internal_business",
+          "example_value": 46.12,
+          "synonym": [
+            "gross profit"
+          ]
+        },
+        {
+          "name": "data_classification",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Truth classification of the stored business row",
+          "business_meaning": "Truth classification of the stored business row",
+          "sensitivity": "internal_business",
+          "example_value": "example_data_classification",
+          "synonym": [
+            "data classification"
+          ]
+        },
+        {
+          "name": "seed_run_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Published sales dataset run identifier retained for compatibility",
+          "business_meaning": "Published sales dataset run identifier retained for compatibility",
+          "sensitivity": "internal_business",
+          "example_value": "DATA41-ACN-ORNL-26-V1",
+          "synonym": [
+            "seed run id"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "metric_definition",
+      "layer": "semantic",
+      "description": "Published metric semantic definition",
+      "query_policy": "semantic_readonly",
+      "columns": [
+        {
+          "name": "metric_id",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": true,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Metric id",
+          "business_meaning": "metric id",
+          "sensitivity": "internal_business",
+          "example_value": "example_metric_id",
+          "synonym": [
+            "metric code",
+            "指标编码"
+          ]
+        },
+        {
+          "name": "display_name",
+          "type": "VARCHAR(128)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Display name",
+          "business_meaning": "display name",
+          "sensitivity": "internal_business",
+          "example_value": "example_display_name",
+          "synonym": [
+            "display name"
+          ]
+        },
+        {
+          "name": "unit",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Unit",
+          "business_meaning": "unit",
+          "sensitivity": "internal_business",
+          "example_value": "example_unit",
+          "synonym": [
+            "unit"
+          ]
+        },
+        {
+          "name": "version",
+          "type": "VARCHAR(16)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Version",
+          "business_meaning": "version",
+          "sensitivity": "internal_business",
+          "example_value": "example_version",
+          "synonym": [
+            "version"
+          ]
+        },
+        {
+          "name": "status",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Status",
+          "business_meaning": "status",
+          "sensitivity": "internal_business",
+          "example_value": "example_status",
+          "synonym": [
+            "status"
+          ]
+        },
+        {
+          "name": "formula",
+          "type": "TEXT",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Formula",
+          "business_meaning": "formula",
+          "sensitivity": "internal_business",
+          "example_value": "example_formula",
+          "synonym": [
+            "formula"
+          ]
+        },
+        {
+          "name": "allowed_dimensions_json",
+          "type": "TEXT",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Allowed dimensions json",
+          "business_meaning": "allowed dimensions json",
+          "sensitivity": "internal_business",
+          "example_value": "example_allowed_dimensions_json",
+          "synonym": [
+            "allowed dimensions json"
+          ]
+        },
+        {
+          "name": "business_domain",
+          "type": "VARCHAR(64)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Business domain",
+          "business_meaning": "business domain",
+          "sensitivity": "internal_business",
+          "example_value": "example_business_domain",
+          "synonym": [
+            "business domain"
+          ]
+        },
+        {
+          "name": "definition",
+          "type": "TEXT",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Definition",
+          "business_meaning": "definition",
+          "sensitivity": "internal_business",
+          "example_value": "example_definition",
+          "synonym": [
+            "definition"
+          ]
+        },
+        {
+          "name": "source_tables_json",
+          "type": "TEXT",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Source tables json",
+          "business_meaning": "source tables json",
+          "sensitivity": "internal_business",
+          "example_value": "example_source_tables_json",
+          "synonym": [
+            "source tables json"
+          ]
+        },
+        {
+          "name": "supported_grains_json",
+          "type": "TEXT",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Supported grains json",
+          "business_meaning": "supported grains json",
+          "sensitivity": "internal_business",
+          "example_value": "example_supported_grains_json",
+          "synonym": [
+            "supported grains json"
+          ]
+        },
+        {
+          "name": "metric_type",
+          "type": "VARCHAR(32)",
+          "nullable": false,
+          "primary_key": false,
+          "foreign_key": [],
+          "relation": [],
+          "description": "Metric type",
+          "business_meaning": "metric type",
+          "sensitivity": "internal_business",
+          "example_value": "example_metric_type",
+          "synonym": [
+            "metric type"
+          ]
+        }
+      ]
+    }
+  ],
+  "relations": [
+    "fact_charging_session.device_id -> dim_device.device_id",
+    "fact_charging_session.station_id -> dim_station.station_id",
+    "fact_charging_session.user_id -> dim_user.user_id",
+    "fact_energy_cost.station_id -> dim_station.station_id",
+    "open_data_ingestion_run.snapshot_id -> open_data_snapshot.snapshot_id",
+    "open_data_ingestion_run.source_id -> open_data_source.source_id",
+    "open_data_quality_check.run_id -> open_data_ingestion_run.run_id",
+    "open_data_snapshot.source_id -> open_data_source.source_id",
+    "raw_acn_session.run_id -> open_data_ingestion_run.run_id",
+    "raw_uci_retail_line.run_id -> open_data_ingestion_run.run_id",
+    "sales_order.channel_id -> sales_channel.channel_id",
+    "sales_order.customer_id -> sales_customer.customer_id",
+    "sales_order.order_date -> sales_business_date.business_date",
+    "sales_order.region_id -> sales_region.region_id",
+    "sales_order.salesperson_id -> salesperson.salesperson_id",
+    "sales_order_item.order_id -> sales_order.order_id",
+    "sales_order_item.product_id -> sales_product.product_id",
+    "stg_acn_session.run_id -> open_data_ingestion_run.run_id",
+    "stg_uci_retail_line.run_id -> open_data_ingestion_run.run_id"
+  ],
+  "statistics": {
+    "table_count": 13,
+    "field_count": 141,
+    "relation_count": 19
+  }
+}

@@ -28,6 +28,7 @@ from app.services.dashboard import DashboardService, allowed_station_ids
 from app.services.metric_catalog import METRICS
 from app.scenarios.registry import published_charging_ops_batch
 from app.services.diagnostics import DiagnosticService
+from app.data.truth import current_data_truth
 
 
 def _hash(value: str) -> str:
@@ -129,9 +130,11 @@ class ChatBIService:
             self._finish_run(run, "partial" if plan.status == "needs_clarification" else "failed", answer, None, plan.status)
             WORK_MEMORY.finish(work_state.task_id)
             return {"status": plan.status, "answer": answer, "conversation_id": self.conversation_id, "state_version": self.state_version, "query_plan": plan.model_dump(mode="json"), "result": None, "chart": None, "evidence": self._evidence(run_id, plan, None, 0, "not_executed")}
-        if plan.time_range.start < date(2025, 1, 1) or plan.time_range.end_exclusive > date(2026, 7, 1):
+        active_start = batch.period_start if batch else date(2025, 1, 1)
+        active_end_exclusive = (batch.period_end + date.resolution) if batch else date(2026, 7, 1)
+        if plan.time_range.start < active_start or plan.time_range.end_exclusive > active_end_exclusive:
             plan.status = "needs_clarification"
-            answer = "请求超出模拟数据范围（2025-01-01 至 2026-06-30）。"
+            answer = f"请求超出当前已发布数据范围（{active_start.isoformat()} 至 {batch.period_end.isoformat() if batch else '2026-06-30'}）。"
             self._finish_run(run, "partial", answer, None, "out_of_data_range")
             return {"status": "needs_clarification", "answer": answer, "conversation_id": self.conversation_id, "state_version": self.state_version, "query_plan": plan.model_dump(mode="json"), "result": None, "chart": None, "evidence": self._evidence(run_id, plan, None, 0, "out_of_data_range")}
         if "质量失败批次" in question:
@@ -193,7 +196,9 @@ class ChatBIService:
         if guard["status"] != "passed":
             raise RuntimeError("answer guard rejected structured result")
         lines = [f"{METRICS[metric_id][0]}：{_format(metric_id, value)}" for metric_id, value in flat_values.items()]
-        answer = "；".join(lines) + "。结果来自已验证结构化查询，数据为模拟数据。"
+        truth = current_data_truth(self.db)
+        nature = "公开数据样本" if truth["is_open_source"] else "模拟数据"
+        answer = "；".join(lines) + f"。结果来自已验证结构化查询，数据性质为{nature}。"
         if plan.intent in {"diagnose_revenue_change", "diagnose_gross_profit_change", "diagnosis"}:
             answer += " 设备状态等因素仅作为同期关联线索，不构成因果结论。"
         WORK_MEMORY.update(work_state.task_id, "answering")
@@ -218,6 +223,7 @@ class ChatBIService:
 
     def _evidence(self, run_id: str, plan: QueryPlan, sql: str | None, station_count: int, guard_status: str, sql_hash: str | None = None, answer_guard_result: dict | None = None) -> dict:
         batch = published_charging_ops_batch(self.db)
+        truth = current_data_truth(self.db)
         versions = (
             {
                 "scenario_version": self.platform_context.scenario_version,
@@ -235,4 +241,4 @@ class ChatBIService:
                 "dataset_version_id": None,
             }
         )
-        return {"analysis_run_id": run_id, "conversation_id": self.conversation_id, "state_version": self.state_version, "data_classification": "simulated", "source": "platform_database", "batch_id": batch.batch_id if batch else None, "query_plan_version": plan.version, "query_plan_hash": _hash(json.dumps(plan.model_dump(mode="json"), ensure_ascii=False, sort_keys=True)), "sql_hash": sql_hash, "sql": sql, "authorized_station_count": station_count, "metric_versions": {metric_id: "0.1.0" for metric_id in plan.metrics}, "query_guard": guard_status, "answer_guard": answer_guard_result, "explanation_mode": "deterministic", **versions}
+        return {"analysis_run_id": run_id, "conversation_id": self.conversation_id, "state_version": self.state_version, "data_classification": truth["data_classification"], "source": truth["source"], "source_name": truth["source_name"], "source_dataset_version": truth["dataset_version"], "transformation_version": truth["transformation_version"], "batch_id": batch.batch_id if batch else None, "query_plan_version": plan.version, "query_plan_hash": _hash(json.dumps(plan.model_dump(mode="json"), ensure_ascii=False, sort_keys=True)), "sql_hash": sql_hash, "sql": sql, "authorized_station_count": station_count, "metric_versions": {metric_id: "0.1.0" for metric_id in plan.metrics}, "query_guard": guard_status, "answer_guard": answer_guard_result, "explanation_mode": "deterministic", **versions}

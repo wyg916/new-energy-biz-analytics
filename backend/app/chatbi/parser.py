@@ -43,6 +43,18 @@ def _metrics(question: str) -> list[str]:
 
 
 def _time_range(question: str) -> TimeRange | None:
+    match = re.search(
+        r"(20\d{2})[-年](\d{1,2})[-月](\d{1,2})日?\s*(?:至|到|~|—)\s*"
+        r"(20\d{2})[-年](\d{1,2})[-月](\d{1,2})日?",
+        question,
+    )
+    if match:
+        start_year, start_month, start_day, end_year, end_month, end_day = map(int, match.groups())
+        return TimeRange(
+            start=date(start_year, start_month, start_day),
+            end_exclusive=date(end_year, end_month, end_day) + timedelta(days=1),
+            grain="day",
+        )
     match = re.search(r"截至(20\d{2})年(\d{1,2})月(\d{1,2})日", question)
     if match and "最近12周" in question:
         end = date(*map(int, match.groups())) + timedelta(days=1); return TimeRange(start=end - timedelta(weeks=12), end_exclusive=end, grain="week")
@@ -88,8 +100,8 @@ def parse_question(question: str) -> QueryPlan:
         return QueryPlan(status="needs_clarification", intent="metric_lookup", clarification=Clarification(reason_code="missing_metric", question="请明确要查询的经营指标。"))
     if period is None:
         return QueryPlan(status="needs_clarification", intent="metric_lookup", metrics=metrics, filters=filters, clarification=Clarification(reason_code="missing_time", question="请明确查询时间范围。"))
-    if period.start < date(2025, 1, 1) or period.end_exclusive > date(2026, 7, 1):
-        return QueryPlan(status="needs_clarification", intent="metric_lookup", metrics=metrics, time_range=period, filters=filters, clarification=Clarification(reason_code="out_of_data_range", question="请求超出模拟数据时间范围。"))
+    if period.start < date(2010, 1, 1) or period.end_exclusive > date(2026, 7, 1):
+        return QueryPlan(status="needs_clarification", intent="metric_lookup", metrics=metrics, time_range=period, filters=filters, clarification=Clarification(reason_code="out_of_data_range", question="请求超出当前已发布数据时间范围。"))
     if "质量失败批次" in normalized:
         return QueryPlan(status="rejected", intent="unsupported", metrics=metrics, time_range=period, filters=filters, clarification=Clarification(reason_code="unsupported_request", question="质量失败批次不可发布查询。"))
     intent = "metric_lookup"; dimensions: list[str] = []; analysis: list[str] = []

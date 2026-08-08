@@ -1,0 +1,47 @@
+{
+  "mapping_version": "data41-mapping-v1",
+  "active_datasets": [
+    {
+      "dataset_code": "charging_ops_acn_ornl_discovery",
+      "run_id": "DATA41-ACN-ORNL-26-V1",
+      "flow": ["raw_acn_session", "stg_acn_session", "dim_station/fact_charging_session/fact_energy_cost", "charging_ops semantic model"],
+      "field_mappings": [
+        {"source": "id", "staging": "source_record_id", "core": "fact_charging_session.session_id", "rule": "SHA-256 namespaced key"},
+        {"source": "stationid", "staging": "station_id", "core": "dim_station.station_id", "rule": "SHA-256 namespaced key"},
+        {"source": "connectiontime", "staging": "connection_time", "core": "fact_charging_session.start_time", "rule": "RFC 2822 to UTC"},
+        {"source": "disconnecttime", "staging": "disconnect_time", "core": "fact_charging_session.end_time/settlement_time", "rule": "RFC 2822 to UTC"},
+        {"source": "kwhdelivered", "staging": "energy_kwh", "core": "fact_charging_session.energy_kwh", "rule": "Decimal, no scaling"},
+        {"source": "userinputs.paymentRequired", "staging": "payment_required", "core": "fact_charging_session.service_fee_net_amount", "rule": "when true, kWh x USD 0.12 Caltech tariff; explicitly derived"}
+      ],
+      "derived_rules": [
+        {"field": "fact_energy_cost.purchase_price_per_kwh", "rule": "USD 0.1059/kWh", "basis": "EIA 2020 US commercial average retail price; not station procurement price"},
+        {"field": "dim_station.rated_power_kw", "rule": "7.20 kW", "basis": "Level-2 modeling assumption; not a source field"},
+        {"field": "fact_device_status_event", "rule": "no rows", "basis": "source does not provide device status; no fabrication"}
+      ]
+    },
+    {
+      "dataset_code": "sales_ops_uci_online_retail",
+      "run_id": "DATA41-UCI-ONLINE-RETAIL-352-V1",
+      "flow": ["raw_uci_retail_line", "stg_uci_retail_line", "sales_* core tables", "sales_ops semantic model"],
+      "selection": "Every twentieth source data row in workbook order; source_row_number retained; 27095 of 541909 rows.",
+      "field_mappings": [
+        {"source": "InvoiceNo", "staging": "invoice_no", "core": "sales_order.order_id", "rule": "SHA-256 namespaced key; C prefix is cancellation"},
+        {"source": "StockCode", "staging": "stock_code", "core": "sales_product.product_id", "rule": "SHA-256 namespaced key"},
+        {"source": "Description", "staging": "description", "core": "sales_product.product_name", "rule": "truncate only to schema limit"},
+        {"source": "Quantity", "staging": "quantity", "core": "sales_order_item.quantity", "rule": "absolute quantity; sign retained as cancellation flag"},
+        {"source": "InvoiceDate", "staging": "invoice_time", "core": "sales_order.order_date", "rule": "source naive timestamp represented as UTC for technical consistency; source timezone unspecified"},
+        {"source": "UnitPrice", "staging": "unit_price", "core": "sales_order_item.unit_price", "rule": "Decimal, no currency conversion"},
+        {"source": "CustomerID", "staging": "customer_id", "core": "sales_customer.customer_id", "rule": "SHA-256 pseudonymous key; missing IDs scoped to invoice"},
+        {"source": "Country", "staging": "country", "core": "sales_region.region_name", "rule": "direct"}
+      ],
+      "derived_rules": [
+        {"field": "sales_order.cost_amount", "rule": "70% of non-refunded net revenue", "basis": "scenario assumption because source has no cost; not an observed business value"},
+        {"field": "salesperson", "rule": "Not provided by source", "basis": "required foreign-key placeholder, visibly classified derived_not_provided"}
+      ]
+    }
+  ],
+  "inactive_candidates": [
+    {"source": "NREL AFDC", "status": "catalog_only", "reason": "API-key endpoint was not reliably resolvable in the acceptance environment"},
+    {"source": "PJM Data Miner 2", "status": "not_ingested", "reason": "official terms restrict redistribution; not suitable for a committed snapshot"}
+  ]
+}

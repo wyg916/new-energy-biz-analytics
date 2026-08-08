@@ -1,0 +1,15 @@
+{
+  "isolation": "dedicated_database",
+  "database": "v2_p2a_release_verify",
+  "head_revision": "data_0001",
+  "rollback_revision": "base",
+  "base_to_head": true,
+  "head_to_base": true,
+  "base_to_head_again": true,
+  "upgrade": true,
+  "rollback": true,
+  "reupgrade": true,
+  "database_removed": true,
+  "existing_volume_deleted": false,
+  "passed": true
+}

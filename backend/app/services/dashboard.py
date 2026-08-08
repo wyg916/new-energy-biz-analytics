@@ -18,6 +18,7 @@ from app.scenarios.charging_ops.runtime import (
     platform_version_metadata,
     resolve_charging_ops_context,
 )
+from app.data.truth import current_data_truth
 
 
 def allowed_station_ids(db: Session, user: User) -> list[str]:
@@ -43,10 +44,12 @@ class DashboardService:
     def _metadata(self, start: date, end_exclusive: date, analysis_run_id: str) -> dict:
         scenario = published_charging_ops(self.db)
         batch = self.db.get(DataGenerationRun, scenario.source_batch_id) if scenario and scenario.source_batch_id else None
+        truth = current_data_truth(self.db)
         metadata = {
-            "data_classification": "simulated",
+            "data_classification": truth["data_classification"],
             "data_time_range": {"start": start.isoformat(), "end_exclusive": end_exclusive.isoformat()},
-            "source": "platform_database",
+            "source": truth["source"],
+            "source_name": truth["source_name"],
             "batch_id": batch.batch_id if batch else None,
             "analysis_run_id": analysis_run_id,
             "scenario_id": "charging_ops",
@@ -54,6 +57,8 @@ class DashboardService:
             "scenario_manifest_checksum": scenario.manifest_checksum if scenario else None,
             "query_source": "platform_fact_tables",
             "dataset_release_version": None,
+            "source_dataset_version": truth["dataset_version"],
+            "transformation_version": truth["transformation_version"],
             "semantic_activation_status": "not_implemented",
             "generated_at": datetime.now(timezone.utc).isoformat(),
         }

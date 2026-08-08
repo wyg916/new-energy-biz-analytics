@@ -4,6 +4,7 @@ from sqlalchemy import case, func, select
 from sqlalchemy.orm import Session
 
 from app.models.sales import SalesOrder, SalesOrderItem
+from app.core.config import get_settings
 
 SALES_METRICS = {
     "sales_revenue": ("销售收入", "元"),
@@ -44,6 +45,9 @@ class SalesOpsMetricService:
             SalesOrder.order_date < end_exclusive,
             SalesOrder.status.in_(("completed", "refunded")),
         ]
+        active_run_id = get_settings().active_sales_run_id
+        if active_run_id:
+            conditions.append(SalesOrder.seed_run_id == active_run_id)
         if region_ids is not None:
             if not region_ids:
                 raise PermissionError("sales region scope is empty")
@@ -152,6 +156,7 @@ class SalesOpsMetricService:
             .where(
                 SalesOrder.order_date >= start,
                 SalesOrder.order_date < end_exclusive,
+                *([SalesOrder.seed_run_id == get_settings().active_sales_run_id] if get_settings().active_sales_run_id else []),
             )
             .group_by(column)
             .order_by(func.sum(SalesOrder.net_revenue).desc())

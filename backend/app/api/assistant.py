@@ -19,6 +19,7 @@ from app.response.contracts import ResponseProfileName
 from app.scenarios.sales_ops.engine import SalesOpsQueryError
 from app.orchestration.memory_skills import FeedbackHandler
 from app.platform.identity import IdentityContextFactory
+from app.data.truth import current_data_truth
 
 router = APIRouter(prefix="/assistant", tags=["assistant"])
 
@@ -104,7 +105,7 @@ def assistant_query(
         "trace_id": result.trace_id,
         "run_id": result.run_id,
         "conversation_id": result.conversation_id,
-        "data_classification": "simulated",
+        "data_classification": current_data_truth(db)["data_classification"],
         "memory_context": result.memory_context,
     }
 

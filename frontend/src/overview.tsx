@@ -132,7 +132,9 @@ function GlobalDataStatus({ metadata }: { metadata: Metadata | null }) {
   }
   const classification = metadata.data_classification === 'simulated'
     ? '模拟数据'
-    : metadata.data_classification
+    : metadata.data_classification === 'open_source_real_data'
+      ? '公开数据样本'
+      : metadata.data_classification
   const source = metadata.source === 'platform_database'
     ? '平台数据库'
     : metadata.source
@@ -1120,7 +1122,7 @@ function ChatPage({ token, start, end }: { token: string; start: string; end: st
         evidence: {
           ...originalEvidence,
           source: body.response?.data_source?.join('；') || '已发布企业知识',
-          data_classification: 'simulated',
+          data_classification: body.data_classification ?? originalEvidence.data_classification,
           analysis_run_id: originalEvidence.analysis_run_id ?? dataEvidence?.run_id ?? body.run_id,
           state_version: dataEvidence?.state_version ?? 0,
           query_guard: originalEvidence.query_guard ?? (dataEvidence ? 'passed' : 'not_required'),

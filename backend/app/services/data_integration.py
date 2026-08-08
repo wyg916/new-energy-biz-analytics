@@ -32,6 +32,7 @@ from app.preproduction.models import PreproductionDataSourceGovernance
 from app.scenarios.registry import published_charging_ops
 from app.services.dashboard import allowed_station_ids
 from app.services.metrics import MetricService
+from app.data.truth import current_data_truth
 
 IDENTIFIER = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 STANDARD_FIELDS = {
@@ -74,6 +75,7 @@ class DataIntegrationService:
         self.settings = get_settings()
 
     def overview(self, start: date, end_exclusive: date) -> dict:
+        truth = current_data_truth(self.db)
         sources = list(self.db.scalars(select(DataSourceConnection).order_by(DataSourceConnection.created_at, DataSourceConnection.source_id)))
         dataset = self.db.get(DataSetDefinition, "station-operations")
         if dataset is None:
@@ -85,7 +87,7 @@ class DataIntegrationService:
             .order_by(IngestedStationPreview.id)
             .limit(5)
         ))
-        if stored:
+        if stored and not truth["is_open_source"]:
             preview = [self._preview_model(row) for row in stored]
             preview_batch_id = stored[0].batch_id
             preview_source = "ingested_staging"
@@ -131,20 +133,23 @@ class DataIntegrationService:
                 "standard_schema": dataset.standard_schema,
                 "mapping": mapping,
                 "status": dataset.status,
-                "data_classification": dataset.data_classification,
+                "data_classification": truth["data_classification"],
             },
             "preview": preview,
             "validations": validations,
             "latest_ingestion": self._run_payload(latest_run) if latest_run else None,
             "workflow": self._review_payload(review, checks) if review else None,
             "metadata": {
-                "data_classification": dataset.data_classification,
-                "source": "platform_database",
+                "data_classification": truth["data_classification"],
+                "source": truth["source"],
+                "source_name": truth["source_name"],
+                "source_dataset_version": truth["dataset_version"],
+                "transformation_version": truth["transformation_version"],
                 "preview_source": preview_source,
                 "batch_id": preview_batch_id,
                 "data_time_range": {"start": start.isoformat(), "end_exclusive": end_exclusive.isoformat()},
                 "generated_at": _utc_now().isoformat(),
-                "semantic_activation_status": "not_implemented",
+                "semantic_activation_status": "active" if truth["is_open_source"] else "not_implemented",
                 "formal_consumer_status": "platform_fact_tables_with_conditional_station_snapshot",
             },
         }

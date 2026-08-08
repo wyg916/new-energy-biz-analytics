@@ -1,0 +1,144 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "data41_acceptance_summary",
+  "generated_at": "2026-08-08T13:24:44.090826+00:00",
+  "phase": "DATA-4.1_OPEN_SOURCE_REAL_DATA_BASELINE",
+  "status": "PASS",
+  "base_sha": "5de9ea85d0472b98a9265c29623c5ceb1b1cf1b2",
+  "branch": "codex/data-open-source-41",
+  "data_classification": "open_source_real_data",
+  "checks": {
+    "DATASET_IMPORT": true,
+    "DATA_QUALITY": true,
+    "DATA_LINEAGE": true,
+    "DB_API_UI": true,
+    "DETERMINISTIC_CHATBI": true,
+    "ONE_CLICK_START": true,
+    "IDEMPOTENT_REUSE": true,
+    "NO_STARTUP_DOWNLOAD": true,
+    "REGRESSION_368": true,
+    "OIDC_LIVE_3": true,
+    "MIGRATION_CYCLE": true,
+    "SCHEMA_CATALOG": true,
+    "FRONTEND_TRUTH_SCAN": true,
+    "SECRET_SCAN": true
+  },
+  "sources": [
+    {
+      "dataset_code": "charging_ops_acn_ornl_discovery",
+      "dataset_version": "ornl-acn-discovery-2020-v1",
+      "distributor": "Oak Ridge National Laboratory OpenEnergyDataPortal",
+      "license": "CC BY 4.0",
+      "publisher": "California Institute of Technology",
+      "run_id": "DATA41-ACN-ORNL-26-V1",
+      "selection_method": "All 26 records exposed by the ORNL discovery copy.",
+      "snapshot_path": "data/open_source/raw/acn_data_ornl_26_v1.json",
+      "snapshot_row_count": 26,
+      "snapshot_sha256": "5d7d71ba8149d84baa879760b570e49399607f22f63e95b7f5e8e4e5549e75ab",
+      "source_api_url": "https://openenergyhub.ornl.gov/api/explore/v2.1/catalog/datasets/acn-data/records?limit=100",
+      "source_download_sha256": "ffd41832118f9c5d5b28b4cf51ebb27c1a485da1c28849e4402be9a22bd8ae28",
+      "source_name": "ACN-Data via ORNL OpenEnergyDataPortal",
+      "source_row_count": 26,
+      "source_url": "https://openenergyhub.ornl.gov/explore/dataset/acn-data/",
+      "transformation_version": "data41-acn-transform-v1"
+    },
+    {
+      "dataset_code": "sales_ops_uci_online_retail",
+      "dataset_version": "uci-352-online-retail-v1-sample-20",
+      "license": "CC BY 4.0",
+      "publisher": "UCI Machine Learning Repository",
+      "run_id": "DATA41-UCI-ONLINE-RETAIL-352-V1",
+      "selection_method": "Every twentieth data row in original workbook order; source_row_number is retained.",
+      "snapshot_path": "data/open_source/raw/uci_online_retail_every_20th_v1.csv",
+      "snapshot_period_end": "2011-12-09T12:50:00",
+      "snapshot_period_start": "2010-12-01T08:34:00",
+      "snapshot_row_count": 27095,
+      "snapshot_sha256": "d3e1295fb77b92c4d5809ad059f52481ad4f58bd0638e4395273f24aeff42e4e",
+      "source_download_sha256": "f5385cbb54bbebf7196389109c6b0621faab0c304e3702548165e71c84aede8b",
+      "source_download_url": "https://archive.ics.uci.edu/static/public/352/online+retail.zip",
+      "source_name": "UCI Machine Learning Repository - Online Retail",
+      "source_period_end": "2011-12-09T12:50:00",
+      "source_period_start": "2010-12-01T08:26:00",
+      "source_row_count": 541909,
+      "source_url": "https://archive.ics.uci.edu/dataset/352/online+retail",
+      "transformation_version": "data41-uci-transform-v1"
+    }
+  ],
+  "quality": {
+    "passed": 28,
+    "failed": 0
+  },
+  "dataset_versions": {
+    "charging_ops": 2,
+    "sales_ops": 2
+  },
+  "tests": {
+    "postgres": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 368
+    },
+    "live_e2e": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "oidc_e2e": {
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "catalog": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 5
+    }
+  },
+  "schema_catalog": {
+    "table_count": 13,
+    "field_count": 141,
+    "relation_count": 19,
+    "sqlbot_enabled": false
+  },
+  "artifacts": {
+    "data41-cold-start.json": {
+      "path": "docs/platformization/data41/evidence/data41-cold-start.json",
+      "sha256": "b741edee9811cf3330f638a9d652b804ebbc691e0fcd667d227578abf90aed06"
+    },
+    "data41-warm-start.json": {
+      "path": "docs/platformization/data41/evidence/data41-warm-start.json",
+      "sha256": "b88e01b40bfcfd2038d9f27a2b4a5d0298137d09a3405de8c99e93f0a9f2c0ea"
+    },
+    "data41-postgres-full-final-rerun.json": {
+      "path": "docs/platformization/data41/evidence/data41-postgres-full-final-rerun.json",
+      "sha256": "86c20e4e1227f2e637421bbb9e4208861a193f98c2e25e646f39c6e7d00300df"
+    },
+    "data41-catalog-focused.json": {
+      "path": "docs/platformization/data41/evidence/data41-catalog-focused.json",
+      "sha256": "fb53f8ce25cba06ebab797ea8b4592e72039804528e88179ad1c4fec9f6403d2"
+    },
+    "data41-migration-cycle.json": {
+      "path": "docs/platformization/data41/evidence/data41-migration-cycle.json",
+      "sha256": "24219fc98d0949e49ba6b6210d3bf05859b81399ea70261a2b7e4c5f6c7e1e63"
+    },
+    "data41-frontend-truth-scan.json": {
+      "path": "docs/platformization/data41/evidence/data41-frontend-truth-scan.json",
+      "sha256": "8b7905e270f0b1fdad8e5036a05d5acdd04017e17af474eb362b3161aa413d34"
+    },
+    "data41-playwright-live.xml": {
+      "path": "docs/platformization/data41/evidence/data41-playwright-live.xml",
+      "sha256": "c23661dca064325f3c6ed15c8ffa50797438c57e502a857676e7c5e6c00b0213"
+    },
+    "data41-playwright-oidc.xml": {
+      "path": "docs/platformization/data41/evidence/data41-playwright-oidc.xml",
+      "sha256": "58a8d08107b0282f6ba56b85a47925908b5c7463060285fdfe5d9ecdbfbdaeb0"
+    }
+  },
+  "production_release_authorized": false,
+  "production_traffic_switched": false,
+  "secret_values_recorded": false
+}

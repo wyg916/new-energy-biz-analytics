@@ -31,6 +31,7 @@ from app.platform.dataset_release import (
 from app.platform.identity import IdentityContextFactory
 from app.scenarios.charging_ops.package_adapter import install_platform_foundation
 from app.scenarios.charging_ops.runtime import DATASET_CODE, SCENARIO_ID
+from app.data.truth import current_data_truth
 
 router = APIRouter(prefix="/platform/foundation", tags=["platform-foundation"])
 
@@ -121,7 +122,7 @@ def _state(db: Session, user: User) -> dict:
             "versions": [],
             "activation": None,
             "rollbacks": [],
-            "data_classification": "simulated",
+            "data_classification": "not_configured",
         }
     versions = list(db.scalars(select(DatasetVersion).where(
         DatasetVersion.dataset_id == dataset.dataset_id
@@ -187,7 +188,7 @@ def _state(db: Session, user: User) -> dict:
             "reason": item.reason,
             "run_id": item.run_id,
         } for item in rollbacks],
-        "data_classification": "simulated",
+        "data_classification": dataset.data_classification,
     }
 
 
@@ -305,7 +306,7 @@ def discover_managed_source(
         "schemas": [{"name": schema_name, "tables": tables}],
         "table_count": len(tables),
         "credential_exposed": False,
-        "data_classification": "simulated",
+        "data_classification": current_data_truth(db)["data_classification"],
     }
 
 

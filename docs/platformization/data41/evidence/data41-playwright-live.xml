@@ -1,0 +1,6 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="11.530802000000001">
+<testsuite name="data41-open-source-live.spec.ts" timestamp="2026-08-08T13:16:18.142Z" hostname="" tests="1" failures="0" skipped="0" time="7.328" errors="0">
+<testcase name="DATA-4.1 public source flows through authenticated API, UI and guarded ChatBI" classname="data41-open-source-live.spec.ts" time="7.328">
+</testcase>
+</testsuite>
+</testsuites>

@@ -31,6 +31,8 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:5173,http://localhost:8080"
     auto_bootstrap_demo_users: bool = True
     simulated_data_only: bool = True
+    data41_open_source_enabled: bool = False
+    active_sales_run_id: str = ""
     data_import_root: str = "data/imports"
     knowledge_source_root: str = _default_knowledge_source_root()
     api_source_allowlist: str = "localhost,127.0.0.1,host.docker.internal"
@@ -149,7 +151,10 @@ class Settings(BaseSettings):
                 failures.append("TRUSTED_HOSTS must not contain wildcard hosts")
             if self.release_version.endswith("-dev"):
                 failures.append("RELEASE_VERSION must identify a release candidate or release")
-            if not self.simulated_data_only:
+            if not self.simulated_data_only and not (
+                self.data41_open_source_enabled
+                and self.release_version.startswith("4.1.0-data.")
+            ):
                 failures.append("SIMULATED_DATA_ONLY must remain true for this release candidate")
             if self.chatbi_readonly_execution_enabled and (
                 not self.chatbi_readonly_database_url

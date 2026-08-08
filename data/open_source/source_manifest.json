@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-08-08T10:06:33.248278+00:00",
+  "manifest_version": "data41-source-manifest-v1",
+  "snapshots": [
+    {
+      "dataset_code": "charging_ops_acn_ornl_discovery",
+      "dataset_version": "ornl-acn-discovery-2020-v1",
+      "distributor": "Oak Ridge National Laboratory OpenEnergyDataPortal",
+      "license": "CC BY 4.0",
+      "publisher": "California Institute of Technology",
+      "run_id": "DATA41-ACN-ORNL-26-V1",
+      "selection_method": "All 26 records exposed by the ORNL discovery copy.",
+      "snapshot_path": "data/open_source/raw/acn_data_ornl_26_v1.json",
+      "snapshot_row_count": 26,
+      "snapshot_sha256": "5d7d71ba8149d84baa879760b570e49399607f22f63e95b7f5e8e4e5549e75ab",
+      "source_api_url": "https://openenergyhub.ornl.gov/api/explore/v2.1/catalog/datasets/acn-data/records?limit=100",
+      "source_download_sha256": "ffd41832118f9c5d5b28b4cf51ebb27c1a485da1c28849e4402be9a22bd8ae28",
+      "source_name": "ACN-Data via ORNL OpenEnergyDataPortal",
+      "source_row_count": 26,
+      "source_url": "https://openenergyhub.ornl.gov/explore/dataset/acn-data/",
+      "transformation_version": "data41-acn-transform-v1"
+    },
+    {
+      "dataset_code": "sales_ops_uci_online_retail",
+      "dataset_version": "uci-352-online-retail-v1-sample-20",
+      "license": "CC BY 4.0",
+      "publisher": "UCI Machine Learning Repository",
+      "run_id": "DATA41-UCI-ONLINE-RETAIL-352-V1",
+      "selection_method": "Every twentieth data row in original workbook order; source_row_number is retained.",
+      "snapshot_path": "data/open_source/raw/uci_online_retail_every_20th_v1.csv",
+      "snapshot_period_end": "2011-12-09T12:50:00",
+      "snapshot_period_start": "2010-12-01T08:34:00",
+      "snapshot_row_count": 27095,
+      "snapshot_sha256": "d3e1295fb77b92c4d5809ad059f52481ad4f58bd0638e4395273f24aeff42e4e",
+      "source_download_sha256": "f5385cbb54bbebf7196389109c6b0621faab0c304e3702548165e71c84aede8b",
+      "source_download_url": "https://archive.ics.uci.edu/static/public/352/online+retail.zip",
+      "source_name": "UCI Machine Learning Repository - Online Retail",
+      "source_period_end": "2011-12-09T12:50:00",
+      "source_period_start": "2010-12-01T08:26:00",
+      "source_row_count": 541909,
+      "source_url": "https://archive.ics.uci.edu/dataset/352/online+retail",
+      "transformation_version": "data41-uci-transform-v1"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+<testsuites id="" name="" tests="1" failures="1" skipped="0" errors="0" time="14.401096">
+<testsuite name="data41-open-source-live.spec.ts" timestamp="2026-08-08T12:34:52.720Z" hostname="" tests="1" failures="1" skipped="0" time="8.168" errors="0">
+<testcase name="DATA-4.1 public source flows through authenticated API, UI and guarded ChatBI" classname="data41-open-source-live.spec.ts" time="8.168">
+<failure message="data41-open-source-live.spec.ts:22:1 DATA-4.1 public source flows through authenticated API, UI and guarded ChatBI" type="FAILURE">
+<![CDATA[  data41-open-source-live.spec.ts:22:1 › DATA-4.1 public source flows through authenticated API, UI and guarded ChatBI 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "completed"
+    Received: "needs_clarification"
+
+      60 |
+      61 |   expect(assistant.data_classification).toBe('open_source_real_data')
+    > 62 |   expect(assistant.data_query_evidence.status).toBe('completed')
+         |                                                ^
+      63 |   expect(assistant.data_query_evidence.evidence.query_guard).toBe('passed')
+      64 |   expect(assistant.data_query_evidence.evidence.answer_guard.status).toBe('passed')
+      65 |   expect(assistant.data_query_evidence.query_result.dataset_version).toBe('2')
+        at E:\新能源企业经营分析智能平台-data-41\frontend\e2e\data41-open-source-live.spec.ts:62:48
+
+    Error Context: ..\test-results\data41-open-source-live-DA-aad68-d-API-UI-and-guarded-ChatBI\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\data41-open-source-live-DA-aad68-d-API-UI-and-guarded-ChatBI\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\data41-open-source-live-DA-aad68-d-API-UI-and-guarded-ChatBI\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\..\..\frontend\test-results\data41-open-source-live-DA-aad68-d-API-UI-and-guarded-ChatBI\error-context.md]]
+
+[[ATTACHMENT|..\..\..\..\frontend\test-results\data41-open-source-live-DA-aad68-d-API-UI-and-guarded-ChatBI\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+</testsuites>

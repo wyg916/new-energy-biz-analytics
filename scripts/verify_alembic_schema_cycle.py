@@ -120,9 +120,18 @@ raise SystemExit(0 if result["passed"] else 1)
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path)
+    parser.add_argument(
+        "--runtime-bootstrap",
+        action="store_true",
+        help="Run through the P4 Vault-backed runtime entrypoint before executing the verifier.",
+    )
     args = parser.parse_args()
+    command = ["docker", "compose", "exec", "-T", "api", "python"]
+    if args.runtime_bootstrap:
+        command.extend(["scripts/p4_entrypoint.py", "python"])
+    command.append("-")
     process = subprocess.run(
-        ["docker", "compose", "exec", "-T", "api", "python", "-"],
+        command,
         cwd=ROOT,
         input=INNER_SCRIPT,
         text=True,

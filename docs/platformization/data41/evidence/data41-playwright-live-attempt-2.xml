@@ -1,0 +1,55 @@
+<testsuites id="" name="" tests="4" failures="1" skipped="0" errors="0" time="25.474152999999998">
+<testsuite name="data41-open-source-live.spec.ts" timestamp="2026-08-08T12:28:35.393Z" hostname="" tests="1" failures="1" skipped="0" time="8.294" errors="0">
+<testcase name="DATA-4.1 public source flows through authenticated API, UI and guarded ChatBI" classname="data41-open-source-live.spec.ts" time="8.294">
+<failure message="data41-open-source-live.spec.ts:22:1 DATA-4.1 public source flows through authenticated API, UI and guarded ChatBI" type="FAILURE">
+<![CDATA[  data41-open-source-live.spec.ts:22:1 › DATA-4.1 public source flows through authenticated API, UI and guarded ChatBI 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "end_exclusive": "2020-06-11",
+    +   "end_exclusive": "2020-06-10",
+        "start": "2020-05-09",
+      }
+
+      30 |   expect(context.metadata.data_classification).toBe('open_source_real_data')
+      31 |   expect(context.metadata.source).toContain('ACN-Data')
+    > 32 |   expect(context.available_time_range).toEqual({
+         |                                        ^
+      33 |     start: '2020-05-09',
+      34 |     end_exclusive: '2020-06-11',
+      35 |   })
+        at E:\新能源企业经营分析智能平台-data-41\frontend\e2e\data41-open-source-live.spec.ts:32:40
+
+    Error Context: ..\test-results\data41-open-source-live-DA-aad68-d-API-UI-and-guarded-ChatBI\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\data41-open-source-live-DA-aad68-d-API-UI-and-guarded-ChatBI\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\data41-open-source-live-DA-aad68-d-API-UI-and-guarded-ChatBI\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\..\..\frontend\test-results\data41-open-source-live-DA-aad68-d-API-UI-and-guarded-ChatBI\error-context.md]]
+
+[[ATTACHMENT|..\..\..\..\frontend\test-results\data41-open-source-live-DA-aad68-d-API-UI-and-guarded-ChatBI\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="p4-preproduction-oidc.spec.ts" timestamp="2026-08-08T12:28:35.393Z" hostname="" tests="3" failures="0" skipped="0" time="7.382" errors="0">
+<testcase name="真实 OIDC Code + PKCE 登录并读取 P4 正式 API" classname="p4-preproduction-oidc.spec.ts" time="4.413">
+</testcase>
+<testcase name="真实 OIDC 未映射用户在服务端 callback 阶段被拒绝" classname="p4-preproduction-oidc.spec.ts" time="1.09">
+</testcase>
+<testcase name="真实 OIDC 禁用用户无法取得授权码" classname="p4-preproduction-oidc.spec.ts" time="1.879">
+</testcase>
+</testsuite>
+</testsuites>

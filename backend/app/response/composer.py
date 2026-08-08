@@ -31,7 +31,7 @@ class ResponseComposer:
         )
         conclusion = clamp_text(conclusion, profile.max_chars)
 
-        warnings = ["当前展示数据均为固定随机种子生成的模拟数据。"]
+        warnings = [self._classification_warning(request.data_classification)]
         if knowledge:
             warnings.extend(knowledge.warnings)
         if data and data.engine == "sqlbot":
@@ -97,7 +97,7 @@ class ResponseComposer:
             data_source=(),
             metric_definition=(),
             citations=(),
-            warnings=("当前展示数据均为固定随机种子生成的模拟数据。",),
+            warnings=(self._classification_warning(request.data_classification),),
             confidence=0.0,
             trace_id=request.trace_id,
             run_id=request.run_id,
@@ -106,3 +106,9 @@ class ResponseComposer:
             refused=True,
             data_classification=request.data_classification,
         )
+
+    @staticmethod
+    def _classification_warning(data_classification: str) -> str:
+        if data_classification == "open_source_real_data":
+            return "当前展示数据来自已登记公开数据样本；来源、许可、版本和转换血缘可审计。"
+        return "当前展示数据均为固定随机种子生成的模拟数据。"
