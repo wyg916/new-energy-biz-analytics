@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.0",
+  "status": "PARTIAL",
+  "phase": "SQLBOT_OPEN_NL2SQL_4_1",
+  "generated_at": "2026-08-08T15:14:46.1820065Z",
+  "git": {
+    "branch": "codex/sqlbot-open-nl2sql-41",
+    "start_sha": "75160df433bbf9273e10a87bae6a7aef29af9744",
+    "baseline_tag": "data41-baseline-20260808",
+    "commit_binding": "THIS_SUMMARY_IS_VALID_ONLY_INSIDE_THE_SQLBOT_41_WORK_PACKAGE_COMMIT"
+  },
+  "implementation": {
+    "status": "PASS",
+    "schema_catalog": true,
+    "schema_retrieval": true,
+    "query_understanding": true,
+    "parser_ast": true,
+    "schema_validation": true,
+    "join_validation": true,
+    "permission_pii_validation": true,
+    "cost_timeout_row_limit": true,
+    "query_guard": true,
+    "readonly_execution": true,
+    "result_guard": true,
+    "answer_guard": true,
+    "audit": true,
+    "free_sql_entry_added": false
+  },
+  "tests": {
+    "targeted": {"status": "PASS", "tests": 75, "failures": 0, "errors": 0, "skipped": 0},
+    "golden_contract": {"status": "PASS", "tests": 100, "passed": 100},
+    "postgres_regression": {"status": "PASS", "tests": 368, "failures": 0, "errors": 0, "skipped": 0},
+    "data41_focused_rerun": {"status": "PASS", "tests": 5, "failures": 0},
+    "security_negative_new": {"status": "PASS", "tests": 16, "unsafe_successes": 0},
+    "secret_scan": {"status": "PASS", "new_leakage_findings": 0},
+    "current_data41_postgresql": {"status": "PASS", "read_only": true, "timeout_verified": true}
+  },
+  "rollout": {
+    "shadow_contract": "PASS",
+    "canary_5_contract": "PASS",
+    "canary_20_contract": "PASS",
+    "scoped_stable_contract": "PASS",
+    "automatic_fallback": "PASS",
+    "real_sqlbot_runtime": "BLOCKED",
+    "real_traffic_promoted": false
+  },
+  "open_nl2sql_boundary": {
+    "registered_active_schema_only": true,
+    "permission_filtered_before_prompt_and_query": true,
+    "single_select_only": true,
+    "ddl_dml_forbidden": true,
+    "multi_statement_forbidden": true,
+    "system_and_cross_database_forbidden": true,
+    "pii_forbidden": true,
+    "literal_limit_required_for_detail": true,
+    "max_rows": 500,
+    "max_joins": 4,
+    "statement_timeout_ms": 5000,
+    "deterministic_core_and_fallback": true
+  },
+  "truth_boundary": {
+    "data_classification": "open-source-derived local DATA-4.1 and simulated test data",
+    "production_claimed": false,
+    "real_customer_claimed": false,
+    "real_model_canary_claimed": false
+  },
+  "integration": {
+    "code_integration_allowed": true,
+    "required_runtime_mode": "SQLBot disabled or Shadow until the live runtime gate passes",
+    "live_canary_allowed": false,
+    "production_promotion_allowed": false
+  }
+}

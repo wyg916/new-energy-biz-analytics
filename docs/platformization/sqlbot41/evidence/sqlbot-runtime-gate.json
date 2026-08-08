@@ -1,0 +1,16 @@
+{
+  "status": "BLOCKED",
+  "evidence_type": "sqlbot_v1_8_runtime_gate",
+  "captured_at": "2026-08-08T15:14:46.1820065Z",
+  "container": "renewable-sqlbot-p2a-runtime-v1-8-0",
+  "image": "dataease/sqlbot:v1.8.0",
+  "initial_state": "exited",
+  "bounded_restart_attempted": true,
+  "database_recovery_completed": true,
+  "platform_http_ready": false,
+  "docker_health": "unhealthy",
+  "final_state": "exited",
+  "mock_used_as_live_evidence": false,
+  "impact": "No real SQLBot model inference, real Shadow comparison, or live Canary promotion is claimed in this work package.",
+  "fallback_impact": "None. Deterministic Engine remains the default and automatic fallback path."
+}

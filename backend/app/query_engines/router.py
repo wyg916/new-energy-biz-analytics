@@ -17,7 +17,15 @@ class EngineMode(StrEnum):
     SHADOW = "SHADOW"
     CANARY = "CANARY"
     SQLBOT_ENABLED = "SQLBOT_ENABLED"
+    SCOPED_STABLE = "SCOPED_STABLE"
     DISABLED = "DISABLED"
+
+
+class RolloutStage(StrEnum):
+    SHADOW = "SHADOW"
+    CANARY_5 = "CANARY_5"
+    CANARY_20 = "CANARY_20"
+    SCOPED_STABLE = "SCOPED_STABLE"
 
 
 class QueryRoutingError(RuntimeError):
@@ -52,7 +60,6 @@ class CanaryPolicy:
             identity.workspace_id,
             identity.subject_id,
             request.scenario_id,
-            identity.request_id,
         ))
         bucket = int(hashlib.sha256(raw.encode()).hexdigest()[:8], 16) % 10_000
         return bucket < min(self.percentage, 100.0) * 100
@@ -76,13 +83,59 @@ class EngineRouter:
         canary: CanaryPolicy | None = None,
         evidence: RoutingEvidenceRepository | None = None,
         feature_flag_version: str = "p1b-1",
+        fallback_enabled: bool = False,
     ):
         self.deterministic = deterministic
         self.sqlbot = sqlbot
         self.mode = mode
         self.canary = canary or CanaryPolicy(percentage=0)
+        if self.mode == EngineMode.SCOPED_STABLE:
+            scoped = any((
+                self.canary.tenants,
+                self.canary.workspaces,
+                self.canary.users,
+                self.canary.scenarios,
+            ))
+            if not scoped:
+                raise ValueError("SCOPED_STABLE requires an explicit allowlist scope")
+            self.canary = replace(self.canary, percentage=100.0)
         self.evidence = evidence
         self.feature_flag_version = feature_flag_version
+        self.fallback_enabled = fallback_enabled
+
+    @classmethod
+    def for_rollout_stage(
+        cls,
+        deterministic: QueryEngine,
+        sqlbot: QueryEngine,
+        *,
+        stage: RolloutStage,
+        scope: CanaryPolicy | None = None,
+        evidence: RoutingEvidenceRepository | None = None,
+        feature_flag_version: str = "sqlbot-4.1",
+    ) -> "EngineRouter":
+        base = scope or CanaryPolicy(percentage=100)
+        percentages = {
+            RolloutStage.SHADOW: base.percentage,
+            RolloutStage.CANARY_5: 5.0,
+            RolloutStage.CANARY_20: 20.0,
+            RolloutStage.SCOPED_STABLE: 100.0,
+        }
+        mode = {
+            RolloutStage.SHADOW: EngineMode.SHADOW,
+            RolloutStage.CANARY_5: EngineMode.CANARY,
+            RolloutStage.CANARY_20: EngineMode.CANARY,
+            RolloutStage.SCOPED_STABLE: EngineMode.SCOPED_STABLE,
+        }[stage]
+        return cls(
+            deterministic,
+            sqlbot,
+            mode=mode,
+            canary=replace(base, percentage=percentages[stage]),
+            evidence=evidence,
+            feature_flag_version=feature_flag_version,
+            fallback_enabled=True,
+        )
 
     @classmethod
     def from_settings(
@@ -107,6 +160,7 @@ class EngineRouter:
             ),
             evidence=evidence,
             feature_flag_version=settings.query_engine_feature_flag_version,
+            fallback_enabled=settings.query_engine_auto_fallback_enabled,
         )
 
     def execute(
@@ -137,7 +191,15 @@ class EngineRouter:
                 "CORE_DETERMINISTIC",
                 "core_query_pinned",
             )
-        if self.mode == EngineMode.CANARY and not self.canary.eligible(request):
+        if self.mode in {EngineMode.CANARY, EngineMode.SCOPED_STABLE} and not self.canary.eligible(request):
+            if self.fallback_enabled:
+                return self._fallback(
+                    request,
+                    context,
+                    "canary_control_group"
+                    if self.mode == EngineMode.CANARY
+                    else "outside_scoped_stable_allowlist",
+                )
             raise QueryRoutingError(
                 "CANARY_NOT_SELECTED",
                 "长尾查询未命中 SQLBot Canary，需澄清或稍后重试",
@@ -147,6 +209,8 @@ class EngineRouter:
             context,
             "SQLBOT_CANARY"
             if self.mode == EngineMode.CANARY
+            else "SQLBOT_SCOPED_STABLE"
+            if self.mode == EngineMode.SCOPED_STABLE
             else "SQLBOT_ENABLED",
             "eligible_long_tail_query",
         )
@@ -225,7 +289,19 @@ class EngineRouter:
         try:
             result = self.sqlbot.execute(request, context)
         except SQLBotEngineError as exc:
+            if self.fallback_enabled:
+                return self._fallback(request, context, str(exc.code))
             raise QueryRoutingError(str(exc.code), exc.message) from exc
+        except ValueError as exc:
+            if self.fallback_enabled:
+                return self._fallback(request, context, "SQLBOT_POLICY_DENIED")
+            raise QueryRoutingError("SQLBOT_POLICY_DENIED", str(exc)) from exc
+        except Exception as exc:
+            if self.fallback_enabled:
+                return self._fallback(request, context, "SQLBOT_UNEXPECTED_FAILURE")
+            raise QueryRoutingError(
+                "SQLBOT_UNEXPECTED_FAILURE", "SQLBot query failed"
+            ) from exc
         self._record_route(
             request,
             context,
@@ -234,6 +310,27 @@ class EngineRouter:
             result,
         )
         return RoutedQueryResult(result, decision, reason)
+
+    def _fallback(
+        self,
+        request: QueryRequest,
+        context: QueryContext,
+        reason: str,
+    ) -> RoutedQueryResult:
+        result = self.deterministic.execute(request, context)
+        result = replace(result, warnings=(*result.warnings, f"SQLBOT_FALLBACK:{reason}"))
+        self._record_route(
+            request,
+            context,
+            "DETERMINISTIC_FALLBACK",
+            reason,
+            result,
+        )
+        return RoutedQueryResult(
+            result,
+            "DETERMINISTIC_FALLBACK",
+            reason,
+        )
 
     def _record_route(
         self,

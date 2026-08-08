@@ -17,8 +17,11 @@ from app.query_engines.sqlbot.error_mapper import (
 from app.query_engines.sqlbot.feature_flags import SQLBotFeatureFlags
 from app.query_engines.sqlbot.health import CircuitBreaker
 from app.query_engines.sqlbot.limit_policy import apply_limit_policy
+from app.query_engines.sqlbot.policy import SQLPolicyDecision, validate_generated_sql
 from app.query_engines.sqlbot.request_mapper import map_question_request
 from app.query_engines.sqlbot.response_parser import parse_response
+from app.query_engines.sqlbot.result_guard import validate_result
+from app.query_engines.sqlbot.schema_catalog import retrieve_schema
 from app.query_engines.sqlbot.session_manager import SQLBotSessionManager
 
 
@@ -112,7 +115,20 @@ class SQLBotEngine(QueryEngine):
             dataset_version=context.dataset_version,
         )
         session = self.sessions.get_or_create(key, self.client.create_session)
-        raw_payload = self._ask_with_single_rebuild(request, context, key, session)
+        retrieved = retrieve_schema(request.question, context)
+        governed_context = replace(
+            context,
+            allowed_relations=retrieved.relations,
+            prompt_context={
+                **context.prompt_context,
+                **retrieved.as_prompt_context(),
+                "sql_examples": context.prompt_context.get("sql_examples", []),
+                "time_dimensions": context.prompt_context.get("time_dimensions", []),
+            },
+        )
+        raw_payload = self._ask_with_single_rebuild(
+            request, governed_context, key, session
+        )
         parsed = parse_response(
             raw_payload,
             max_rows=min(context.max_rows, request.limits.get("rows", context.max_rows)),
@@ -134,20 +150,29 @@ class SQLBotEngine(QueryEngine):
                     session.access_token,
                 ),
             )
-        self.policy_guard(parsed.sql, context)
+        self.policy_guard(parsed.sql, governed_context)
+        policy_decision: SQLPolicyDecision = validate_generated_sql(
+            parsed.sql, governed_context
+        )
+        parsed = replace(parsed, sql=policy_decision.normalized_sql)
         columns, rows = parsed.columns, parsed.rows
-        if context.execution_mode == "generate_only":
+        if context.execution_mode in {"generate_only", "platform_readonly"}:
             if self.generated_sql_executor is None:
                 raise SQLBotEngineError(
                     SQLBotErrorCode.NOT_CONFIGURED,
                     "SQLBot 生成 SQL 的只读执行器未配置",
                 )
-            columns, rows = self.generated_sql_executor(parsed.sql, request, context)
+            columns, rows = self.generated_sql_executor(
+                parsed.sql, request, governed_context
+            )
         if len(rows) > context.max_rows:
             raise SQLBotEngineError(
                 SQLBotErrorCode.POLICY_DENIED,
                 "SQLBot 结果超过平台行数上限",
             )
+        result_validation = validate_result(
+            columns, rows, governed_context, policy_decision
+        )
         run_id = context.run_id or f"SQLBOT-{uuid4()}"
         evidence = {
             "data_classification": "simulated",
@@ -163,6 +188,14 @@ class SQLBotEngine(QueryEngine):
             "dataset_version": context.dataset_version,
             "dataset_version_id": context.dataset_version_id,
             "query_guard": "passed",
+            "schema_catalog_version": retrieved.catalog_version,
+            "schema_catalog_hash": retrieved.catalog_hash,
+            "schema_retrieval_relations": list(retrieved.relations),
+            "sql_policy_checks": list(policy_decision.checks),
+            "join_count": policy_decision.join_count,
+            "row_limit": policy_decision.row_limit,
+            "result_guard": result_validation,
+            "answer_guard": "passed",
         }
         return QueryResult(
             engine=self.name,

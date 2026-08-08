@@ -61,9 +61,11 @@ class Settings(BaseSettings):
         "SHADOW",
         "CANARY",
         "SQLBOT_ENABLED",
+        "SCOPED_STABLE",
         "DISABLED",
     ] | None = None
     query_engine_feature_flag_version: str = "p1b-1"
+    query_engine_auto_fallback_enabled: bool = True
     query_engine_canary_percentage: float = 5.0
     query_engine_canary_tenants: str = ""
     query_engine_canary_workspaces: str = ""

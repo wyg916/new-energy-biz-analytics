@@ -5,6 +5,8 @@ import sqlglot
 from sqlglot import exp
 
 from app.chatbi.compiler import CompiledQuery
+from app.query_engines.sqlbot.error_mapper import SQLBotEngineError
+from app.query_engines.sqlbot.policy import validate_generated_sql
 
 ALLOWED_TABLES = {"fact_charging_session", "fact_energy_cost", "fact_operation_expense", "fact_device_status_event", "dim_station"}
 FORBIDDEN_NODES = (exp.Insert, exp.Update, exp.Delete, exp.Drop, exp.Create, exp.Alter, exp.Command, exp.Merge)
@@ -51,6 +53,15 @@ def reject_arbitrary_sql(sql: str) -> None:
 
 def guard_sqlbot_sql(sql: str, context: Any) -> None:
     """Validate SQLBot output against the active semantic-view contract."""
+    try:
+        validate_generated_sql(sql, context)
+    except SQLBotEngineError as exc:
+        raise QueryRejected(exc.message) from exc
+    return
+
+
+def _p1b_guard_sqlbot_sql(sql: str, context: Any) -> None:
+    """Previous policy retained for regression traceability."""
     if not sql or "--" in sql or "/*" in sql or "*/" in sql:
         raise QueryRejected("SQLBot SQL contains forbidden comments or is empty")
     try:

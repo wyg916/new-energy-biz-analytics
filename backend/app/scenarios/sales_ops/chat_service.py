@@ -12,7 +12,9 @@ from app.query_engines.context import build_query_context
 from app.query_engines.router import EngineRouter
 from app.query_engines.shadow import RoutingEvidenceRepository
 from app.query_engines.sqlbot.engine import SQLBotEngine
+from app.query_engines.sqlbot.readonly_executor import execute_generated_readonly
 from app.query_engines.sqlbot.session_manager import SQLBotSessionManager
+from app.query_engines.sqlbot.understanding import understand_query
 from app.scenarios.sales_ops.engine import SalesOpsDeterministicEngine
 from app.scenarios.sales_ops.metrics import SALES_METRICS
 from app.scenarios.sales_ops.runtime import resolve_sales_ops_context
@@ -79,8 +81,10 @@ class SalesOpsChatService:
         sqlbot = SQLBotEngine(
             session_manager=SQLBotSessionManager(
                 on_bind=evidence_repository.record_session_binding
-            )
+            ),
+            generated_sql_executor=execute_generated_readonly,
         )
+        understanding = understand_query(request, query_context)
         routed = EngineRouter.from_settings(
             SalesOpsDeterministicEngine(self.db),
             sqlbot,
@@ -88,7 +92,7 @@ class SalesOpsChatService:
         ).execute(
             request,
             query_context,
-            deterministic_supported=True,
+            deterministic_supported=understanding.deterministic_preferred,
         )
         result = routed.result
         state_version = self._save_state(result)

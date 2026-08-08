@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "evidence_type": "current_data41_postgresql_readonly_query",
+  "captured_at": "2026-08-08T15:14:46.1820065Z",
+  "database_container": "renewable-data41-db-1",
+  "database": "renewable_p5b",
+  "transaction_read_only": true,
+  "statement_timeout": "5s",
+  "transaction_rolled_back": true,
+  "write_statements_executed": false,
+  "open_source_runs": [
+    {
+      "run_id": "DATA41-ACN-ORNL-26-V1",
+      "status": "COMPLETED",
+      "raw_rows": 26,
+      "staging_rows": 26,
+      "core_rows": 26
+    },
+    {
+      "run_id": "DATA41-UCI-ONLINE-RETAIL-352-V1",
+      "status": "COMPLETED",
+      "raw_rows": 27095,
+      "staging_rows": 27095,
+      "core_rows": 40760
+    }
+  ],
+  "bounded_samples": {
+    "charging_rows": 5,
+    "sales_rows": 5,
+    "limit": 5
+  },
+  "timeout_negative": {
+    "status": "PASS",
+    "operation": "unbounded charging fact aggregate",
+    "outcome": "canceled by statement_timeout"
+  },
+  "data_truth": "current DATA-4.1 open-source-derived local PostgreSQL data; not customer production data"
+}

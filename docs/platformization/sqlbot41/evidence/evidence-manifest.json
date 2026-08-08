@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-08T15:26:14.367108+00:00",
+  "status": "PARTIAL",
+  "checks": {
+    "postgres_regression_368": true,
+    "targeted_75": true,
+    "golden_100": true,
+    "data41_postgres_5": true,
+    "live_data_readonly": true,
+    "runtime_truthful_block": true,
+    "secret_scan": true
+  },
+  "artifacts": {
+    "acceptance": {
+      "path": "docs/platformization/sqlbot41/evidence/acceptance-summary.json",
+      "sha256": "8ac23aaf59fb26063823a5819605a971bec49573231c73402b1769517a726640"
+    },
+    "regression": {
+      "path": "docs/platformization/sqlbot41/evidence/backend-postgres-regression-final.json",
+      "sha256": "a2e561a1163bf09f0f5a59d81a44ba6aeebfef9a82d190027f1fd08638247173"
+    },
+    "targeted": {
+      "path": "docs/platformization/sqlbot41/evidence/sqlbot41-targeted.xml",
+      "sha256": "f1c85bb7e05f1302ab5859c674b781cf881a308ff8b51f5749f59045d248739c"
+    },
+    "golden": {
+      "path": "docs/platformization/sqlbot41/evidence/dual_engine_golden_contract_v1.json",
+      "sha256": "c938d7c0617083b3c48ddaecd2e1eae8c8f9932adf7b4ad0d85d8ff4b2256c30"
+    },
+    "data41": {
+      "path": "docs/platformization/sqlbot41/evidence/data41-postgres-rerun.json",
+      "sha256": "e5a3bae9d5ceaf73f8278a354b86f517b65def668db8aa09ca1ea3ad17d54b48"
+    },
+    "live_data": {
+      "path": "docs/platformization/sqlbot41/evidence/live-data41-postgres.json",
+      "sha256": "22cd9827e9cfb50bcee87b274ec5a8fec0d7f3ae5df4d758144e73097b65aace"
+    },
+    "runtime_gate": {
+      "path": "docs/platformization/sqlbot41/evidence/sqlbot-runtime-gate.json",
+      "sha256": "4e319e771c5e858a8e4971b520c54151d4c3afa06a905eb0beeeb440e16e98f8"
+    },
+    "secret_scan": {
+      "path": "docs/platformization/sqlbot41/evidence/secret-scan.json",
+      "sha256": "07fe55c51fd05794d669470a9ac3696484bb649a28741fcb699268d6524a2003"
+    }
+  },
+  "truth_boundary": {
+    "implementation_and_contract_tests": "PASS",
+    "real_sqlbot_runtime": "BLOCKED",
+    "real_canary_claimed": false,
+    "production_promotion_authorized": false
+  }
+}
