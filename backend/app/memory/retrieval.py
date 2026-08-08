@@ -11,6 +11,7 @@ from app.memory.audit import audit_memory_use
 from app.memory.authorization import MemoryAuthorization
 from app.memory.contracts import ContextSections, MemoryStatus, MemoryType
 from app.memory.models import MemoryRecord
+from app.memory.signals import apply_recall_signal
 from app.platform.identity import IdentityContext
 
 
@@ -45,7 +46,7 @@ class MemoryRetriever:
         filters = [
             MemoryAuthorization.retrieval_filter(self.identity, scenario_id=scenario_id),
             MemoryRecord.memory_type.in_(memory_types),
-            MemoryRecord.status == MemoryStatus.ACTIVE,
+            MemoryRecord.status.in_((MemoryStatus.ACTIVE, MemoryStatus.REDUCED_RANK)),
             MemoryRecord.deleted_at.is_(None),
             MemoryRecord.valid_from <= current,
             or_(MemoryRecord.valid_to.is_(None), MemoryRecord.valid_to > current),
@@ -79,6 +80,8 @@ class MemoryRetriever:
             if len(selected) >= safe_limit:
                 truncated = truncated or len(candidates) > len(selected)
                 break
+        for record in selected:
+            apply_recall_signal(record, now=current)
         audit_memory_use(
             self.db,
             self.identity,

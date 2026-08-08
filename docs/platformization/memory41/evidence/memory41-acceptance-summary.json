@@ -1,0 +1,140 @@
+{
+  "status": "PASS",
+  "generated_at": "2026-08-08T15:14:12.518266+00:00",
+  "branch": "codex/memory-lifecycle-41",
+  "head_before_commit": "75160df433bbf9273e10a87bae6a7aef29af9744",
+  "baseline": "75160df433bbf9273e10a87bae6a7aef29af9744",
+  "migration": {
+    "status": "PASS",
+    "generated_at": "2026-08-08T14:51:23.844254+00:00",
+    "database_engine": "postgresql",
+    "database_url_redacted": true,
+    "start_revision": "data_0001",
+    "final_revision": "memory_41_0001",
+    "required_tables": [
+      "memory_delete_verification",
+      "memory_lifecycle_outbox",
+      "memory_lifecycle_task"
+    ],
+    "required_columns": [
+      "last_recalled_at",
+      "lifecycle_transition_at",
+      "recall_count"
+    ],
+    "steps": [
+      {
+        "command": [
+          "python",
+          "-m",
+          "alembic",
+          "upgrade",
+          "head"
+        ],
+        "exit_code": 0,
+        "stdout": "",
+        "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL."
+      },
+      {
+        "command": [
+          "python",
+          "-m",
+          "alembic",
+          "downgrade",
+          "data_0001"
+        ],
+        "exit_code": 0,
+        "stdout": "",
+        "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running downgrade memory_41_0001 -> data_0001, Add continuously runnable and auditable memory lifecycle jobs."
+      },
+      {
+        "command": [
+          "python",
+          "-m",
+          "alembic",
+          "upgrade",
+          "head"
+        ],
+        "exit_code": 0,
+        "stdout": "",
+        "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade data_0001 -> memory_41_0001, Add continuously runnable and auditable memory lifecycle jobs."
+      },
+      {
+        "command": [
+          "python",
+          "-m",
+          "alembic",
+          "current"
+        ],
+        "exit_code": 0,
+        "stdout": "memory_41_0001 (head)",
+        "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL."
+      }
+    ]
+  },
+  "test_suites": {
+    "lifecycle": {
+      "file": "docs/platformization/memory41/evidence/memory41-lifecycle.xml",
+      "tests": 28,
+      "passed": 28,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "memory_skill": {
+      "file": "docs/platformization/memory41/evidence/memory41-memory-skill.xml",
+      "tests": 95,
+      "passed": 95,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "postgres": {
+      "file": "docs/platformization/memory41/evidence/memory41-postgres.xml",
+      "tests": 4,
+      "passed": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    },
+    "redis": {
+      "file": "docs/platformization/memory41/evidence/memory41-redis.xml",
+      "tests": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "status": "PASS"
+    }
+  },
+  "fixed_evaluations": {
+    "memory": {
+      "passed": 40,
+      "total": 40,
+      "source": "test_memory_evaluation_report.py"
+    },
+    "skill": {
+      "passed": 40,
+      "total": 40,
+      "source": "test_memory_evaluation_report.py"
+    },
+    "lifecycle": {
+      "passed": 12,
+      "total": 12,
+      "version": "4.1-memory-lifecycle-v1"
+    }
+  },
+  "stores": {
+    "postgresql": "integration_verified",
+    "redis": "integration_verified",
+    "vector": "contract_and_failure_injection_verified_no_runtime_backend_configured",
+    "object": "contract_and_in_memory_adapter_verified_no_runtime_backend_configured"
+  },
+  "truth_boundary": {
+    "production_run_claimed": false,
+    "real_customer_data_used": false,
+    "data_classification": "simulated_and_test_operational_metadata"
+  }
+}

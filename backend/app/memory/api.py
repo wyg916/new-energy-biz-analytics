@@ -1,12 +1,14 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from typing import Any
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field
-from sqlalchemy import select
+from redis import Redis
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import current_user
@@ -14,7 +16,14 @@ from app.core.database import get_db
 from app.memory.authorization import MemoryAuthorizationError
 from app.memory.contracts import MemoryType
 from app.memory.deletion import MemoryDeletionService
-from app.memory.models import MemoryRecord, MemoryWriteCandidateRecord
+from app.memory.metrics import memory_lifecycle_metrics
+from app.memory.models import (
+    MemoryDeleteVerification,
+    MemoryLifecycleOutbox,
+    MemoryLifecycleTask,
+    MemoryRecord,
+    MemoryWriteCandidateRecord,
+)
 from app.memory.policy import MemoryPolicyService
 from app.memory.retrieval import MemoryRetriever
 from app.memory.semantic import SemanticMemoryError, SemanticMemoryService
@@ -83,6 +92,28 @@ def _serialize(record: MemoryRecord) -> dict:
         "created_at": record.created_at,
         "updated_at": record.updated_at,
     }
+
+
+def _require_lifecycle_admin(db: Session, user: User) -> None:
+    if user.role != "analyst_admin":
+        raise HTTPException(403, detail={"code": "MEMORY_LIFECYCLE_ADMIN_REQUIRED", "message": "仅系统管理员可查看生命周期运行状态"})
+    _require(db, user, "memory.view")
+
+
+def _digest(value: str | None) -> str | None:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest() if value else None
+
+
+def _runtime_redis_client():
+    settings = get_settings()
+    if not settings.memory_lifecycle_redis_enabled:
+        return None
+    return Redis.from_url(
+        settings.redis_url,
+        socket_connect_timeout=1,
+        socket_timeout=1,
+        decode_responses=True,
+    )
 
 
 @router.get("/records")
@@ -283,16 +314,21 @@ def delete_record(
         scenario_id=record.scenario_id if record else None,
     )
     try:
-        result = MemoryDeletionService(
-            db, IdentityContextFactory.from_user(user)
-        ).delete_one(memory_id, reason=reason)
+        redis_client = _runtime_redis_client()
+        try:
+            result = MemoryDeletionService(
+                db, IdentityContextFactory.from_user(user), redis_client=redis_client
+            ).delete_one(memory_id, reason=reason)
+        finally:
+            if redis_client is not None:
+                redis_client.close()
         record_governance_event(
             db,
             IdentityContextFactory.from_user(user),
             action="memory.delete",
             resource_type="memory",
             resource_id=memory_id,
-            result="SUCCESS" if result.deleted_count else "BLOCKED",
+            result=("SUCCESS" if result.verification_passed else "PENDING") if result.deleted_count else "BLOCKED",
             detail=result.__dict__,
             commit=True,
         )
@@ -308,16 +344,21 @@ def delete_current_user_memory(
     user: User = Depends(current_user),
 ) -> dict:
     _require(db, user, "memory.delete", owner=f"user:{user.id}")
-    result = MemoryDeletionService(
-        db, IdentityContextFactory.from_user(user)
-    ).purge_current_user(reason=reason)
+    redis_client = _runtime_redis_client()
+    try:
+        result = MemoryDeletionService(
+            db, IdentityContextFactory.from_user(user), redis_client=redis_client
+        ).purge_current_user(reason=reason)
+    finally:
+        if redis_client is not None:
+            redis_client.close()
     record_governance_event(
         db,
         IdentityContextFactory.from_user(user),
         action="memory.delete_user",
         resource_type="memory",
         resource_id=f"user:{user.id}",
-        result="SUCCESS" if result.deleted_count else "NOOP",
+        result=("SUCCESS" if result.verification_passed else "PENDING") if result.deleted_count else "NOOP",
         detail=result.__dict__,
         commit=True,
     )
@@ -337,4 +378,102 @@ def export_memory(
         "source": "governed PostgreSQL memory_record",
         "run_id_location": "records[].structured_value.run_id when applicable",
         **response,
+    }
+
+
+@router.get("/lifecycle/tasks")
+def lifecycle_tasks(
+    status: str | None = Query(default=None, max_length=24),
+    limit: int = Query(default=50, ge=1, le=200),
+    db: Session = Depends(get_db),
+    user: User = Depends(current_user),
+) -> dict:
+    _require_lifecycle_admin(db, user)
+    identity = IdentityContextFactory.from_user(user)
+    filters = [
+        MemoryLifecycleTask.tenant_id == identity.tenant_id,
+        MemoryLifecycleTask.organization_id == identity.org_id,
+        MemoryLifecycleTask.workspace_id == identity.workspace_id,
+    ]
+    if status:
+        filters.append(MemoryLifecycleTask.status == status.upper())
+    rows = db.scalars(select(MemoryLifecycleTask).where(*filters).order_by(
+        MemoryLifecycleTask.created_at.desc()
+    ).limit(limit)).all()
+    return {"tasks": [{
+        "task_id": row.task_id,
+        "task_type": row.task_type,
+        "status": row.status,
+        "scenario_id": row.scenario_id,
+        "memory_id_hash": _digest(row.memory_id),
+        "user_id_hash": _digest(row.user_id),
+        "attempt_count": row.attempt_count,
+        "max_attempts": row.max_attempts,
+        "next_attempt_at": row.next_attempt_at,
+        "failure_reason": row.failure_reason,
+        "created_at": row.created_at,
+        "updated_at": row.updated_at,
+        "finished_at": row.finished_at,
+    } for row in rows]}
+
+
+@router.get("/lifecycle/tasks/{task_id}/delete-verification")
+def lifecycle_delete_verification(
+    task_id: str,
+    db: Session = Depends(get_db),
+    user: User = Depends(current_user),
+) -> dict:
+    _require_lifecycle_admin(db, user)
+    identity = IdentityContextFactory.from_user(user)
+    task = db.scalar(select(MemoryLifecycleTask).where(
+        MemoryLifecycleTask.task_id == task_id,
+        MemoryLifecycleTask.tenant_id == identity.tenant_id,
+        MemoryLifecycleTask.organization_id == identity.org_id,
+        MemoryLifecycleTask.workspace_id == identity.workspace_id,
+    ))
+    if task is None:
+        raise HTTPException(404, detail={"code": "LIFECYCLE_TASK_NOT_FOUND", "message": "生命周期任务不存在"})
+    rows = db.scalars(select(MemoryDeleteVerification).where(
+        MemoryDeleteVerification.task_id == task_id
+    ).order_by(MemoryDeleteVerification.target_store)).all()
+    return {
+        "task_id": task_id,
+        "task_status": task.status,
+        "delete_no_recall": all(row.status in {"VERIFIED", "NOT_CONFIGURED"} for row in rows) and bool(rows),
+        "stores": [{
+            "target_store": row.target_store,
+            "status": row.status,
+            "resource_id_hash": row.resource_id_hash,
+            "checked_at": row.checked_at,
+        } for row in rows],
+    }
+
+
+@router.get("/lifecycle/metrics")
+def lifecycle_metrics(
+    db: Session = Depends(get_db),
+    user: User = Depends(current_user),
+) -> dict:
+    _require_lifecycle_admin(db, user)
+    identity = IdentityContextFactory.from_user(user)
+    task_rows = db.execute(select(
+        MemoryLifecycleTask.status, func.count()
+    ).where(
+        MemoryLifecycleTask.tenant_id == identity.tenant_id,
+        MemoryLifecycleTask.organization_id == identity.org_id,
+        MemoryLifecycleTask.workspace_id == identity.workspace_id,
+    ).group_by(MemoryLifecycleTask.status)).all()
+    outbox_rows = db.execute(select(
+        MemoryLifecycleOutbox.status, func.count()
+    ).join(MemoryLifecycleTask, MemoryLifecycleTask.task_id == MemoryLifecycleOutbox.task_id).where(
+        MemoryLifecycleTask.tenant_id == identity.tenant_id,
+        MemoryLifecycleTask.organization_id == identity.org_id,
+        MemoryLifecycleTask.workspace_id == identity.workspace_id,
+    ).group_by(MemoryLifecycleOutbox.status)).all()
+    return {
+        "tasks_by_status": {status: count for status, count in task_rows},
+        "outbox_by_status": {status: count for status, count in outbox_rows},
+        "process_metrics": memory_lifecycle_metrics.snapshot(),
+        "data_classification": "operational_metadata",
+        "content_included": False,
     }

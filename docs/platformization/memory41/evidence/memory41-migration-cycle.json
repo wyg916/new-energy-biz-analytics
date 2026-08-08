@@ -1,0 +1,67 @@
+{
+  "status": "PASS",
+  "generated_at": "2026-08-08T14:51:23.844254+00:00",
+  "database_engine": "postgresql",
+  "database_url_redacted": true,
+  "start_revision": "data_0001",
+  "final_revision": "memory_41_0001",
+  "required_tables": [
+    "memory_delete_verification",
+    "memory_lifecycle_outbox",
+    "memory_lifecycle_task"
+  ],
+  "required_columns": [
+    "last_recalled_at",
+    "lifecycle_transition_at",
+    "recall_count"
+  ],
+  "steps": [
+    {
+      "command": [
+        "python",
+        "-m",
+        "alembic",
+        "upgrade",
+        "head"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL."
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "alembic",
+        "downgrade",
+        "data_0001"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running downgrade memory_41_0001 -> data_0001, Add continuously runnable and auditable memory lifecycle jobs."
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "alembic",
+        "upgrade",
+        "head"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade data_0001 -> memory_41_0001, Add continuously runnable and auditable memory lifecycle jobs."
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "alembic",
+        "current"
+      ],
+      "exit_code": 0,
+      "stdout": "memory_41_0001 (head)",
+      "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL."
+    }
+  ]
+}

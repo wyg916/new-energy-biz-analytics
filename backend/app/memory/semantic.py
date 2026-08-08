@@ -138,7 +138,7 @@ class SemanticMemoryService:
             raise SemanticMemoryError("MEMORY_CANDIDATE_FORBIDDEN", "记忆候选不属于当前用户")
         existing = self.db.scalar(select(MemoryRecord).where(
             MemoryRecord.duplicate_hash == candidate.duplicate_hash,
-            MemoryRecord.status == MemoryStatus.ACTIVE,
+            MemoryRecord.status.in_((MemoryStatus.ACTIVE, MemoryStatus.REDUCED_RANK)),
         ).order_by(MemoryRecord.version.desc()))
         if existing and existing.structured_value_json == candidate.structured_value_json:
             candidate.status = MemoryStatus.REJECTED

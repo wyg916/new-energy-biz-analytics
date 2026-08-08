@@ -30,7 +30,7 @@ class MemoryConflictDetector:
     ) -> ConflictResult:
         active = self.db.scalars(select(MemoryRecord).where(
             MemoryRecord.duplicate_hash == duplicate_hash,
-            MemoryRecord.status == MemoryStatus.ACTIVE,
+            MemoryRecord.status.in_((MemoryStatus.ACTIVE, MemoryStatus.REDUCED_RANK)),
             MemoryRecord.deleted_at.is_(None),
         ).order_by(MemoryRecord.version.desc())).all()
         if not active:

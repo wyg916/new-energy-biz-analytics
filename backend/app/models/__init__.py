@@ -35,8 +35,11 @@ from app.models.knowledge import (
     KnowledgeRetrievalEvent,
 )
 from app.memory.models import (
+    MemoryDeleteVerification,
     MemoryAuditEvent,
     MemoryDeletionAudit,
+    MemoryLifecycleOutbox,
+    MemoryLifecycleTask,
     MemoryRecord,
     MemoryWriteCandidateRecord,
     ProcedureDefinition,
@@ -78,7 +81,8 @@ __all__ = [
     "KnowledgeChunk", "KnowledgeDocument", "KnowledgeDocumentAcl",
     "KnowledgeDocumentVersion", "KnowledgePublicationEvent",
     "KnowledgeRetrievalEvent",
-    "MemoryAuditEvent", "MemoryDeletionAudit", "MemoryRecord",
+    "MemoryAuditEvent", "MemoryDeletionAudit", "MemoryDeleteVerification",
+    "MemoryLifecycleOutbox", "MemoryLifecycleTask", "MemoryRecord",
     "MemoryWriteCandidateRecord", "ProcedureDefinition", "SkillDefinition",
     "SkillExecutionRecord", "SQLBotSourceBindingRelease",
     "Principal", "IdentityGroup", "IdentityGroupMembership", "GovernanceRole",

@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+import asyncio
 import logging
 import re
 from time import perf_counter
@@ -29,7 +30,19 @@ async def lifespan(_: FastAPI):
     settings = get_settings()
     if settings.auto_bootstrap_demo_users and settings.app_env != "production":
         bootstrap_demo_users()
-    yield
+    scheduler = None
+    scheduler_task = None
+    if settings.memory_lifecycle_scheduler_enabled and settings.app_env != "test":
+        from app.memory.scheduler import MemoryLifecycleScheduler
+
+        scheduler = MemoryLifecycleScheduler()
+        scheduler_task = asyncio.create_task(scheduler.run())
+    try:
+        yield
+    finally:
+        if scheduler is not None and scheduler_task is not None:
+            scheduler.stop()
+            await scheduler_task
 
 
 app = FastAPI(title=get_settings().app_name, version="0.1.0", lifespan=lifespan)

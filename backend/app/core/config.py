@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Literal
 from urllib.parse import urlparse
 
-from pydantic import model_validator
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -28,6 +28,11 @@ class Settings(BaseSettings):
     database_max_overflow: int = 10
     database_pool_timeout_seconds: float = 30.0
     redis_url: str = "redis://localhost:6379/0"
+    memory_lifecycle_scheduler_enabled: bool = True
+    memory_lifecycle_interval_seconds: int = Field(default=60, ge=5, le=86400)
+    memory_lifecycle_batch_size: int = Field(default=20, ge=1, le=100)
+    memory_lifecycle_redis_enabled: bool = True
+    memory_lifecycle_scenario_ids: str = "charging_ops,sales_ops"
     cors_origins: str = "http://localhost:5173,http://localhost:8080"
     auto_bootstrap_demo_users: bool = True
     simulated_data_only: bool = True
@@ -224,6 +229,14 @@ class Settings(BaseSettings):
     @property
     def api_source_allowed_hosts(self) -> set[str]:
         return {item.strip().lower() for item in self.api_source_allowlist.split(",") if item.strip()}
+
+    @property
+    def memory_lifecycle_scenarios(self) -> tuple[str, ...]:
+        values = tuple(
+            item.strip() for item in self.memory_lifecycle_scenario_ids.split(",")
+            if item.strip() in {"charging_ops", "sales_ops"}
+        )
+        return values or ("charging_ops",)
 
     @property
     def trusted_host_list(self) -> list[str]:

@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from app.memory.contracts import MemoryScope, MemoryStatus, MemoryType, TrustLevel
 from app.memory.deletion import MemoryDeletionService
 from app.memory.lifecycle import MemoryLifecycleService
-from app.memory.models import MemoryDeletionAudit, MemoryRecord, P2B_MEMORY_TABLES
+from app.memory.models import MEMORY_LIFECYCLE_TABLES, MemoryDeletionAudit, MemoryRecord, P2B_MEMORY_TABLES
 from app.memory.retrieval import ContextAssembler, MemoryRetriever
 from app.memory.writer import MemoryWriteCandidate, MemoryWriteError, MemoryWritePipeline
 from app.models.auth import User
@@ -34,7 +34,7 @@ class FakeRedis:
 @pytest.fixture
 def db():
     engine = create_engine("sqlite:///:memory:")
-    for table in P2B_MEMORY_TABLES:
+    for table in [*P2B_MEMORY_TABLES, *MEMORY_LIFECYCLE_TABLES]:
         table.create(engine)
     factory = sessionmaker(bind=engine, expire_on_commit=False)
     with factory() as session:

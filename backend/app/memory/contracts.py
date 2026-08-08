@@ -28,11 +28,45 @@ class MemoryStatus(StrEnum):
     CANDIDATE = "CANDIDATE"
     PENDING_APPROVAL = "PENDING_APPROVAL"
     ACTIVE = "ACTIVE"
+    REDUCED_RANK = "REDUCED_RANK"
+    COLD = "COLD"
     REJECTED = "REJECTED"
     SUPERSEDED = "SUPERSEDED"
     ARCHIVED = "ARCHIVED"
     REVOKED = "REVOKED"
     DELETED = "DELETED"
+
+
+class LifecycleTaskType(StrEnum):
+    MAINTAIN = "MAINTAIN"
+    FORGET_MEMORY = "FORGET_MEMORY"
+    FORGET_USER = "FORGET_USER"
+    VERIFY_DELETE = "VERIFY_DELETE"
+
+
+class LifecycleTaskStatus(StrEnum):
+    PENDING = "PENDING"
+    RUNNING = "RUNNING"
+    RETRY = "RETRY"
+    COMPLETED = "COMPLETED"
+    BLOCKED = "BLOCKED"
+    FAILED = "FAILED"
+
+
+class OutboxStatus(StrEnum):
+    PENDING = "PENDING"
+    RUNNING = "RUNNING"
+    RETRY = "RETRY"
+    COMPLETED = "COMPLETED"
+    FAILED = "FAILED"
+
+
+class DeleteVerificationStatus(StrEnum):
+    PENDING = "PENDING"
+    VERIFIED = "VERIFIED"
+    PRESENT = "PRESENT"
+    NOT_CONFIGURED = "NOT_CONFIGURED"
+    ERROR = "ERROR"
 
 
 class TrustLevel(StrEnum):

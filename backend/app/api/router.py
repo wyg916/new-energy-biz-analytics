@@ -13,6 +13,7 @@ from app.api.assistant import router as assistant_router
 from app.knowledge.api import router as knowledge_router
 from app.core.config import get_settings
 from app.core.observability import readiness_snapshot, request_metrics
+from app.memory.metrics import memory_lifecycle_metrics
 from app.memory.api import router as memory_router
 from app.skills.api import router as skills_router
 from app.governance.api import router as governance_router
@@ -58,6 +59,6 @@ def ready() -> JSONResponse:
 @api_router.get("/metrics", tags=["system"], include_in_schema=False)
 def metrics() -> PlainTextResponse:
     return PlainTextResponse(
-        request_metrics.render(),
+        request_metrics.render() + "\n" + memory_lifecycle_metrics.render(),
         media_type="text/plain; version=0.0.4; charset=utf-8",
     )

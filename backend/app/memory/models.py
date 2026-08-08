@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-from sqlalchemy import Boolean, DateTime, Float, Index, Integer, String, Text, UniqueConstraint, text
+from sqlalchemy import Boolean, DateTime, Float, ForeignKey, Index, Integer, String, Text, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -60,6 +60,9 @@ class MemoryRecord(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
     deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, index=True)
+    recall_count: Mapped[int] = mapped_column(Integer, default=0)
+    last_recalled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, index=True)
+    lifecycle_transition_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
 class MemoryWriteCandidateRecord(Base):
@@ -148,6 +151,77 @@ class MemoryDeletionAudit(Base):
     legal_hold_applied: Mapped[bool] = mapped_column(Boolean, default=False)
     reason: Mapped[str] = mapped_column(String(500))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+
+
+class MemoryLifecycleTask(Base):
+    __tablename__ = "memory_lifecycle_task"
+    __table_args__ = (
+        UniqueConstraint("idempotency_key", name="uq_memory_lifecycle_task_idempotency"),
+        Index("ix_memory_lifecycle_task_due", "status", "next_attempt_at", "created_at"),
+        Index("ix_memory_lifecycle_task_scope", "tenant_id", "workspace_id", "task_type", "created_at"),
+    )
+
+    task_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    task_type: Mapped[str] = mapped_column(String(32), index=True)
+    status: Mapped[str] = mapped_column(String(24), index=True)
+    tenant_id: Mapped[str] = mapped_column(String(64), index=True)
+    organization_id: Mapped[str] = mapped_column(String(64), index=True)
+    workspace_id: Mapped[str] = mapped_column(String(64), index=True)
+    requested_by: Mapped[str] = mapped_column(String(96), index=True)
+    memory_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    user_id: Mapped[str | None] = mapped_column(String(96), nullable=True, index=True)
+    scenario_id: Mapped[str | None] = mapped_column(String(64), nullable=True, index=True)
+    reason: Mapped[str] = mapped_column(String(500))
+    payload_json: Mapped[str] = mapped_column(Text, default="{}")
+    idempotency_key: Mapped[str] = mapped_column(String(160))
+    attempt_count: Mapped[int] = mapped_column(Integer, default=0)
+    max_attempts: Mapped[int] = mapped_column(Integer, default=5)
+    next_attempt_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, index=True)
+    locked_by: Mapped[str | None] = mapped_column(String(96), nullable=True)
+    locked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    failure_reason: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    result_json: Mapped[str] = mapped_column(Text, default="{}")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class MemoryLifecycleOutbox(Base):
+    __tablename__ = "memory_lifecycle_outbox"
+    __table_args__ = (
+        UniqueConstraint("task_id", "target_store", "operation", "resource_id", name="uq_memory_outbox_delivery"),
+        Index("ix_memory_outbox_due", "status", "next_attempt_at", "created_at"),
+    )
+
+    event_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    task_id: Mapped[str] = mapped_column(String(64), ForeignKey("memory_lifecycle_task.task_id"), index=True)
+    operation: Mapped[str] = mapped_column(String(32))
+    target_store: Mapped[str] = mapped_column(String(24), index=True)
+    resource_id: Mapped[str] = mapped_column(String(128))
+    status: Mapped[str] = mapped_column(String(24), index=True)
+    attempt_count: Mapped[int] = mapped_column(Integer, default=0)
+    max_attempts: Mapped[int] = mapped_column(Integer, default=5)
+    next_attempt_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    failure_reason: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
+    delivered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class MemoryDeleteVerification(Base):
+    __tablename__ = "memory_delete_verification"
+    __table_args__ = (
+        UniqueConstraint("task_id", "target_store", name="uq_memory_delete_verification_store"),
+        Index("ix_memory_delete_verification_task", "task_id", "checked_at"),
+    )
+
+    verification_id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    task_id: Mapped[str] = mapped_column(String(64), ForeignKey("memory_lifecycle_task.task_id"), index=True)
+    target_store: Mapped[str] = mapped_column(String(24))
+    resource_id_hash: Mapped[str] = mapped_column(String(64))
+    status: Mapped[str] = mapped_column(String(24), index=True)
+    detail_json: Mapped[str] = mapped_column(Text, default="{}")
+    checked_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
 
 
 class ProcedureDefinition(Base):
@@ -270,4 +344,11 @@ P2B_MEMORY_TABLES = [
     SkillDefinition.__table__,
     SkillExecutionRecord.__table__,
     SQLBotSourceBindingRelease.__table__,
+]
+
+
+MEMORY_LIFECYCLE_TABLES = [
+    MemoryLifecycleTask.__table__,
+    MemoryLifecycleOutbox.__table__,
+    MemoryDeleteVerification.__table__,
 ]

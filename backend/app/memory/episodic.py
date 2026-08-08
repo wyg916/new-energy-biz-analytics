@@ -6,13 +6,14 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from sqlalchemy import desc, select
+from sqlalchemy import desc, or_, select
 from sqlalchemy.orm import Session
 
 from app.memory.audit import audit_memory_use
 from app.memory.authorization import MemoryAuthorization
 from app.memory.contracts import MemoryScope, MemoryStatus, MemoryType, TrustLevel
 from app.memory.models import MemoryRecord
+from app.memory.signals import apply_recall_signal
 from app.platform.identity import IdentityContext
 
 
@@ -76,7 +77,7 @@ class EpisodicMemoryService:
             MemoryRecord.workspace_id == scope.workspace_id,
             MemoryRecord.user_id == scope.user_id,
             MemoryRecord.run_id == episode.run_id,
-            MemoryRecord.status == MemoryStatus.ACTIVE,
+            MemoryRecord.status.in_((MemoryStatus.ACTIVE, MemoryStatus.REDUCED_RANK)),
         ))
         if existing:
             return existing
@@ -150,13 +151,16 @@ class EpisodicMemoryService:
             MemoryAuthorization.retrieval_filter(self.identity, scenario_id=scenario_id),
             MemoryRecord.memory_type == MemoryType.EPISODIC,
             MemoryRecord.run_id == run_id,
-            MemoryRecord.status == MemoryStatus.ACTIVE,
+            MemoryRecord.status.in_((MemoryStatus.ACTIVE, MemoryStatus.REDUCED_RANK)),
             MemoryRecord.deleted_at.is_(None),
+            or_(MemoryRecord.valid_to.is_(None), MemoryRecord.valid_to > datetime.now(UTC)),
+            or_(MemoryRecord.expires_at.is_(None), MemoryRecord.expires_at > datetime.now(UTC)),
         ))
         if record is None:
             raise EpisodicMemoryError("EPISODE_NOT_FOUND", "当前身份范围内未找到运行记录")
         MemoryAuthorization.assert_owned(self.identity, record)
         MemoryAuthorization.assert_scenario(record, scenario_id)
+        apply_recall_signal(record)
         audit_memory_use(
             self.db,
             self.identity,
@@ -173,10 +177,14 @@ class EpisodicMemoryService:
         records = self.db.scalars(select(MemoryRecord).where(
             MemoryAuthorization.retrieval_filter(self.identity, scenario_id=scenario_id),
             MemoryRecord.memory_type == MemoryType.EPISODIC,
-            MemoryRecord.status == MemoryStatus.ACTIVE,
+            MemoryRecord.status.in_((MemoryStatus.ACTIVE, MemoryStatus.REDUCED_RANK)),
             MemoryRecord.deleted_at.is_(None),
+            or_(MemoryRecord.valid_to.is_(None), MemoryRecord.valid_to > datetime.now(UTC)),
+            or_(MemoryRecord.expires_at.is_(None), MemoryRecord.expires_at > datetime.now(UTC)),
             MemoryRecord.content.ilike(f"%{query[:100]}%"),
         ).order_by(desc(MemoryRecord.created_at)).limit(safe_limit)).all()
+        for record in records:
+            apply_recall_signal(record)
         audit_memory_use(
             self.db,
             self.identity,

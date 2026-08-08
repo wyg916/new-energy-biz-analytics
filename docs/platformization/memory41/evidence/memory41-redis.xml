@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="0" skipped="0" tests="1" time="0.225" timestamp="2026-08-08T23:10:35.852840+08:00" hostname="wyg_win11"><testcase classname="tests.test_memory_lifecycle_redis_41" name="test_real_redis_cross_store_user_clear_and_verification" time="0.183" /></testsuite></testsuites>

@@ -1,0 +1,18 @@
+{
+  "version": "4.1-memory-lifecycle-v1",
+  "data_classification": "simulated",
+  "cases": [
+    {"id": "ML-01", "category": "ttl", "expectation": "expired memory is excluded from recall"},
+    {"id": "ML-02", "category": "decay", "expectation": "inactive memory transitions to reduced rank"},
+    {"id": "ML-03", "category": "cold", "expectation": "long inactive memory transitions to cold and is not recalled"},
+    {"id": "ML-04", "category": "usage_signal", "expectation": "authorized recall updates usage signal"},
+    {"id": "ML-05", "category": "conflict", "expectation": "current database fact and explicit instruction remain authoritative"},
+    {"id": "ML-06", "category": "forget", "expectation": "user clear is idempotent"},
+    {"id": "ML-07", "category": "legal_hold", "expectation": "legal hold blocks deletion and records reason"},
+    {"id": "ML-08", "category": "outbox", "expectation": "cross-store delete uses durable outbox"},
+    {"id": "ML-09", "category": "retry", "expectation": "transient delete failure is retried with bounded state"},
+    {"id": "ML-10", "category": "cross_store", "expectation": "PostgreSQL Redis vector and enabled object store are handled"},
+    {"id": "ML-11", "category": "delete_verification", "expectation": "delete verification proves no recall"},
+    {"id": "ML-12", "category": "authorization", "expectation": "permission filter executes before recall and admin views omit content"}
+  ]
+}

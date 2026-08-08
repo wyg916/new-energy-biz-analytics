@@ -20,7 +20,7 @@ class MemoryPolicyService:
         records = self.db.scalars(select(MemoryRecord).where(
             MemoryAuthorization.retrieval_filter(self.identity, scenario_id=scenario_id),
             MemoryRecord.memory_type == MemoryType.SEMANTIC,
-            MemoryRecord.status == MemoryStatus.ACTIVE,
+            MemoryRecord.status.in_((MemoryStatus.ACTIVE, MemoryStatus.REDUCED_RANK)),
             MemoryRecord.deleted_at.is_(None),
         ).order_by(MemoryRecord.version.desc())).all()
         for record in records:
