@@ -2,8 +2,8 @@
 param(
     [switch]$NoBrowser,
     [ValidateRange(60, 1800)]
-    [int]$TimeoutSeconds = 600,
-    [string]$EvidencePath = "runtime/data41-startup-report.json"
+    [int]$TimeoutSeconds = 1800,
+    [string]$EvidencePath = "runtime/integration41-startup-report.json"
 )
 
 Set-StrictMode -Version Latest
@@ -12,18 +12,19 @@ $workspace = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 $baseCompose = Join-Path $workspace "deploy/preproduction/compose.yaml"
 $overrideCompose = Join-Path $workspace "deploy/production-acceptance/p5b.override.yaml"
 $dataOverrideCompose = Join-Path $workspace "deploy/data41/override.yaml"
-$project = "renewable-data41"
-$releaseVersion = "4.1.0-data.1"
-$expectedMigration = "data_0001"
+$project = "renewable-integration41-core"
+$releaseVersion = "4.1.0-integration.1"
+$expectedMigration = "integration_41_merge_0001"
 $businessUrl = "https://p5b.localhost:8446"
 $apiHealthUrl = "$businessUrl/api/v1/health"
 $apiReadyUrl = "$businessUrl/api/v1/health/ready"
 $oidcUrl = "$businessUrl/oidc/realms/chatbi/.well-known/openid-configuration"
 $composeArgs = @("compose", "-p", $project, "-f", $baseCompose, "-f", $overrideCompose, "-f", $dataOverrideCompose)
 $legacyComposeArgs = @("compose", "-p", "renewable-p5b-gate-closure", "-f", $baseCompose, "-f", $overrideCompose)
+$dataComposeArgs = @("compose", "-p", "renewable-data41", "-f", $baseCompose, "-f", $overrideCompose, "-f", $dataOverrideCompose)
 $requiredImages = @(
-    "renewable-data41-api:4.1.0-data.1",
-    "renewable-data41-web:4.1.0-data.1",
+    "renewable-integration41-api:4.1.0-integration.1",
+    "renewable-integration41-web:4.1.0-integration.1",
     "renewable-p5b-postgres:16.14-hardened",
     "renewable-p5b-keycloak:26.7.0-hardened",
     "renewable-p5b-backup:16.14-hardened",
@@ -126,7 +127,7 @@ function Write-StartupReport {
     $head = (& git -C $workspace rev-parse HEAD 2>$null | Out-String).Trim()
     $payload = [ordered]@{
         schema_version = "1.0"
-        evidence_type = "data41_cold_start"
+        evidence_type = "integration41_core_cold_start"
         status = $Status
         started_at = $startedAt.ToString("o")
         finished_at = [DateTimeOffset]::UtcNow.ToString("o")
@@ -135,8 +136,15 @@ function Write-StartupReport {
             compose_project = $project
             release_version = $releaseVersion
             expected_migration_head = $expectedMigration
-            sqlbot_runtime = "NOT_ENABLED_DATA41_SCHEMA_CATALOG_ONLY"
-            rag_mode = "KEYWORD_ONLY"
+            sqlbot_runtime = "NOT_INCLUDED_IN_INTEGRATION_CORE"
+            rag_capability = "Governed Hybrid RAG V1"
+            rag_mode = "hybrid_bm25_vector_rrf_rerank"
+            rag_vector = "deterministic_multilingual_feature_hash_v1"
+            rag_dimensions = 256
+            pgvector_claimed = $false
+            memory_scheduler = "ENABLED"
+            memory_scheduler_scenarios = @("charging_ops", "sales_ops")
+            query_engine_mode = "SHADOW"
             production_release_authorized = $false
             production_traffic_switched = $false
         }
@@ -180,14 +188,10 @@ try {
         }
         "Validated $($manifest.snapshots.Count) committed snapshots; no startup download"
     }
-    Invoke-Step "DATA-4.1 application images" {
-        if (-not (Test-ImageExists -Image "renewable-data41-api:4.1.0-data.1")) {
-            Invoke-CheckedNative -FilePath "docker" -Arguments @("build", "--file", "backend/Dockerfile", "--tag", "renewable-data41-api:4.1.0-data.1", ".") -FailureMessage "DATA-4.1 API image build failed" | Out-Null
-        }
-        if (-not (Test-ImageExists -Image "renewable-data41-web:4.1.0-data.1")) {
-            Invoke-CheckedNative -FilePath "docker" -Arguments @("build", "--tag", "renewable-data41-web:4.1.0-data.1", "frontend") -FailureMessage "DATA-4.1 web image build failed" | Out-Null
-        }
-        "Application images are present; subsequent starts reuse them"
+    Invoke-Step "Integration 4.1 application images" {
+        Invoke-CheckedNative -FilePath "docker" -Arguments @("build", "--file", "backend/Dockerfile", "--tag", "renewable-integration41-api:4.1.0-integration.1", ".") -FailureMessage "Integration 4.1 API image build failed" | Out-Null
+        Invoke-CheckedNative -FilePath "docker" -Arguments @("build", "--tag", "renewable-integration41-web:4.1.0-integration.1", "frontend") -FailureMessage "Integration 4.1 web image build failed" | Out-Null
+        "Application images were rebuilt from the current Integration worktree"
     }
     Invoke-Step "Required image inventory" {
         foreach ($image in $requiredImages) {
@@ -195,12 +199,14 @@ try {
         }
         "Validated $($requiredImages.Count) required image references"
     }
-    Invoke-Step "P5B runtime handoff" {
+    Invoke-Step "Superseded runtime handoff" {
+        Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("down", "--remove-orphans")) -FailureMessage "Unable to stop the previous Integration runtime safely" | Out-Null
+        Invoke-CheckedNative -FilePath "docker" -Arguments ($dataComposeArgs + @("down", "--remove-orphans")) -FailureMessage "Unable to stop the superseded DATA-4.1 runtime safely" | Out-Null
         Invoke-CheckedNative -FilePath "docker" -Arguments ($legacyComposeArgs + @("down", "--remove-orphans")) -FailureMessage "Unable to stop the superseded P5B runtime safely" | Out-Null
-        "Stopped P5B containers without deleting P5B volumes; rollback remains available"
+        "Stopped Integration, DATA-4.1 and P5B containers without deleting rollback volumes"
     }
-    Invoke-Step "DATA-4.1 services" {
-        Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("up", "-d", "--wait", "--wait-timeout", "$TimeoutSeconds")) -FailureMessage "DATA-4.1 Compose startup failed"
+    Invoke-Step "Integration 4.1 services" {
+        Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("up", "-d", "--wait", "--wait-timeout", "$TimeoutSeconds")) -FailureMessage "Integration 4.1 Compose startup failed"
     }
     Invoke-Step "API health" { Wait-Http -Url $apiHealthUrl }
     Invoke-Step "API readiness" { Wait-Http -Url $apiReadyUrl }
@@ -214,17 +220,37 @@ try {
         }
         $joined
     }
-    Invoke-Step "Open-source import and lineage" {
+    Invoke-Step "Open-source import and RAG index gate" {
         $initLogs = Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("logs", "--no-color", "init")) -FailureMessage "Unable to read DATA-4.1 init logs"
         $joined = ($initLogs -join "`n")
-        if ($joined -notmatch '"status": "PASS"' -or $joined -notmatch '"quality_check_fail_count": 0') {
-            throw "DATA-4.1 init did not report a passing import and quality result"
+        if (
+            $joined -notmatch '"status": "PASS"' -or
+            $joined -notmatch '"quality_check_fail_count": 0' -or
+            $joined -notmatch '"index_ready": true'
+        ) {
+            throw "Integration init did not report passing DATA quality and RAG index readiness"
+        }
+        $joined
+    }
+    Invoke-Step "RAG index completeness" {
+        $index = Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("exec", "-T", "api", "python", "scripts/p4_entrypoint.py", "python", "scripts/rebuild_rag_indexes.py", "--check")) -FailureMessage "RAG index completeness check failed closed"
+        $joined = ($index -join "`n")
+        if ($joined -notmatch '"index_ready": true') {
+            throw "RAG index status is INDEX_BACKFILL_REQUIRED"
+        }
+        $joined
+    }
+    Invoke-Step "Memory scheduler and Integration runtime" {
+        $runtime = Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("exec", "-T", "api", "python", "scripts/p4_entrypoint.py", "python", "scripts/verify_integration41_runtime.py", "--timeout-seconds", "45", "--output", "/app/data/preproduction-evidence/integration41-runtime.json")) -FailureMessage "Integrated runtime verification failed"
+        $joined = ($runtime -join "`n")
+        if ($joined -notmatch '"status": "PASS"') {
+            throw "Memory scheduler, RAG index or SQLBot shadow gate did not pass"
         }
         $joined
     }
     Write-StartupReport -Status "PASS"
     Write-Host ""
-    Write-Host "DATA-4.1 OPEN-SOURCE STARTUP PASSED"
+    Write-Host "INTEGRATION-4.1-CORE STARTUP PASSED"
     Write-Host "Web: $businessUrl"
     Write-Host "API: $apiReadyUrl"
     if (-not $NoBrowser) {

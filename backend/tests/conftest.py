@@ -10,6 +10,12 @@ os.environ.update({
     "SECRET_KEY": "test-secret-key-not-for-production",
     "AUTO_BOOTSTRAP_DEMO_USERS": "true",
     "PLATFORM_VERSION_ROUTING_ENABLED": "false",
+    # Generic unit/API suites must not depend on a host Redis. The dedicated
+    # Memory 4.1 Redis integration suite supplies an isolated real Redis URL.
+    "MEMORY_LIFECYCLE_REDIS_ENABLED": os.environ.get(
+        "MEMORY_LIFECYCLE_REDIS_ENABLED",
+        "false",
+    ),
 })
 Path("data").mkdir(exist_ok=True)
 

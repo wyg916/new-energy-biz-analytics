@@ -1,0 +1,102 @@
+{
+  "status": "PASS",
+  "generated_at": "2026-08-09T08:03:28.437471+00:00",
+  "database_engine": "postgresql",
+  "database_url_redacted": true,
+  "start_revision": "data_0001",
+  "parent_heads": [
+    "memory_41_0001",
+    "rag_0001"
+  ],
+  "final_revisions": [
+    "integration_41_merge_0001"
+  ],
+  "expected_revision": "integration_41_merge_0001",
+  "required_tables": [
+    "knowledge_chunk_index",
+    "knowledge_governance_event",
+    "memory_delete_verification",
+    "memory_lifecycle_outbox",
+    "memory_lifecycle_task"
+  ],
+  "required_columns": {
+    "memory_record": [
+      "last_recalled_at",
+      "lifecycle_transition_at",
+      "recall_count"
+    ],
+    "knowledge_document_version": [
+      "chunking_version",
+      "embedding_dimensions",
+      "embedding_model",
+      "metadata_json",
+      "parser_name",
+      "parser_version"
+    ],
+    "knowledge_chunk": [
+      "locator_json",
+      "paragraph_end",
+      "paragraph_start"
+    ],
+    "knowledge_retrieval_event": [
+      "context_sha256",
+      "injection_rejection_count",
+      "keyword_candidate_count",
+      "rank_config_json",
+      "refusal_reason",
+      "rewritten_query_sha256",
+      "vector_candidate_count"
+    ]
+  },
+  "steps": [
+    {
+      "command": [
+        "alembic",
+        "upgrade",
+        "data_0001"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade  -> 0001, Authentication and audit baseline.\nINFO  [alembic.runtime.migration] Running upgrade 0001 -> 0002, Core business dimensions, facts, generation and metric catalog.\nINFO  [alembic.runtime.migration] Running upgrade 0002 -> 0003, Structured session state and auditable analysis runs.\nINFO  [alembic.runtime.migration] Running upgrade 0003 -> 0004, Data source registry, dataset mappings and auditable staging preview.\nINFO  [alembic.runtime.migration] Running upgrade 0004 -> 0005, Auditable ingestion quality, approval and dataset release workflow.\nINFO  [alembic.runtime.migration] Running upgrade 0005 -> 0006, Versioned charging_ops package and immutable published station snapshots.\nINFO  [alembic.runtime.migration] Running upgrade 0006 -> 0007, Generic immutable dataset release, activation, and rollback records.\nINFO  [alembic.runtime.migration] Running upgrade 0007 -> 0008, Generic versioned semantic model registry.\nINFO  [alembic.runtime.migration] Running upgrade 0008 -> 0009, Add tenant-scoped scenario package lifecycle metadata.\nINFO  [alembic.runtime.migration] Running upgrade 0009 -> 0010, Add dual-engine routing, SQLBot session, and shadow evidence tables.\nINFO  [alembic.runtime.migration] Running upgrade 0010 -> 0011, Add isolated simulated sales_ops dimensions and facts.\nINFO  [alembic.runtime.migration] Running upgrade 0011 -> 0012, Bind every ChatBI conversation to one identity scope and scenario.\nINFO  [alembic.runtime.migration] Running upgrade 0012 -> 0013, Add governed enterprise knowledge lifecycle and retrieval evidence.\nINFO  [alembic.runtime.migration] Running upgrade 0013 -> 0014, Add scenario-isolated SQLBot semantic schemas and approved views.\nINFO  [alembic.runtime.migration] Running upgrade 0014 -> p2b_0001, Add governed memory, procedure, skill and SQLBot binding records.\nINFO  [alembic.runtime.migration] Running upgrade 0014 -> 0015, Persist metric presentation metadata used by the frontend.\nINFO  [alembic.runtime.migration] Running upgrade 0015, p2b_0001 -> p3_merge_0001, Merge frontend data lineage and P2B memory heads.\nINFO  [alembic.runtime.migration] Running upgrade p3_merge_0001 -> p3_0001, Add enterprise identity, authorization, credential and governance records.\nINFO  [alembic.runtime.migration] Running upgrade p3_0001 -> p4_0001, Add preproduction acceptance, alert delivery and datasource governance state.\nINFO  [alembic.runtime.migration] Running upgrade p4_0001 -> p5_0001, Add auditable P5 production acceptance gates.\nINFO  [alembic.runtime.migration] Running upgrade p5_0001 -> data_0001, Add DATA-4.1 open-source lineage and raw/staging schemas."
+    },
+    {
+      "command": [
+        "alembic",
+        "upgrade",
+        "head"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade data_0001 -> rag_0001, Add enterprise hybrid RAG indexes, locators and governance audit.\nINFO  [alembic.runtime.migration] Running upgrade data_0001 -> memory_41_0001, Add continuously runnable and auditable memory lifecycle jobs.\nINFO  [alembic.runtime.migration] Running upgrade memory_41_0001, rag_0001 -> integration_41_merge_0001, Merge Memory 4.1 and Governed Hybrid RAG V1 migration heads."
+    },
+    {
+      "command": [
+        "alembic",
+        "downgrade",
+        "data_0001"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running downgrade integration_41_merge_0001 -> memory_41_0001, rag_0001, Merge Memory 4.1 and Governed Hybrid RAG V1 migration heads.\nINFO  [alembic.runtime.migration] Running downgrade memory_41_0001 -> data_0001, Add continuously runnable and auditable memory lifecycle jobs.\nINFO  [alembic.runtime.migration] Running downgrade rag_0001 -> data_0001, Add enterprise hybrid RAG indexes, locators and governance audit."
+    },
+    {
+      "command": [
+        "alembic",
+        "upgrade",
+        "head"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade data_0001 -> rag_0001, Add enterprise hybrid RAG indexes, locators and governance audit.\nINFO  [alembic.runtime.migration] Running upgrade data_0001 -> memory_41_0001, Add continuously runnable and auditable memory lifecycle jobs.\nINFO  [alembic.runtime.migration] Running upgrade memory_41_0001, rag_0001 -> integration_41_merge_0001, Merge Memory 4.1 and Governed Hybrid RAG V1 migration heads."
+    },
+    {
+      "command": [
+        "alembic",
+        "current"
+      ],
+      "exit_code": 0,
+      "stdout": "integration_41_merge_0001 (head) (mergepoint)",
+      "stderr": "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL."
+    }
+  ]
+}

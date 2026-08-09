@@ -1,4 +1,4 @@
-name: renewable-data41
+name: renewable-integration41-core
 
 x-data41-api-environment: &data41-api-environment
   APP_ENV: preproduction
@@ -12,19 +12,24 @@ x-data41-api-environment: &data41-api-environment
   PUBLIC_BASE_URL: https://p5b.localhost:8446
   CORS_ORIGINS: https://p5b.localhost:8446
   TRUSTED_HOSTS: p5b.localhost,localhost,api,testserver
-  RELEASE_VERSION: 4.1.0-data.1
-  EXPECTED_DATABASE_REVISION: data_0001
+  RELEASE_VERSION: 4.1.0-integration.1
+  EXPECTED_DATABASE_REVISION: integration_41_merge_0001
   ACCEPTANCE_POSTGRES_DB: renewable_p5b
   DATABASE_POOL_SIZE: "20"
   DATABASE_MAX_OVERFLOW: "10"
   DATABASE_POOL_TIMEOUT_SECONDS: "30"
   ACCEPTANCE_PUBLIC_BASE_URL: https://p5b.localhost:8446
-  ACCEPTANCE_LABEL: DATA-4.1 Open Source Baseline
+  ACCEPTANCE_LABEL: INTEGRATION-4.1-CORE
   QUERY_ENGINE_MODE: SHADOW
   SQLBOT_INCLUDED_IN_V4_RELEASE: "false"
   SQLBOT_ENGINE_ENABLED: "false"
   SQLBOT_RUNTIME_VERIFIED: "false"
   CHATBI_READONLY_EXECUTION_ENABLED: "false"
+  MEMORY_LIFECYCLE_SCHEDULER_ENABLED: "true"
+  MEMORY_LIFECYCLE_INTERVAL_SECONDS: "30"
+  MEMORY_LIFECYCLE_BATCH_SIZE: "20"
+  MEMORY_LIFECYCLE_REDIS_ENABLED: "true"
+  MEMORY_LIFECYCLE_SCENARIO_IDS: charging_ops,sales_ops
   OIDC_ENABLED: "true"
   OIDC_PROVIDER_CODE: OIDC_PREPROD
   OIDC_ISSUER: https://p5b.localhost:8446/oidc/realms/chatbi
@@ -43,38 +48,50 @@ x-data41-api-environment: &data41-api-environment
   SECRET_ENV_ALLOWLIST: ""
 
 services:
+  db:
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U alpha -d renewable_p5b"]
+      interval: 5s
+      timeout: 3s
+      retries: 120
+      start_period: 300s
+
   runtime-bootstrap:
-    image: renewable-data41-api:4.1.0-data.1
+    image: renewable-integration41-api:4.1.0-integration.1
     pull_policy: never
 
   vault-bootstrap:
-    image: renewable-data41-api:4.1.0-data.1
+    image: renewable-integration41-api:4.1.0-integration.1
     pull_policy: never
 
   migrate:
-    image: renewable-data41-api:4.1.0-data.1
+    image: renewable-integration41-api:4.1.0-integration.1
     pull_policy: never
     environment: *data41-api-environment
 
   init:
-    image: renewable-data41-api:4.1.0-data.1
+    image: renewable-integration41-api:4.1.0-integration.1
     pull_policy: never
-    command: ["python", "scripts/p4_entrypoint.py", "python", "scripts/prepare_data41.py"]
+    command: ["python", "scripts/p4_entrypoint.py", "python", "scripts/prepare_integration41.py"]
     environment: *data41-api-environment
 
+  oidc:
+    healthcheck:
+      start_period: 1800s
+
   alert-receiver:
-    image: renewable-data41-api:4.1.0-data.1
+    image: renewable-integration41-api:4.1.0-integration.1
     pull_policy: never
 
   api:
-    image: renewable-data41-api:4.1.0-data.1
+    image: renewable-integration41-api:4.1.0-integration.1
     pull_policy: never
     environment: *data41-api-environment
 
   web:
-    image: renewable-data41-web:4.1.0-data.1
+    image: renewable-integration41-web:4.1.0-integration.1
     pull_policy: never
 
 networks:
   default:
-    name: renewable-data41-network
+    name: renewable-integration41-core-network

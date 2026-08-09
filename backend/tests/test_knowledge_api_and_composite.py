@@ -1,8 +1,12 @@
 import pytest
 from types import SimpleNamespace
+from sqlalchemy import delete
 
+from app.core.database import SessionLocal
+from app.models.knowledge import KnowledgeChunkIndex
 from app.orchestration.composite import CompositeQueryOrchestrator, CompositeRoute
 from app.scenarios.sales_ops.engine import SalesOpsQueryError
+from scripts.rebuild_rag_indexes import ensure_indexes
 
 
 def test_composite_route_classifier_supports_three_routes() -> None:
@@ -132,6 +136,34 @@ def test_knowledge_api_governed_flow_and_composed_answer(client, login) -> None:
     )
     assert published.status_code == 200
     assert published.json()["status"] == "PUBLISHED"
+
+    ready_runtime = client.get("/api/v1/knowledge/runtime", headers=headers)
+    assert ready_runtime.status_code == 200
+    assert ready_runtime.json()["knowledge_service"] == "READY"
+    assert ready_runtime.json()["published_chunk_count"] > 0
+    assert (
+        ready_runtime.json()["published_chunk_count"]
+        == ready_runtime.json()["indexed_chunk_count"]
+    )
+
+    with SessionLocal() as db:
+        db.execute(delete(KnowledgeChunkIndex))
+        db.commit()
+    blocked_runtime = client.get("/api/v1/knowledge/runtime", headers=headers)
+    assert blocked_runtime.status_code == 200
+    assert blocked_runtime.json()["knowledge_service"] == "INDEX_BACKFILL_REQUIRED"
+    assert blocked_runtime.json()["retrieval_mode"] == "hybrid_partial_index_fail_closed"
+    assert blocked_runtime.json()["published_chunk_count"] > 0
+    assert blocked_runtime.json()["indexed_chunk_count"] == 0
+
+    rebuilt = ensure_indexes()
+    assert rebuilt["action"] == "REBUILT"
+    assert rebuilt["index_ready"] is True
+    assert rebuilt["rebuild_required"] is True
+    no_op = ensure_indexes()
+    assert no_op["action"] == "NOOP"
+    assert no_op["index_ready"] is True
+    assert no_op["rebuild_required"] is False
 
     retrieved = client.post(
         "/api/v1/knowledge/retrieval/test",

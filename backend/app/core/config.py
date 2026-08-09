@@ -44,7 +44,7 @@ class Settings(BaseSettings):
     public_base_url: str = "http://localhost:8080"
     trusted_hosts: str = "localhost,127.0.0.1,testserver"
     release_version: str = "0.1.0-dev"
-    expected_database_revision: str = "p3_0001"
+    expected_database_revision: str = "integration_41_merge_0001"
     secret_env_allowlist: str = (
         "SQLBOT_SERVICE_USERNAME,SQLBOT_SERVICE_PASSWORD,"
         "P2A_SQLBOT_USERNAME,P2A_SQLBOT_PASSWORD,"
@@ -158,7 +158,7 @@ class Settings(BaseSettings):
                 failures.append("RELEASE_VERSION must identify a release candidate or release")
             if not self.simulated_data_only and not (
                 self.data41_open_source_enabled
-                and self.release_version.startswith("4.1.0-data.")
+                and self.release_version.startswith(("4.1.0-data.", "4.1.0-integration."))
             ):
                 failures.append("SIMULATED_DATA_ONLY must remain true for this release candidate")
             if self.chatbi_readonly_execution_enabled and (

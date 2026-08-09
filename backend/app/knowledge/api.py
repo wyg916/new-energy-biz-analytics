@@ -26,7 +26,12 @@ from app.knowledge.publication import (
     KnowledgePublicationService,
 )
 from app.knowledge.retrieval import KnowledgeRetrievalService
-from app.knowledge.indexer import EMBEDDING_MODEL, EMBEDDING_VERSION, VECTOR_STATUS
+from app.knowledge.indexer import (
+    EMBEDDING_DIMENSIONS,
+    EMBEDDING_MODEL,
+    EMBEDDING_VERSION,
+    VECTOR_STATUS,
+)
 from app.models.auth import User
 from app.models.knowledge import (
     KnowledgeChunk,
@@ -119,9 +124,6 @@ def runtime(
             KnowledgeDocumentVersion.status == "PUBLISHED",
             KnowledgeDocument.tenant_id == identity.tenant_id,
             KnowledgeDocument.workspace_id == identity.workspace_id,
-            KnowledgeChunkIndex.embedding_model == EMBEDDING_MODEL,
-            KnowledgeChunkIndex.embedding_version == EMBEDDING_VERSION,
-            KnowledgeChunkIndex.content_sha256 == KnowledgeChunk.content_sha256,
         )
     ) or 0)
     indexed_chunk_count = int(db.scalar(
@@ -133,6 +135,10 @@ def runtime(
             KnowledgeDocumentVersion.status == "PUBLISHED",
             KnowledgeDocument.tenant_id == identity.tenant_id,
             KnowledgeDocument.workspace_id == identity.workspace_id,
+            KnowledgeChunkIndex.embedding_model == EMBEDDING_MODEL,
+            KnowledgeChunkIndex.embedding_version == EMBEDDING_VERSION,
+            KnowledgeChunkIndex.dimensions == EMBEDDING_DIMENSIONS,
+            KnowledgeChunkIndex.content_sha256 == KnowledgeChunk.content_sha256,
         )
     ) or 0)
     index_ready = indexed_chunk_count == published_chunk_count
