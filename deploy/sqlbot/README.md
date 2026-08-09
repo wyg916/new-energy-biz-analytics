@@ -6,9 +6,10 @@ runtime. SQLBot source code is not copied into the platform core.
 ## Pinned upstream
 
 - repository: `dataease/SQLBot`
-- release: `v1.8.0`
-- release commit shown by the upstream release: `b2de038`
-- image reference: `dataease/sqlbot:v1.8.0`
+- release: `v1.10.0`
+- image reference: `registry.cn-qingdao.aliyuncs.com/dataease/sqlbot:v1.10.0`
+- local acceptance source: the official offline installer supplied outside this
+  repository; no installer payload is copied or coupled into the platform
 
 Do not replace the image reference with `main` or `latest`.
 
@@ -43,11 +44,22 @@ creating another crash-recovery cycle. The health check remains an actual HTTP
 probe; the extended `start_period` is not a readiness bypass.
 
 The mounted `sqlbot41_runtime.py` adds only
-`POST /api/v1/mcp/mcp_generate_sql`. It invokes SQLBot v1.8.0 with its native
+`POST /api/v1/mcp/mcp_generate_sql`. It invokes SQLBot v1.10.0 with its native
 `GENERATE_SQL` finish step and therefore returns before SQLBot's datasource
 execution step. The platform Adapter calls only this route, then applies Query
 Guard and the platform read-only executor. The upstream execution-capable MCP
 route is not part of the platform integration contract.
+
+SQLBot v1.10 converts a structured model refusal into an HTTP 500 on its
+non-stream route. The thin route preserves only an exact `success:false`
+envelope as a pre-SQL refusal; all other HTTP/runtime failures remain failures.
+No upstream model prose is forwarded into audit evidence.
+
+4.1C acceptance resolves the runtime account through governed
+CredentialReferences. A domain-separated HMAC adapter produces a value that
+meets SQLBot's local 8--20 character password policy without storing or
+printing the referenced secret. Missing or stale references fail closed and do
+not fall back to unregistered environment credentials.
 
 ## Start and verify
 
@@ -63,7 +75,7 @@ Acceptance startup order is: bundled PostgreSQL ready, SQLBot SSR/MCP, SQLBot
 HTTP API. `restart: unless-stopped` restarts an abnormal application exit. A
 normal `docker compose stop` allows the supervisor to stop PostgreSQL cleanly.
 
-The current repository records `SQLBOT_RUNTIME_PENDING` until the pinned image
-is pulled and its health check and Adapter contract are exercised against a
-locally configured simulated datasource. A Mock Server result is never evidence
-of upstream runtime health.
+The 4.1C evidence records real v1.10 HTTP generation against locally configured
+simulated DATA-4.1 semantic datasources. A Mock Server result is never evidence
+of upstream runtime health or Shadow eligibility. Current quality and latency
+gates are recorded separately from platform contract tests.

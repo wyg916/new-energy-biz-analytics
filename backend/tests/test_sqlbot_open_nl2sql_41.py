@@ -92,6 +92,58 @@ def test_schema_catalog_is_version_bound_reproducible_and_retrieved() -> None:
     assert retrieved.metrics[0]["code"] == "sales_revenue"
 
 
+def test_schema_retrieval_preserves_authorized_business_metadata() -> None:
+    context = _context()
+    table = {
+        "code": "order",
+        "name": "Sales order",
+        "relation": "sales_order",
+        "fields": [{
+            "code": "revenue",
+            "name": "Sales revenue",
+            "physical_field": "net_revenue",
+            "data_type": "numeric",
+        }],
+    }
+    context = replace(
+        context,
+        prompt_context={
+            **context.prompt_context,
+            "authorized_tables": [table],
+        },
+    )
+
+    retrieved = retrieve_schema("sales revenue", context)
+
+    assert retrieved.as_prompt_context()["authorized_tables"] == [table]
+
+
+def test_schema_retrieval_maps_semantic_table_codes_and_keeps_minimal_subset() -> None:
+    context = _context()
+    context = replace(
+        context,
+        prompt_context={
+            **context.prompt_context,
+            "authorized_tables": [
+                {"code": "order_fact", "relation": "sales_order", "fields": []},
+                {"code": "channel_dimension", "relation": "sales_channel", "fields": []},
+            ],
+            "metrics": [{
+                "code": "sales_revenue",
+                "name": "Sales revenue",
+                "expression": "SUM(order_fact.net_revenue)",
+                "time_field": "order_fact.order_date",
+            }],
+        },
+    )
+
+    retrieved = retrieve_schema("Sales revenue", context)
+
+    assert set(retrieved.relations) == {"sales_order"}
+    assert retrieved.relationships == ()
+    assert retrieved.authorized_tables[0]["code"] == "order_fact"
+
+
 def test_query_understanding_pins_core_and_high_risk_but_opens_registered_exploration() -> None:
     core = understand_query(_request("2026年6月销售收入是多少"), _context())
     assert core.deterministic_preferred is True

@@ -1,6 +1,6 @@
-"""Provision and verify the P2A SQLBot model through the official API.
+"""Provision and verify the SQLBot v1.10 model through the official API.
 
-Run this helper inside the pinned SQLBot v1.8.0 container. The provider
+Run this helper inside the pinned SQLBot v1.10.0 container. The provider
 credential is supplied as a single JSON object on stdin so it is never placed
 in a command line, tracked file, log message, or evidence artifact. SQLBot's
 administrator credential is read from the container runtime environment.
@@ -136,11 +136,15 @@ def _candidate(provider: ProviderInput) -> dict[str, Any]:
     config_list = (
         [
             {"key": "temperature", "val": 0, "name": "temperature"},
-            # Reasoning-capable DeepSeek models account reasoning tokens in
-            # this limit.  2048 can end at finish_reason=length before the
-            # structured SQL content begins, so reserve an explicit bounded
-            # budget that still remains below the provider context limit.
-            {"key": "max_tokens", "val": 8192, "name": "max_tokens"},
+            # SQL generation is a constrained structured-output task. DeepSeek
+            # V4 enables thinking by default, which dominated the measured
+            # 4.1B latency. Use the provider's documented non-thinking mode.
+            {
+                "key": "extra_body",
+                "val": {"thinking": {"type": "disabled"}},
+                "name": "extra_body",
+            },
+        {"key": "max_tokens", "val": 1024, "name": "max_tokens"},
         ]
         if provider.provider == "deepseek"
         else []
@@ -151,7 +155,7 @@ def _candidate(provider: ProviderInput) -> dict[str, Any]:
         "base_model": provider.model_name,
         "supplier": contract["supplier"],
         "protocol": 1,
-        # SQLBot v1.8.0 does not reconcile existing defaults when a create
+        # SQLBot does not reconcile existing defaults when a create
         # payload already marks the new row as default. Create/update it as a
         # non-default first, then use the dedicated default-selection API.
         "default_model": False,
@@ -355,7 +359,7 @@ def main() -> None:
             provider,
         )
     print(json.dumps({
-        "upstream": "SQLBot v1.8.0",
+        "upstream": "SQLBot v1.10.0",
         "configuration_method": "official_runtime_api",
         "provider": provider.provider,
         "actual_model": provider.model_name,

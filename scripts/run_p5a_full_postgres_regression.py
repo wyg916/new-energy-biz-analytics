@@ -250,7 +250,7 @@ def main() -> None:
     elif args.gate_rerun:
         expected_totals = {"tests": 5, "failures": 0, "errors": 0, "skipped": 0}
     elif args.sqlbot_rerun:
-        expected_totals = {"tests": 19, "failures": 0, "errors": 0, "skipped": 0}
+        expected_totals = {"tests": 23, "failures": 0, "errors": 0, "skipped": 0}
     elif args.data41_rerun:
         expected_totals = {"tests": 5, "failures": 0, "errors": 0, "skipped": 0}
     else:

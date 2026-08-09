@@ -70,13 +70,24 @@ def build_governed_question(
         "sql_dialect": "postgres",
         "constraints": {
             "single_select_only": True,
+            "postgresql_only": True,
+            "forbid_ddl_dml": True,
+            "forbid_system_tables": True,
+            "forbid_comments_and_markdown_fences": True,
+            "only_authorized_tables_and_fields": True,
+            "only_published_join_paths": True,
+            "forbid_pii": True,
+            "explicit_time_filter_when_requested": True,
             "max_limit": 500,
             "default_detail_limit": 100,
             "aggregate_limit_required": False,
             "no_cross_scenario_schema": True,
             "active_schema_qualification_may_be_stripped": True,
             "forbid_database_qualification": True,
-            "output": {"sql": "single PostgreSQL SELECT"},
+            "output": {
+                "format": "structured_sql_result",
+                "sql": "single PostgreSQL SELECT without markdown or explanation",
+            },
         },
         "authorized_tables": prompt_context.get("authorized_tables", []),
         "metrics": prompt_context.get("metrics", []),
@@ -96,3 +107,28 @@ def build_governed_question(
         f"{question.strip()}\n"
         "[/USER_QUESTION]"
     )
+
+
+def build_guard_repair_question(
+    question: str,
+    *,
+    original_sql: str,
+    guard_error: str,
+) -> str:
+    """Build the sole allowed repair request without changing Guard semantics."""
+    repair = {
+        "task": "regenerate_sql_after_guard_rejection",
+        "rules": {
+            "maximum_repairs": 1,
+            "return_sql_only": True,
+            "preserve_user_intent": True,
+            "obey_platform_governed_context": True,
+            "do_not_execute": True,
+        },
+        "original_question": question.strip(),
+        "rejected_sql": original_sql.strip(),
+        "structured_guard_error": guard_error,
+    }
+    return "[CONTROLLED_SQL_REPAIR]\n" + json.dumps(
+        repair, ensure_ascii=False, separators=(",", ":")
+    ) + "\n[/CONTROLLED_SQL_REPAIR]"

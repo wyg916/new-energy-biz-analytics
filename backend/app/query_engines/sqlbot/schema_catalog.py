@@ -17,19 +17,22 @@ class RetrievedSchema:
     relationships: tuple[dict[str, Any], ...]
     metrics: tuple[dict[str, Any], ...]
     dimensions: tuple[dict[str, Any], ...]
+    time_dimensions: tuple[dict[str, Any], ...]
     retrieval_terms: tuple[str, ...]
+    authorized_tables: tuple[dict[str, Any], ...] = ()
 
     def as_prompt_context(self) -> dict[str, Any]:
         return {
             "schema_catalog_version": self.catalog_version,
             "schema_catalog_hash": self.catalog_hash,
-            "authorized_tables": [
+            "authorized_tables": list(self.authorized_tables) or [
                 {"relation": relation, "fields": list(columns)}
                 for relation, columns in sorted(self.relations.items())
             ],
             "relationships": list(self.relationships),
             "metrics": list(self.metrics),
             "dimensions": list(self.dimensions),
+            "time_dimensions": list(self.time_dimensions),
             "retrieval_terms": list(self.retrieval_terms),
         }
 
@@ -92,41 +95,37 @@ def retrieve_schema(question: str, context: QueryContext) -> RetrievedSchema:
         if not terms or _relevant(question, terms, item)
     )
 
+    authorized_tables = tuple(
+        item for item in (context.prompt_context or {}).get("authorized_tables", ())
+        if isinstance(item, dict) and item.get("relation") in context.allowed_relations
+    )
+    table_code_to_relation = {
+        str(item.get("code")): str(item.get("relation"))
+        for item in authorized_tables
+        if item.get("code") and item.get("relation")
+    }
+
+    def physical_relation(value: str) -> str:
+        return table_code_to_relation.get(value, value)
+
     selected = set()
     for item in (*metrics, *dimensions):
         for key in ("field_ref", "time_field"):
             ref = item.get(key)
             if isinstance(ref, str) and "." in ref:
-                selected.add(ref.split(".", 1)[0])
+                selected.add(physical_relation(ref.split(".", 1)[0]))
         expression = item.get("expression")
         if isinstance(expression, str):
-            selected.update(
-                relation for relation in context.allowed_relations
-                if relation in expression
-            )
+            for identifier in re.findall(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\.", expression):
+                selected.add(physical_relation(identifier))
 
     for relation, columns in context.allowed_relations.items():
-        relation_terms = _tokens(relation.replace("_", " "))
         column_terms = set().union(*(_tokens(column.replace("_", " ")) for column in columns)) if columns else set()
-        if terms & (relation_terms | column_terms):
+        if relation.lower() in question.lower() or terms & column_terms:
             selected.add(relation)
 
     relationships = tuple(catalog["relationships"])
-    if selected:
-        changed = True
-        while changed:
-            changed = False
-            for relationship in relationships:
-                source = relationship.get("source_table")
-                target = relationship.get("target_table")
-                if source in selected or target in selected:
-                    before = len(selected)
-                    if source in context.allowed_relations:
-                        selected.add(source)
-                    if target in context.allowed_relations:
-                        selected.add(target)
-                    changed = changed or len(selected) != before
-    else:
+    if not selected:
         selected = set(context.allowed_relations)
 
     relations = {
@@ -138,6 +137,15 @@ def retrieve_schema(question: str, context: QueryContext) -> RetrievedSchema:
         item for item in relationships
         if item.get("source_table") in relations and item.get("target_table") in relations
     )
+    authorized_tables = tuple(
+        item for item in authorized_tables
+        if item.get("relation") in relations
+    )
+    time_dimensions = tuple(
+        item for item in catalog["time_dimensions"]
+        if isinstance(item.get("field_ref"), str)
+        and physical_relation(item["field_ref"].split(".", 1)[0]) in relations
+    )
     return RetrievedSchema(
         catalog_version=catalog["version"],
         catalog_hash=catalog["catalog_hash"],
@@ -145,5 +153,7 @@ def retrieve_schema(question: str, context: QueryContext) -> RetrievedSchema:
         relationships=retained_relationships,
         metrics=metrics,
         dimensions=dimensions,
+        time_dimensions=time_dimensions,
         retrieval_terms=tuple(sorted(terms)),
+        authorized_tables=authorized_tables,
     )

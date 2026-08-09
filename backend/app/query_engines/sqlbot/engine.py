@@ -5,7 +5,7 @@ from time import perf_counter
 from typing import Callable
 from uuid import uuid4
 
-from app.chatbi.guard import guard_sqlbot_sql
+from app.chatbi.guard import QueryRejected, guard_sqlbot_sql
 from app.core.config import get_settings
 from app.platform.query_engine import QueryContext, QueryEngine, QueryRequest, QueryResult
 from app.query_engines.sqlbot.client import SQLBotClient
@@ -18,6 +18,10 @@ from app.query_engines.sqlbot.feature_flags import SQLBotFeatureFlags
 from app.query_engines.sqlbot.health import CircuitBreaker
 from app.query_engines.sqlbot.limit_policy import apply_limit_policy
 from app.query_engines.sqlbot.policy import SQLPolicyDecision, validate_generated_sql
+from app.query_engines.sqlbot.prompt_context import (
+    authorized_examples,
+    build_guard_repair_question,
+)
 from app.query_engines.sqlbot.request_mapper import map_question_request
 from app.query_engines.sqlbot.response_parser import parse_response
 from app.query_engines.sqlbot.result_guard import validate_result
@@ -39,7 +43,7 @@ def _binding_hash(key: SQLBotSessionKey) -> str:
 
 class SQLBotEngine(QueryEngine):
     name = "sqlbot"
-    version = "adapter-1.1.0/sqlbot-v1.8.0"
+    version = "adapter-1.2.0/sqlbot-v1.10.0"
 
     def __init__(
         self,
@@ -106,6 +110,18 @@ class SQLBotEngine(QueryEngine):
         requested_execution_mode = context.execution_mode
         context = replace(context, execution_mode="platform_readonly")
         started = perf_counter()
+        timings: dict[str, int | None] = {
+            "schema_retrieval_ms": 0,
+            "prompt_build_ms": 0,
+            "runtime_connection_ms": 0,
+            "model_ttft_ms": None,
+            "model_generation_ms": 0,
+            "retry_ms": 0,
+            "normalization_ms": 0,
+            "guard_ms": 0,
+            "execution_ms": 0,
+            "answer_ms": 0,
+        }
         key = SQLBotSessionKey(
             tenant_id=request.identity_context.tenant_id,
             workspace_id=request.identity_context.workspace_id,
@@ -116,8 +132,12 @@ class SQLBotEngine(QueryEngine):
             semantic_version=context.semantic_version,
             dataset_version=context.dataset_version,
         )
+        phase = perf_counter()
         session = self.sessions.get_or_create(key, self.client.create_session)
+        timings["runtime_connection_ms"] = int((perf_counter() - phase) * 1000)
+        phase = perf_counter()
         retrieved = retrieve_schema(request.question, context)
+        timings["schema_retrieval_ms"] = int((perf_counter() - phase) * 1000)
         governed_context = replace(
             context,
             allowed_relations=retrieved.relations,
@@ -125,26 +145,104 @@ class SQLBotEngine(QueryEngine):
                 **context.prompt_context,
                 **retrieved.as_prompt_context(),
                 "scenario_id": request.scenario_id,
-                "sql_examples": context.prompt_context.get("sql_examples", []),
-                "time_dimensions": context.prompt_context.get("time_dimensions", []),
+                "sql_examples": authorized_examples(
+                    request.scenario_id,
+                    retrieved.relations,
+                ),
             },
         )
-        raw_payload = self._ask_with_single_rebuild(
+        generation_attempts: list[dict] = []
+        raw_payload, prompt_ms, model_ms = self._ask_with_single_rebuild(
             request, governed_context, key, session
         )
-        parsed = parse_response(
-            raw_payload,
-            max_rows=min(context.max_rows, request.limits.get("rows", context.max_rows)),
-        )
-        limited = apply_limit_policy(
-            parsed.sql,
-            max_limit=min(context.max_rows, request.limits.get("rows", context.max_rows)),
-        )
-        parsed = replace(
-            parsed,
-            sql=limited.sql,
-            warnings=parsed.warnings + limited.warnings,
-        )
+        timings["prompt_build_ms"] = prompt_ms
+        timings["model_generation_ms"] = model_ms
+
+        def prepare_and_guard(payload: dict, attempt: int):
+            phase = perf_counter()
+            candidate = parse_response(
+                payload,
+                max_rows=min(context.max_rows, request.limits.get("rows", context.max_rows)),
+            )
+            limited = apply_limit_policy(
+                candidate.sql,
+                max_limit=min(context.max_rows, request.limits.get("rows", context.max_rows)),
+            )
+            candidate = replace(
+                candidate,
+                sql=limited.sql,
+                warnings=candidate.warnings + limited.warnings,
+            )
+            timings["normalization_ms"] += int((perf_counter() - phase) * 1000)
+            phase = perf_counter()
+            try:
+                self.policy_guard(candidate.sql, governed_context)
+                decision = validate_generated_sql(candidate.sql, governed_context)
+            except (QueryRejected, SQLBotEngineError) as exc:
+                timings["guard_ms"] += int((perf_counter() - phase) * 1000)
+                error = (
+                    f"{exc.code}:{exc.message}"
+                    if isinstance(exc, SQLBotEngineError)
+                    else f"QUERY_GUARD_REJECTED:{exc}"
+                )
+                generation_attempts.append({
+                    "generation_attempt": attempt,
+                    "sql_hash": hashlib.sha256(candidate.sql.encode()).hexdigest(),
+                    "guard_result": "REJECTED",
+                    "error": error,
+                })
+                raise
+            timings["guard_ms"] += int((perf_counter() - phase) * 1000)
+            generation_attempts.append({
+                "generation_attempt": attempt,
+                "sql_hash": hashlib.sha256(decision.normalized_sql.encode()).hexdigest(),
+                "guard_result": "PASSED",
+                "error": None,
+            })
+            return candidate, decision
+
+        try:
+            parsed, policy_decision = prepare_and_guard(raw_payload, 1)
+        except (QueryRejected, SQLBotEngineError) as first_error:
+            if not generation_attempts:
+                raise
+            if isinstance(first_error, SQLBotEngineError) and first_error.code not in {
+                SQLBotErrorCode.POLICY_DENIED,
+                SQLBotErrorCode.RESPONSE_INVALID,
+            }:
+                raise
+            rejected_sql = generation_attempts[-1]["sql_hash"]
+            # The model receives the original SQL text, but evidence persists only its hash.
+            first_parsed = parse_response(
+                raw_payload,
+                max_rows=min(context.max_rows, request.limits.get("rows", context.max_rows)),
+            )
+            guard_error = generation_attempts[-1]["error"]
+            repair_question = build_guard_repair_question(
+                request.question,
+                original_sql=first_parsed.sql,
+                guard_error=guard_error,
+            )
+            repair_started = perf_counter()
+            raw_payload, repair_prompt_ms, repair_model_ms = self._ask_with_single_rebuild(
+                request,
+                governed_context,
+                key,
+                session,
+                question_override=repair_question,
+            )
+            timings["prompt_build_ms"] += repair_prompt_ms
+            timings["model_generation_ms"] += repair_model_ms
+            timings["retry_ms"] = int((perf_counter() - repair_started) * 1000)
+            try:
+                parsed, policy_decision = prepare_and_guard(raw_payload, 2)
+            except QueryRejected as repair_error:
+                raise SQLBotEngineError(
+                    SQLBotErrorCode.POLICY_DENIED,
+                    str(repair_error),
+                ) from repair_error
+            assert rejected_sql == generation_attempts[0]["sql_hash"]
+
         if parsed.token_usage is None and parsed.upstream_record_id is not None:
             parsed = replace(
                 parsed,
@@ -153,10 +251,6 @@ class SQLBotEngine(QueryEngine):
                     session.access_token,
                 ),
             )
-        self.policy_guard(parsed.sql, governed_context)
-        policy_decision: SQLPolicyDecision = validate_generated_sql(
-            parsed.sql, governed_context
-        )
         parsed = replace(parsed, sql=policy_decision.normalized_sql)
         columns, rows = parsed.columns, parsed.rows
         if context.execution_mode in {"generate_only", "platform_readonly"}:
@@ -165,22 +259,26 @@ class SQLBotEngine(QueryEngine):
                     SQLBotErrorCode.NOT_CONFIGURED,
                     "SQLBot 生成 SQL 的只读执行器未配置",
                 )
+            phase = perf_counter()
             columns, rows = self.generated_sql_executor(
                 parsed.sql, request, governed_context
             )
+            timings["execution_ms"] = int((perf_counter() - phase) * 1000)
         if len(rows) > context.max_rows:
             raise SQLBotEngineError(
                 SQLBotErrorCode.POLICY_DENIED,
                 "SQLBot 结果超过平台行数上限",
             )
+        phase = perf_counter()
         result_validation = validate_result(
             columns, rows, governed_context, policy_decision
         )
+        timings["answer_ms"] = int((perf_counter() - phase) * 1000)
         run_id = context.run_id or f"SQLBOT-{uuid4()}"
         evidence = {
             "data_classification": "simulated",
             "source": "sqlbot_adapter",
-            "upstream_version": "v1.8.0",
+            "upstream_version": "v1.10.0",
             "execution_mode": context.execution_mode,
             "requested_execution_mode": requested_execution_mode,
             "upstream_sql_execution": False,
@@ -201,6 +299,12 @@ class SQLBotEngine(QueryEngine):
             "row_limit": policy_decision.row_limit,
             "result_guard": result_validation,
             "answer_guard": "passed",
+            "generation_attempts": generation_attempts,
+            "repair_used": len(generation_attempts) == 2,
+            "latency_profile": {
+                **timings,
+                "total_ms": int((perf_counter() - started) * 1000),
+            },
         }
         return QueryResult(
             engine=self.name,
@@ -227,9 +331,21 @@ class SQLBotEngine(QueryEngine):
         context: QueryContext,
         key: SQLBotSessionKey,
         session,
-    ) -> dict:
+        *,
+        question_override: str | None = None,
+    ) -> tuple[dict, int, int]:
+        prompt_started = perf_counter()
+        payload = map_question_request(
+            request,
+            context,
+            session,
+            question_override=question_override,
+        )
+        prompt_ms = int((perf_counter() - prompt_started) * 1000)
+        model_started = perf_counter()
         try:
-            return self.client.generate_sql(map_question_request(request, context, session))
+            response = self.client.generate_sql(payload)
+            return response, prompt_ms, int((perf_counter() - model_started) * 1000)
         except SQLBotEngineError as exc:
             if exc.code != SQLBotErrorCode.SESSION_INVALID:
                 raise
@@ -238,7 +354,16 @@ class SQLBotEngine(QueryEngine):
             self.client.create_session,
             force_rebuild=True,
         )
-        return self.client.generate_sql(map_question_request(request, context, rebuilt))
+        prompt_started = perf_counter()
+        payload = map_question_request(
+            request,
+            context,
+            rebuilt,
+            question_override=question_override,
+        )
+        prompt_ms += int((perf_counter() - prompt_started) * 1000)
+        response = self.client.generate_sql(payload)
+        return response, prompt_ms, int((perf_counter() - model_started) * 1000)
 
     def health_check(self) -> dict:
         if not self.flags.enabled:

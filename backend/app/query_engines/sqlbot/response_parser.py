@@ -50,6 +50,16 @@ def _find_explicit_sql_mapping(value: Any) -> dict[str, Any] | None:
     return None
 
 
+def _has_explicit_refusal(value: Any) -> bool:
+    """Recognize refusal only in documented response envelopes."""
+    value = _json(value)
+    if not isinstance(value, dict):
+        return False
+    if value.get("success") is False:
+        return True
+    return any(_has_explicit_refusal(value.get(key)) for key in _ENVELOPE_KEYS)
+
+
 def _approved_text_values(value: Any) -> tuple[str, ...]:
     if isinstance(value, str):
         return (value,)
@@ -176,10 +186,10 @@ def _normalize_rows(value: Any) -> tuple[dict[str, Any], ...]:
 
 def parse_response(payload: Any, *, max_rows: int) -> SQLBotParsedResponse:
     decoded = _json(payload)
-    if isinstance(decoded, dict) and decoded.get("success") is False:
+    if _has_explicit_refusal(decoded):
         raise SQLBotEngineError(
-            SQLBotErrorCode.UPSTREAM_UNAVAILABLE,
-            "SQLBot 未完成请求",
+            SQLBotErrorCode.MODEL_REFUSAL,
+            "SQLBot 在生成 SQL 前受控拒答",
         )
     candidate, response_format = _candidate_in_order(payload)
     if candidate is None:

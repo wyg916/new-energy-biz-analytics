@@ -11,6 +11,8 @@ def map_question_request(
     request: QueryRequest,
     context: QueryContext,
     session: SQLBotSession,
+    *,
+    question_override: str | None = None,
 ) -> dict:
     if not context.datasource_id:
         raise SQLBotEngineError(
@@ -19,7 +21,7 @@ def map_question_request(
         )
     return {
         "question": build_governed_question(
-            request.question,
+            request.question if question_override is None else question_override,
             scenario_id=request.scenario_id,
             prompt_context=context.prompt_context,
         ),

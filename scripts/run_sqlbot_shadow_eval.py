@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -74,17 +75,23 @@ def _source_stats(db) -> dict[str, dict[str, Any]]:
 def _cases(path: Path) -> list[dict[str, Any]]:
     source = json.loads(path.read_text(encoding="utf-8"))
     selected: list[dict[str, Any]] = []
-    for scenario in ("charging_ops", "sales_ops"):
-        matching = [
-            case
-            for case in source.get("cases", [])
-            if case.get("scenario_id") == scenario
-            and case.get("expected_decision") == "QUERY"
-            and case.get("category") == "single_metric"
-        ][:10]
-        if len(matching) != 10:
-            raise RuntimeError(f"expected exactly 10 fixed single-metric cases for {scenario}")
-        selected.extend(matching)
+    for category in (
+        "single_metric",
+        "filter_sort",
+        "trend_comparison",
+        "multi_table_dimension",
+        "ambiguity_security_refusal",
+    ):
+        for scenario in ("charging_ops", "sales_ops"):
+            matching = [
+                case
+                for case in source.get("cases", [])
+                if case.get("scenario_id") == scenario
+                and case.get("category") == category
+            ][:5]
+            if len(matching) != 5:
+                raise RuntimeError("real Shadow requires five cases per category/scenario")
+            selected.extend(matching)
     return selected
 
 
@@ -117,13 +124,20 @@ def main() -> None:
             db, IdentityContextFactory.from_user(user)
         )
         credential_trace = f"P3-SQLBOT-SHADOW-{datetime.now(UTC).strftime('%Y%m%dT%H%M%S%f')}"
+        def active_reference(value: str) -> str:
+            if value.startswith("env://"):
+                raise RuntimeError("ENV credential fallback is forbidden for SQLBot 4.1C")
+            if value.startswith("name://"):
+                return credential_service.active_by_name(value[7:]).credential_ref_id
+            return value
+
         username = credential_service.resolve(
-            args.username_credential_ref,
+            active_reference(args.username_credential_ref),
             action="sqlbot.authenticate",
             trace_id=credential_trace,
         ).value
         password = credential_service.resolve(
-            args.password_credential_ref,
+            active_reference(args.password_credential_ref),
             action="sqlbot.authenticate",
             trace_id=credential_trace,
         ).value
@@ -234,7 +248,7 @@ def main() -> None:
                 }
                 results.append(item)
                 print(json.dumps({
-                    "progress": f"{index}/20",
+                    "progress": f"{index}/50",
                     "case_id": case["case_id"],
                     "scenario": scenario,
                     "main_status": routed.result.status,
@@ -248,15 +262,20 @@ def main() -> None:
         source_stats = _source_stats(db)
 
     completed = [item for item in results if item["sqlbot_generated_sql"]]
+    latencies = sorted(
+        int(item["sqlbot_latency_ms"])
+        for item in results
+        if item["sqlbot_latency_ms"] is not None
+    )
     report = {
-        "evidence_type": "sqlbot_real_shadow_20",
+        "evidence_type": "sqlbot_real_shadow_50",
         "evaluated_at": evaluated_at.isoformat(),
         "runtime_status": "COMPLETED_WITH_FAILURES"
         if len(completed) < len(results)
         else "COMPLETED",
         "provider": args.provider,
         "actual_model": args.model,
-        "sqlbot_upstream": "v1.8.0",
+        "sqlbot_upstream": "v1.10.0",
         "data_classification": "simulated",
         "source_stats": source_stats,
         "total": len(results),
@@ -280,6 +299,11 @@ def main() -> None:
         "exact_result_match_count": sum(
             item["execution_accuracy"] == 1.0 for item in results
         ),
+        "semantic_correct_count": sum(
+            item["metric_value_match"] is True for item in results
+        ),
+        "p95_latency_ms": latencies[max(0, math.ceil(len(latencies) * 0.95) - 1)]
+        if latencies else None,
         "results": results,
         "secret_values_exposed": False,
         "model_response_prose_exposed": False,

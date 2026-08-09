@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-# SQLBot v1.8.0 starts its bundled PostgreSQL asynchronously. On slow local
+# SQLBot's offline image starts its bundled PostgreSQL asynchronously. On slow local
 # Docker Desktop storage, crash recovery can exceed the upstream 120-second
 # wait-for-it window. This LOCAL_ACCEPTANCE_ONLY supervisor also stops the
 # bundled database cleanly so a normal container restart does not force crash

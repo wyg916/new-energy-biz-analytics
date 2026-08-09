@@ -1,4 +1,4 @@
-"""SQLBot v1.8.0 local-acceptance extension for generate-only NL2SQL.
+"""SQLBot v1.10.0 local-acceptance extension for generate-only NL2SQL.
 
 The upstream MCP question route runs generated SQL before returning it. This
 wrapper exposes one additional authenticated-in-body MCP route that stops at
@@ -6,18 +6,21 @@ SQLBot's native GENERATE_SQL finish step. The platform remains responsible for
 AST/schema/join/permission/cost guards and the only permitted execution.
 """
 
+import json
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException
+from starlette.responses import JSONResponse
 
 # Import the fully assembled upstream application first. Importing chat modules
-# before main causes SQLBot v1.8 datasource modules to re-enter each other.
+# before main causes SQLBot datasource modules to re-enter each other.
 from main import app, mcp_app
 from apps.chat.api.chat import question_answer_inner
 from apps.chat.models.chat_model import ChatFinishStep, ChatMcp, McpQuestion
 from apps.mcp.mcp import get_user
 from common.core.config import settings
 from common.core.deps import SessionDep
+from common.error import SingleMessageError
 
 
 router = APIRouter(tags=["mcp"], prefix="/mcp")
@@ -44,23 +47,36 @@ async def mcp_generate_sql(session: SessionDep, chat: McpQuestion):
     session_user = get_user(session, chat.token)
     if chat.lang in {"zh-CN", "zh-TW", "en", "ko-KR"}:
         session_user.language = chat.lang
-    if chat.oid:
-        session_user.oid = int(chat.oid)
     request = ChatMcp(
         token=chat.token,
         chat_id=chat.chat_id,
         question=chat.question,
         datasource_id=_datasource_id(chat.datasource_id),
     )
-    return await question_answer_inner(
-        session=session,
-        current_user=session_user,
-        request_question=request,
-        in_chat=False,
-        stream=False,
-        finish_step=ChatFinishStep.GENERATE_SQL,
-        return_img=False,
-    )
+    try:
+        response = await question_answer_inner(
+            session=session,
+            current_user=session_user,
+            request_question=request,
+            in_chat=False,
+            stream=False,
+            finish_step=ChatFinishStep.GENERATE_SQL,
+            return_img=False,
+        )
+        # v1.10's non-stream path deliberately converts every structured
+        # {"success": false} model refusal into HTTP 500. Recover only that
+        # exact envelope. Other 500 responses remain failures.
+        if isinstance(response, JSONResponse) and response.status_code == 500:
+            payload = json.loads(response.body)
+            if isinstance(payload, dict) and payload.get("success") is False:
+                return {"success": False, "refusal": "PRE_SQL_MODEL_REFUSAL"}
+        return response
+    except SingleMessageError:
+        # v1.10 raises this after the model has deliberately returned
+        # {"success": false, ...}. Preserve the refusal as a successful HTTP
+        # exchange so the platform can distinguish it from runtime failure.
+        # The upstream prose is intentionally not forwarded or audited.
+        return {"success": False, "refusal": "PRE_SQL_MODEL_REFUSAL"}
 
 
 # XPack installs its SPA catch-all while ``main`` is imported.  FastAPI uses

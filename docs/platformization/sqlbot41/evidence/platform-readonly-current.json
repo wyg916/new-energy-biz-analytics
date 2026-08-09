@@ -1,0 +1,17 @@
+{
+  "credentials_exposed": false,
+  "read_only": true,
+  "results": [
+    {
+      "row_count": 300026,
+      "scenario": "charging_ops",
+      "status": "PASS"
+    },
+    {
+      "row_count": 63665,
+      "scenario": "sales_ops",
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS"
+}

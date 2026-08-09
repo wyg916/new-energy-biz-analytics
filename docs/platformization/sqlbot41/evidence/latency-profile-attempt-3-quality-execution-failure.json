@@ -1,0 +1,76 @@
+{
+  "evidence_type": "sqlbot41c_latency_profile",
+  "evaluated_at": "2026-08-09T12:20:44.414211+00:00",
+  "source_evidence": "sqlbot41c-smoke20.json",
+  "case_count": 20,
+  "stages": {
+    "schema_retrieval_ms": {
+      "observed": 20,
+      "p50": 1,
+      "p95": 3,
+      "max": 5
+    },
+    "prompt_build_ms": {
+      "observed": 20,
+      "p50": 0,
+      "p95": 0,
+      "max": 0
+    },
+    "runtime_connection_ms": {
+      "observed": 20,
+      "p50": 634,
+      "p95": 1944,
+      "max": 2306
+    },
+    "model_ttft_ms": {
+      "observed": 0,
+      "p50": null,
+      "p95": null,
+      "max": null
+    },
+    "model_generation_ms": {
+      "observed": 20,
+      "p50": 6337,
+      "p95": 24924,
+      "max": 26189
+    },
+    "retry_ms": {
+      "observed": 20,
+      "p50": 0,
+      "p95": 9576,
+      "max": 11795
+    },
+    "normalization_ms": {
+      "observed": 20,
+      "p50": 2,
+      "p95": 11,
+      "max": 11
+    },
+    "guard_ms": {
+      "observed": 20,
+      "p50": 8,
+      "p95": 32,
+      "max": 112
+    },
+    "execution_ms": {
+      "observed": 20,
+      "p50": 0,
+      "p95": 0,
+      "max": 0
+    },
+    "answer_ms": {
+      "observed": 20,
+      "p50": 0,
+      "p95": 0,
+      "max": 0
+    },
+    "total_ms": {
+      "observed": 20,
+      "p50": 11584,
+      "p95": 25552,
+      "max": 28196
+    }
+  },
+  "largest_p95_stage": "model_generation_ms",
+  "ttft_available": false
+}

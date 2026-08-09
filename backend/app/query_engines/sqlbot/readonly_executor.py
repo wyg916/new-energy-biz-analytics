@@ -42,7 +42,7 @@ def execute_generated_readonly(
             with connection.begin():
                 connection.execute(text("SET TRANSACTION READ ONLY"))
                 connection.execute(
-                    text("SET LOCAL statement_timeout = :timeout"),
+                    text("SELECT set_config('statement_timeout', :timeout, true)"),
                     {"timeout": f"{settings.chatbi_statement_timeout_ms}ms"},
                 )
                 result = connection.execute(text(sql))
@@ -54,9 +54,11 @@ def execute_generated_readonly(
     except SQLBotEngineError:
         raise
     except Exception as exc:
+        original = getattr(exc, "orig", exc)
+        sqlstate = getattr(original, "sqlstate", None) or "NO_SQLSTATE"
         raise SQLBotEngineError(
             SQLBotErrorCode.UPSTREAM_UNAVAILABLE,
-            "readonly SQL execution failed",
+            f"readonly SQL execution failed ({type(exc).__name__}:{sqlstate})",
             retryable=True,
         ) from exc
     if len(rows) > context.max_rows:

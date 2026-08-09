@@ -6,6 +6,7 @@ from urllib.parse import urlsplit, urlunsplit
 import httpx
 
 from app.query_engines.sqlbot.contracts import SQLBotHealth
+from app.query_engines.sqlbot.credentials import derive_runtime_account_password
 from app.query_engines.sqlbot.error_mapper import (
     SQLBotEngineError,
     SQLBotErrorCode,
@@ -47,6 +48,7 @@ class SQLBotClient:
     def _credentials(self) -> tuple[str, str]:
         if self.credential_loader is not None:
             username, password = self.credential_loader()
+            password = derive_runtime_account_password(password)
         else:
             username = os.getenv(self.username_env_key) if self.username_env_key else None
             password = os.getenv(self.password_env_key) if self.password_env_key else None
@@ -96,7 +98,7 @@ class SQLBotClient:
         return str(chat_id), token
 
     def generate_sql(self, payload: dict) -> dict:
-        """Call the governed SQLBot v1.8 generate-only runtime extension."""
+        """Call the governed SQLBot generate-only runtime extension."""
         return self._call(
             lambda: self.http.post("mcp/mcp_generate_sql", json=payload)
         )

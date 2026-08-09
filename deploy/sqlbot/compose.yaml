@@ -2,8 +2,8 @@ name: renewable-sqlbot
 
 services:
   sqlbot:
-    image: dataease/sqlbot:v1.8.0
-    container_name: renewable-sqlbot-v1-8-0
+    image: registry.cn-qingdao.aliyuncs.com/dataease/sqlbot:v1.10.0
+    container_name: renewable-sqlbot-v1-10-0
     entrypoint:
       - /bin/sh
       - /usr/local/bin/sqlbot-local-acceptance-start.sh
