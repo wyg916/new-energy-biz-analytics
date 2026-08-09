@@ -73,6 +73,8 @@ class Settings(BaseSettings):
     query_engine_canary_scenarios: str = "charging_ops,sales_ops"
     chatbi_readonly_execution_enabled: bool = False
     chatbi_readonly_database_url: str | None = None
+    sqlbot_readonly_charging_database_url: str | None = None
+    sqlbot_readonly_sales_database_url: str | None = None
     chatbi_statement_timeout_ms: int = 5000
     model_gateway_kimi_base_url: str = ""
     model_gateway_kimi_model_name: str = ""
@@ -158,12 +160,17 @@ class Settings(BaseSettings):
                 and self.release_version.startswith("4.1.0-data.")
             ):
                 failures.append("SIMULATED_DATA_ONLY must remain true for this release candidate")
+            readonly_urls = tuple(filter(None, (
+                self.chatbi_readonly_database_url,
+                self.sqlbot_readonly_charging_database_url,
+                self.sqlbot_readonly_sales_database_url,
+            )))
             if self.chatbi_readonly_execution_enabled and (
-                not self.chatbi_readonly_database_url
-                or not self.chatbi_readonly_database_url.startswith("postgresql")
+                not readonly_urls
+                or any(not url.startswith("postgresql") for url in readonly_urls)
             ):
                 failures.append(
-                    "CHATBI_READONLY_DATABASE_URL must use PostgreSQL when the independent readonly boundary is enabled"
+                    "configured readonly database URLs must use PostgreSQL when the independent readonly boundary is enabled"
                 )
             if self.sqlbot_engine_enabled:
                 if not self.sqlbot_runtime_verified:

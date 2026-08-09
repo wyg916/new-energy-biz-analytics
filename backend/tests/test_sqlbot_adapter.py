@@ -96,6 +96,15 @@ def _client(monkeypatch, handler, *, threshold: int = 3) -> SQLBotClient:
     )
 
 
+def _platform_rows(*rows: dict):
+    def execute(sql, request, context):
+        del sql, request, context
+        columns = tuple(rows[0]) if rows else ()
+        return columns, tuple(rows)
+
+    return execute
+
+
 def test_adapter_normalizes_result_and_never_exposes_session_secret(monkeypatch) -> None:
     requests: list[dict] = []
     paths: list[str] = []
@@ -130,6 +139,9 @@ def test_adapter_normalizes_result_and_never_exposes_session_secret(monkeypatch)
         enabled=True,
         runtime_verified=True,
         client=_client(monkeypatch, handler),
+        generated_sql_executor=_platform_rows(
+            {"region": "north", "sales_revenue": 123.45},
+        ),
     )
     result = engine.execute(
         QueryRequest(
@@ -152,7 +164,7 @@ def test_adapter_normalizes_result_and_never_exposes_session_secret(monkeypatch)
     assert "oid" not in requests[1]
     assert paths == [
         "/api/v1/mcp/mcp_start",
-        "/api/v1/mcp/mcp_question",
+        "/api/v1/mcp/mcp_generate_sql",
     ]
 
 
@@ -168,7 +180,7 @@ def test_adapter_fetches_record_usage_when_question_response_omits_it(
                 200,
                 json={"access_token": "runtime-only-token", "chat_id": 102},
             )
-        if request.url.path.endswith("/mcp_question"):
+        if request.url.path.endswith("/mcp_generate_sql"):
             return httpx.Response(
                 200,
                 json={
@@ -190,6 +202,9 @@ def test_adapter_fetches_record_usage_when_question_response_omits_it(
         enabled=True,
         runtime_verified=True,
         client=_client(monkeypatch, handler),
+        generated_sql_executor=_platform_rows(
+            {"region": "north", "sales_revenue": 123.45},
+        ),
     )
     result = engine.execute(
         QueryRequest(
@@ -203,7 +218,7 @@ def test_adapter_fetches_record_usage_when_question_response_omits_it(
     assert result.evidence["token_usage"] == 41
     assert paths == [
         "/api/v1/mcp/mcp_start",
-        "/api/v1/mcp/mcp_question",
+        "/api/v1/mcp/mcp_generate_sql",
         "/api/v1/chat/record/9002/usage",
     ]
 
@@ -250,6 +265,7 @@ def test_sessions_are_isolated_by_user_workspace_scenario_and_versions(monkeypat
         enabled=True,
         runtime_verified=True,
         client=_client(monkeypatch, handler),
+        generated_sql_executor=_platform_rows({"sales_revenue": 1}),
     )
     context = _context()
     for identity in (_identity("user:1"), _identity("user:1"), _identity("user:2")):

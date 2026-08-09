@@ -16,9 +16,17 @@ def execute_generated_readonly(
     context: QueryContext,
 ) -> tuple[tuple[str, ...], tuple[dict[str, Any], ...]]:
     """Execute policy-approved SQL through the independent PostgreSQL role."""
-    del request
     settings = get_settings()
-    database_url = settings.chatbi_readonly_database_url
+    scenario_urls = {
+        "charging_ops": settings.sqlbot_readonly_charging_database_url,
+        "sales_ops": settings.sqlbot_readonly_sales_database_url,
+    }
+    database_url = scenario_urls.get(request.scenario_id)
+    if request.scenario_id not in scenario_urls:
+        raise SQLBotEngineError(
+            SQLBotErrorCode.POLICY_DENIED,
+            "controlled NL2SQL scenario has no readonly execution boundary",
+        )
     if not settings.chatbi_readonly_execution_enabled or not database_url:
         raise SQLBotEngineError(
             SQLBotErrorCode.NOT_CONFIGURED,

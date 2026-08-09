@@ -30,6 +30,7 @@ from app.query_engines.shadow import RoutingEvidenceRepository
 from app.query_engines.sqlbot.client import SQLBotClient
 from app.query_engines.sqlbot.engine import SQLBotEngine
 from app.query_engines.sqlbot.health import CircuitBreaker
+from app.query_engines.sqlbot.readonly_executor import execute_generated_readonly
 from app.query_engines.sqlbot.session_manager import SQLBotSessionManager
 from app.scenarios.charging_ops.runtime import resolve_charging_ops_context
 from app.scenarios.sales_ops.engine import SalesOpsDeterministicEngine
@@ -118,12 +119,12 @@ def main() -> None:
         credential_trace = f"P3-SQLBOT-SHADOW-{datetime.now(UTC).strftime('%Y%m%dT%H%M%S%f')}"
         username = credential_service.resolve(
             args.username_credential_ref,
-            action="sqlbot.shadow.username",
+            action="sqlbot.authenticate",
             trace_id=credential_trace,
         ).value
         password = credential_service.resolve(
             args.password_credential_ref,
-            action="sqlbot.shadow.password",
+            action="sqlbot.authenticate",
             trace_id=credential_trace,
         ).value
 
@@ -151,6 +152,7 @@ def main() -> None:
             session_manager=SQLBotSessionManager(
                 on_bind=repository.record_session_binding
             ),
+            generated_sql_executor=execute_generated_readonly,
         )
 
         try:

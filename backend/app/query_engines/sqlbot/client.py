@@ -95,9 +95,10 @@ class SQLBotClient:
             )
         return str(chat_id), token
 
-    def ask(self, payload: dict) -> dict:
+    def generate_sql(self, payload: dict) -> dict:
+        """Call the governed SQLBot v1.8 generate-only runtime extension."""
         return self._call(
-            lambda: self.http.post("mcp/mcp_question", json=payload)
+            lambda: self.http.post("mcp/mcp_generate_sql", json=payload)
         )
 
     def record_usage(self, record_id: str, access_token: str) -> int | None:

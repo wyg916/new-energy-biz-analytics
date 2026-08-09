@@ -52,7 +52,9 @@ def _fingerprint(value: str) -> str:
 
 def _read_provider_input() -> ProviderInput:
     try:
-        payload = json.load(sys.stdin)
+        # Windows PowerShell 5 can prefix native-pipeline UTF-8 with a BOM.
+        # Accept that transport marker while retaining the exact JSON contract.
+        payload = json.loads(sys.stdin.buffer.read().decode("utf-8-sig"))
     except (json.JSONDecodeError, UnicodeDecodeError) as exc:
         raise RuntimeError("provider stdin payload is not valid JSON") from exc
     if not isinstance(payload, dict):
@@ -134,7 +136,11 @@ def _candidate(provider: ProviderInput) -> dict[str, Any]:
     config_list = (
         [
             {"key": "temperature", "val": 0, "name": "temperature"},
-            {"key": "max_tokens", "val": 2048, "name": "max_tokens"},
+            # Reasoning-capable DeepSeek models account reasoning tokens in
+            # this limit.  2048 can end at finish_reason=length before the
+            # structured SQL content begins, so reserve an explicit bounded
+            # budget that still remains below the provider context limit.
+            {"key": "max_tokens", "val": 8192, "name": "max_tokens"},
         ]
         if provider.provider == "deepseek"
         else []

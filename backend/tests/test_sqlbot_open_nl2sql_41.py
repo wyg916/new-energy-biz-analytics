@@ -5,11 +5,13 @@ from datetime import UTC, datetime
 
 import pytest
 
+from app.core.config import get_settings
 from app.platform.identity import IdentityContext
 from app.platform.query_engine import QueryContext, QueryEngine, QueryRequest, QueryResult
 from app.query_engines.router import CanaryPolicy, EngineRouter, RolloutStage
 from app.query_engines.sqlbot.error_mapper import SQLBotEngineError, SQLBotErrorCode
 from app.query_engines.sqlbot.policy import validate_generated_sql
+from app.query_engines.sqlbot.readonly_executor import execute_generated_readonly
 from app.query_engines.sqlbot.schema_catalog import build_schema_catalog, retrieve_schema
 from app.query_engines.sqlbot.understanding import understand_query
 
@@ -116,6 +118,39 @@ def test_policy_accepts_registered_join_and_reports_all_guard_stages() -> None:
         "parser_ast", "schema", "join", "permission", "pii",
         "cost", "row_limit", "query_guard", "readonly_boundary",
     )
+
+
+def test_policy_strips_only_the_active_scenario_schema_qualifier() -> None:
+    context = replace(
+        _context(),
+        prompt_context={**_context().prompt_context, "scenario_id": "sales_ops"},
+    )
+    decision = validate_generated_sql(
+        "SELECT order_id FROM semantic_sqlbot_sales.sales_order LIMIT 10",
+        context,
+    )
+    assert "semantic_sqlbot_sales" not in decision.normalized_sql
+    with pytest.raises(SQLBotEngineError):
+        validate_generated_sql(
+            "SELECT order_id FROM semantic_sqlbot_charging.sales_order LIMIT 10",
+            context,
+        )
+
+
+def test_platform_executor_fails_closed_without_scenario_connection(monkeypatch) -> None:
+    settings = get_settings()
+    monkeypatch.setattr(settings, "chatbi_readonly_execution_enabled", True)
+    monkeypatch.setattr(
+        settings,
+        "chatbi_readonly_database_url",
+        "postgresql+psycopg://legacy:secret@db:5432/legacy",
+    )
+    monkeypatch.setattr(settings, "sqlbot_readonly_sales_database_url", None)
+
+    with pytest.raises(SQLBotEngineError) as exc_info:
+        execute_generated_readonly("SELECT 1", _request(), _context())
+
+    assert exc_info.value.code == SQLBotErrorCode.NOT_CONFIGURED
 
 
 @pytest.mark.parametrize(

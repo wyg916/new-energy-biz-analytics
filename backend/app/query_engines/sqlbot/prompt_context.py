@@ -74,6 +74,8 @@ def build_governed_question(
             "default_detail_limit": 100,
             "aggregate_limit_required": False,
             "no_cross_scenario_schema": True,
+            "active_schema_qualification_may_be_stripped": True,
+            "forbid_database_qualification": True,
             "output": {"sql": "single PostgreSQL SELECT"},
         },
         "authorized_tables": prompt_context.get("authorized_tables", []),

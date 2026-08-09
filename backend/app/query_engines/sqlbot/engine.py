@@ -103,6 +103,8 @@ class SQLBotEngine(QueryEngine):
                 SQLBotErrorCode.POLICY_DENIED,
                 "SQLBot 查询缺少版本绑定",
             )
+        requested_execution_mode = context.execution_mode
+        context = replace(context, execution_mode="platform_readonly")
         started = perf_counter()
         key = SQLBotSessionKey(
             tenant_id=request.identity_context.tenant_id,
@@ -122,6 +124,7 @@ class SQLBotEngine(QueryEngine):
             prompt_context={
                 **context.prompt_context,
                 **retrieved.as_prompt_context(),
+                "scenario_id": request.scenario_id,
                 "sql_examples": context.prompt_context.get("sql_examples", []),
                 "time_dimensions": context.prompt_context.get("time_dimensions", []),
             },
@@ -179,6 +182,8 @@ class SQLBotEngine(QueryEngine):
             "source": "sqlbot_adapter",
             "upstream_version": "v1.8.0",
             "execution_mode": context.execution_mode,
+            "requested_execution_mode": requested_execution_mode,
+            "upstream_sql_execution": False,
             "session_binding_hash": _binding_hash(key),
             "upstream_record_id": parsed.upstream_record_id,
             "token_usage": parsed.token_usage,
@@ -224,7 +229,7 @@ class SQLBotEngine(QueryEngine):
         session,
     ) -> dict:
         try:
-            return self.client.ask(map_question_request(request, context, session))
+            return self.client.generate_sql(map_question_request(request, context, session))
         except SQLBotEngineError as exc:
             if exc.code != SQLBotErrorCode.SESSION_INVALID:
                 raise
@@ -233,7 +238,7 @@ class SQLBotEngine(QueryEngine):
             self.client.create_session,
             force_rebuild=True,
         )
-        return self.client.ask(map_question_request(request, context, rebuilt))
+        return self.client.generate_sql(map_question_request(request, context, rebuilt))
 
     def health_check(self) -> dict:
         if not self.flags.enabled:

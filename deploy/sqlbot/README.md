@@ -35,6 +35,20 @@ controlled local secret mechanism. Never commit the populated file.
 The Compose file deliberately fails configuration when any required secret is
 missing. It does not contain an upstream default password or a generated secret.
 
+The service entrypoint is the repository-owned
+`start-local-acceptance.sh`. It extends the bounded bundled-PostgreSQL readiness
+window to 15 minutes and supervises a graceful database shutdown. This avoids
+the upstream fixed startup window and prevents a normal container restart from
+creating another crash-recovery cycle. The health check remains an actual HTTP
+probe; the extended `start_period` is not a readiness bypass.
+
+The mounted `sqlbot41_runtime.py` adds only
+`POST /api/v1/mcp/mcp_generate_sql`. It invokes SQLBot v1.8.0 with its native
+`GENERATE_SQL` finish step and therefore returns before SQLBot's datasource
+execution step. The platform Adapter calls only this route, then applies Query
+Guard and the platform read-only executor. The upstream execution-capable MCP
+route is not part of the platform integration contract.
+
 ## Start and verify
 
 Create the shared proxy network once, then start the isolated stack:
@@ -44,6 +58,10 @@ docker network create renewable-sqlbot-proxy
 docker compose --env-file <untracked-local-env> -f deploy/sqlbot/compose.yaml up -d
 docker compose --env-file <untracked-local-env> -f deploy/sqlbot/compose.yaml ps
 ```
+
+Acceptance startup order is: bundled PostgreSQL ready, SQLBot SSR/MCP, SQLBot
+HTTP API. `restart: unless-stopped` restarts an abnormal application exit. A
+normal `docker compose stop` allows the supervisor to stop PostgreSQL cleanly.
 
 The current repository records `SQLBOT_RUNTIME_PENDING` until the pinned image
 is pulled and its health check and Adapter contract are exercised against a

@@ -1,2 +1,4 @@
 data/open_source/raw/acn_data_ornl_26_v1.json text eol=lf
 data/open_source/raw/uci_online_retail_every_20th_v1.csv text eol=lf
+deploy/sqlbot/*.sh text eol=lf
+scripts/*.sh text eol=lf

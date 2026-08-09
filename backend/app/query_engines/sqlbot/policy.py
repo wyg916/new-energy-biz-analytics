@@ -75,9 +75,20 @@ def validate_generated_sql(sql: str, context: QueryContext) -> SQLPolicyDecision
         _deny("active semantic relation allowlist is empty")
     table_aliases: dict[str, str] = {}
     relations = []
+    approved_schema = {
+        "charging_ops": "semantic_sqlbot_charging",
+        "sales_ops": "semantic_sqlbot_sales",
+    }.get((context.prompt_context or {}).get("scenario_id"))
     for table in root.find_all(exp.Table):
-        if table.catalog or table.db:
-            _deny("cross-database or explicit schema access is forbidden")
+        if table.catalog:
+            _deny("cross-database access is forbidden")
+        if table.db:
+            if approved_schema is None or table.db != approved_schema:
+                _deny("explicit schema is not the active scenario schema")
+            # The independent database role owns the scenario search_path.
+            # Strip the one approved qualifier before execution so the SQL
+            # cannot redirect to a same-named object outside that boundary.
+            table.set("db", None)
         if table.name not in allowed_relations:
             _deny("relation is not registered for the active scenario")
         relations.append(table.name)

@@ -37,11 +37,14 @@ from app.query_engines.sqlbot.contracts import SQLBotSession, SQLBotSessionKey
 from app.query_engines.sqlbot.error_mapper import SQLBotEngineError
 from app.query_engines.sqlbot.health import CircuitBreaker
 from app.query_engines.sqlbot.limit_policy import apply_limit_policy
+from app.query_engines.sqlbot.policy import validate_generated_sql
+from app.query_engines.sqlbot.readonly_executor import execute_generated_readonly
 from app.query_engines.sqlbot.request_mapper import map_question_request
 from app.query_engines.sqlbot.response_parser import parse_response
+from app.query_engines.sqlbot.result_guard import validate_result
 from app.scenarios.charging_ops.runtime import resolve_charging_ops_context
 from app.scenarios.sales_ops.runtime import resolve_sales_ops_context
-from app.governance.secrets import CredentialReferenceService
+from app.governance.secrets import CredentialReferenceService, EnvironmentSecretProvider
 from app.platform.identity import IdentityContextFactory
 
 
@@ -128,13 +131,18 @@ def _runtime_contexts(db, user: User) -> tuple[dict[str, Any], dict[str, QueryCo
         ("charging_ops", charging_active),
         ("sales_ops", sales_active),
     ):
+        base_context = build_query_context(
+            db,
+            conversation_id=f"p2a-runtime-{scenario}",
+            platform_context=active,
+        )
         contexts[scenario] = replace(
-            build_query_context(
-                db,
-                conversation_id=f"p2a-runtime-{scenario}",
-                platform_context=active,
-            ),
+            base_context,
             datasource_id=DATASOURCE_IDS[scenario],
+            prompt_context={
+                **base_context.prompt_context,
+                "scenario_id": scenario,
+            },
             max_rows=500,
         )
     return identities, contexts
@@ -295,7 +303,7 @@ def _execute_case(
                 access_token=token,
             )
             external_calls += 1
-            raw_payload = client.ask(map_question_request(request, context, session))
+            raw_payload = client.generate_sql(map_question_request(request, context, session))
             break
         except SQLBotEngineError as exc:
             last_error = str(exc.code)
@@ -311,6 +319,7 @@ def _execute_case(
         "question": question,
         "normalized_question": re.sub(r"\s+", " ", question.strip()),
         "model": "deepseek-v4-flash",
+        "upstream_sql_execution": False,
         "model_called": external_calls > 0,
         "external_request_count": external_calls,
         "attempts": attempts,
@@ -365,9 +374,9 @@ def _execute_case(
         "generated_sql": sql,
         "limit_policy_warnings": list(limited.warnings),
         "sql_hash": hashlib.sha256(sql.encode()).hexdigest(),
-        "execution_status": "UPSTREAM_READONLY_COMPLETED",
-        "row_count": len(parsed.rows),
-        "result_hash": _hash(parsed.rows),
+        "execution_status": "NOT_EXECUTED",
+        "row_count": None,
+        "result_hash": None,
         "token_usage": _usage(client, session.access_token, parsed.upstream_record_id),
         "error": None,
         "time_range_alignment": _time_alignment(question, sql),
@@ -396,9 +405,30 @@ def _execute_case(
         return base
     base["guard_result"] = "PASSED"
     base["permission_pass"] = True
-    base["final_status"] = "PASS" if expected_decision == "QUERY" else "FAIL"
     if expected_decision != "QUERY":
-        base["error"] = "EXPECTED_NON_QUERY_BUT_SQL_EXECUTED"
+        base["error"] = "EXPECTED_NON_QUERY_BUT_SQL_GENERATED"
+        return base
+    try:
+        policy = validate_generated_sql(sql, context)
+        columns, rows = execute_generated_readonly(
+            policy.normalized_sql,
+            request,
+            context,
+        )
+        validate_result(columns, rows, context, policy)
+    except SQLBotEngineError as exc:
+        base["error"] = str(exc.code)
+        return base
+    base.update({
+        "generated_sql": policy.normalized_sql,
+        "sql_hash": hashlib.sha256(policy.normalized_sql.encode()).hexdigest(),
+        "execution_status": "PLATFORM_READONLY_COMPLETED",
+        "row_count": len(rows),
+        "result_hash": _hash(rows),
+        "result_guard": "PASSED",
+        "answer_guard": "PASSED",
+        "final_status": "PASS",
+    })
     return base
 
 
@@ -540,7 +570,7 @@ def _metrics(results: list[dict[str, Any]]) -> dict[str, Any]:
             total,
         ),
         "sql_execution_rate": _rate(
-            sum(item["execution_status"] == "UPSTREAM_READONLY_COMPLETED" for item in results),
+            sum(item["execution_status"] == "PLATFORM_READONLY_COMPLETED" for item in results),
             total,
         ),
         "guarded_query_completion_rate": _rate(
@@ -629,16 +659,24 @@ def main() -> None:
             db, IdentityContextFactory.from_user(user)
         )
         credential_trace = f"P3-SQLBOT-{datetime.now(UTC).strftime('%Y%m%dT%H%M%S%f')}"
-        username = credential_service.resolve(
-            args.username_credential_ref,
-            action="sqlbot.runtime.username",
-            trace_id=credential_trace,
-        ).value
-        password = credential_service.resolve(
-            args.password_credential_ref,
-            action="sqlbot.runtime.password",
-            trace_id=credential_trace,
-        ).value
+        env_prefix = "env://"
+        if args.username_credential_ref.startswith(env_prefix) and args.password_credential_ref.startswith(env_prefix):
+            provider = EnvironmentSecretProvider()
+            username = provider.resolve(args.username_credential_ref[len(env_prefix):])
+            password = provider.resolve(args.password_credential_ref[len(env_prefix):])
+            credential_source = "ENV_ALLOWLIST_ACCEPTANCE"
+        else:
+            username = credential_service.resolve(
+                args.username_credential_ref,
+                action="sqlbot.authenticate",
+                trace_id=credential_trace,
+            ).value
+            password = credential_service.resolve(
+                args.password_credential_ref,
+                action="sqlbot.authenticate",
+                trace_id=credential_trace,
+            ).value
+            credential_source = "CREDENTIAL_REFERENCE"
 
     def run_case(index: int, case: dict[str, Any]) -> tuple[int, dict[str, Any]]:
         scenario = str(case.get("scenario") or case.get("scenario_id"))
@@ -725,6 +763,7 @@ def main() -> None:
         "actual_model": args.model,
         "sqlbot_upstream": "v1.8.0",
         "data_classification": "simulated",
+        "credential_source": credential_source,
         "source_stats": stats,
         "total": len(results),
         "executed": len(results),
