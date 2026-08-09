@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "knowledge_baseline_v1_governance_audit",
+  "status": "PASS_WITH_REVIEW_DISCLOSURE",
+  "generated_at": "2026-08-10T01:50:52.6077268+08:00",
+  "environment": "local_integration_preproduction",
+  "verification_basis": "read_only_live_database_query",
+  "automated_governance": {
+    "actor_type": "SYSTEM",
+    "governance_role": "rag_quality_agent",
+    "action": "INDEX_QUALITY_REVIEW",
+    "pass_count": 15,
+    "review_required_count": 2,
+    "publication_changed": false,
+    "review_required_entries": [
+      {
+        "source": "docs/knowledge_baseline/v1/KB07_业务分析方法.md",
+        "scenario_id": "charging_ops",
+        "reason": "defensive text contains a deny-bypass phrase matched by the prompt-injection scanner"
+      },
+      {
+        "source": "docs/knowledge_baseline/v1/KB07_业务分析方法.md",
+        "scenario_id": "sales_ops",
+        "reason": "defensive text contains a deny-bypass phrase matched by the prompt-injection scanner"
+      }
+    ]
+  },
+  "publication": {
+    "actor_id": "user:3",
+    "actor_type": "USER",
+    "verified_oidc_username": "p4.analyst",
+    "verified_application_role": "analyst_admin",
+    "action": "PUBLISH",
+    "count": 17,
+    "system_publication_count": 0
+  },
+  "retrieval_safety": {
+    "dangerous_injection_evidence_used": 0,
+    "prompt_injection_query_refusal": "PROMPT_INJECTION_QUERY",
+    "content_injection_filter_enforced_before_ranking": true
+  },
+  "secret_recorded": false
+}

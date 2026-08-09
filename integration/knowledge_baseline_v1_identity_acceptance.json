@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "knowledge_baseline_v1_publisher_identity_acceptance",
+  "status": "PASS",
+  "generated_at": "2026-08-10T00:47:32.8285106+08:00",
+  "environment": "local_integration_preproduction",
+  "identity": {
+    "realm": "chatbi",
+    "username": "p4.analyst",
+    "enabled": true,
+    "group": "analysts",
+    "application_role": "analyst_admin",
+    "tenant_id": "tenant-alpha",
+    "workspace_id": "workspace-alpha",
+    "auth_strength": "oidc-pkce"
+  },
+  "knowledge_permissions": {
+    "rag.document.view": "ALLOW",
+    "release.review": "ALLOW",
+    "release.activate": "ALLOW"
+  },
+  "credential_repair": {
+    "scope": "local_integration_identity_only",
+    "password_drift_resolved": true,
+    "role_changed": false,
+    "temporary_recovery_admin_removed": true,
+    "authorization_code_pkce_verified": true
+  },
+  "secret_recorded": false,
+  "verification_basis": [
+    "live_keycloak_user_and_group_read_only_check",
+    "live_application_principal_and_governance_binding_read_only_check",
+    "live_permission_decision_read_only_check",
+    "successful_authorization_code_pkce_knowledge_publish"
+  ]
+}

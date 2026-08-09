@@ -1,0 +1,128 @@
+{
+  "package_name": "项目二知识基线包",
+  "package_version": "1.0.0",
+  "generated_date": "2026-08-09",
+  "base_integration_sha": "0a2c776cd6ba47598a17286a793f3c570823cf77",
+  "target_runtime": "Governed Hybrid RAG V1",
+  "knowledge_docs": [
+    "docs/knowledge_baseline/v1/KB01_15项核心指标定义.md",
+    "docs/knowledge_baseline/v1/KB02_数据字典.md",
+    "docs/knowledge_baseline/v1/KB03_charging_ops业务规则.md",
+    "docs/knowledge_baseline/v1/KB04_sales_ops业务规则.md",
+    "docs/knowledge_baseline/v1/KB05_收入与成本计算规则.md",
+    "docs/knowledge_baseline/v1/KB06_数据接入说明.md",
+    "docs/knowledge_baseline/v1/KB07_业务分析方法.md",
+    "docs/knowledge_baseline/v1/KB08_SQL安全规则.md",
+    "docs/knowledge_baseline/v1/KB09_项目功能使用说明.md",
+    "docs/knowledge_baseline/v1/KB00_知识基线说明.md"
+  ],
+  "ingestion_entry_count": 17,
+  "files": [
+    {
+      "path": "README_知识基线包落地说明.md",
+      "sha256": "9bc864014195939c2fad643592a08c8a8ea10c30c6335bcccbb201016eddfabe",
+      "bytes": 3868
+    },
+    {
+      "path": "docs/knowledge_baseline/v1/KB00_知识基线说明.md",
+      "sha256": "4cac5fb6bb251a39d74a9156c97a8a5f6900603ddbbfde2e63a5c2592892166e",
+      "bytes": 1722
+    },
+    {
+      "path": "docs/knowledge_baseline/v1/KB01_15项核心指标定义.md",
+      "sha256": "d994cc448456ba31f36a5c349295a214ec9d67b2ec8065d330165a9998c7e7cd",
+      "bytes": 6978
+    },
+    {
+      "path": "docs/knowledge_baseline/v1/KB02_数据字典.md",
+      "sha256": "a9278607ab5a1bfbd181ef6109874cf424c1614270cc510c239730efdbea9a28",
+      "bytes": 7895
+    },
+    {
+      "path": "docs/knowledge_baseline/v1/KB03_charging_ops业务规则.md",
+      "sha256": "96f7abd343386ac1e397de465ab1de918972491b3689a0dffac45ede650151da",
+      "bytes": 3707
+    },
+    {
+      "path": "docs/knowledge_baseline/v1/KB04_sales_ops业务规则.md",
+      "sha256": "45327a21d89ec051a7d3d72a14d4b9de10a505207b48cd7ffc59a460c3b878d0",
+      "bytes": 4470
+    },
+    {
+      "path": "docs/knowledge_baseline/v1/KB05_收入与成本计算规则.md",
+      "sha256": "ed922bdd2f739c88dff63f511ea5aec9cf78fc9860b72fc452cda5829168bcf2",
+      "bytes": 3303
+    },
+    {
+      "path": "docs/knowledge_baseline/v1/KB06_数据接入说明.md",
+      "sha256": "579e4254ab4830911a95c015a446ffc3c2bacfe0c42ecc916a1dccf538e77faf",
+      "bytes": 4030
+    },
+    {
+      "path": "docs/knowledge_baseline/v1/KB07_业务分析方法.md",
+      "sha256": "815542825c3b4533f0026ef9a8655f19ae95efde98e12f00b1ada2cd980835ec",
+      "bytes": 4505
+    },
+    {
+      "path": "docs/knowledge_baseline/v1/KB08_SQL安全规则.md",
+      "sha256": "853c3a944974feb9173d7ad4fc4a900a44581e7ca0c7f92dc97ff301b1b99086",
+      "bytes": 4923
+    },
+    {
+      "path": "docs/knowledge_baseline/v1/KB09_项目功能使用说明.md",
+      "sha256": "f40c8855a0450b7959b62f403da499ad3aa4fde3b4e1221f595c7601ed5bcd42",
+      "bytes": 5000
+    },
+    {
+      "path": "integration/approved_sources_paths.txt",
+      "sha256": "56adea6d1847784aed9525c604edd1946ce4564f0f50dabfd23b60a4a3851b91",
+      "bytes": 560
+    },
+    {
+      "path": "integration/knowledge_import_plan.json",
+      "sha256": "79422d1a16cdbabb877a69fff77b2bead8521361ecb72c7d4e844c77a0e4a649",
+      "bytes": 6744
+    },
+    {
+      "path": "integration/source_provenance.json",
+      "sha256": "299a80d1b39ef24eacdf9e482b53c991b6bffd0b7b8b4f51d0b76122bfff04f2",
+      "bytes": 1280
+    },
+    {
+      "path": "scripts/apply_knowledge_baseline_v1.py",
+      "sha256": "9b6375a1076915acbac37a44d7ff94c5d8399328e6124f48a6df6f7d3c49bba7",
+      "bytes": 6945
+    },
+    {
+      "path": "scripts/install_knowledge_baseline_v1.py",
+      "sha256": "931a97bef0e02a3818134248532769a056c5a4ca1d189534e2a1a9b76e69907d",
+      "bytes": 2916
+    },
+    {
+      "path": "scripts/publish_knowledge_baseline_v1.py",
+      "sha256": "b84d24de56b7bdbbfad55d1736e1edaf2d0976d3de11b3422ff48c2aa8ff55a0",
+      "bytes": 4753
+    },
+    {
+      "path": "scripts/verify_knowledge_baseline_v1.py",
+      "sha256": "f89a344901cbe4aa4d4f0e7d06b38c5950827842a60f4ed7aea37f4f7d93607f",
+      "bytes": 13556
+    },
+    {
+      "path": "发布知识基线包.bat",
+      "sha256": "8f481677bd818d37dbd1e00b5284c3e8e0cfe535c62a19f2247b1b79217c6a35",
+      "bytes": 352
+    },
+    {
+      "path": "安装知识基线包.bat",
+      "sha256": "45d5bcf60f42da6a2127e0e45db350ca377ef31c9f6d00c425bd665ec187f42b",
+      "bytes": 311
+    }
+  ],
+  "expected_after_publish": {
+    "knowledge_service": "READY",
+    "published_chunk_count": ">0",
+    "indexed_chunk_count": "=published_chunk_count",
+    "retrieval_mode": "hybrid_bm25_vector_rrf_rerank"
+  }
+}

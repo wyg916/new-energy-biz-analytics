@@ -15,6 +15,7 @@ from app.knowledge.indexer import (
 from app.knowledge.models import Citation
 from app.knowledge.parser import KnowledgeParseError, parse_document
 from app.knowledge.query_rewrite import rewrite_query
+from app.knowledge.reranker import keyword_terms
 
 pytestmark = pytest.mark.no_db
 
@@ -91,6 +92,15 @@ def test_embedding_is_deterministic_and_has_cosine_signal() -> None:
     assert len(metric) == EMBEDDING_DIMENSIONS
     assert metric == feature_hash_vector(tokenize("充电收入 指标口径 定义"))
     assert cosine_similarity(metric, same) > cosine_similarity(metric, unrelated)
+
+
+def test_question_form_terms_cannot_establish_unrelated_evidence() -> None:
+    unknown = keyword_terms("火星基地量子税率是多少？")
+    generic_metric_question = keyword_terms("营业收入是多少？")
+
+    assert "多少" not in unknown
+    assert "是多" not in unknown
+    assert unknown.isdisjoint(generic_metric_question)
 
 
 def test_query_rewrite_is_controlled_and_injection_fails_closed() -> None:
