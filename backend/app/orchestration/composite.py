@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from app.ai.model_gateway.runtime import runtime_model_status
 from app.chatbi.scenario_services import get_scenario_chat_registry
 from app.knowledge.models import RetrievalIdentity
+from app.knowledge.answer_guard import guard_grounded_answer
 from app.knowledge.retrieval import KnowledgeRetrievalService
 from app.models.auth import AuditLog, User
 from app.platform.identity import IdentityContextFactory
@@ -323,17 +324,25 @@ class CompositeQueryOrchestrator:
             title=item.title,
             page=item.page,
             section=item.section,
+            paragraph_start=item.paragraph_start,
+            paragraph_end=item.paragraph_end,
+            locator=item.locator,
             source=item.source,
             published_at=item.published_at.isoformat(),
             citation_text=item.citation_text,
             retrieval_score=item.retrieval_score,
         ) for index, item in enumerate(result.citations))
-        claims = tuple(EvidenceClaim(
-            claim_id=f"claim-{index + 1}",
-            text=CompositeQueryOrchestrator._grounded_extract(question, item.citation_text),
-            citation_ids=(f"citation-{index + 1}",),
-            confidence=item.retrieval_score,
-        ) for index, item in enumerate(result.citations[:3]))
+        claims_list = []
+        for index, item in enumerate(result.citations[:3]):
+            text = CompositeQueryOrchestrator._grounded_extract(question, item.citation_text)
+            if not guard_grounded_answer(text, result.citations).allowed:
+                continue
+            claims_list.append(EvidenceClaim(
+                claim_id=f"claim-{index + 1}", text=text,
+                citation_ids=(f"citation-{index + 1}",),
+                confidence=item.retrieval_score,
+            ))
+        claims = tuple(claims_list)
         return KnowledgeEvidence(
             claims=claims,
             citations=citations,
@@ -393,4 +402,6 @@ class CompositeQueryOrchestrator:
             "vector_status": result.vector_status,
             "citation_count": len(result.citations),
             "chunk_ids": [item.chunk_id for item in result.citations],
+            "refusal_reason": result.refusal_reason,
+            "answer_guard_status": result.answer_guard_status,
         }

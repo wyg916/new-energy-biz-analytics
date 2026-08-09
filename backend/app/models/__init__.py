@@ -28,11 +28,13 @@ from app.models.sales import (
 )
 from app.models.knowledge import (
     KnowledgeChunk,
+    KnowledgeChunkIndex,
     KnowledgeDocument,
     KnowledgeDocumentAcl,
     KnowledgeDocumentVersion,
     KnowledgePublicationEvent,
     KnowledgeRetrievalEvent,
+    KnowledgeGovernanceEvent,
 )
 from app.memory.models import (
     MemoryDeleteVerification,
@@ -80,7 +82,7 @@ __all__ = [
     "SalesRegion",
     "KnowledgeChunk", "KnowledgeDocument", "KnowledgeDocumentAcl",
     "KnowledgeDocumentVersion", "KnowledgePublicationEvent",
-    "KnowledgeRetrievalEvent",
+    "KnowledgeRetrievalEvent", "KnowledgeChunkIndex", "KnowledgeGovernanceEvent",
     "MemoryAuditEvent", "MemoryDeletionAudit", "MemoryDeleteVerification",
     "MemoryLifecycleOutbox", "MemoryLifecycleTask", "MemoryRecord",
     "MemoryWriteCandidateRecord", "ProcedureDefinition", "SkillDefinition",

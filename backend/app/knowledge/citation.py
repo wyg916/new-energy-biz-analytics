@@ -1,3 +1,4 @@
+import json
 from datetime import UTC, datetime
 
 from app.knowledge.models import Citation
@@ -20,6 +21,9 @@ def citation_from_ranked(item: RankedChunk, *, at_time: datetime) -> Citation:
         title=item.document.title,
         page=item.chunk.page,
         section=item.chunk.section,
+        paragraph_start=item.chunk.paragraph_start,
+        paragraph_end=item.chunk.paragraph_end,
+        locator=_locator(item.chunk.locator_json, item.chunk.page, item.chunk.section),
         source=item.document.source_path,
         published_at=version.published_at,
         citation_text=item.chunk.content[:500],
@@ -29,3 +33,20 @@ def citation_from_ranked(item: RankedChunk, *, at_time: datetime) -> Citation:
 
 def _utc(value: datetime) -> datetime:
     return value.replace(tzinfo=UTC) if value.tzinfo is None else value.astimezone(UTC)
+
+
+def _locator(raw: str, page: int | None, section: str | None) -> str:
+    try:
+        locator = json.loads(raw or "{}")
+    except json.JSONDecodeError:
+        locator = {}
+    values = []
+    if locator.get("page") or page:
+        values.append(f"page:{locator.get('page') or page}")
+    if locator.get("section") or section:
+        values.append(f"section:{locator.get('section') or section}")
+    start = locator.get("paragraph_start")
+    end = locator.get("paragraph_end")
+    if start:
+        values.append(f"paragraph:{start}" if start == end else f"paragraph:{start}-{end}")
+    return ";".join(values) or "document"

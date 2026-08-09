@@ -144,7 +144,8 @@ def test_knowledge_api_governed_flow_and_composed_answer(client, login) -> None:
     )
     assert retrieved.status_code == 200
     assert retrieved.json()["citations"]
-    assert retrieved.json()["vector_status"] == "VECTOR_DEFERRED_POST_P5"
+    assert retrieved.json()["vector_status"] == "EQUIVALENT_VECTOR_READY"
+    assert retrieved.json()["retrieval_mode"] == "hybrid_bm25_vector_rrf_rerank"
 
     answered = client.post(
         "/api/v1/assistant/query",

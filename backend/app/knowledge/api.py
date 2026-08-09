@@ -26,9 +26,11 @@ from app.knowledge.publication import (
     KnowledgePublicationService,
 )
 from app.knowledge.retrieval import KnowledgeRetrievalService
+from app.knowledge.indexer import EMBEDDING_MODEL, EMBEDDING_VERSION, VECTOR_STATUS
 from app.models.auth import User
 from app.models.knowledge import (
     KnowledgeChunk,
+    KnowledgeChunkIndex,
     KnowledgeDocument,
     KnowledgeDocumentVersion,
 )
@@ -103,12 +105,49 @@ def _http_error(exc: Exception) -> HTTPException:
 
 
 @router.get("/runtime")
-def runtime(_: User = Depends(current_user)) -> dict:
+def runtime(
+    db: Session = Depends(get_db),
+    user: User = Depends(current_user),
+) -> dict:
     settings = get_settings()
+    identity = IdentityContextFactory.from_user(user)
+    published_chunk_count = int(db.scalar(
+        select(func.count()).select_from(KnowledgeChunk)
+        .join(KnowledgeDocumentVersion)
+        .join(KnowledgeDocument)
+        .where(
+            KnowledgeDocumentVersion.status == "PUBLISHED",
+            KnowledgeDocument.tenant_id == identity.tenant_id,
+            KnowledgeDocument.workspace_id == identity.workspace_id,
+            KnowledgeChunkIndex.embedding_model == EMBEDDING_MODEL,
+            KnowledgeChunkIndex.embedding_version == EMBEDDING_VERSION,
+            KnowledgeChunkIndex.content_sha256 == KnowledgeChunk.content_sha256,
+        )
+    ) or 0)
+    indexed_chunk_count = int(db.scalar(
+        select(func.count()).select_from(KnowledgeChunkIndex)
+        .join(KnowledgeChunk)
+        .join(KnowledgeDocumentVersion)
+        .join(KnowledgeDocument)
+        .where(
+            KnowledgeDocumentVersion.status == "PUBLISHED",
+            KnowledgeDocument.tenant_id == identity.tenant_id,
+            KnowledgeDocument.workspace_id == identity.workspace_id,
+        )
+    ) or 0)
+    index_ready = indexed_chunk_count == published_chunk_count
     return {
-        "knowledge_service": "READY",
-        "retrieval_mode": "keyword_full_text_only",
-        "vector_status": "VECTOR_DEFERRED_POST_P5",
+        "knowledge_service": "READY" if index_ready else "INDEX_BACKFILL_REQUIRED",
+        "retrieval_mode": (
+            "hybrid_bm25_vector_rrf_rerank"
+            if index_ready else "hybrid_partial_index_fail_closed"
+        ),
+        "keyword_index": "equivalent_bm25_v1",
+        "vector_status": VECTOR_STATUS if index_ready else "INDEX_BACKFILL_REQUIRED",
+        "embedding_model": EMBEDDING_MODEL,
+        "pgvector_claimed": False,
+        "published_chunk_count": published_chunk_count,
+        "indexed_chunk_count": indexed_chunk_count,
         "sqlbot_runtime": (
             "NOT_INCLUDED_IN_THIS_RELEASE"
             if not settings.sqlbot_included_in_v4_release
@@ -301,6 +340,9 @@ def retrieval_test(
         "vector_status": result.vector_status,
         "citations": [item.__dict__ for item in result.citations],
         "warnings": result.warnings,
+        "rewritten_query": result.rewritten_query,
+        "refusal_reason": result.refusal_reason,
+        "answer_guard_status": result.answer_guard_status,
         "trace_id": result.trace_id,
         "run_id": result.run_id,
     }

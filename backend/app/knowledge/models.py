@@ -57,6 +57,9 @@ class Citation:
     title: str
     page: int | None
     section: str | None
+    paragraph_start: int | None
+    paragraph_end: int | None
+    locator: str
     source: str
     published_at: datetime
     citation_text: str
@@ -72,3 +75,7 @@ class RetrievalResult:
     trace_id: str
     run_id: str | None
     warnings: tuple[str, ...]
+    rewritten_query: str = ""
+    context: str = ""
+    refusal_reason: str | None = None
+    answer_guard_status: str = "PASSED"

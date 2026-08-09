@@ -1,0 +1,3 @@
+data/open_source/source_manifest.json text eol=lf
+data/open_source/raw/*.json text eol=lf
+data/open_source/raw/*.csv text eol=lf
