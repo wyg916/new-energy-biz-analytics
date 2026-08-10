@@ -144,7 +144,11 @@ def _candidate(provider: ProviderInput) -> dict[str, Any]:
                 "val": {"thinking": {"type": "disabled"}},
                 "name": "extra_body",
             },
-        {"key": "max_tokens", "val": 1024, "name": "max_tokens"},
+            {"key": "max_tokens", "val": 768, "name": "max_tokens"},
+            # The platform owns the only permitted one-repair loop.  Disable
+            # hidden SDK retries so provider delay cannot multiply silently.
+            {"key": "max_retries", "val": 0, "name": "max_retries"},
+            {"key": "timeout", "val": 12, "name": "timeout"},
         ]
         if provider.provider == "deepseek"
         else []

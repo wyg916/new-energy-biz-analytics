@@ -49,13 +49,103 @@ def _searchable(item: dict[str, Any]) -> set[str]:
     return _tokens(json.dumps(item, ensure_ascii=False, sort_keys=True))
 
 
+def _compact(value: str) -> str:
+    return re.sub(r"[^\w\u4e00-\u9fff]+", "", value.lower())
+
+
+def _semantic_labels(item: dict[str, Any]) -> tuple[str, ...]:
+    values = (item.get("code"), item.get("name"), *(item.get("aliases") or ()))
+    return tuple(
+        _compact(value)
+        for value in values
+        if isinstance(value, str) and len(_compact(value)) >= 2
+    )
+
+
 def _relevant(question: str, terms: set[str], item: dict[str, Any]) -> bool:
-    compact_question = re.sub(r"\s+", "", question.lower())
+    compact_question = _compact(question)
     searchable = _searchable(item)
     return bool(
+        any(label in compact_question for label in _semantic_labels(item))
+        or
         terms & searchable
         or any(token in compact_question for token in searchable if len(token) > 1)
     )
+
+
+_CONTROLLED_SCHEMA_HINTS: dict[str, tuple[str, ...]] = {
+    "completed_order_count": ("订单", "完成订单"),
+    "order_count": ("订单",),
+    "sales_revenue": ("收入",),
+    "gross_profit": ("毛利",),
+    "new_customer_count": ("新客户",),
+    "repeat_customer_count": ("复购客户",),
+    "station": ("快充站", "慢充站", "站点"),
+    "station_type": ("快充", "慢充"),
+    "customer_segment": ("企业客户", "政府客户", "消费客户", "小微客户"),
+}
+_EXPLICIT_TIME = re.compile(
+    r"(?i)(?:20\d{2}年|\d{4}-\d{2}-\d{2}|上半年|下半年|季度|月份|每月|按月|同比|环比)"
+)
+
+
+def _hint_relevant(question: str, item: dict[str, Any]) -> bool:
+    compact_question = _compact(question)
+    return any(
+        _compact(hint) in compact_question
+        for hint in _CONTROLLED_SCHEMA_HINTS.get(str(item.get("code") or ""), ())
+    )
+
+
+def _metric_dependency_closure(
+    selected: tuple[dict[str, Any], ...],
+    catalog_metrics: list[dict[str, Any]],
+) -> tuple[dict[str, Any], ...]:
+    by_code = {str(item.get("code")): item for item in catalog_metrics if item.get("code")}
+    codes = {str(item["code"]) for item in selected}
+    changed = True
+    while changed:
+        changed = False
+        expressions = " ".join(str(by_code[code].get("expression") or "") for code in codes)
+        for code in by_code:
+            if code not in codes and re.search(rf"(?<!\w){re.escape(code)}(?!\w)", expressions):
+                codes.add(code)
+                changed = True
+    return tuple(item for item in catalog_metrics if str(item.get("code")) in codes)
+
+
+def _relationship_closure(
+    selected: set[str],
+    relationships: tuple[dict[str, Any], ...],
+) -> set[str]:
+    """Add only intermediate nodes needed to connect selected relations."""
+    if len(selected) < 2:
+        return selected
+    graph: dict[str, set[str]] = {}
+    for item in relationships:
+        source = str(item.get("source_table") or "")
+        target = str(item.get("target_table") or "")
+        if source and target:
+            graph.setdefault(source, set()).add(target)
+            graph.setdefault(target, set()).add(source)
+    closure = set(selected)
+    anchors = tuple(sorted(selected))
+    for start in anchors:
+        for target in anchors:
+            if start >= target:
+                continue
+            queue = [(start, (start,))]
+            visited = {start}
+            while queue:
+                node, path = queue.pop(0)
+                if node == target:
+                    closure.update(path)
+                    break
+                for candidate in sorted(graph.get(node, ())):
+                    if candidate not in visited:
+                        visited.add(candidate)
+                        queue.append((candidate, (*path, candidate)))
+    return closure
 
 
 def build_schema_catalog(context: QueryContext) -> dict[str, Any]:
@@ -88,11 +178,19 @@ def retrieve_schema(question: str, context: QueryContext) -> RetrievedSchema:
     terms = _tokens(question)
     metrics = tuple(
         item for item in catalog["metrics"]
-        if not terms or _relevant(question, terms, item)
+        if (
+            not terms
+            or _relevant(question, terms, item)
+            or _hint_relevant(question, item)
+        )
     )
+    metrics = _metric_dependency_closure(metrics, catalog["metrics"])
     dimensions = tuple(
         item for item in catalog["dimensions"]
-        if not terms or _relevant(question, terms, item)
+        if not terms
+        or _relevant(question, terms, item)
+        or _hint_relevant(question, item)
+        or (str(item.get("code") or "") == "date" and _EXPLICIT_TIME.search(question))
     )
 
     authorized_tables = tuple(
@@ -110,6 +208,10 @@ def retrieve_schema(question: str, context: QueryContext) -> RetrievedSchema:
 
     selected = set()
     for item in (*metrics, *dimensions):
+        lineage = item.get("lineage") or {}
+        for ref in lineage.get("fields", ()) if isinstance(lineage, dict) else ():
+            if isinstance(ref, str) and "." in ref:
+                selected.add(physical_relation(ref.split(".", 1)[0]))
         for key in ("field_ref", "time_field"):
             ref = item.get(key)
             if isinstance(ref, str) and "." in ref:
@@ -118,6 +220,13 @@ def retrieve_schema(question: str, context: QueryContext) -> RetrievedSchema:
         if isinstance(expression, str):
             for identifier in re.findall(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\.", expression):
                 selected.add(physical_relation(identifier))
+            for identifier in re.findall(r"\b[A-Za-z_][A-Za-z0-9_]*\b", expression):
+                matches = [
+                    relation for relation, columns in context.allowed_relations.items()
+                    if identifier in columns
+                ]
+                if len(matches) == 1:
+                    selected.add(matches[0])
 
     for relation, columns in context.allowed_relations.items():
         column_terms = set().union(*(_tokens(column.replace("_", " ")) for column in columns)) if columns else set()
@@ -127,6 +236,7 @@ def retrieve_schema(question: str, context: QueryContext) -> RetrievedSchema:
     relationships = tuple(catalog["relationships"])
     if not selected:
         selected = set(context.allowed_relations)
+    selected = _relationship_closure(selected, relationships)
 
     relations = {
         relation: context.allowed_relations[relation]

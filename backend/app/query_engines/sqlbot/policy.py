@@ -90,9 +90,33 @@ def validate_generated_sql(sql: str, context: QueryContext) -> SQLPolicyDecision
             # cannot redirect to a same-named object outside that boundary.
             table.set("db", None)
         if table.name not in allowed_relations:
-            _deny("relation is not registered for the active scenario")
+            _deny(
+                "relation is not registered for the active scenario: "
+                f"relation={table.name}"
+            )
         relations.append(table.name)
         table_aliases[table.alias_or_name] = table.name
+
+    derived_outputs: dict[str, set[str]] = {}
+    derived_lineage: dict[str, dict[str, tuple[str, str]]] = {}
+    for subquery in root.find_all(exp.Subquery):
+        alias = subquery.alias
+        select_node = subquery.this
+        if not alias or not isinstance(select_node, exp.Select):
+            continue
+        outputs: set[str] = set()
+        lineage: dict[str, tuple[str, str]] = {}
+        for projection in select_node.expressions:
+            output_name = projection.alias_or_name
+            if output_name:
+                outputs.add(output_name)
+            source = projection.this if isinstance(projection, exp.Alias) else projection
+            if isinstance(source, exp.Column) and output_name:
+                relation = table_aliases.get(source.table)
+                if relation is not None:
+                    lineage[output_name] = (relation, source.name)
+        derived_outputs[alias] = outputs
+        derived_lineage[alias] = lineage
     if not relations:
         _deny("query must reference a registered relation")
 
@@ -106,18 +130,34 @@ def validate_generated_sql(sql: str, context: QueryContext) -> SQLPolicyDecision
             continue
         if column.table:
             relation = table_aliases.get(column.table)
+            if relation is None and name in derived_outputs.get(column.table, set()):
+                columns.append(name)
+                continue
             if relation is None or name not in allowed_relations.get(relation, ()):
-                _deny("qualified field is not in the active semantic allowlist")
+                _deny(
+                    "qualified field is not in the active semantic allowlist: "
+                    f"table={relation or column.table},column={name}"
+                )
         else:
             matches = [relation for relation in relations if name in allowed_relations[relation]]
             if len(set(matches)) != 1:
-                _deny("unqualified field is unknown or ambiguous")
+                _deny(
+                    "unqualified field is unknown or ambiguous: "
+                    f"column={name}"
+                )
         columns.append(name)
 
     joins = tuple(root.find_all(exp.Join))
     if len(joins) > 4:
         _deny("join count exceeds the controlled cost budget")
     relationship_pairs = _relationship_pairs(context)
+
+    def join_endpoint(column: exp.Column) -> tuple[str, str] | None:
+        relation = table_aliases.get(column.table)
+        if relation is not None:
+            return relation, column.name
+        return derived_lineage.get(column.table, {}).get(column.name)
+
     for join in joins:
         if join.args.get("on") is None or join.args.get("kind") == "CROSS":
             _deny("every join requires an approved equality predicate")
@@ -128,10 +168,11 @@ def validate_generated_sql(sql: str, context: QueryContext) -> SQLPolicyDecision
             left, right = predicate.left, predicate.right
             if not isinstance(left, exp.Column) or not isinstance(right, exp.Column):
                 _deny("join equality must compare registered columns")
-            pair = frozenset((
-                (table_aliases.get(left.table, left.table), left.name),
-                (table_aliases.get(right.table, right.table), right.name),
-            ))
+            left_endpoint = join_endpoint(left)
+            right_endpoint = join_endpoint(right)
+            if left_endpoint is None or right_endpoint is None:
+                _deny("derived join key must preserve registered column lineage")
+            pair = frozenset((left_endpoint, right_endpoint))
             if pair not in relationship_pairs:
                 _deny("join relationship is not published")
 

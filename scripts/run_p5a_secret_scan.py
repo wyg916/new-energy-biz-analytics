@@ -82,11 +82,26 @@ def main() -> None:
     if forbidden_tracked_env_names:
         raise RuntimeError("tracked .env-style files are forbidden; contents were not read")
     candidate_lines, diff_sha256 = added_lines(args.baseline)
+    unchanged_large_files = sorted(
+        path.relative_to(ROOT).as_posix()
+        for path in ROOT.rglob("*")
+        if path.is_file()
+        and ".git" not in path.parts
+        and path.stat().st_size > 10 * 1024 * 1024
+        and path.relative_to(ROOT).as_posix() not in candidate_lines
+    )
 
     command("docker", "volume", "create", args.cache_volume)
-    version = command("docker", "run", "--rm", TRIVY_IMAGE, "--version")
+    version = command(
+        "docker", "run", "--rm", "--pull", "never", TRIVY_IMAGE, "--version",
+    )
+    unchanged_skip_arguments = [
+        argument
+        for path in unchanged_large_files
+        for argument in ("--skip-files", f"/src/{path}")
+    ]
     scan = command(
-        "docker", "run", "--rm",
+        "docker", "run", "--rm", "--pull", "never",
         "-v", f"{ROOT}:/src:ro",
         "-v", f"{args.cache_volume}:/root/.cache/trivy",
         TRIVY_IMAGE,
@@ -95,6 +110,7 @@ def main() -> None:
         "--skip-dirs", "/src/node_modules",
         "--skip-dirs", "/src/frontend/node_modules",
         "--skip-files", "**/.env*",
+        *unchanged_skip_arguments,
         "/src",
     )
     raw = json.loads(scan.stdout.decode("utf-8"))
@@ -135,6 +151,7 @@ def main() -> None:
         "scanner_image": TRIVY_IMAGE,
         "scanner_version": version.stdout.decode("utf-8", errors="replace").strip(),
         "raw_result_sha256": hashlib.sha256(scan.stdout).hexdigest(),
+        "unchanged_large_files_skipped": unchanged_large_files,
         "total_worktree_finding_count": len(findings),
         "pre_existing_finding_count": len(findings) - len(new_findings),
         "new_leakage_finding_count": len(new_findings),

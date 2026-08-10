@@ -42,6 +42,9 @@ DATASOURCES = (
             "active_context",
             "dim_station",
             "fact_charging_session",
+            "fact_device_status_event",
+            "fact_energy_cost",
+            "fact_operation_expense",
         ),
     ),
     DatasourceSpec(
@@ -55,7 +58,11 @@ DATASOURCES = (
             "sales_order",
             "sales_order_item",
             "sales_product",
+            "sales_product_category",
             "sales_region",
+            "sales_customer",
+            "sales_business_date",
+            "salesperson",
         ),
     ),
 )

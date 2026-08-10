@@ -1,0 +1,970 @@
+{
+  "evidence_type": "sqlbot_runtime_smoke20",
+  "evaluated_at": "2026-08-09T19:39:31.751134+00:00",
+  "runtime_status": "COMPLETED_WITH_FAILURES",
+  "provider": "deepseek",
+  "actual_model": "deepseek-v4-flash",
+  "sqlbot_upstream": "v1.10.0",
+  "data_classification": "simulated",
+  "credential_source": "CREDENTIAL_REFERENCE",
+  "credential_versions": {
+    "username": 1,
+    "password": 1
+  },
+  "source_stats": {
+    "charging_ops": {
+      "min_date": "2020-05-10",
+      "max_date": "2026-06-30",
+      "row_count": 300026
+    },
+    "sales_ops": {
+      "min_date": "2010-12-01",
+      "max_date": "2026-06-30",
+      "row_count": 63665
+    }
+  },
+  "total": 1,
+  "executed": 1,
+  "passed": 0,
+  "failed": 1,
+  "scenario_counts": {
+    "charging_ops": 1
+  },
+  "external_request_count": 1,
+  "evidence_recovered_from_sqlbot_records": false,
+  "reconstructed_trace_count": 0,
+  "metrics": {
+    "model_call_success_rate": 1.0,
+    "sql_generation_rate": 0.0,
+    "sql_guard_pass_rate": 0.0,
+    "sql_execution_rate": 0.0,
+    "guarded_query_completion_rate": 0.0,
+    "execution_accuracy": null,
+    "execution_accuracy_reason": "no result-value oracle is present in the fixed Golden source",
+    "metric_value_accuracy": null,
+    "metric_value_accuracy_reason": "fixed Golden cases contain metric labels but no expected result values",
+    "semantic_outcome_accuracy": 0.0,
+    "time_range_accuracy": null,
+    "dimension_accuracy": null,
+    "sort_accuracy": null,
+    "permission_violation_rate": 0.0,
+    "cross_scenario_generation_rate": null,
+    "hallucinated_table_rate": null,
+    "hallucinated_field_rate": null,
+    "rejection_accuracy": null,
+    "clarification_expected_accuracy": null,
+    "dangerous_sql_allowed_count": 0,
+    "unauthorized_relation_allowed_count": 0,
+    "pii_sql_allowed_count": 0,
+    "p50_latency_ms": 6846,
+    "p95_latency_ms": 6846,
+    "token_usage": {
+      "observed_count": 0,
+      "total": 0,
+      "mean": null
+    },
+    "estimated_cost_per_request": null
+  },
+  "latency_profile": {
+    "stages": {
+      "schema_retrieval_ms": {
+        "observed": 1,
+        "p50": 4,
+        "p95": 4,
+        "max": 4
+      },
+      "prompt_build_ms": {
+        "observed": 1,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "runtime_connection_ms": {
+        "observed": 1,
+        "p50": 463,
+        "p95": 463,
+        "max": 463
+      },
+      "model_ttft_ms": {
+        "observed": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      },
+      "model_generation_ms": {
+        "observed": 1,
+        "p50": 6340,
+        "p95": 6340,
+        "max": 6340
+      },
+      "retry_ms": {
+        "observed": 1,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "normalization_ms": {
+        "observed": 1,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "guard_ms": {
+        "observed": 1,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "execution_ms": {
+        "observed": 1,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "answer_ms": {
+        "observed": 1,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "total_ms": {
+        "observed": 1,
+        "p50": 6846,
+        "p95": 6846,
+        "max": 6846
+      }
+    },
+    "largest_p95_stage": "model_generation_ms",
+    "ttft_available": false
+  },
+  "results": [
+    {
+      "case_id": "MD-001",
+      "scenario": "charging_ops",
+      "category": "multi_table_dimension",
+      "expected_decision": "QUERY",
+      "question": "按区域和城市查看2026年6月收入、订单和毛利。",
+      "normalized_question": "按区域和城市查看2026年6月收入、订单和毛利。",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 1,
+      "attempts": 1,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "REFUSED_PRE_SQL",
+      "execution_status": "NOT_EXECUTED",
+      "execution_error_detail": null,
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 6846,
+      "latency_profile": {
+        "schema_retrieval_ms": 4,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 463,
+        "model_ttft_ms": null,
+        "model_generation_ms": 6340,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 6846
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c2",
+      "prompt_profile": {
+        "characters": 6607,
+        "utf8_bytes": 6965,
+        "schema_relation_count": 4,
+        "schema_field_count": 24
+      },
+      "query_understanding": {
+        "status": "READY",
+        "route_class": "core_metric",
+        "risk": "controlled",
+        "deterministic_preferred": true,
+        "reason": "core_metric_pinned",
+        "clarification_codes": [],
+        "clarification_question": null,
+        "matched_metrics": [
+          "charging_revenue",
+          "gross_profit"
+        ],
+        "matched_dimensions": [
+          "city",
+          "region",
+          "date"
+        ]
+      },
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "06ae24030d02df65239516f3a18fd1e859309c55931abe01c61f16a79412f22f",
+        "authorized_tables": [
+          {
+            "code": "session_fact",
+            "name": "充电会话事实",
+            "relation": "fact_charging_session",
+            "fields": [
+              {
+                "code": "charging_duration_seconds",
+                "name": "充电时长",
+                "physical_field": "charging_duration_seconds",
+                "data_type": "integer"
+              },
+              {
+                "code": "device_id",
+                "name": "设备编码",
+                "physical_field": "device_id",
+                "data_type": "string"
+              },
+              {
+                "code": "electricity_fee_net_amount",
+                "name": "电费净额",
+                "physical_field": "electricity_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "energy_kwh",
+                "name": "充电电量",
+                "physical_field": "energy_kwh",
+                "data_type": "number"
+              },
+              {
+                "code": "service_fee_net_amount",
+                "name": "服务费净额",
+                "physical_field": "service_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "session_id",
+                "name": "会话编码",
+                "physical_field": "session_id",
+                "data_type": "string"
+              },
+              {
+                "code": "settlement_time",
+                "name": "结算时间",
+                "physical_field": "settlement_time",
+                "data_type": "datetime"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              },
+              {
+                "code": "user_id",
+                "name": "用户编码",
+                "physical_field": "user_id",
+                "data_type": "string"
+              },
+              {
+                "code": "user_segment",
+                "name": "用户分群",
+                "physical_field": "user_segment",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "energy_cost_fact",
+            "name": "电费成本事实",
+            "relation": "fact_energy_cost",
+            "fields": [
+              {
+                "code": "cost_date",
+                "name": "成本日期",
+                "physical_field": "cost_date",
+                "data_type": "date"
+              },
+              {
+                "code": "energy_cost",
+                "name": "电费成本",
+                "physical_field": "energy_cost",
+                "data_type": "number"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "operation_expense_fact",
+            "name": "运营费用事实",
+            "relation": "fact_operation_expense",
+            "fields": [
+              {
+                "code": "amount",
+                "name": "费用金额",
+                "physical_field": "amount",
+                "data_type": "number"
+              },
+              {
+                "code": "expense_date",
+                "name": "费用日期",
+                "physical_field": "expense_date",
+                "data_type": "date"
+              },
+              {
+                "code": "is_variable",
+                "name": "是否可变",
+                "physical_field": "is_variable",
+                "data_type": "boolean"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              },
+              {
+                "code": "expense_type",
+                "name": "费用类型",
+                "physical_field": "expense_type",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "station_dimension",
+            "name": "场站维度",
+            "relation": "dim_station",
+            "fields": [
+              {
+                "code": "city_id",
+                "name": "城市编码",
+                "physical_field": "city_id",
+                "data_type": "string"
+              },
+              {
+                "code": "connector_count",
+                "name": "枪口数",
+                "physical_field": "connector_count",
+                "data_type": "integer"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              },
+              {
+                "code": "operator",
+                "name": "运营商",
+                "physical_field": "operator",
+                "data_type": "string"
+              },
+              {
+                "code": "station_type",
+                "name": "场站类型",
+                "physical_field": "station_type",
+                "data_type": "string"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "cost_to_station",
+            "source_table": "fact_energy_cost",
+            "source_fields": [
+              "station_id"
+            ],
+            "target_table": "dim_station",
+            "target_fields": [
+              "station_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "expense_to_station",
+            "source_table": "fact_operation_expense",
+            "source_fields": [
+              "station_id"
+            ],
+            "target_table": "dim_station",
+            "target_fields": [
+              "station_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "session_to_station",
+            "source_table": "fact_charging_session",
+            "source_fields": [
+              "station_id"
+            ],
+            "target_table": "dim_station",
+            "target_fields": [
+              "station_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [
+          {
+            "code": "charging_revenue",
+            "name": "充电收入",
+            "aliases": [
+              "收入",
+              "营收"
+            ],
+            "expression": "electricity_fee_net_amount + service_fee_net_amount",
+            "aggregation": "sum",
+            "time_field": "session_fact.settlement_time",
+            "lineage": {
+              "fields": [
+                "session_fact.electricity_fee_net_amount",
+                "session_fact.service_fee_net_amount"
+              ]
+            },
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "quarter",
+              "region",
+              "city",
+              "station"
+            ]
+          },
+          {
+            "code": "energy_cost",
+            "name": "电费成本",
+            "aliases": [
+              "电成本"
+            ],
+            "expression": "SUM(energy_cost)",
+            "aggregation": "sum",
+            "time_field": "energy_cost_fact.cost_date",
+            "lineage": {
+              "fields": [
+                "energy_cost_fact.energy_cost"
+              ]
+            },
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "region",
+              "city",
+              "station"
+            ]
+          },
+          {
+            "code": "gross_profit",
+            "name": "经营毛利",
+            "aliases": [
+              "毛利"
+            ],
+            "expression": "charging_revenue - energy_cost - variable_operating_cost",
+            "aggregation": "derived",
+            "time_field": "session_fact.settlement_time",
+            "lineage": {
+              "metrics": [
+                "charging_revenue",
+                "energy_cost",
+                "variable_operating_cost"
+              ]
+            },
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "region",
+              "city",
+              "station"
+            ]
+          },
+          {
+            "code": "variable_operating_cost",
+            "name": "可变运营成本",
+            "aliases": [
+              "可变成本"
+            ],
+            "expression": "SUM(amount WHERE is_variable)",
+            "aggregation": "sum",
+            "time_field": "operation_expense_fact.expense_date",
+            "lineage": {
+              "fields": [
+                "operation_expense_fact.amount",
+                "operation_expense_fact.is_variable"
+              ]
+            },
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "region",
+              "city",
+              "station",
+              "expense_type"
+            ]
+          }
+        ],
+        "dimensions": [
+          {
+            "code": "city",
+            "name": "城市",
+            "aliases": [
+              "所在城市"
+            ],
+            "field_ref": "station_dimension.city_id",
+            "data_type": "string"
+          },
+          {
+            "code": "date",
+            "name": "日期",
+            "aliases": [
+              "日"
+            ],
+            "field_ref": "session_fact.settlement_time",
+            "data_type": "date"
+          },
+          {
+            "code": "region",
+            "name": "运营区域",
+            "aliases": [
+              "区域"
+            ],
+            "field_ref": "station_dimension.region_id",
+            "data_type": "string"
+          }
+        ],
+        "time_dimensions": [
+          {
+            "code": "settlement_time",
+            "field_ref": "session_fact.settlement_time",
+            "timezone": "UTC",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ],
+        "retrieval_terms": [
+          "按区域和城市查看2026年6月收入",
+          "订单和毛利"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [
+          {
+            "code": "session_fact",
+            "name": "充电会话事实",
+            "relation": "fact_charging_session",
+            "fields": [
+              {
+                "code": "charging_duration_seconds",
+                "name": "充电时长",
+                "physical_field": "charging_duration_seconds",
+                "data_type": "integer"
+              },
+              {
+                "code": "device_id",
+                "name": "设备编码",
+                "physical_field": "device_id",
+                "data_type": "string"
+              },
+              {
+                "code": "electricity_fee_net_amount",
+                "name": "电费净额",
+                "physical_field": "electricity_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "energy_kwh",
+                "name": "充电电量",
+                "physical_field": "energy_kwh",
+                "data_type": "number"
+              },
+              {
+                "code": "service_fee_net_amount",
+                "name": "服务费净额",
+                "physical_field": "service_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "session_id",
+                "name": "会话编码",
+                "physical_field": "session_id",
+                "data_type": "string"
+              },
+              {
+                "code": "settlement_time",
+                "name": "结算时间",
+                "physical_field": "settlement_time",
+                "data_type": "datetime"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              },
+              {
+                "code": "user_id",
+                "name": "用户编码",
+                "physical_field": "user_id",
+                "data_type": "string"
+              },
+              {
+                "code": "user_segment",
+                "name": "用户分群",
+                "physical_field": "user_segment",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "energy_cost_fact",
+            "name": "电费成本事实",
+            "relation": "fact_energy_cost",
+            "fields": [
+              {
+                "code": "cost_date",
+                "name": "成本日期",
+                "physical_field": "cost_date",
+                "data_type": "date"
+              },
+              {
+                "code": "energy_cost",
+                "name": "电费成本",
+                "physical_field": "energy_cost",
+                "data_type": "number"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "operation_expense_fact",
+            "name": "运营费用事实",
+            "relation": "fact_operation_expense",
+            "fields": [
+              {
+                "code": "amount",
+                "name": "费用金额",
+                "physical_field": "amount",
+                "data_type": "number"
+              },
+              {
+                "code": "expense_date",
+                "name": "费用日期",
+                "physical_field": "expense_date",
+                "data_type": "date"
+              },
+              {
+                "code": "is_variable",
+                "name": "是否可变",
+                "physical_field": "is_variable",
+                "data_type": "boolean"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              },
+              {
+                "code": "expense_type",
+                "name": "费用类型",
+                "physical_field": "expense_type",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "station_dimension",
+            "name": "场站维度",
+            "relation": "dim_station",
+            "fields": [
+              {
+                "code": "city_id",
+                "name": "城市编码",
+                "physical_field": "city_id",
+                "data_type": "string"
+              },
+              {
+                "code": "connector_count",
+                "name": "枪口数",
+                "physical_field": "connector_count",
+                "data_type": "integer"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              },
+              {
+                "code": "operator",
+                "name": "运营商",
+                "physical_field": "operator",
+                "data_type": "string"
+              },
+              {
+                "code": "station_type",
+                "name": "场站类型",
+                "physical_field": "station_type",
+                "data_type": "string"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "cost_to_station",
+            "source_table": "fact_energy_cost",
+            "source_fields": [
+              "station_id"
+            ],
+            "target_table": "dim_station",
+            "target_fields": [
+              "station_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "expense_to_station",
+            "source_table": "fact_operation_expense",
+            "source_fields": [
+              "station_id"
+            ],
+            "target_table": "dim_station",
+            "target_fields": [
+              "station_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "session_to_station",
+            "source_table": "fact_charging_session",
+            "source_fields": [
+              "station_id"
+            ],
+            "target_table": "dim_station",
+            "target_fields": [
+              "station_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [
+          {
+            "code": "charging_revenue",
+            "name": "充电收入",
+            "aliases": [
+              "收入",
+              "营收"
+            ],
+            "expression": "electricity_fee_net_amount + service_fee_net_amount",
+            "aggregation": "sum",
+            "time_field": "session_fact.settlement_time",
+            "lineage": {
+              "fields": [
+                "session_fact.electricity_fee_net_amount",
+                "session_fact.service_fee_net_amount"
+              ]
+            },
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "quarter",
+              "region",
+              "city",
+              "station"
+            ]
+          },
+          {
+            "code": "energy_cost",
+            "name": "电费成本",
+            "aliases": [
+              "电成本"
+            ],
+            "expression": "SUM(energy_cost)",
+            "aggregation": "sum",
+            "time_field": "energy_cost_fact.cost_date",
+            "lineage": {
+              "fields": [
+                "energy_cost_fact.energy_cost"
+              ]
+            },
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "region",
+              "city",
+              "station"
+            ]
+          },
+          {
+            "code": "gross_profit",
+            "name": "经营毛利",
+            "aliases": [
+              "毛利"
+            ],
+            "expression": "charging_revenue - energy_cost - variable_operating_cost",
+            "aggregation": "derived",
+            "time_field": "session_fact.settlement_time",
+            "lineage": {
+              "metrics": [
+                "charging_revenue",
+                "energy_cost",
+                "variable_operating_cost"
+              ]
+            },
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "region",
+              "city",
+              "station"
+            ]
+          },
+          {
+            "code": "variable_operating_cost",
+            "name": "可变运营成本",
+            "aliases": [
+              "可变成本"
+            ],
+            "expression": "SUM(amount WHERE is_variable)",
+            "aggregation": "sum",
+            "time_field": "operation_expense_fact.expense_date",
+            "lineage": {
+              "fields": [
+                "operation_expense_fact.amount",
+                "operation_expense_fact.is_variable"
+              ]
+            },
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "region",
+              "city",
+              "station",
+              "expense_type"
+            ]
+          }
+        ],
+        "dimensions": [
+          {
+            "code": "city",
+            "name": "城市",
+            "aliases": [
+              "所在城市"
+            ],
+            "field_ref": "station_dimension.city_id",
+            "data_type": "string"
+          },
+          {
+            "code": "date",
+            "name": "日期",
+            "aliases": [
+              "日"
+            ],
+            "field_ref": "session_fact.settlement_time",
+            "data_type": "date"
+          },
+          {
+            "code": "region",
+            "name": "运营区域",
+            "aliases": [
+              "区域"
+            ],
+            "field_ref": "station_dimension.region_id",
+            "data_type": "string"
+          }
+        ],
+        "time_dimensions": [
+          {
+            "code": "settlement_time",
+            "field_ref": "session_fact.settlement_time",
+            "timezone": "UTC",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": {
+        "code": 0,
+        "data": {
+          "success": false,
+          "refusal": "PRE_SQL_MODEL_REFUSAL"
+        },
+        "msg": null
+      },
+      "model_response_received": true,
+      "model_refusal": true,
+      "generation_attempts": [
+        {
+          "generation_attempt": 1,
+          "sql_hash": null,
+          "guard_result": "REFUSED_PRE_SQL",
+          "error": "SQLBOT_MODEL_REFUSAL"
+        }
+      ],
+      "repair_attempt": 0,
+      "repair_input": null,
+      "repair_output": null,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-98969282-1a79-4fc0-b268-2f6e462f873a",
+      "semantic_version": "0.1.0",
+      "semantic_model_version_id": "SMV-de099d2e-0e49-4bbd-a993-17ec1894c74e",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-MD-001-20260809T193924903115",
+      "trace_id": "P2A-MD-001-20260809T193924903115",
+      "error": "SQLBOT_MODEL_REFUSAL",
+      "final_status": "FAIL",
+      "permission_pass": true,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    }
+  ],
+  "secret_values_exposed": false,
+  "model_response_prose_exposed": false
+}

@@ -16,7 +16,7 @@
   "required_roles": ["executive", "regional_manager", "analyst_admin"],
   "dataset_code": "sales_operations",
   "semantic_model_code": "sales_operations_model",
-  "semantic_version": "1.0.0",
+  "semantic_version": "1.0.1",
   "migration": {"plugin": "app.scenarios.sales_ops.package_adapter"},
   "validation": {"metric_count": 12, "free_sql_allowed": false},
   "uninstall_boundary": "disable_only_preserve_history",

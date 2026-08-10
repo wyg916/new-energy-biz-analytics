@@ -1,0 +1,111 @@
+{
+  "current_data41_readonly_confirmation": {
+    "alembic_heads": [
+      "sqlbot_41c2"
+    ],
+    "checks": {
+      "alembic_current": true,
+      "category_alias_published": true,
+      "current_data41_activations": true,
+      "refund_amount_published": true,
+      "sales_semantic_1_0_1_active": true,
+      "single_active_binding_per_scenario": true,
+      "single_alembic_head": true
+    },
+    "database": "renewable_p5b",
+    "database_container": "renewable-data41-db-1",
+    "evidence_type": "sqlbot41c2_current_live_migration",
+    "read_only_verification": true,
+    "secret_values_exposed": false,
+    "state": {
+      "active_datasets": [
+        {
+          "classification": "open_source_real_data",
+          "dataset_id": "DS-2cbeb99b-c693-4432-abb6-7fbc3c665399",
+          "dataset_version_id": "DSV-98969282-1a79-4fc0-b268-2f6e462f873a",
+          "period_end_exclusive": "2020-06-10",
+          "period_start": "2020-05-09",
+          "scenario_id": "charging_ops",
+          "source_version": "DATA41-ACN-ORNL-26-V1",
+          "version": 2
+        },
+        {
+          "classification": "open_source_real_data",
+          "dataset_id": "DS-8cfbf83d-04be-453a-9e90-40e6cec1ee62",
+          "dataset_version_id": "DSV-ba404880-0be0-4fd1-aed7-20c422c3edc5",
+          "period_end_exclusive": "2011-12-10",
+          "period_start": "2010-12-01",
+          "scenario_id": "sales_ops",
+          "source_version": "DATA41-UCI-ONLINE-RETAIL-352-V1",
+          "version": 2
+        }
+      ],
+      "active_source_bindings": [
+        {
+          "approved_relations": [
+            "active_context",
+            "dim_station",
+            "fact_charging_session",
+            "fact_device_status_event",
+            "fact_energy_cost",
+            "fact_operation_expense"
+          ],
+          "datasource_id": "1",
+          "execution_mode": "upstream_readonly",
+          "scenario_id": "charging_ops",
+          "version": 2
+        },
+        {
+          "approved_relations": [
+            "active_context",
+            "sales_business_date",
+            "sales_channel",
+            "sales_customer",
+            "sales_order",
+            "sales_order_item",
+            "sales_product",
+            "sales_product_category",
+            "sales_region",
+            "salesperson"
+          ],
+          "datasource_id": "2",
+          "execution_mode": "upstream_readonly",
+          "scenario_id": "sales_ops",
+          "version": 1
+        }
+      ],
+      "alembic_current": "sqlbot_41c2",
+      "category_alias_published": true,
+      "refund_amount_published": true,
+      "sales_semantic_status": "ACTIVE",
+      "sales_semantic_version": "1.0.1"
+    },
+    "status": "PASS"
+  },
+  "evidence_type": "sqlbot41c2_final_migration",
+  "isolated_upgrade_rollback_reupgrade": {
+    "active_dataset_binding": true,
+    "database": "sqlbot41c2_migration_verify",
+    "database_removed": true,
+    "evidence_type": "sqlbot41c2_migration_cycle",
+    "expected_head": "sqlbot_41c2",
+    "new_relations": [
+      "semantic_sqlbot_charging.fact_device_status_event",
+      "semantic_sqlbot_charging.fact_energy_cost",
+      "semantic_sqlbot_charging.fact_operation_expense",
+      "semantic_sqlbot_sales.sales_business_date",
+      "semantic_sqlbot_sales.sales_customer",
+      "semantic_sqlbot_sales.sales_product_category",
+      "semantic_sqlbot_sales.salesperson"
+    ],
+    "reupgrade": true,
+    "rollback": true,
+    "secret_values_exposed": false,
+    "semantic_reupgrade": true,
+    "semantic_rollback": true,
+    "semantic_upgrade": true,
+    "status": "PASS",
+    "upgrade": true
+  },
+  "status": "PASS"
+}

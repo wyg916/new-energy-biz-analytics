@@ -1,4 +1,8 @@
 from datetime import UTC, datetime
+from decimal import Decimal
+from dataclasses import replace
+
+import pytest
 
 from app.core.database import SessionLocal
 from app.models.query_routing import (
@@ -14,7 +18,7 @@ from app.platform.query_engine import (
     QueryResult,
 )
 from app.query_engines.router import EngineMode, EngineRouter
-from app.query_engines.shadow import RoutingEvidenceRepository
+from app.query_engines.shadow import RoutingEvidenceRepository, compare_results, result_hash
 from app.query_engines.sqlbot.contracts import SQLBotSession, SQLBotSessionKey
 from app.query_engines.sqlbot.error_mapper import (
     SQLBotEngineError,
@@ -126,6 +130,27 @@ def test_shadow_route_and_session_evidence_never_persist_access_token() -> None:
         assert shadow.execution_accuracy == 1.0
         assert shadow.metric_value_match == 1
         assert shadow.permission_result == "PASS"
+
+
+@pytest.mark.no_db
+def test_shadow_result_hash_canonicalizes_equivalent_numeric_types() -> None:
+    deterministic = _result("deterministic")
+    sqlbot = replace(
+        _result("sqlbot"),
+        rows=({"sales_revenue": Decimal("10.0000001")},),
+    )
+
+    assert result_hash(deterministic) == result_hash(sqlbot)
+
+
+@pytest.mark.no_db
+def test_sqlbot_permission_result_is_independent_of_main_comparability() -> None:
+    deterministic = replace(_result("deterministic"), status="needs_clarification")
+
+    comparison = compare_results(deterministic, _result("sqlbot"))
+
+    assert comparison.permission_result == "PASS"
+    assert comparison.execution_accuracy == 0.0
 
 
 class _StaticEngine(QueryEngine):

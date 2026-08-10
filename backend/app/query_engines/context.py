@@ -118,6 +118,32 @@ def build_query_context(
         item for item in dimensions
         if item.field_ref.split(".", 1)[0] in allowed_table_codes
     )
+    # A published dimension is itself an allowlisted semantic field.  Include
+    # its physical field when an older model release omitted the duplicate
+    # SemanticField row; this keeps the published dimension and SQL policy in
+    # sync without discovering arbitrary database columns.
+    table_by_code = {table.code: table for table in tables}
+    authorized_by_code = {item["code"]: item for item in authorized_tables}
+    for dimension in dimensions:
+        table_code, physical_field = dimension.field_ref.split(".", 1)
+        table = table_by_code.get(table_code)
+        if table is None:
+            continue
+        columns = list(relation_columns[table.physical_binding])
+        if physical_field not in columns:
+            columns.append(physical_field)
+            relation_columns[table.physical_binding] = tuple(sorted(columns))
+        table_prompt = authorized_by_code[table_code]
+        if not any(
+            item["physical_field"] == physical_field
+            for item in table_prompt["fields"]
+        ):
+            table_prompt["fields"].append({
+                "code": dimension.code,
+                "name": dimension.name,
+                "physical_field": physical_field,
+                "data_type": dimension.data_type,
+            })
     relationships = tuple(db.scalars(select(SemanticRelationship).where(
         SemanticRelationship.semantic_model_version_id == version_id,
         SemanticRelationship.status == "PUBLISHED",
@@ -140,9 +166,11 @@ def build_query_context(
             {
                 "code": item.code,
                 "name": item.name,
+                "aliases": json.loads(item.aliases_json),
                 "expression": item.expression,
                 "aggregation": item.aggregation,
                 "time_field": item.time_field,
+                "lineage": json.loads(item.lineage_json),
                 "supported_dimensions": json.loads(item.supported_dimensions_json),
             }
             for item in metrics
@@ -151,6 +179,7 @@ def build_query_context(
             {
                 "code": item.code,
                 "name": item.name,
+                "aliases": json.loads(item.aliases_json),
                 "field_ref": item.field_ref,
                 "data_type": item.data_type,
             }

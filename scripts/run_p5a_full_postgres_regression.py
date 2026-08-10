@@ -38,6 +38,7 @@ BATCHES = (
         "test_rag_golden_60.py", "test_memory_working_semantic_episodic.py", "test_mysql_connector.py",
         "test_knowledge_api_and_composite.py", "test_p3_identity_authorization.py",
         "test_platform_foundation_api.py", "test_memory_skill_orchestration_api.py",
+        "test_sqlbot_open_nl2sql_41.py",
         "test_sqlbot_quality_patch.py", "test_sqlbot_source_binding.py", "test_memory_scope_authorization.py",
         "test_metric_catalog.py", "test_observability.py", "test_readonly_boundary.py",
         "test_memory_evaluation_report.py",

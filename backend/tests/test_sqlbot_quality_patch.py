@@ -9,6 +9,7 @@ from app.query_engines.sqlbot.error_mapper import SQLBotEngineError, SQLBotError
 from app.query_engines.sqlbot.limit_policy import apply_limit_policy
 from app.query_engines.sqlbot.request_mapper import map_question_request
 from app.query_engines.sqlbot.response_parser import parse_response
+from app.query_engines.sqlbot.prompt_context import build_guard_repair_question
 
 
 pytestmark = pytest.mark.no_db
@@ -105,3 +106,37 @@ def test_request_prompt_contains_only_current_authorized_scenario_contract():
     assert "fact_charging_session" not in prompt
     assert mapped["datasource_id"] == "2"
     assert json.loads(prompt.split("\n", 2)[1])["constraints"]["default_detail_limit"] == 100
+
+
+def test_repair_prompt_contains_structured_guard_and_current_allowlists():
+    prompt = build_guard_repair_question(
+        "按类别查看销量",
+        original_sql="SELECT x.bad FROM missing x",
+        guard_error=(
+            "SQLBOT_POLICY_DENIED:qualified field is not in the active "
+            "semantic allowlist: table=sales_product,column=bad"
+        ),
+        prompt_context={
+            "authorized_tables": [{
+                "relation": "sales_product",
+                "fields": [{"physical_field": "product_id"}],
+            }],
+            "relationships": [{
+                "source_table": "sales_order_item",
+                "source_fields": ["product_id"],
+                "target_table": "sales_product",
+                "target_fields": ["product_id"],
+            }],
+        },
+    )
+    payload = json.loads(prompt.split("\n", 1)[1].rsplit("\n", 1)[0])
+
+    assert payload["guard_error_code"] == "UNKNOWN_COLUMN"
+    assert payload["guard_error_field"] == {
+        "table": "sales_product",
+        "column": "bad",
+    }
+    assert payload["allowed_schema_subset"] == {
+        "sales_product": ["product_id"],
+    }
+    assert payload["single_select_required"] is True

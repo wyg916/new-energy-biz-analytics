@@ -8,6 +8,8 @@ param(
     [string]$RuntimeVolume = 'renewable-data41_p4_runtime',
     [string]$PlatformDatabaseHost = 'renewable-data41-db-1',
     [string]$SQLBotBaseUrl = 'http://host.docker.internal:18082/api/v1',
+    [string]$Provider = 'deepseek',
+    [string]$Model = 'deepseek-v4-flash',
     [string]$CaseId = '',
     [ValidateSet(1, 2)]
     [int]$Concurrency = 2
@@ -58,8 +60,10 @@ $arguments += @(
     '--latency-output', "/tmp/sqlbot41c-$Mode-latency.json",
     '--sqlbot-base-url', $SQLBotBaseUrl,
     '--max-attempts', '2',
-    '--timeout-seconds', '30',
+    '--timeout-seconds', '12',
     '--concurrency', "$Concurrency",
+    '--provider', $Provider,
+    '--model', $Model,
     '--username-credential-ref', 'name://preprod-sqlbot-username',
     '--password-credential-ref', 'name://preprod-sqlbot-password'
 )

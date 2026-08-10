@@ -43,6 +43,14 @@ def test_initial_source_bindings_are_versioned_approved_active_and_audited(bindi
     assert set(installed) == {"charging_ops", "sales_ops"}
     assert (charging.datasource_id, charging.status, charging.approved_by) == ("1", "ACTIVE", "user:admin")
     assert (sales.datasource_id, sales.status, sales.approved_by) == ("2", "ACTIVE", "user:admin")
+    assert set(json.loads(charging.binding_json)["approved_relations"]) == {
+        "active_context",
+        "dim_station",
+        "fact_charging_session",
+        "fact_device_status_event",
+        "fact_energy_cost",
+        "fact_operation_expense",
+    }
     assert len(db.scalars(select(MemoryAuditEvent).where(MemoryAuditEvent.action.like("sqlbot.binding.%"))).all()) == 6
 
 

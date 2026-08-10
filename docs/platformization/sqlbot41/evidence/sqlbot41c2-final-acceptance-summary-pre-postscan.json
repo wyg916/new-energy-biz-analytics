@@ -1,0 +1,91 @@
+{
+  "artifacts": {
+    "data41-regression-5.json": {
+      "sha256": "8ddb521e900cb3ae1d936f81b058f95d48909a2a92c7bc10ee3245c81e004b93",
+      "size": 1639
+    },
+    "latency-profile-final.json": {
+      "sha256": "5d00d8585e8ecbfbc611c36bd9c78330f34088b047d80069cbd476eef8a95d95",
+      "size": 1496
+    },
+    "migration-cycle-final.json": {
+      "sha256": "4280b88c40c04d8436e11e0923ef7b4dc1ecfc321015aad1db3d62c5dd718964",
+      "size": 3753
+    },
+    "postgres-regression-453.json": {
+      "sha256": "c6f2436fa23a7c6fe5812d5e958c46ac28d0aa0027748bb1bde1c3b36748ddf9",
+      "size": 6233
+    },
+    "provider-comparison.json": {
+      "sha256": "5caf7a98928c59391134092c271fa51421b35d41bf8c7f49a27f8ecfcfb4f951",
+      "size": 1104
+    },
+    "readonly-role-live-verification.json": {
+      "sha256": "2af86ed721582c5ce466c6651d4162a4a85bb009abd170d77782409b38e53cee",
+      "size": 1614
+    },
+    "readonly-role-security-verification.json": {
+      "sha256": "21fdd902265cdf830578af8faa9e931213fac8a88a45e43e8ff7e4898b10cb0e",
+      "size": 655
+    },
+    "readonly-wrapper-negative-final.json": {
+      "sha256": "5fa4314e802407358e9c513fcf3c378a7d14aeba10682ae9d7fde3c533e83c47",
+      "size": 912
+    },
+    "real-shadow-50-final.json": {
+      "sha256": "7cc778f03615edc5d4ff3ff88ae876baa104b7a29d689054ae5f93f2de608564",
+      "size": 127237
+    },
+    "real-smoke-20-failure-matrix.json": {
+      "sha256": "0236afb97d12c8b545e23b744059c403419e09e52550055d4a5ae1ef96ff702a",
+      "size": 75576
+    },
+    "real-smoke-20-final.json": {
+      "sha256": "ea1e7a2bb9917c4371b41aff5de271816f1a5fb657171cbb2f842fd93f02e2ec",
+      "size": 354127
+    },
+    "secret-scan-final.json": {
+      "sha256": "4ec52bda4fe2c186651b7de5eb83bec93e9bd6cdede6d2bc2e70099d80f0873d",
+      "size": 1182
+    }
+  },
+  "canary_executed": false,
+  "checks": {
+    "data41_regression_5": true,
+    "migration": true,
+    "postgres_regression_453": true,
+    "readonly_role_live": true,
+    "readonly_role_security": true,
+    "real_shadow_50": true,
+    "real_smoke_20": true,
+    "secret_scan": true,
+    "wrapper_fail_closed": true
+  },
+  "evidence_type": "sqlbot41c2_final_acceptance",
+  "generated_at": "2026-08-10T13:42:12.070359+00:00",
+  "integration_allowed": true,
+  "model_call_success_distinct_from_controlled_fallback": true,
+  "next_stage": "SQLBOT-4.1D Canary Closure",
+  "schema_version": "1.0",
+  "shadow_model_and_fallback_counts": {
+    "controlled_exact_example_fallback": 0,
+    "counting_basis": "shadow evidence records token-backed model success separately; MD-003 remains an unclassified Guard-correct denial, not fallback",
+    "model_call_attempted": 40,
+    "model_call_success": 39,
+    "unclassified_after_model_attempt": 1
+  },
+  "smoke_model_and_fallback_counts": {
+    "controlled_exact_example_fallback": 1,
+    "counting_basis": "explicit runtime model-response and governed-fallback fields",
+    "model_call_attempted": 16,
+    "model_call_success": 16,
+    "unclassified_after_model_attempt": 0
+  },
+  "status": "PASS",
+  "truth_boundary": {
+    "canary_or_stable_claimed": false,
+    "production_deployment_claimed": false,
+    "real_business_benefit_claimed": false,
+    "real_customer_usage_claimed": false
+  }
+}

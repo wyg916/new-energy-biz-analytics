@@ -21,12 +21,14 @@ from app.query_engines.sqlbot.policy import SQLPolicyDecision, validate_generate
 from app.query_engines.sqlbot.prompt_context import (
     authorized_examples,
     build_guard_repair_question,
+    exact_authorized_example,
 )
 from app.query_engines.sqlbot.request_mapper import map_question_request
 from app.query_engines.sqlbot.response_parser import parse_response
 from app.query_engines.sqlbot.result_guard import validate_result
 from app.query_engines.sqlbot.schema_catalog import retrieve_schema
 from app.query_engines.sqlbot.session_manager import SQLBotSessionManager
+from app.query_engines.sqlbot.understanding import understand_query
 
 
 GeneratedSQLExecutor = Callable[
@@ -133,9 +135,6 @@ class SQLBotEngine(QueryEngine):
             dataset_version=context.dataset_version,
         )
         phase = perf_counter()
-        session = self.sessions.get_or_create(key, self.client.create_session)
-        timings["runtime_connection_ms"] = int((perf_counter() - phase) * 1000)
-        phase = perf_counter()
         retrieved = retrieve_schema(request.question, context)
         timings["schema_retrieval_ms"] = int((perf_counter() - phase) * 1000)
         governed_context = replace(
@@ -148,15 +147,65 @@ class SQLBotEngine(QueryEngine):
                 "sql_examples": authorized_examples(
                     request.scenario_id,
                     retrieved.relations,
+                    request.question,
                 ),
             },
         )
+        understanding = understand_query(request, governed_context)
+        if understanding.status == "NEEDS_CLARIFICATION":
+            raise SQLBotEngineError(
+                SQLBotErrorCode.NEEDS_CLARIFICATION,
+                understanding.clarification_question or "查询需要澄清",
+            )
+        if understanding.status == "REJECTED":
+            raise SQLBotEngineError(
+                SQLBotErrorCode.POLICY_DENIED,
+                "query understanding rejected a high-risk request",
+            )
+        phase = perf_counter()
+        session = self.sessions.get_or_create(key, self.client.create_session)
+        timings["runtime_connection_ms"] = int((perf_counter() - phase) * 1000)
         generation_attempts: list[dict] = []
-        raw_payload, prompt_ms, model_ms = self._ask_with_single_rebuild(
-            request, governed_context, key, session
+        exact_example = exact_authorized_example(
+            request.scenario_id, retrieved.relations, request.question
         )
-        timings["prompt_build_ms"] = prompt_ms
-        timings["model_generation_ms"] = model_ms
+        generation_attempt = 1
+        generation_started = perf_counter()
+        try:
+            raw_payload, prompt_ms, model_ms, prompt_profile = self._ask_with_single_rebuild(
+                request, governed_context, key, session
+            )
+            timings["prompt_build_ms"] = prompt_ms
+            timings["model_generation_ms"] = model_ms
+        except SQLBotEngineError as generation_error:
+            transport_fallback_codes = {
+                SQLBotErrorCode.TIMEOUT,
+                SQLBotErrorCode.UPSTREAM_UNAVAILABLE,
+                SQLBotErrorCode.CIRCUIT_OPEN,
+            }
+            if (
+                exact_example is None
+                or generation_error.code not in transport_fallback_codes
+            ):
+                raise
+            timings["model_generation_ms"] = int(
+                (perf_counter() - generation_started) * 1000
+            )
+            generation_attempts.append({
+                "generation_attempt": 1,
+                "sql_hash": None,
+                "guard_result": "NOT_EXECUTED_TRANSPORT_ERROR",
+                "error": str(generation_error.code),
+            })
+            raw_payload = {"sql": exact_example["sql"]}
+            prompt_profile = {
+                "repair": {
+                    "mode": "governed_exact_example_fallback",
+                    "external_model_call": True,
+                    "reason": str(generation_error.code),
+                }
+            }
+            generation_attempt = 2
 
         def prepare_and_guard(payload: dict, attempt: int):
             phase = perf_counter()
@@ -202,46 +251,92 @@ class SQLBotEngine(QueryEngine):
             return candidate, decision
 
         try:
-            parsed, policy_decision = prepare_and_guard(raw_payload, 1)
+            parsed, policy_decision = prepare_and_guard(raw_payload, generation_attempt)
         except (QueryRejected, SQLBotEngineError) as first_error:
+            if generation_attempt == 2:
+                raise SQLBotEngineError(
+                    SQLBotErrorCode.POLICY_DENIED,
+                    str(first_error),
+                ) from first_error
             if not generation_attempts:
-                raise
+                if (
+                    exact_example is None
+                    or not isinstance(first_error, SQLBotEngineError)
+                    or first_error.code not in {
+                        SQLBotErrorCode.MODEL_REFUSAL,
+                        SQLBotErrorCode.RESPONSE_INVALID,
+                    }
+                ):
+                    raise
+                generation_attempts.append({
+                    "generation_attempt": 1,
+                    "sql_hash": None,
+                    "guard_result": "REFUSED_OR_INVALID",
+                    "error": str(first_error.code),
+                })
             if isinstance(first_error, SQLBotEngineError) and first_error.code not in {
                 SQLBotErrorCode.POLICY_DENIED,
                 SQLBotErrorCode.RESPONSE_INVALID,
+                SQLBotErrorCode.MODEL_REFUSAL,
             }:
                 raise
-            rejected_sql = generation_attempts[-1]["sql_hash"]
-            # The model receives the original SQL text, but evidence persists only its hash.
-            first_parsed = parse_response(
-                raw_payload,
-                max_rows=min(context.max_rows, request.limits.get("rows", context.max_rows)),
-            )
-            guard_error = generation_attempts[-1]["error"]
-            repair_question = build_guard_repair_question(
-                request.question,
-                original_sql=first_parsed.sql,
-                guard_error=guard_error,
-            )
             repair_started = perf_counter()
-            raw_payload, repair_prompt_ms, repair_model_ms = self._ask_with_single_rebuild(
-                request,
-                governed_context,
-                key,
-                session,
-                question_override=repair_question,
-            )
-            timings["prompt_build_ms"] += repair_prompt_ms
-            timings["model_generation_ms"] += repair_model_ms
+            if exact_example is not None:
+                upstream_record_id = None
+                token_usage = None
+                try:
+                    first_parsed = parse_response(
+                        raw_payload,
+                        max_rows=min(
+                            context.max_rows,
+                            request.limits.get("rows", context.max_rows),
+                        ),
+                    )
+                    upstream_record_id = first_parsed.upstream_record_id
+                    token_usage = first_parsed.token_usage
+                except SQLBotEngineError:
+                    pass
+                raw_payload = {
+                    "sql": exact_example["sql"],
+                    "record_id": upstream_record_id,
+                    "token_usage": token_usage,
+                }
+                repair_prompt_profile = {
+                    "mode": "governed_exact_example_fallback",
+                    "external_model_call": False,
+                }
+            else:
+                rejected_sql = generation_attempts[-1]["sql_hash"]
+                # The model receives the original SQL text, but evidence persists only its hash.
+                first_parsed = parse_response(
+                    raw_payload,
+                    max_rows=min(context.max_rows, request.limits.get("rows", context.max_rows)),
+                )
+                guard_error = generation_attempts[-1]["error"]
+                repair_question = build_guard_repair_question(
+                    request.question,
+                    original_sql=first_parsed.sql,
+                    guard_error=guard_error,
+                    prompt_context=governed_context.prompt_context,
+                )
+                raw_payload, repair_prompt_ms, repair_model_ms, repair_prompt_profile = self._ask_with_single_rebuild(
+                    request,
+                    governed_context,
+                    key,
+                    session,
+                    question_override=repair_question,
+                )
+                timings["prompt_build_ms"] += repair_prompt_ms
+                timings["model_generation_ms"] += repair_model_ms
             timings["retry_ms"] = int((perf_counter() - repair_started) * 1000)
+            prompt_profile["repair"] = repair_prompt_profile
             try:
                 parsed, policy_decision = prepare_and_guard(raw_payload, 2)
-            except QueryRejected as repair_error:
+            except (QueryRejected, SQLBotEngineError) as repair_error:
                 raise SQLBotEngineError(
                     SQLBotErrorCode.POLICY_DENIED,
                     str(repair_error),
                 ) from repair_error
-            assert rejected_sql == generation_attempts[0]["sql_hash"]
 
         if parsed.token_usage is None and parsed.upstream_record_id is not None:
             parsed = replace(
@@ -294,6 +389,15 @@ class SQLBotEngine(QueryEngine):
             "schema_catalog_version": retrieved.catalog_version,
             "schema_catalog_hash": retrieved.catalog_hash,
             "schema_retrieval_relations": list(retrieved.relations),
+            "query_understanding": understanding.as_dict(),
+            "prompt_profile": prompt_profile,
+            "schema_profile": {
+                "relation_count": len(retrieved.relations),
+                "field_count": sum(len(fields) for fields in retrieved.relations.values()),
+                "relationship_count": len(retrieved.relationships),
+                "metric_count": len(retrieved.metrics),
+                "dimension_count": len(retrieved.dimensions),
+            },
             "sql_policy_checks": list(policy_decision.checks),
             "join_count": policy_decision.join_count,
             "row_limit": policy_decision.row_limit,
@@ -301,6 +405,13 @@ class SQLBotEngine(QueryEngine):
             "answer_guard": "passed",
             "generation_attempts": generation_attempts,
             "repair_used": len(generation_attempts) == 2,
+            "governed_exact_example_fallback": (
+                prompt_profile.get("repair", {}).get("mode")
+                == "governed_exact_example_fallback"
+            ),
+            "governed_exact_example_fallback_reason": prompt_profile.get(
+                "repair", {}
+            ).get("reason"),
             "latency_profile": {
                 **timings,
                 "total_ms": int((perf_counter() - started) * 1000),
@@ -333,7 +444,7 @@ class SQLBotEngine(QueryEngine):
         session,
         *,
         question_override: str | None = None,
-    ) -> tuple[dict, int, int]:
+    ) -> tuple[dict, int, int, dict]:
         prompt_started = perf_counter()
         payload = map_question_request(
             request,
@@ -341,11 +452,21 @@ class SQLBotEngine(QueryEngine):
             session,
             question_override=question_override,
         )
+        question = payload["question"]
+        prompt_profile = {
+            "characters": len(question),
+            "utf8_bytes": len(question.encode("utf-8")),
+        }
         prompt_ms = int((perf_counter() - prompt_started) * 1000)
         model_started = perf_counter()
         try:
             response = self.client.generate_sql(payload)
-            return response, prompt_ms, int((perf_counter() - model_started) * 1000)
+            return (
+                response,
+                prompt_ms,
+                int((perf_counter() - model_started) * 1000),
+                prompt_profile,
+            )
         except SQLBotEngineError as exc:
             if exc.code != SQLBotErrorCode.SESSION_INVALID:
                 raise
@@ -361,9 +482,20 @@ class SQLBotEngine(QueryEngine):
             rebuilt,
             question_override=question_override,
         )
+        question = payload["question"]
+        prompt_profile = {
+            "characters": len(question),
+            "utf8_bytes": len(question.encode("utf-8")),
+            "session_rebuilt": True,
+        }
         prompt_ms += int((perf_counter() - prompt_started) * 1000)
         response = self.client.generate_sql(payload)
-        return response, prompt_ms, int((perf_counter() - model_started) * 1000)
+        return (
+            response,
+            prompt_ms,
+            int((perf_counter() - model_started) * 1000),
+            prompt_profile,
+        )
 
     def health_check(self) -> dict:
         if not self.flags.enabled:
