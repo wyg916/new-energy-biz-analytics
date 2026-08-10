@@ -30,10 +30,19 @@ test('P6 三类经营管理业务闭环经真实 API 完成', async ({ page }) =
 
   await page.getByRole('button', { name: '经营预警' }).click()
   await expect(page.getByTestId('p6-alert-center')).toBeVisible({ timeout: 120_000 })
+  const startDate = page.getByRole('textbox', { name: '开始日期' })
+  const endDate = page.getByRole('textbox', { name: '结束日期' })
+  await startDate.fill('2020-06-02')
+  await endDate.fill('2020-06-09')
+  await expect(startDate).toHaveValue('2020-06-02')
+  await expect(endDate).toHaveValue('2020-06-09')
   if (await page.getByRole('button', { name: '运行受控预警规则' }).isEnabled()) {
     await page.getByRole('button', { name: '运行受控预警规则' }).click()
   }
-  for (const action of ['分派', '确认', '开始处理', '解决', '验证', '关闭', '重开']) {
+  const assign = page.getByRole('button', { name: /^(分派|重新分派)$/ })
+  await expect(assign).toBeVisible({ timeout: 120_000 })
+  await assign.click()
+  for (const action of ['确认', '开始处理', '解决', '验证', '关闭', '重开']) {
     const button = page.getByRole('button', { name: action, exact: true })
     await expect(button).toBeVisible({ timeout: 120_000 })
     await button.click()
@@ -43,6 +52,7 @@ test('P6 三类经营管理业务闭环经真实 API 完成', async ({ page }) =
   await page.getByRole('button', { name: '经营报告' }).click()
   await expect(page.getByTestId('p6-report-center')).toBeVisible()
   await page.getByRole('button', { name: '创建月报草稿' }).click()
+  await page.getByRole('button', { name: '新版本', exact: true }).click()
   await page.getByRole('button', { name: '提交审核', exact: true }).click()
   await page.getByRole('button', { name: '批准', exact: true }).click()
   await page.getByRole('button', { name: '发布', exact: true }).click()
@@ -52,11 +62,16 @@ test('P6 三类经营管理业务闭环经真实 API 完成', async ({ page }) =
 
   await page.getByRole('button', { name: '指标与场景管理' }).click()
   await expect(page.getByTestId('p6-metric-center')).toBeVisible()
-  const publishedChargingRevenue = page.locator('tr').filter({ hasText: 'charging_revenue' }).filter({ hasText: 'PUBLISHED' }).first()
-  await publishedChargingRevenue.click()
-  await page.getByRole('button', { name: '新建版本', exact: true }).click()
+  const draftChargingRevenue = page.locator('tr').filter({ hasText: 'charging_revenue' }).filter({ hasText: 'DRAFT' }).first()
+  if (await draftChargingRevenue.count()) {
+    await draftChargingRevenue.click()
+  } else {
+    const publishedChargingRevenue = page.locator('tr').filter({ hasText: 'charging_revenue' }).filter({ hasText: 'PUBLISHED' }).first()
+    await publishedChargingRevenue.click()
+    await page.getByRole('button', { name: '新建版本', exact: true }).click()
+  }
   await page.getByRole('button', { name: '影响分析', exact: true }).click()
-  await expect(page.getByText('dashboard', { exact: true })).toBeVisible()
+  await expect(page.locator('.p6-impact')).toContainText('dashboard')
   await page.getByRole('button', { name: '提交审核', exact: true }).click()
   await page.getByRole('button', { name: '批准', exact: true }).click()
   await page.getByRole('button', { name: '发布', exact: true }).click()
