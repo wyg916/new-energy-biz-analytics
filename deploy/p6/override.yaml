@@ -1,0 +1,50 @@
+name: renewable-p6-business-loop-41
+
+services:
+  runtime-bootstrap:
+    image: renewable-p6-api:4.1.0-p6.1
+    pull_policy: never
+
+  vault-bootstrap:
+    image: renewable-p6-api:4.1.0-p6.1
+    pull_policy: never
+
+  migrate:
+    image: renewable-p6-api:4.1.0-p6.1
+    pull_policy: never
+    environment:
+      RELEASE_VERSION: 4.1.0-p6.1
+      EXPECTED_DATABASE_REVISION: p6_41_0001
+      ACCEPTANCE_LABEL: P6-4.1 Business Loop
+
+  init:
+    image: renewable-p6-api:4.1.0-p6.1
+    pull_policy: never
+    command: ["python", "scripts/p4_entrypoint.py", "python", "scripts/prepare_p6_business_loop.py"]
+    environment:
+      RELEASE_VERSION: 4.1.0-p6.1
+      EXPECTED_DATABASE_REVISION: p6_41_0001
+      ACCEPTANCE_LABEL: P6-4.1 Business Loop
+
+  alert-receiver:
+    image: renewable-p6-api:4.1.0-p6.1
+    pull_policy: never
+
+  api:
+    image: renewable-p6-api:4.1.0-p6.1
+    pull_policy: never
+    environment:
+      RELEASE_VERSION: 4.1.0-p6.1
+      EXPECTED_DATABASE_REVISION: p6_41_0001
+      ACCEPTANCE_LABEL: P6-4.1 Business Loop
+      QUERY_ENGINE_MODE: SHADOW
+      SQLBOT_ENGINE_ENABLED: "false"
+      SQLBOT_RUNTIME_VERIFIED: "false"
+
+  web:
+    image: renewable-p6-web:4.1.0-p6.1
+    pull_policy: never
+
+networks:
+  default:
+    name: renewable-p6-business-loop-41-network

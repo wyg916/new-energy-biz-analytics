@@ -158,7 +158,9 @@ class Settings(BaseSettings):
                 failures.append("RELEASE_VERSION must identify a release candidate or release")
             if not self.simulated_data_only and not (
                 self.data41_open_source_enabled
-                and self.release_version.startswith(("4.1.0-data.", "4.1.0-integration."))
+                and self.release_version.startswith(
+                    ("4.1.0-data.", "4.1.0-integration.", "4.1.0-p6.")
+                )
             ):
                 failures.append("SIMULATED_DATA_ONLY must remain true for this release candidate")
             if self.chatbi_readonly_execution_enabled and (

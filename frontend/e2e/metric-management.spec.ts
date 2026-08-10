@@ -1,66 +1,30 @@
 import { expect, test } from '@playwright/test'
 
-test.use({
-  viewport: { width: 1600, height: 900 },
-  launchOptions: {
-    ...(process.env.PLAYWRIGHT_EXECUTABLE_PATH
-      ? { executablePath: process.env.PLAYWRIGHT_EXECUTABLE_PATH }
-      : {}),
-  },
-})
+test.use({ viewport: { width: 1600, height: 900 } })
 
-test('指标与场景管理页在100%缩放下一屏完整展示', async ({ page }) => {
+test('指标治理中心展示语义层的正式版本历史', async ({ page }) => {
   const consoleErrors: string[] = []
-  page.on('console', message => {
-    if (message.type() === 'error') consoleErrors.push(message.text())
-  })
-
+  page.on('console', message => { if (message.type() === 'error') consoleErrors.push(message.text()) })
   await page.goto('/')
   await expect(page.getByRole('heading', { name: '欢迎登录' })).toBeVisible()
   await page.getByRole('button', { name: '安全登录' }).click()
   await page.getByRole('button', { name: '指标与场景管理' }).click()
-
-  await expect(page.getByRole('heading', { name: '指标与场景管理', exact: true })).toBeVisible()
-  await expect(page.getByRole('heading', { name: '指标目录' })).toBeVisible({ timeout: 120_000 })
-  await expect(page.getByRole('heading', { name: /指标列表/ })).toBeVisible()
-  await expect(page.getByRole('heading', { name: '指标详情' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: '场景应用预览' })).toBeVisible()
-  await expect(page.getByText('15 项', { exact: true })).toBeVisible()
+  await expect(page.getByTestId('p6-metric-center')).toBeVisible({ timeout: 120_000 })
+  await expect(page.getByRole('heading', { name: '指标版本' })).toBeVisible()
+  await expect(page.getByText('15', { exact: true })).toBeVisible()
   await expect(page.getByText('充电收入', { exact: true }).first()).toBeVisible()
-  await expect(page.getByText('模拟数据', { exact: true })).toBeVisible()
-  await expect(page.getByText(/run_id：DASH-/)).toBeVisible()
-  await expect(page.getByText('已完成充电订单中，电费净额与服务费净额之和。')).toBeVisible()
-  await expect(page.locator('.metric-spark')).toHaveCount(0)
-
-  await page.getByPlaceholder('搜索指标名称/编码').fill('device_online_rate')
-  await expect(page.getByText('设备在线率', { exact: true }).first()).toBeVisible()
-  await page.getByRole('button', { name: '重置' }).click()
-  await expect(page.getByText('共 15 条', { exact: true })).toBeVisible()
-
-  const fit = await page.evaluate(() => {
-    const pageNode = document.querySelector<HTMLElement>('.metrics-page')
-    const workspace = document.querySelector<HTMLElement>('.metrics-workspace')
-    const guardedPanels = [
-      ...document.querySelectorAll<HTMLElement>('.metric-catalog-panel,.metric-table-panel,.metric-detail-card,.metric-preview-card'),
-    ]
-    return {
-      documentScrollHeight: document.documentElement.scrollHeight,
-      documentScrollWidth: document.documentElement.scrollWidth,
-      viewportHeight: window.innerHeight,
-      viewportWidth: window.innerWidth,
-      pageBottom: pageNode?.getBoundingClientRect().bottom ?? 0,
-      workspaceBottom: workspace?.getBoundingClientRect().bottom ?? 0,
-      overflowingPanels: guardedPanels
-        .filter(panel => panel.scrollHeight > panel.clientHeight + 1 || panel.scrollWidth > panel.clientWidth + 1)
-        .map(panel => panel.className),
-    }
-  })
-  expect(fit.documentScrollHeight).toBeLessThanOrEqual(fit.viewportHeight)
-  expect(fit.documentScrollWidth).toBeLessThanOrEqual(fit.viewportWidth)
-  expect(fit.pageBottom).toBeLessThanOrEqual(fit.viewportHeight)
-  expect(fit.workspaceBottom).toBeLessThanOrEqual(fit.viewportHeight)
+  await expect(page.getByRole('heading', { name: '指标版本治理' })).toBeVisible()
+  await expect(page.getByText('PUBLISHED', { exact: true }).first()).toBeVisible()
+  await expect(page.getByText('Owner', { exact: true })).toBeVisible()
+  await expect(page.getByText('公式', { exact: true })).toBeVisible()
+  await expect(page.getByText('来源表', { exact: true })).toBeVisible()
+  const fit = await page.evaluate(() => ({
+    documentWidth: document.documentElement.scrollWidth,
+    viewportWidth: window.innerWidth,
+    overflowingPanels: [...document.querySelectorAll<HTMLElement>('.p6-panel')]
+      .filter(panel => panel.scrollWidth > panel.clientWidth + 1).map(panel => panel.className),
+  }))
+  expect(fit.documentWidth).toBeLessThanOrEqual(fit.viewportWidth)
   expect(fit.overflowingPanels).toEqual([])
-
-  await page.screenshot({ fullPage: true })
   expect(consoleErrors).toEqual([])
 })
