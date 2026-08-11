@@ -39,6 +39,9 @@ def test_single_launcher_converges_full_integration_runtime():
     canary = (ROOT / "scripts/Run-SQLBot41DCanary.ps1").read_text(
         encoding="utf-8-sig"
     )
+    backend_regression = (
+        ROOT / "scripts/Run-Integration41FullBackendRegression.ps1"
+    ).read_text(encoding="utf-8-sig")
     override = (ROOT / "deploy/integration41full/override.yaml").read_text(encoding="utf-8")
     dockerfile = (ROOT / "backend/Dockerfile").read_text(encoding="utf-8")
 
@@ -77,6 +80,9 @@ def test_single_launcher_converges_full_integration_runtime():
     assert "[string]$SQLBotRuntimeContainer" in canary
     assert '"VAULT_ADDRESS=http://${VaultContainer}:8200"' in canary
     assert "$PlatformApiImage" in canary
+    assert "python -m pytest backend/tests -q" in backend_regression
+    assert "MEMORY41_TEST_REDIS_URL" in backend_regression
+    assert "isolated tmpfs PostgreSQL 16.14" in backend_regression
     assert '$env:PLAYWRIGHT_BROWSERS_PATH = Join-Path $workspace ".cache/ms-playwright"' in startup
     assert 'P6 runtime-only OIDC acceptance credential is unavailable' in startup
     assert '$env:P4_OIDC_PASSWORD = ($runtimePassword | Out-String).Trim()' in startup
