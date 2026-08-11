@@ -36,6 +36,9 @@ def test_single_launcher_converges_full_integration_runtime():
     stability = (ROOT / "scripts/Run-SQLBot41DStability.ps1").read_text(
         encoding="utf-8-sig"
     )
+    canary = (ROOT / "scripts/Run-SQLBot41DCanary.ps1").read_text(
+        encoding="utf-8-sig"
+    )
     override = (ROOT / "deploy/integration41full/override.yaml").read_text(encoding="utf-8")
     dockerfile = (ROOT / "backend/Dockerfile").read_text(encoding="utf-8")
 
@@ -70,6 +73,10 @@ def test_single_launcher_converges_full_integration_runtime():
     assert stability.index("Get-SQLBotRuntimeSample -Phase 'pre_window'") < stability.index(
         "docker start $AcceptanceContainer"
     )
+    assert "[string]$EvidenceDirectory" in canary
+    assert "[string]$SQLBotRuntimeContainer" in canary
+    assert '"VAULT_ADDRESS=http://${VaultContainer}:8200"' in canary
+    assert "$PlatformApiImage" in canary
     assert '$env:PLAYWRIGHT_BROWSERS_PATH = Join-Path $workspace ".cache/ms-playwright"' in startup
     assert 'P6 runtime-only OIDC acceptance credential is unavailable' in startup
     assert '$env:P4_OIDC_PASSWORD = ($runtimePassword | Out-String).Trim()' in startup
