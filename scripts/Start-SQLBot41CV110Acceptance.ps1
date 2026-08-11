@@ -1,14 +1,56 @@
 param(
     [string]$SourceContainer = 'renewable-sqlbot-41b-runtime-v1-8-0',
     [string]$TargetContainer = 'renewable-sqlbot-41c-runtime-v1-10-0',
-    [int]$HostPort = 18082
+    [int]$HostPort = 18082,
+    [string]$PlatformNetwork = 'renewable-data41-network',
+    [int]$HealthTimeoutSeconds = 180
 )
 
 $ErrorActionPreference = 'Stop'
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 Set-Location $root
-if (docker ps -a -q --filter "name=^/$TargetContainer$") {
-    throw "Refusing to replace existing container: $TargetContainer"
+
+function Connect-PlatformNetwork {
+    $target = (docker inspect $TargetContainer | ConvertFrom-Json)[0]
+    $networkNames = @($target.NetworkSettings.Networks.psobject.Properties.Name)
+    if ($networkNames -notcontains $PlatformNetwork) {
+        docker network connect $PlatformNetwork $TargetContainer | Out-Null
+        if ($LASTEXITCODE -ne 0) {
+            throw "Unable to connect SQLBot Runtime to $PlatformNetwork"
+        }
+    }
+}
+
+function Wait-SQLBotRuntime {
+    $deadline = [DateTimeOffset]::UtcNow.AddSeconds($HealthTimeoutSeconds)
+    do {
+        $previousPreference = $ErrorActionPreference
+        try {
+            $ErrorActionPreference = 'Continue'
+            & curl.exe --silent --show-error --fail `
+                "http://127.0.0.1:${HostPort}/" 1>$null 2>$null
+            $exitCode = $LASTEXITCODE
+        }
+        finally {
+            $ErrorActionPreference = $previousPreference
+        }
+        if ($exitCode -eq 0) { return }
+        Start-Sleep -Seconds 2
+    } while ([DateTimeOffset]::UtcNow -lt $deadline)
+    throw "SQLBot Runtime did not become healthy within $HealthTimeoutSeconds seconds"
+}
+
+$existingTarget = docker ps -a -q --filter "name=^/$TargetContainer$"
+if ($existingTarget) {
+    $running = docker inspect $TargetContainer --format '{{.State.Running}}'
+    if ($running -ne 'true') {
+        docker start $TargetContainer | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw 'Existing SQLBot v1.10 runtime failed to start' }
+    }
+    Connect-PlatformNetwork
+    Wait-SQLBotRuntime
+    Write-Output '{"status":"READY","action":"REUSED","upstream":"v1.10.0","secret_values_exposed":false}'
+    return
 }
 $source = (docker inspect $SourceContainer | ConvertFrom-Json)[0]
 $allowedEnvironment = @(
@@ -45,4 +87,6 @@ docker @arguments | Out-Null
 if ($LASTEXITCODE -ne 0) { throw 'SQLBot v1.10 acceptance container creation failed' }
 docker start $TargetContainer | Out-Null
 if ($LASTEXITCODE -ne 0) { throw 'SQLBot v1.10 acceptance container start failed' }
-Write-Output '{"status":"STARTED","upstream":"v1.10.0","secret_values_exposed":false}'
+Connect-PlatformNetwork
+Wait-SQLBotRuntime
+Write-Output '{"status":"READY","action":"CREATED","upstream":"v1.10.0","secret_values_exposed":false}'

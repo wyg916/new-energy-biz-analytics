@@ -38,7 +38,7 @@ BATCHES = (
         "test_rag_golden_60.py", "test_memory_working_semantic_episodic.py", "test_mysql_connector.py",
         "test_knowledge_api_and_composite.py", "test_p3_identity_authorization.py",
         "test_platform_foundation_api.py", "test_memory_skill_orchestration_api.py",
-        "test_sqlbot_open_nl2sql_41.py",
+        "test_sqlbot_open_nl2sql_41.py", "test_sqlbot_canary_41d.py",
         "test_sqlbot_quality_patch.py", "test_sqlbot_source_binding.py", "test_memory_scope_authorization.py",
         "test_metric_catalog.py", "test_observability.py", "test_readonly_boundary.py",
         "test_memory_evaluation_report.py",
@@ -136,6 +136,7 @@ def run_batch(
             f"{test_container}:/app/app",
         )
         command("docker", "cp", str(ROOT / "deploy"), f"{test_container}:/app/deploy")
+        command("docker", "cp", f"{ROOT / 'scripts'}/.", f"{test_container}:/app/scripts")
         command("docker", "cp", f"{ROOT / 'docs'}/.", f"{test_container}:/app/docs")
         command("docker", "cp", f"{ROOT / 'data'}/.", f"{test_container}:/app/data")
         command("docker", "cp", str(ROOT / "samples"), f"{test_container}:/app/samples")

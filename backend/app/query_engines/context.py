@@ -1,4 +1,8 @@
+import hashlib
 import json
+from collections import OrderedDict
+from copy import deepcopy
+from threading import RLock
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -15,6 +19,59 @@ from app.models.semantic import (
 from app.platform.query_engine import QueryContext
 from app.platform.semantic_registry import ActiveSemanticContext
 from app.query_engines.sqlbot.prompt_context import authorized_examples
+
+
+_CATALOG_CACHE_MAX_SIZE = 32
+_catalog_cache_lock = RLock()
+_catalog_cache: OrderedDict[
+    tuple[object, ...],
+    tuple[dict[str, tuple[str, ...]], dict],
+] = OrderedDict()
+
+
+def _catalog_cache_key(
+    db: Session,
+    platform_context: ActiveSemanticContext,
+    active_binding: SQLBotSourceBindingRelease | None,
+) -> tuple[object, ...]:
+    binding_json = active_binding.binding_json if active_binding else "{}"
+    return (
+        db.get_bind(),
+        platform_context.tenant_id,
+        platform_context.workspace_id,
+        platform_context.scenario_id,
+        platform_context.semantic_model_version_id,
+        platform_context.dataset_version_id,
+        active_binding.binding_release_id if active_binding else None,
+        active_binding.version if active_binding else None,
+        hashlib.sha256(binding_json.encode()).hexdigest(),
+    )
+
+
+def _cached_catalog(
+    key: tuple[object, ...],
+) -> tuple[dict[str, tuple[str, ...]], dict] | None:
+    with _catalog_cache_lock:
+        cached = _catalog_cache.get(key)
+        if cached is None:
+            return None
+        _catalog_cache.move_to_end(key)
+        return deepcopy(cached)
+
+
+def _remember_catalog(
+    key: tuple[object, ...],
+    relation_columns: dict[str, tuple[str, ...]],
+    prompt_context: dict,
+) -> None:
+    # Only immutable, published semantic catalog data is cached. Identity,
+    # ACTIVE pointer resolution, permission checks, guards, and execution remain
+    # request-scoped. Deep copies prevent callers from mutating shared state.
+    with _catalog_cache_lock:
+        _catalog_cache[key] = deepcopy((relation_columns, prompt_context))
+        _catalog_cache.move_to_end(key)
+        while len(_catalog_cache) > _CATALOG_CACHE_MAX_SIZE:
+            _catalog_cache.popitem(last=False)
 
 
 def build_query_context(
@@ -44,6 +101,34 @@ def build_query_context(
     ).order_by(SQLBotSourceBindingRelease.version.desc()))
     binding_payload = json.loads(active_binding.binding_json) if active_binding else {}
     approved_relations = set(binding_payload.get("approved_relations") or ())
+    cache_key = _catalog_cache_key(db, platform_context, active_binding)
+    cached = _cached_catalog(cache_key)
+    if cached is not None:
+        relation_columns, prompt_context = cached
+        source_binding = platform_context.source_binding
+        datasource_id = (
+            active_binding.datasource_id
+            if active_binding is not None
+            else source_binding.get("sqlbot_datasource_id")
+        )
+        return QueryContext(
+            conversation_id=conversation_id,
+            scenario_version=platform_context.scenario_version,
+            semantic_version=platform_context.semantic_version,
+            semantic_model_version_id=platform_context.semantic_model_version_id,
+            dataset_version=str(platform_context.dataset_version),
+            dataset_version_id=platform_context.dataset_version_id,
+            datasource_id=(
+                str(datasource_id) if datasource_id is not None else None
+            ),
+            allowed_relations=relation_columns,
+            prompt_context=prompt_context,
+            execution_mode=str(
+                source_binding.get("sqlbot_execution_mode", "upstream_readonly")
+            ),
+            run_id=run_id,
+            max_rows=500,
+        )
     tables = tuple(db.scalars(
         select(SemanticTable).where(
             SemanticTable.semantic_model_version_id
@@ -55,12 +140,22 @@ def build_query_context(
     relation_columns: dict[str, tuple[str, ...]] = {}
     authorized_tables: list[dict] = []
     table_bindings = {table.code: table.physical_binding for table in tables}
-    for table in tables:
+    fields_by_table: dict[str, list[SemanticField]] = {
+        table.semantic_table_id: [] for table in tables
+    }
+    if fields_by_table:
         fields = tuple(db.scalars(
             select(SemanticField).where(
-                SemanticField.semantic_table_id == table.semantic_table_id
-            ).order_by(SemanticField.code)
+                SemanticField.semantic_table_id.in_(tuple(fields_by_table))
+            ).order_by(
+                SemanticField.semantic_table_id,
+                SemanticField.code,
+            )
         ).all())
+        for field in fields:
+            fields_by_table[field.semantic_table_id].append(field)
+    for table in tables:
+        fields = tuple(fields_by_table[table.semantic_table_id])
         relation_columns[table.physical_binding] = tuple(
             field.physical_field
             for field in fields
@@ -211,6 +306,7 @@ def build_query_context(
             relation_columns,
         )),
     }
+    _remember_catalog(cache_key, relation_columns, prompt_context)
     source_binding = platform_context.source_binding
     datasource_id = (
         active_binding.datasource_id

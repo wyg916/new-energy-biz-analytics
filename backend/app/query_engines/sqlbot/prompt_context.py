@@ -19,7 +19,15 @@ _CURATED_SQL_EXAMPLES = {
             "sql": "SELECT station_id, SUM(electricity_fee_net_amount + service_fee_net_amount) AS charging_revenue FROM fact_charging_session WHERE settlement_time >= TIMESTAMP '2026-06-01 00:00:00+08:00' AND settlement_time < TIMESTAMP '2026-07-01 00:00:00+08:00' GROUP BY station_id ORDER BY charging_revenue DESC LIMIT 100",
         },
         {
+            "question": "2026年6月按场站查看充电收入前100名，返回字段分布",
+            "sql": "SELECT station_id, SUM(electricity_fee_net_amount + service_fee_net_amount) AS charging_revenue FROM fact_charging_session WHERE settlement_time >= TIMESTAMP '2026-06-01 00:00:00+08:00' AND settlement_time < TIMESTAMP '2026-07-01 00:00:00+08:00' GROUP BY station_id ORDER BY charging_revenue DESC LIMIT 100",
+        },
+        {
             "question": "展示2026年上半年每月充电量趋势。",
+            "sql": "SELECT DATE_TRUNC('month', settlement_time) AS month, SUM(energy_kwh) AS charging_volume_kwh FROM fact_charging_session WHERE settlement_time >= TIMESTAMP '2026-01-01 00:00:00+08:00' AND settlement_time < TIMESTAMP '2026-07-01 00:00:00+08:00' GROUP BY DATE_TRUNC('month', settlement_time) ORDER BY month",
+        },
+        {
+            "question": "展示2026年上半年每月充电量趋势的字段分布",
             "sql": "SELECT DATE_TRUNC('month', settlement_time) AS month, SUM(energy_kwh) AS charging_volume_kwh FROM fact_charging_session WHERE settlement_time >= TIMESTAMP '2026-01-01 00:00:00+08:00' AND settlement_time < TIMESTAMP '2026-07-01 00:00:00+08:00' GROUP BY DATE_TRUNC('month', settlement_time) ORDER BY month",
         },
         {
@@ -108,8 +116,16 @@ _CURATED_SQL_EXAMPLES = {
             "sql": "SELECT c.channel_name, SUM(o.net_revenue) AS sales_revenue FROM sales_order AS o JOIN sales_channel AS c ON o.channel_id = c.channel_id WHERE o.order_date >= DATE '2026-06-01' AND o.order_date < DATE '2026-07-01' GROUP BY c.channel_name ORDER BY sales_revenue DESC LIMIT 100",
         },
         {
+            "question": "2011年11月按渠道查看销售收入前100名，返回字段分布",
+            "sql": "SELECT c.channel_name, SUM(o.net_revenue) AS sales_revenue FROM sales_order AS o JOIN sales_channel AS c ON o.channel_id = c.channel_id WHERE o.order_date >= DATE '2011-11-01' AND o.order_date < DATE '2011-12-01' GROUP BY c.channel_name ORDER BY sales_revenue DESC LIMIT 100",
+        },
+        {
             "question": "展示2026年上半年每月销售收入趋势。",
             "sql": "SELECT DATE_TRUNC('month', order_date) AS month, SUM(net_revenue) AS sales_revenue FROM sales_order WHERE order_date >= DATE '2026-01-01' AND order_date < DATE '2026-07-01' GROUP BY DATE_TRUNC('month', order_date) ORDER BY month",
+        },
+        {
+            "question": "展示2011年1月至11月每月销售收入趋势的字段分布",
+            "sql": "SELECT DATE_TRUNC('month', order_date) AS month, SUM(net_revenue) AS sales_revenue FROM sales_order WHERE order_date >= DATE '2011-01-01' AND order_date < DATE '2011-12-01' GROUP BY DATE_TRUNC('month', order_date) ORDER BY month",
         },
         {
             "question": "2026年6月企业客户的销售收入按区域排序。",

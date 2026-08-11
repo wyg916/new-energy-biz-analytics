@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "sqlbot41d_failed_attempt",
+  "stage": "canary-5",
+  "status": "FAIL",
+  "failure_stage": "canary_query_selection",
+  "error_code": "NO_SQLBOT_CANARY_SAMPLE",
+  "reason": "The first controlled corpus used registered metric questions that Query Understanding correctly pinned to the deterministic core path, so cohort selection produced no SQLBot primary request.",
+  "completed_api_request_count": 54,
+  "sqlbot_canary_request_count": 0,
+  "core_deterministic_count": 51,
+  "canary_control_group_count": 3,
+  "secret_values_persisted": false,
+  "production_traffic_claimed": false,
+  "corrective_action": "Restart the stage count at zero with registered-schema exploration questions that explicitly contain controlled distribution intent; keep the frozen understanding and routing contracts unchanged."
+}

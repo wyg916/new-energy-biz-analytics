@@ -29,6 +29,7 @@ class SQLBotSessionManager:
         factory: SessionFactory,
         *,
         force_rebuild: bool = False,
+        on_bind: Callable[[SQLBotSession], None] | None = None,
     ) -> SQLBotSession:
         now = datetime.now(UTC)
         cache_key = key.as_tuple()
@@ -48,6 +49,8 @@ class SQLBotSessionManager:
             self._sessions[cache_key] = session
             if self.on_bind:
                 self.on_bind(session)
+            if on_bind and on_bind is not self.on_bind:
+                on_bind(session)
             return session
 
     def invalidate(self, key: SQLBotSessionKey) -> None:
@@ -57,3 +60,11 @@ class SQLBotSessionManager:
     def clear(self) -> None:
         with self._lock:
             self._sessions.clear()
+
+
+_RUNTIME_SESSION_MANAGER = SQLBotSessionManager()
+
+
+def runtime_session_manager() -> SQLBotSessionManager:
+    """Return the process-scoped, secret-bearing runtime session cache."""
+    return _RUNTIME_SESSION_MANAGER

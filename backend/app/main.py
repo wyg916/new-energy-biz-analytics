@@ -17,6 +17,7 @@ from app.core.logging import configure_logging
 from app.core.observability import request_metrics
 from app.governance.identity import TrustedIdentityMiddleware
 from app.governance.authorization import AuthorizationDenied
+from app.query_engines.sqlbot.client import close_runtime_sqlbot_client
 
 
 logger = logging.getLogger("app.http")
@@ -29,7 +30,10 @@ async def lifespan(_: FastAPI):
     settings = get_settings()
     if settings.auto_bootstrap_demo_users and settings.app_env != "production":
         bootstrap_demo_users()
-    yield
+    try:
+        yield
+    finally:
+        close_runtime_sqlbot_client()
 
 
 app = FastAPI(title=get_settings().app_name, version="0.1.0", lifespan=lifespan)

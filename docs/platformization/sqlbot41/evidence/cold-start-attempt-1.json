@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "sqlbot41d_cold_start_attempt",
+  "status": "FAIL",
+  "failure_phase": "pre_stop_business_snapshot",
+  "services_stopped": false,
+  "persistent_volumes_removed": false,
+  "business_data_changed": false,
+  "failure": {
+    "type": "UndefinedTable",
+    "message": "Snapshot query referenced obsolete core schema tables; published business tables are in public schema."
+  },
+  "secret_values_persisted": false
+}

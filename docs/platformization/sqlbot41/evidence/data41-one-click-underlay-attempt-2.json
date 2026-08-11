@@ -1,0 +1,108 @@
+﻿{
+    "schema_version":  "1.0",
+    "evidence_type":  "data41_cold_start",
+    "status":  "FAIL",
+    "started_at":  "2026-08-11T11:23:39.2144247+00:00",
+    "finished_at":  "2026-08-11T11:23:43.1272707+00:00",
+    "git":  {
+                "branch":  "codex/sqlbot-canary-41",
+                "head":  "8c2300532dc4c02d513df89ea8202c1aa519c6fb"
+            },
+    "runtime":  {
+                    "compose_project":  "renewable-data41",
+                    "release_version":  "4.1.0-data.1",
+                    "expected_migration_head":  "sqlbot_41c2",
+                    "sqlbot_runtime":  "NOT_ENABLED_DATA41_SCHEMA_CATALOG_ONLY",
+                    "rag_mode":  "KEYWORD_ONLY",
+                    "production_release_authorized":  false,
+                    "production_traffic_switched":  false
+                },
+    "data":  {
+                 "classification":  "open_source_real_data",
+                 "period_start":  "2020-05-09",
+                 "period_end":  "2020-06-09",
+                 "source":  "ACN-Data via ORNL OpenEnergyDataPortal; transformed into PostgreSQL core and semantic tables",
+                 "source_dataset_version":  "ornl-acn-discovery-2020-v1",
+                 "transformation_version":  "data41-acn-transform-v1",
+                 "ingestion_run_id":  "DATA41-ACN-ORNL-26-V1",
+                 "run_id_location":  "API responses and audit/evidence records"
+             },
+    "urls":  {
+                 "business":  "https://p5b.localhost:8446",
+                 "api_health":  "https://p5b.localhost:8446/api/v1/health",
+                 "oidc":  "https://p5b.localhost:8446/oidc/realms/chatbi/.well-known/openid-configuration"
+             },
+    "required_images":  [
+                            "renewable-data41-api:4.1.0-data.1",
+                            "renewable-data41-web:4.1.0-data.1",
+                            "renewable-p5b-postgres:16.14-hardened",
+                            "renewable-p5b-keycloak:26.7.0-hardened",
+                            "renewable-p5b-backup:16.14-hardened",
+                            "hashicorp/vault:2.0.3@sha256:a296a888b118615dc01d5f1a6846e6d4a7277946caaed5b447008fff5fe06b54",
+                            "redis:7.4.10-alpine@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2",
+                            "nginx:1.31.3-alpine@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752"
+                        ],
+    "steps":  [
+                  {
+                      "name":  "Docker engine",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-11T11:23:39.2268095+00:00",
+                      "finished_at":  "2026-08-11T11:23:40.1822286+00:00",
+                      "elapsed_seconds":  0.963,
+                      "detail":  "29.6.2"
+                  },
+                  {
+                      "name":  "Compose contract",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-11T11:23:40.2727336+00:00",
+                      "finished_at":  "2026-08-11T11:23:40.6144846+00:00",
+                      "elapsed_seconds":  0.342,
+                      "detail":  ""
+                  },
+                  {
+                      "name":  "Committed source snapshot hashes",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-11T11:23:40.6505099+00:00",
+                      "finished_at":  "2026-08-11T11:23:41.0164458+00:00",
+                      "elapsed_seconds":  0.366,
+                      "detail":  "Validated 2 committed snapshots; no startup download"
+                  },
+                  {
+                      "name":  "DATA-4.1 application images",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-11T11:23:41.0192565+00:00",
+                      "finished_at":  "2026-08-11T11:23:41.2089212+00:00",
+                      "elapsed_seconds":  0.19,
+                      "detail":  "Application images are present; subsequent starts reuse them"
+                  },
+                  {
+                      "name":  "Required image inventory",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-11T11:23:41.2110876+00:00",
+                      "finished_at":  "2026-08-11T11:23:41.9491934+00:00",
+                      "elapsed_seconds":  0.738,
+                      "detail":  "Validated 8 required image references"
+                  },
+                  {
+                      "name":  "P5B runtime handoff",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-11T11:23:41.9511928+00:00",
+                      "finished_at":  "2026-08-11T11:23:42.2694224+00:00",
+                      "elapsed_seconds":  0.318,
+                      "detail":  "Stopped P5B containers without deleting P5B volumes; rollback remains available"
+                  },
+                  {
+                      "name":  "DATA-4.1 standalone runtime handoff",
+                      "status":  "FAIL",
+                      "started_at":  "2026-08-11T11:23:42.2731986+00:00",
+                      "finished_at":  "2026-08-11T11:23:42.5275131+00:00",
+                      "elapsed_seconds":  0.254,
+                      "detail":  "在此对象上找不到属性“Name”。请确认该属性存在。"
+                  }
+              ],
+    "failure":  {
+                    "type":  "RuntimeException",
+                    "message":  "在此对象上找不到属性“Name”。请确认该属性存在。"
+                },
+    "secret_values_recorded":  false
+}

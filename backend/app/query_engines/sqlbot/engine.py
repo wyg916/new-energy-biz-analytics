@@ -1,6 +1,9 @@
 import hashlib
 import json
+import re
 from dataclasses import replace
+from datetime import date, datetime
+from decimal import Decimal
 from time import perf_counter
 from typing import Callable
 from uuid import uuid4
@@ -9,7 +12,7 @@ from app.chatbi.guard import QueryRejected, guard_sqlbot_sql
 from app.core.config import get_settings
 from app.platform.query_engine import QueryContext, QueryEngine, QueryRequest, QueryResult
 from app.query_engines.sqlbot.client import SQLBotClient
-from app.query_engines.sqlbot.contracts import SQLBotSessionKey
+from app.query_engines.sqlbot.contracts import SQLBotSession, SQLBotSessionKey
 from app.query_engines.sqlbot.error_mapper import (
     SQLBotEngineError,
     SQLBotErrorCode,
@@ -38,6 +41,117 @@ GeneratedSQLExecutor = Callable[
 SQLPolicyGuard = Callable[[str, QueryContext], None]
 
 
+def _extract_sql_time_range(sql: str) -> list[str] | None:
+    """Return the bounded ISO date range already present in guarded SQL."""
+    values = sorted(set(re.findall(r"20\d{2}-\d{2}-\d{2}", sql)))
+    return [values[0], values[-1]] if len(values) >= 2 else None
+
+
+def _normalize_result_contract(
+    columns: tuple[str, ...],
+    rows: tuple[dict, ...],
+    matched_metrics: tuple[str, ...],
+    matched_dimensions: tuple[str, ...] = (),
+) -> tuple[tuple[str, ...], tuple[dict, ...], dict[str, object]]:
+    """Expose stable semantic keys and grains after guarded SQL execution."""
+    if not rows:
+        profile: dict[str, object] = {"status": "not_applicable"}
+        return columns, rows, profile
+    removed_columns = tuple(
+        column
+        for column in columns
+        if column.endswith("_id")
+        and column[:-3] in matched_dimensions
+        and f"{column[:-3]}_name" in columns
+    )
+    working_columns = tuple(column for column in columns if column not in removed_columns)
+    working_rows = tuple(
+        {key: value for key, value in row.items() if key not in removed_columns}
+        for row in rows
+    )
+    normalized_time_columns: list[str] = []
+    temporal_rows: list[dict] = []
+    for row in working_rows:
+        normalized_row = dict(row)
+        for column, value in row.items():
+            if column.lower() != "month" or value is None:
+                continue
+            normalized = value
+            if isinstance(value, (date, datetime)):
+                normalized = value.strftime("%Y-%m")
+            elif isinstance(value, str) and re.fullmatch(r"\d{4}-\d{2}.*", value):
+                normalized = value[:7]
+            if normalized != value:
+                normalized_row[column] = normalized
+                normalized_time_columns.append(column)
+        temporal_rows.append(normalized_row)
+    working_rows = tuple(temporal_rows)
+    metric_profile: dict[str, object] = {"status": "not_applicable"}
+    if len(matched_metrics) != 1:
+        return working_columns, working_rows, {
+            "status": "normalized" if removed_columns or normalized_time_columns else "already_canonical",
+            "removed_redundant_columns": list(removed_columns),
+            "normalized_time_columns": sorted(set(normalized_time_columns)),
+            "metric": metric_profile,
+        }
+    metric = matched_metrics[0]
+    if metric in working_columns:
+        metric_profile = {"status": "already_semantic", "metric": metric}
+        return working_columns, working_rows, {
+            "status": "normalized" if removed_columns or normalized_time_columns else "already_canonical",
+            "removed_redundant_columns": list(removed_columns),
+            "normalized_time_columns": sorted(set(normalized_time_columns)),
+            "metric": metric_profile,
+        }
+    numeric_columns = [
+        column
+        for column in working_columns
+        if not column.endswith("_id")
+        if any(
+            isinstance(row.get(column), (int, float, Decimal))
+            and not isinstance(row.get(column), bool)
+            for row in working_rows
+        )
+        and all(
+            row.get(column) is None
+            or (
+                isinstance(row.get(column), (int, float, Decimal))
+                and not isinstance(row.get(column), bool)
+            )
+            for row in working_rows
+        )
+    ]
+    if len(numeric_columns) != 1:
+        metric_profile = {
+            "status": "ambiguous_numeric_columns",
+            "semantic_code": metric,
+            "candidate_count": len(numeric_columns),
+        }
+        return working_columns, working_rows, {
+            "status": "normalized" if removed_columns or normalized_time_columns else "already_canonical",
+            "removed_redundant_columns": list(removed_columns),
+            "normalized_time_columns": sorted(set(normalized_time_columns)),
+            "metric": metric_profile,
+        }
+    source = numeric_columns[0]
+    normalized_columns = tuple(metric if column == source else column for column in working_columns)
+    normalized_rows = tuple(
+        {metric if key == source else key: value for key, value in row.items()}
+        for row in working_rows
+    )
+    metric_profile = {
+        "status": "normalized",
+        "semantic_code": metric,
+        "source_alias": source,
+    }
+    return normalized_columns, normalized_rows, {
+        "status": "normalized",
+        "removed_redundant_columns": list(removed_columns),
+        "normalized_time_columns": sorted(set(normalized_time_columns)),
+        "metric": metric_profile,
+    }
+
+
 def _binding_hash(key: SQLBotSessionKey) -> str:
     raw = json.dumps(key.as_tuple(), ensure_ascii=False)
     return hashlib.sha256(raw.encode()).hexdigest()
@@ -54,6 +168,7 @@ class SQLBotEngine(QueryEngine):
         runtime_verified: bool | None = None,
         client: SQLBotClient | None = None,
         session_manager: SQLBotSessionManager | None = None,
+        session_on_bind: Callable[[SQLBotSession], None] | None = None,
         policy_guard: SQLPolicyGuard | None = None,
         generated_sql_executor: GeneratedSQLExecutor | None = None,
     ):
@@ -79,6 +194,7 @@ class SQLBotEngine(QueryEngine):
             breaker=breaker,
         )
         self.sessions = session_manager or SQLBotSessionManager()
+        self.session_on_bind = session_on_bind
         self.policy_guard = policy_guard or guard_sqlbot_sql
         self.generated_sql_executor = generated_sql_executor
 
@@ -163,7 +279,11 @@ class SQLBotEngine(QueryEngine):
                 "query understanding rejected a high-risk request",
             )
         phase = perf_counter()
-        session = self.sessions.get_or_create(key, self.client.create_session)
+        session = self.sessions.get_or_create(
+            key,
+            self.client.create_session,
+            on_bind=self.session_on_bind,
+        )
         timings["runtime_connection_ms"] = int((perf_counter() - phase) * 1000)
         generation_attempts: list[dict] = []
         exact_example = exact_authorized_example(
@@ -359,6 +479,12 @@ class SQLBotEngine(QueryEngine):
                 parsed.sql, request, governed_context
             )
             timings["execution_ms"] = int((perf_counter() - phase) * 1000)
+        columns, rows, result_normalization = _normalize_result_contract(
+            columns,
+            rows,
+            understanding.matched_metrics,
+            understanding.matched_dimensions,
+        )
         if len(rows) > context.max_rows:
             raise SQLBotEngineError(
                 SQLBotErrorCode.POLICY_DENIED,
@@ -390,6 +516,15 @@ class SQLBotEngine(QueryEngine):
             "schema_catalog_hash": retrieved.catalog_hash,
             "schema_retrieval_relations": list(retrieved.relations),
             "query_understanding": understanding.as_dict(),
+            "metrics": list(understanding.matched_metrics),
+            "dimensions": list(understanding.matched_dimensions),
+            "time_range": _extract_sql_time_range(parsed.sql),
+            "metric_values": {
+                metric: rows[0][metric]
+                for metric in understanding.matched_metrics
+                if len(rows) == 1 and metric in rows[0]
+            },
+            "result_contract_normalization": result_normalization,
             "prompt_profile": prompt_profile,
             "schema_profile": {
                 "relation_count": len(retrieved.relations),
@@ -474,6 +609,7 @@ class SQLBotEngine(QueryEngine):
             key,
             self.client.create_session,
             force_rebuild=True,
+            on_bind=self.session_on_bind,
         )
         prompt_started = perf_counter()
         payload = map_question_request(

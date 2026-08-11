@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "sqlbot41d_failed_attempt",
+  "stage": "canary-5",
+  "status": "FAIL",
+  "failure_stage": "vault_approle_authentication",
+  "error_code": "VAULT_AUTH_FAILED",
+  "reason": "The existing DATA-4.1 Vault returned HTTP 503 to the governed AppRole login before traffic started.",
+  "sqlbot_request_count": 0,
+  "sql_executed_count": 0,
+  "secret_values_persisted": false,
+  "production_traffic_claimed": false,
+  "corrective_action": "Inspect current Vault health and restore its existing controlled authentication state without reading or exporting secret values."
+}

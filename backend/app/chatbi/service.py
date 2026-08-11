@@ -1,5 +1,6 @@
 import hashlib
 import json
+from dataclasses import replace
 from datetime import UTC, date, datetime
 from uuid import uuid4
 
@@ -22,8 +23,9 @@ from app.query_engines.context import build_query_context
 from app.query_engines.router import EngineRouter
 from app.query_engines.shadow import RoutingEvidenceRepository
 from app.query_engines.sqlbot.engine import SQLBotEngine
+from app.query_engines.sqlbot.client import runtime_sqlbot_client
 from app.query_engines.sqlbot.readonly_executor import execute_generated_readonly
-from app.query_engines.sqlbot.session_manager import SQLBotSessionManager
+from app.query_engines.sqlbot.session_manager import runtime_session_manager
 from app.query_engines.sqlbot.understanding import understand_query
 from app.scenarios.charging_ops.runtime import SCENARIO_ID, resolve_charging_ops_context
 from app.services.dashboard import DashboardService, allowed_station_ids
@@ -84,9 +86,9 @@ class ChatBIService:
         )
         evidence_repository = RoutingEvidenceRepository(self.db)
         sqlbot = SQLBotEngine(
-            session_manager=SQLBotSessionManager(
-                on_bind=evidence_repository.record_session_binding
-            ),
+            client=runtime_sqlbot_client(),
+            session_manager=runtime_session_manager(),
+            session_on_bind=evidence_repository.record_session_binding,
             generated_sql_executor=execute_generated_readonly,
         )
         understanding = understand_query(request, query_context)
@@ -100,15 +102,33 @@ class ChatBIService:
             deterministic_supported=understanding.deterministic_preferred,
         )
         query_result = routed.result
+        legacy_disabled_shadow = (
+            settings.effective_query_engine_mode == "SHADOW"
+            and not settings.sqlbot_engine_enabled
+            and routed.route_decision == "DETERMINISTIC_ONLY"
+        )
+        if legacy_disabled_shadow and "SQLBOT_DISABLED" not in query_result.warnings:
+            query_result = replace(
+                query_result,
+                warnings=(*query_result.warnings, "SQLBOT_DISABLED"),
+            )
         response = engine.legacy_response or {}
         response["query_result"] = query_result.as_dict()
-        response["engine_routing"] = {
-            "mode": get_settings().effective_query_engine_mode,
-            "route_decision": routed.route_decision,
-            "route_reason": routed.route_reason,
-            "feature_flag_version": get_settings().query_engine_feature_flag_version,
-            "shadow_compared": routed.shadow_comparison is not None,
-        }
+        if legacy_disabled_shadow:
+            response["engine_routing"] = {
+                "mode": "SHADOW",
+                "route_decision": "DETERMINISTIC_WITH_SHADOW",
+                "route_reason": "SQLBOT_DISABLED",
+                "feature_flag_version": settings.query_engine_feature_flag_version,
+                "shadow_compared": False,
+            }
+        else:
+            response["engine_routing"] = {
+                "mode": settings.effective_query_engine_mode,
+                "feature_flag_version": settings.query_engine_feature_flag_version,
+                "shadow_compared": routed.shadow_comparison is not None,
+                **routed.routing_evidence(),
+            }
         return response
 
     def _ask_deterministic(self, question: str) -> dict:

@@ -43,17 +43,26 @@ class CanaryPolicy:
     users: frozenset[str] = frozenset()
     scenarios: frozenset[str] = frozenset()
 
+    @property
+    def has_complete_scope(self) -> bool:
+        return all((
+            self.tenants,
+            self.workspaces,
+            self.users,
+            self.scenarios,
+        ))
+
     def eligible(self, request: QueryRequest) -> bool:
         identity = request.identity_context
-        if self.percentage <= 0:
+        if self.percentage <= 0 or not self.has_complete_scope:
             return False
-        if self.tenants and identity.tenant_id not in self.tenants:
+        if identity.tenant_id not in self.tenants:
             return False
-        if self.workspaces and identity.workspace_id not in self.workspaces:
+        if identity.workspace_id not in self.workspaces:
             return False
-        if self.users and identity.subject_id not in self.users:
+        if identity.subject_id not in self.users:
             return False
-        if self.scenarios and request.scenario_id not in self.scenarios:
+        if request.scenario_id not in self.scenarios:
             return False
         raw = "|".join((
             identity.tenant_id,
@@ -71,6 +80,22 @@ class RoutedQueryResult:
     route_decision: str
     route_reason: str
     shadow_comparison: ShadowComparison | None = None
+    canary_percentage: float = 0.0
+    sqlbot_attempted: bool = False
+    fallback_used: bool = False
+
+    def routing_evidence(self) -> dict[str, object]:
+        return {
+            "route_decision": self.route_decision,
+            "route_reason": self.route_reason,
+            "canary_percentage": self.canary_percentage,
+            "selected_engine": (
+                "sqlbot" if self.sqlbot_attempted else "deterministic"
+            ),
+            "final_engine": self.result.engine,
+            "sqlbot_attempted": self.sqlbot_attempted,
+            "fallback_used": self.fallback_used,
+        }
 
 
 class EngineRouter:
@@ -89,15 +114,15 @@ class EngineRouter:
         self.sqlbot = sqlbot
         self.mode = mode
         self.canary = canary or CanaryPolicy(percentage=0)
+        if not 0 <= self.canary.percentage <= 100:
+            raise ValueError("Canary percentage must be between 0 and 100")
+        if self.mode in {EngineMode.CANARY, EngineMode.SCOPED_STABLE}:
+            if not self.canary.has_complete_scope:
+                raise ValueError(
+                    f"{self.mode.value} requires tenant, workspace, user, and "
+                    "scenario allowlists"
+                )
         if self.mode == EngineMode.SCOPED_STABLE:
-            scoped = any((
-                self.canary.tenants,
-                self.canary.workspaces,
-                self.canary.users,
-                self.canary.scenarios,
-            ))
-            if not scoped:
-                raise ValueError("SCOPED_STABLE requires an explicit allowlist scope")
             self.canary = replace(self.canary, percentage=100.0)
         self.evidence = evidence
         self.feature_flag_version = feature_flag_version
@@ -147,10 +172,21 @@ class EngineRouter:
     ) -> "EngineRouter":
         settings = get_settings()
         scope = settings.query_engine_canary_scope
+        mode = EngineMode(settings.effective_query_engine_mode)
+        if (
+            mode in {
+                EngineMode.SHADOW,
+                EngineMode.CANARY,
+                EngineMode.SQLBOT_ENABLED,
+                EngineMode.SCOPED_STABLE,
+            }
+            and not settings.sqlbot_engine_enabled
+        ):
+            mode = EngineMode.DETERMINISTIC_ONLY
         return cls(
             deterministic,
             sqlbot,
-            mode=EngineMode(settings.effective_query_engine_mode),
+            mode=mode,
             canary=CanaryPolicy(
                 percentage=settings.query_engine_canary_percentage,
                 tenants=scope["tenants"],
@@ -230,7 +266,12 @@ class EngineRouter:
             reason,
             result,
         )
-        return RoutedQueryResult(result, decision, reason)
+        return RoutedQueryResult(
+            result,
+            decision,
+            reason,
+            canary_percentage=self.canary.percentage,
+        )
 
     def _shadow(
         self,
@@ -277,6 +318,8 @@ class EngineRouter:
             "DETERMINISTIC_WITH_SHADOW",
             error_code or "shadow_completed",
             comparison,
+            canary_percentage=self.canary.percentage,
+            sqlbot_attempted=True,
         )
 
     def _sqlbot(
@@ -309,7 +352,13 @@ class EngineRouter:
             reason,
             result,
         )
-        return RoutedQueryResult(result, decision, reason)
+        return RoutedQueryResult(
+            result,
+            decision,
+            reason,
+            canary_percentage=self.canary.percentage,
+            sqlbot_attempted=True,
+        )
 
     def _fallback(
         self,
@@ -330,6 +379,15 @@ class EngineRouter:
             result,
             "DETERMINISTIC_FALLBACK",
             reason,
+            canary_percentage=self.canary.percentage,
+            sqlbot_attempted=reason not in {
+                "canary_control_group",
+                "outside_scoped_stable_allowlist",
+            },
+            fallback_used=reason not in {
+                "canary_control_group",
+                "outside_scoped_stable_allowlist",
+            },
         )
 
     def _record_route(

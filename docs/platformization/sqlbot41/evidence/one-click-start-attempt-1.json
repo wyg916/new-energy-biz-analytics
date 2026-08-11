@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "sqlbot41d_one_click_start_attempt",
+  "status": "FAIL",
+  "attempt": 1,
+  "finished_at": "2026-08-11T10:33:32.4773048Z",
+  "mode": "SHADOW",
+  "dependency_startup": "PASS",
+  "sqlbot_runtime_healthy": true,
+  "api_ready": false,
+  "failure_reason": "DATA-4.1 API endpoint was not running; the readiness wrapper failed closed before producing canonical evidence",
+  "corrective_action": "run the root one-click DATA-4.1 startup before SQLBot readiness verification",
+  "secret_values_persisted": false,
+  "truth_boundary": {
+    "production_traffic_claimed": false,
+    "real_customer_usage_claimed": false
+  }
+}

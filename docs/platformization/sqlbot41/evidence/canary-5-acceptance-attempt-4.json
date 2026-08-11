@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "sqlbot41d_failed_attempt",
+  "stage": "canary-5",
+  "status": "FAIL",
+  "failure_stage": "sqlbot_generation",
+  "error_code": "SQLBOT_RESPONSE_INVALID",
+  "reason": "All three initial controlled distribution probes were rejected as invalid SQLBot responses; the platform automatically returned deterministic results without a 500 or unguarded SQL.",
+  "completed_route_count": 14,
+  "sqlbot_primary_success_count": 0,
+  "sqlbot_automatic_fallback_count": 3,
+  "core_deterministic_count": 10,
+  "canary_control_group_count": 1,
+  "secret_values_persisted": false,
+  "production_traffic_claimed": false,
+  "corrective_action": "Use nearest-neighbor variants of already-validated curated questions and require a two-scenario live probe before restarting the full count."
+}

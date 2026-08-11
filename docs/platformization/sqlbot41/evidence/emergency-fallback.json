@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "sqlbot41d_emergency_fallback",
+  "generated_at": "2026-08-11T11:22:14.916817+00:00",
+  "status": "PASS",
+  "new_request_deterministic_rate": 1.0,
+  "cases": [
+    {
+      "single_configuration_change": "SQLBOT_ENGINE_ENABLED=false",
+      "new_request_route": "DETERMINISTIC_ONLY",
+      "final_engine": "deterministic",
+      "sqlbot_call_count": 0,
+      "deterministic_call_count": 1,
+      "rebuild_required": false,
+      "migration_required": false,
+      "manual_data_delete_required": false,
+      "passed": true
+    },
+    {
+      "single_configuration_change": "QUERY_ENGINE_MODE=DETERMINISTIC_ONLY",
+      "new_request_route": "DETERMINISTIC_ONLY",
+      "final_engine": "deterministic",
+      "sqlbot_call_count": 0,
+      "deterministic_call_count": 1,
+      "rebuild_required": false,
+      "migration_required": false,
+      "manual_data_delete_required": false,
+      "passed": true
+    }
+  ],
+  "production_configuration_changed": false,
+  "secret_values_persisted": false
+}

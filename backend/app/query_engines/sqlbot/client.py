@@ -1,4 +1,5 @@
 import os
+from functools import lru_cache
 from time import perf_counter
 from typing import Callable
 from urllib.parse import urlsplit, urlunsplit
@@ -13,6 +14,7 @@ from app.query_engines.sqlbot.error_mapper import (
     map_http_error,
 )
 from app.query_engines.sqlbot.health import CircuitBreaker
+from app.core.config import get_settings
 
 
 class SQLBotClient:
@@ -137,3 +139,29 @@ class SQLBotClient:
 
     def close(self) -> None:
         self.http.close()
+
+
+@lru_cache(maxsize=1)
+def runtime_sqlbot_client() -> SQLBotClient:
+    """Return the process-scoped HTTP pool and circuit breaker.
+
+    Request-scoped SQLBotEngine objects retain their own audit callback while
+    sharing transport connections and failure state across controlled traffic.
+    """
+    settings = get_settings()
+    return SQLBotClient(
+        settings.sqlbot_base_url,
+        username_env_key=settings.sqlbot_username_env_key,
+        password_env_key=settings.sqlbot_password_env_key,
+        timeout_seconds=settings.sqlbot_timeout_seconds,
+        breaker=CircuitBreaker(
+            settings.sqlbot_circuit_failure_threshold,
+            settings.sqlbot_circuit_recovery_seconds,
+        ),
+    )
+
+
+def close_runtime_sqlbot_client() -> None:
+    if runtime_sqlbot_client.cache_info().currsize:
+        runtime_sqlbot_client().close()
+        runtime_sqlbot_client.cache_clear()

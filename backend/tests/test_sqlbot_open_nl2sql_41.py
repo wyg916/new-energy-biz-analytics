@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 from datetime import UTC, datetime
+from decimal import Decimal
 
 import pytest
 
@@ -10,14 +11,73 @@ from app.platform.identity import IdentityContext
 from app.platform.query_engine import QueryContext, QueryEngine, QueryRequest, QueryResult
 from app.query_engines.router import CanaryPolicy, EngineRouter, RolloutStage
 from app.query_engines.sqlbot.error_mapper import SQLBotEngineError, SQLBotErrorCode
+from app.query_engines.sqlbot.engine import (
+    _extract_sql_time_range,
+    _normalize_result_contract,
+)
 from app.query_engines.sqlbot.policy import validate_generated_sql
 from app.query_engines.sqlbot.prompt_context import authorized_examples
 from app.query_engines.sqlbot.readonly_executor import execute_generated_readonly
 from app.query_engines.sqlbot.schema_catalog import build_schema_catalog, retrieve_schema
 from app.query_engines.sqlbot.understanding import understand_query
+from app.scenarios.sales_ops.chat_service import _compose_answer as compose_sales_answer
 
 
 pytestmark = pytest.mark.no_db
+
+
+def test_sqlbot_result_contract_extracts_only_bounded_guarded_sql_dates() -> None:
+    assert _extract_sql_time_range(
+        "SELECT SUM(net_revenue) FROM sales_order "
+        "WHERE order_date >= DATE '2026-01-01' "
+        "AND order_date < DATE '2026-07-01'"
+    ) == ["2026-01-01", "2026-07-01"]
+    assert _extract_sql_time_range("SELECT order_id FROM sales_order LIMIT 10") is None
+
+
+def test_sqlbot_result_contract_normalizes_equivalent_metric_aliases() -> None:
+    columns, rows, profile = _normalize_result_contract(
+        ("month", "total_energy_kwh"),
+        (
+            {"month": "2026-01-01", "total_energy_kwh": 12.5},
+            {"month": "2026-02-01", "total_energy_kwh": 10.0},
+        ),
+        ("charging_volume_kwh",),
+    )
+    assert columns == ("month", "charging_volume_kwh")
+    assert rows[0] == {"month": "2026-01", "charging_volume_kwh": 12.5}
+    assert profile == {
+        "status": "normalized",
+        "removed_redundant_columns": [],
+        "normalized_time_columns": ["month"],
+        "metric": {
+            "status": "normalized",
+            "semantic_code": "charging_volume_kwh",
+            "source_alias": "total_energy_kwh",
+        },
+    }
+
+
+def test_sqlbot_result_contract_removes_redundant_id_and_normalizes_month() -> None:
+    columns, rows, profile = _normalize_result_contract(
+        ("channel_id", "channel_name", "month", "total_revenue"),
+        ({
+            "channel_id": 7,
+            "channel_name": "线上",
+            "month": datetime(2011, 11, 1, tzinfo=UTC),
+            "total_revenue": Decimal("19.25"),
+        },),
+        ("sales_revenue",),
+        ("channel",),
+    )
+    assert columns == ("channel_name", "month", "sales_revenue")
+    assert rows == ({
+        "channel_name": "线上",
+        "month": "2011-11",
+        "sales_revenue": Decimal("19.25"),
+    },)
+    assert profile["removed_redundant_columns"] == ["channel_id"]
+    assert profile["normalized_time_columns"] == ["month"]
 
 
 def _identity(subject: str = "user:41") -> IdentityContext:
@@ -579,6 +639,8 @@ def test_complex_profit_examples_are_set_based_and_pass_the_full_policy(
 @pytest.mark.parametrize(
     "question",
     [
+        "2026年6月按场站查看充电收入前100名，返回字段分布",
+        "展示2026年上半年每月充电量趋势的字段分布",
         "筛选快充站，查看2026年6月利用率前10名。",
         "区域C中设备故障率最高的场站有哪些？时间为2026年6月。",
         "2026年6月毛利率同比变化。",
@@ -593,7 +655,7 @@ def test_shadow_charging_examples_pass_full_policy(question: str) -> None:
         allowed_relations={
             "fact_charging_session": (
                 "session_id", "station_id", "settlement_time", "user_id",
-                "charging_duration_seconds", "electricity_fee_net_amount",
+                "charging_duration_seconds", "energy_kwh", "electricity_fee_net_amount",
                 "service_fee_net_amount",
             ),
             "fact_device_status_event": ("station_id", "start_time", "status"),
@@ -629,6 +691,8 @@ def test_shadow_charging_examples_pass_full_policy(question: str) -> None:
 @pytest.mark.parametrize(
     "question",
     [
+        "2011年11月按渠道查看销售收入前100名，返回字段分布",
+        "展示2011年1月至11月每月销售收入趋势的字段分布",
         "2026年6月企业客户的销售收入按区域排序。",
         "2026年6月销售收入是多少？",
         "2026年6月完成订单数是多少？",
@@ -810,11 +874,19 @@ class _Engine(QueryEngine):
         return {"status": "ok"}
 
 
+def test_sales_sqlbot_answer_contract_handles_grouped_rows_without_time_range() -> None:
+    result = _Engine("sqlbot").execute(_request(), _context())
+    answer = compose_sales_answer(result)
+    assert "受控查询返回 1 行、1 列" in answer
+    assert "Query Guard" in answer
+
+
 def test_shadow_canary_5_canary_20_and_scoped_stable_contracts() -> None:
     scope = CanaryPolicy(
         percentage=100,
         tenants=frozenset({"tenant-alpha"}),
         workspaces=frozenset({"workspace-alpha"}),
+        users=frozenset({"user:41"}),
         scenarios=frozenset({"sales_ops"}),
     )
     stages = {
@@ -843,7 +915,13 @@ def test_canary_control_group_and_sqlbot_failure_automatically_fallback() -> Non
         deterministic,
         _Engine("sqlbot"),
         stage=RolloutStage.CANARY_5,
-        scope=CanaryPolicy(percentage=0),
+        scope=CanaryPolicy(
+            percentage=0,
+            tenants=frozenset({"tenant-alpha"}),
+            workspaces=frozenset({"workspace-alpha"}),
+            users=frozenset({"user:41"}),
+            scenarios=frozenset({"sales_ops"}),
+        ),
     ).execute(_request(), _context(), deterministic_supported=False)
     assert control.route_decision == "DETERMINISTIC_FALLBACK"
     assert control.route_reason == "canary_control_group"
@@ -854,6 +932,9 @@ def test_canary_control_group_and_sqlbot_failure_automatically_fallback() -> Non
         stage=RolloutStage.SCOPED_STABLE,
         scope=CanaryPolicy(
             percentage=100,
+            tenants=frozenset({"tenant-alpha"}),
+            workspaces=frozenset({"workspace-alpha"}),
+            users=frozenset({"user:41"}),
             scenarios=frozenset({"sales_ops"}),
         ),
     ).execute(_request(), _context(), deterministic_supported=False)
@@ -864,8 +945,15 @@ def test_canary_control_group_and_sqlbot_failure_automatically_fallback() -> Non
 
 
 def test_canary_assignment_is_sticky_and_stage_percentages_are_bounded() -> None:
-    five = CanaryPolicy(percentage=5)
-    twenty = CanaryPolicy(percentage=20)
+    scope = {
+        "tenants": frozenset({"tenant-alpha"}),
+        "workspaces": frozenset({"workspace-alpha"}),
+        "users": frozenset(f"user:{index}" for index in range(10_000))
+        | frozenset({"sticky"}),
+        "scenarios": frozenset({"sales_ops"}),
+    }
+    five = CanaryPolicy(percentage=5, **scope)
+    twenty = CanaryPolicy(percentage=20, **scope)
     five_count = sum(five.eligible(_request(subject=f"user:{index}")) for index in range(10_000))
     twenty_count = sum(twenty.eligible(_request(subject=f"user:{index}")) for index in range(10_000))
     assert 400 <= five_count <= 600

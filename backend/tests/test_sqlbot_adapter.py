@@ -8,7 +8,11 @@ import pytest
 
 from app.platform.identity import IdentityContext
 from app.platform.query_engine import QueryContext, QueryRequest
-from app.query_engines.sqlbot.client import SQLBotClient
+from app.query_engines.sqlbot.client import (
+    SQLBotClient,
+    close_runtime_sqlbot_client,
+    runtime_sqlbot_client,
+)
 from app.query_engines.sqlbot.credentials import derive_runtime_account_password
 from app.query_engines.sqlbot.engine import SQLBotEngine
 from app.query_engines.sqlbot.error_mapper import (
@@ -17,9 +21,21 @@ from app.query_engines.sqlbot.error_mapper import (
 )
 from app.query_engines.sqlbot.health import CircuitBreaker
 from app.query_engines.sqlbot.response_parser import parse_response
+from app.query_engines.sqlbot.session_manager import SQLBotSessionManager
 from deploy.sqlbot.sync_credential_reference_runtime import synchronize
 
 pytestmark = pytest.mark.no_db
+
+
+def test_runtime_sqlbot_client_reuses_transport_and_circuit_state() -> None:
+    close_runtime_sqlbot_client()
+    first = runtime_sqlbot_client()
+    second = runtime_sqlbot_client()
+
+    assert first is second
+    assert first.breaker is second.breaker
+
+    close_runtime_sqlbot_client()
 
 
 def test_sqlbot_engine_direct_import_and_health_check_are_order_independent():
@@ -355,6 +371,59 @@ def test_sessions_are_isolated_by_user_workspace_scenario_and_versions(monkeypat
             context,
         )
     assert starts == 2
+
+
+def test_request_scoped_engines_reuse_the_process_session_cache(monkeypatch) -> None:
+    starts = 0
+    generations = 0
+    bindings: list[str] = []
+    sessions = SQLBotSessionManager()
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal starts, generations
+        if request.url.path.endswith("/mcp_start"):
+            starts += 1
+            return httpx.Response(
+                200,
+                json={"access_token": "runtime-token", "chat_id": 77},
+            )
+        generations += 1
+        payload = json.loads(request.content)
+        assert payload["chat_id"] == 77
+        assert payload["token"] == "runtime-token"
+        return httpx.Response(
+            200,
+            json={
+                "success": True,
+                "data": {
+                    "sql": (
+                        "SELECT sales_revenue "
+                        "FROM semantic_sales_ops_orders LIMIT 1"
+                    ),
+                    "rows": [{"sales_revenue": 1}],
+                },
+            },
+        )
+
+    request = QueryRequest(
+        question="销售额",
+        identity_context=_identity(),
+        scenario_id="sales_ops",
+    )
+    for _ in range(2):
+        engine = SQLBotEngine(
+            enabled=True,
+            runtime_verified=True,
+            client=_client(monkeypatch, handler),
+            session_manager=sessions,
+            session_on_bind=lambda session: bindings.append(session.external_chat_id),
+            generated_sql_executor=_platform_rows({"sales_revenue": 1}),
+        )
+        engine.execute(request, _context())
+
+    assert starts == 1
+    assert generations == 2
+    assert bindings == ["77"]
 
 
 def test_generate_only_uses_platform_executor_after_guard(monkeypatch) -> None:
