@@ -14,7 +14,7 @@ from app.models.open_data import OpenDataQualityCheck
 from scripts.prepare_p4_preproduction import main as prepare_p4_baseline
 
 
-EXPECTED_REVISION = os.getenv("EXPECTED_DATABASE_REVISION", "data_0001")
+EXPECTED_REVISION = os.getenv("EXPECTED_DATABASE_REVISION", "sqlbot_41c2")
 
 
 def main() -> None:

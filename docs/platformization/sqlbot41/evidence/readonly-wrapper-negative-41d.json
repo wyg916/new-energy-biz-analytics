@@ -1,0 +1,35 @@
+{
+  "passed": 4,
+  "results": [
+    {
+      "case": "missing_image",
+      "exit_code_nonzero": true,
+      "expected_error_code": "SQLBOT41C_IMAGE_NOT_FOUND",
+      "implicit_pull_attempted": false,
+      "status": "PASS"
+    },
+    {
+      "case": "missing_network",
+      "exit_code_nonzero": true,
+      "expected_error_code": "SQLBOT41C_NETWORK_NOT_FOUND",
+      "implicit_pull_attempted": false,
+      "status": "PASS"
+    },
+    {
+      "case": "missing_volume",
+      "exit_code_nonzero": true,
+      "expected_error_code": "SQLBOT41C_VOLUME_NOT_FOUND",
+      "implicit_pull_attempted": false,
+      "status": "PASS"
+    },
+    {
+      "case": "missing_database",
+      "exit_code_nonzero": true,
+      "expected_error_code": "SQLBOT41C_DATABASE_UNAVAILABLE",
+      "implicit_pull_attempted": false,
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS",
+  "total": 4
+}

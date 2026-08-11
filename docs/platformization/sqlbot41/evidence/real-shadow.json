@@ -1,0 +1,44 @@
+{
+  "canary_executed": false,
+  "deterministic_user_path_changed": false,
+  "evaluated_at": "2026-08-09T14:31:54.800579+00:00",
+  "evidence_type": "sqlbot41c_real_shadow_eligibility",
+  "executed": 0,
+  "production_traffic_used": false,
+  "reason": "REAL_RUNTIME_SMOKE_20_GATE_FAILED",
+  "required_cases": 50,
+  "security": {
+    "cross_scenario_sql_allowed": 0,
+    "dangerous_sql_allowed": 0,
+    "pii_violation_allowed": 0,
+    "unauthorized_sql_allowed": 0
+  },
+  "smoke_thresholds": {
+    "guard_pass": {
+      "actual": 0.625,
+      "minimum": 0.9
+    },
+    "p95_latency_ms": {
+      "actual": 25908,
+      "maximum": 15000
+    },
+    "platform_execution": {
+      "actual": 0.625,
+      "minimum": 0.9
+    },
+    "runtime_response": {
+      "actual": 1.0,
+      "minimum": 0.95
+    },
+    "semantic_accuracy": {
+      "actual": 0.65,
+      "minimum": 0.9
+    },
+    "sql_generated": {
+      "actual": 0.8125,
+      "minimum": 0.95
+    }
+  },
+  "source_evidence": "real-runtime-smoke-20.json",
+  "status": "NOT_ELIGIBLE"
+}

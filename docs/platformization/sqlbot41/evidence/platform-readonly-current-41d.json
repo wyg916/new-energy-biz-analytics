@@ -1,0 +1,60 @@
+{
+  "credentials_exposed": false,
+  "docker_runtime": {
+    "container_id": "be4c7aec3e4c",
+    "exact_image": "renewable-sqlbot41-api:test",
+    "state": "running"
+  },
+  "prior_timeout_classification": {
+    "classification": "OTHER",
+    "reason": "prior process telemetry was not retained; this exact rerun records query timings"
+  },
+  "read_only": true,
+  "results": [
+    {
+      "active_transaction": true,
+      "backend_pid": 4055,
+      "blocked_by_pids": [],
+      "connection_acquisition_ms": 288.857,
+      "database_load": {
+        "active": 1,
+        "connections": 4,
+        "waiting": 0
+      },
+      "lock_timeout": "1s",
+      "query_case": "SELECT COUNT(*) FROM fact_charging_session",
+      "row_count": 300026,
+      "scenario": "charging_ops",
+      "sql_execution_ms": 1764.596,
+      "sqlstate": "00000",
+      "statement_timeout": "3s",
+      "status": "PASS",
+      "transaction_read_only": true,
+      "wait_event": null,
+      "wait_event_type": null
+    },
+    {
+      "active_transaction": true,
+      "backend_pid": 4058,
+      "blocked_by_pids": [],
+      "connection_acquisition_ms": 29.412,
+      "database_load": {
+        "active": 1,
+        "connections": 4,
+        "waiting": 0
+      },
+      "lock_timeout": "1s",
+      "query_case": "SELECT COUNT(*) FROM sales_order",
+      "row_count": 13665,
+      "scenario": "sales_ops",
+      "sql_execution_ms": 74.69,
+      "sqlstate": "00000",
+      "statement_timeout": "3s",
+      "status": "PASS",
+      "transaction_read_only": true,
+      "wait_event": null,
+      "wait_event_type": null
+    }
+  ],
+  "status": "PASS"
+}

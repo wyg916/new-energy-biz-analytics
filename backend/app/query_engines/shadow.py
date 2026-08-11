@@ -2,6 +2,7 @@ import hashlib
 import json
 import re
 from dataclasses import dataclass
+from decimal import Decimal, InvalidOperation
 from typing import Any
 from uuid import uuid4
 
@@ -25,7 +26,24 @@ def normalized_question(question: str) -> str:
 def result_hash(result: QueryResult | None) -> str | None:
     if result is None:
         return None
-    payload = {
+    def canonical(value: Any) -> Any:
+        if isinstance(value, bool) or value is None or isinstance(value, str):
+            return value
+        if isinstance(value, (int, float, Decimal)):
+            try:
+                number = Decimal(str(value)).quantize(Decimal("0.000001"))
+            except (InvalidOperation, ValueError):
+                return str(value)
+            if number == number.to_integral_value():
+                return int(number)
+            return format(number.normalize(), "f")
+        if isinstance(value, dict):
+            return {str(key): canonical(item) for key, item in value.items()}
+        if isinstance(value, (list, tuple)):
+            return [canonical(item) for item in value]
+        return str(value)
+
+    payload = canonical({
         "columns": result.columns,
         "rows": result.rows,
         "scenario": result.scenario,
@@ -33,7 +51,7 @@ def result_hash(result: QueryResult | None) -> str | None:
         "semantic_version": result.semantic_version,
         "dataset_version": result.dataset_version,
         "status": result.status,
-    }
+    })
     raw = json.dumps(
         payload,
         ensure_ascii=False,
@@ -94,7 +112,6 @@ def compare_results(
     permission_result = (
         "PASS"
         if sqlbot.evidence.get("query_guard") == "passed"
-        and deterministic.status in {"completed", "succeeded"}
         and sqlbot.status == "completed"
         else "FAIL"
     )

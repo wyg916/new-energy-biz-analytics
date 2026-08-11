@@ -18,6 +18,7 @@ from app.core.logging import configure_logging
 from app.core.observability import request_metrics
 from app.governance.identity import TrustedIdentityMiddleware
 from app.governance.authorization import AuthorizationDenied
+from app.query_engines.sqlbot.client import close_runtime_sqlbot_client
 
 
 logger = logging.getLogger("app.http")
@@ -43,6 +44,7 @@ async def lifespan(_: FastAPI):
         if scheduler is not None and scheduler_task is not None:
             scheduler.stop()
             await scheduler_task
+        close_runtime_sqlbot_client()
 
 
 app = FastAPI(title=get_settings().app_name, version="0.1.0", lifespan=lifespan)

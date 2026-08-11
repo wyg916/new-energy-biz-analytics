@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="0" skipped="0" tests="1" time="1.901" timestamp="2026-08-11T11:30:50.155194+00:00" hostname="ae0c1e8ecf58"><testcase classname="" name="tests.test_sqlbot_canary_41d" time="0.000"><error message="collection failure">ImportError while importing test module '/app/backend/tests/test_sqlbot_canary_41d.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/local/lib/python3.11/importlib/__init__.py:126: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend/tests/test_sqlbot_canary_41d.py:5: in &lt;module&gt;
+    from scripts.run_sqlbot_canary_acceptance import (
+E   ModuleNotFoundError: No module named 'scripts.run_sqlbot_canary_acceptance'</error></testcase></testsuite></testsuites>

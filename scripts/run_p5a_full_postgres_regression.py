@@ -38,6 +38,7 @@ BATCHES = (
         "test_rag_golden_60.py", "test_memory_working_semantic_episodic.py", "test_mysql_connector.py",
         "test_knowledge_api_and_composite.py", "test_p3_identity_authorization.py",
         "test_platform_foundation_api.py", "test_memory_skill_orchestration_api.py",
+        "test_sqlbot_open_nl2sql_41.py", "test_sqlbot_canary_41d.py",
         "test_sqlbot_quality_patch.py", "test_sqlbot_source_binding.py", "test_memory_scope_authorization.py",
         "test_metric_catalog.py", "test_observability.py", "test_readonly_boundary.py",
         "test_memory_evaluation_report.py",
@@ -127,8 +128,17 @@ def run_batch(
             "-q", "--tb=no", f"--junitxml=/tmp/{junit.name}",
         )
         command("docker", "cp", str(ROOT / "backend"), f"{test_container}:/app/backend")
+        # The acceptance image contains an older /app/app tree. Copy the
+        # current source into that import location as well as the test tree so
+        # the regression cannot accidentally validate stale application code.
+        command(
+            "docker", "cp", f"{ROOT / 'backend' / 'app'}/.",
+            f"{test_container}:/app/app",
+        )
         command("docker", "cp", str(ROOT / "deploy"), f"{test_container}:/app/deploy")
+        command("docker", "cp", f"{ROOT / 'scripts'}/.", f"{test_container}:/app/scripts")
         command("docker", "cp", f"{ROOT / 'docs'}/.", f"{test_container}:/app/docs")
+        command("docker", "cp", f"{ROOT / 'data'}/.", f"{test_container}:/app/data")
         command("docker", "cp", str(ROOT / "samples"), f"{test_container}:/app/samples")
         test_process = command("docker", "start", "-a", test_container, check=False)
         copied = command(
@@ -180,6 +190,10 @@ def main() -> None:
     parser.add_argument("--container-prefix", default="renewable-p5a-final")
     parser.add_argument("--expected-tests", type=int)
     parser.add_argument(
+        "--max-workers", type=int, choices=(1, 2, 3, 4),
+        help="Bound isolated PostgreSQL batch concurrency; defaults to all jobs.",
+    )
+    parser.add_argument(
         "--knowledge-rerun", action="store_true",
         help="Rerun the one knowledge lifecycle file after correcting test asset layout.",
     )
@@ -218,7 +232,7 @@ def main() -> None:
         jobs = [(1, ("test_data41_open_source.py",))]
     else:
         jobs = list(enumerate(BATCHES, start=1))
-    with ThreadPoolExecutor(max_workers=len(jobs)) as pool:
+    with ThreadPoolExecutor(max_workers=args.max_workers or len(jobs)) as pool:
         futures = [
             pool.submit(
                 run_batch, index, files, args.output_dir, stamp, args.label,
@@ -238,7 +252,7 @@ def main() -> None:
     elif args.gate_rerun:
         expected_totals = {"tests": 5, "failures": 0, "errors": 0, "skipped": 0}
     elif args.sqlbot_rerun:
-        expected_totals = {"tests": 19, "failures": 0, "errors": 0, "skipped": 0}
+        expected_totals = {"tests": 23, "failures": 0, "errors": 0, "skipped": 0}
     elif args.data41_rerun:
         expected_totals = {"tests": 5, "failures": 0, "errors": 0, "skipped": 0}
     else:

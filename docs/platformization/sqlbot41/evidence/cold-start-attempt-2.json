@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "sqlbot41d_cold_start_attempt",
+  "status": "FAIL",
+  "failure_phase": "runtime_health_wait",
+  "services_fully_stopped_before_restart": true,
+  "restart_initiated": true,
+  "persistent_volumes_removed": false,
+  "failure": {
+    "type": "PowerShellNativeStderrPromotion",
+    "message": "A transient curl empty response during runtime warm-up was promoted to a terminating PowerShell error before the retry loop could continue."
+  },
+  "secret_values_persisted": false
+}

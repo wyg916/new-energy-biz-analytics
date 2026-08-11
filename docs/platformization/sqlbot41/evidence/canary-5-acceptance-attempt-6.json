@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "sqlbot41d_stage_acceptance",
+  "stage": "canary-5",
+  "generated_at": "2026-08-11T05:23:37.887195+00:00",
+  "status": "FAIL",
+  "metrics": {
+    "request_count": 100,
+    "charging_request_count": 50,
+    "sales_request_count": 50,
+    "cohort_selected_count": 5,
+    "cohort_selected_rate": 0.05,
+    "sqlbot_attempt_count": 5,
+    "runtime_availability_rate": 1.0,
+    "guard_pass_rate": 1.0,
+    "execution_success_rate": 1.0,
+    "semantic_accuracy": 1.0,
+    "result_consistency_rate": 0.0,
+    "p95_latency_ms": 12461,
+    "permission_violation_count": 0,
+    "pii_violation_count": 0,
+    "readonly_violation_count": 0,
+    "unguarded_sql_count": 0,
+    "fallback_count": 0,
+    "fallback_rate": 0.0,
+    "controlled_exact_example_fallback_count": 0
+  },
+  "gate": {
+    "minimum_request_count": true,
+    "scenario_coverage": true,
+    "stage_percentage": true,
+    "runtime": true,
+    "guard": true,
+    "execution": true,
+    "semantic": true,
+    "consistency": false,
+    "latency": true,
+    "security": true,
+    "fallback_rate": true
+  },
+  "runtime": "SQLBot CE v1.10.0",
+  "provider": "deepseek",
+  "model": "deepseek-v4-flash",
+  "api_path": "/api/v1/assistant/query",
+  "database": "current DATA-4.1 PostgreSQL simulated dataset",
+  "truth_boundary": {
+    "production_traffic_claimed": false,
+    "real_customer_usage_claimed": false,
+    "real_business_benefit_claimed": false
+  }
+}

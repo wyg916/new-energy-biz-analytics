@@ -1,19 +1,21 @@
 @echo off
 setlocal EnableExtensions
-title Renewable Operations - P6 4.1 Business Loop Startup
+title Renewable Operations - Full Integration 4.1 Startup
 
 cd /d "%~dp0"
 
 echo.
 echo ============================================================
-echo   Renewable Operations Analytics - P6 Business Closed Loops
-echo   Version: 4.1.0-p6.1 ^| Migration: p6_41_0001
-echo   Alerts, reports and metric governance; DATA/RAG/Memory retained.
-echo   SQLBot remains Shadow/disabled. Notifications use a controlled receiver.
+echo   Renewable Operations Analytics - Full Integration 4.1
+echo   P6 business loops, DATA/RAG/Memory and controlled SQLBot.
+echo   Default SQLBot mode: SHADOW. Not production approved.
 echo ============================================================
 echo.
 
 powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\release\start-project.ps1"
+if errorlevel 1 goto :failed
+
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\Run-SQLBot41DOneClick.ps1"
 if errorlevel 1 goto :failed
 
 echo.
@@ -23,8 +25,8 @@ exit /b 0
 
 :failed
 echo.
-echo [FAILED] P6-4.1 startup did not pass all checks.
-echo Review runtime\p6-41-startup-report.json for non-secret diagnostics.
+echo [FAILED] Full Integration 4.1 startup did not pass all checks.
+echo Review runtime startup reports for non-secret diagnostics.
 echo.
 echo Press any key to close this window.
 pause >nul

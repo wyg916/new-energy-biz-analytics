@@ -42,6 +42,9 @@ DATASOURCES = (
             "active_context",
             "dim_station",
             "fact_charging_session",
+            "fact_device_status_event",
+            "fact_energy_cost",
+            "fact_operation_expense",
         ),
     ),
     DatasourceSpec(
@@ -55,7 +58,11 @@ DATASOURCES = (
             "sales_order",
             "sales_order_item",
             "sales_product",
+            "sales_product_category",
             "sales_region",
+            "sales_customer",
+            "sales_business_date",
+            "salesperson",
         ),
     ),
 )
@@ -264,7 +271,32 @@ def _upsert_datasource(
         operation = "created"
     else:
         datasource_id = current.get("id")
-        operation = "reused"
+        if datasource_id is None:
+            raise RuntimeError(f"{spec.name} datasource id is unavailable")
+        # A recovered acceptance runtime can retain a valid catalogue whose
+        # encrypted connection still points at an obsolete database host.
+        # Reusing that row without updating it makes the connection check test
+        # stale state rather than the current DATA-4.1 PostgreSQL service.
+        candidate["id"] = datasource_id
+        _response_data(
+            client.post(
+                f"{API_BASE_URL}/datasource/update",
+                headers=headers,
+                json=candidate,
+                timeout=120,
+            ),
+            f"{spec.name} datasource update",
+        )
+        _response_data(
+            client.post(
+                f"{API_BASE_URL}/datasource/chooseTables/{datasource_id}",
+                headers=headers,
+                json=candidate["tables"],
+                timeout=120,
+            ),
+            f"{spec.name} datasource table allowlist update",
+        )
+        operation = "updated"
     if datasource_id is None:
         raise RuntimeError(f"{spec.name} datasource id is unavailable")
     _response_data(

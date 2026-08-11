@@ -1,4 +1,6 @@
 from datetime import UTC, datetime
+from types import SimpleNamespace
+from unittest.mock import patch
 
 import pytest
 
@@ -164,6 +166,8 @@ def test_canary_routes_only_selected_long_tail_queries() -> None:
         mode=EngineMode.CANARY,
         canary=CanaryPolicy(
             percentage=100,
+            tenants=frozenset({"tenant-a"}),
+            workspaces=frozenset({"workspace-a"}),
             users=frozenset({"user:canary"}),
             scenarios=frozenset({"sales_ops"}),
         ),
@@ -176,9 +180,33 @@ def test_canary_routes_only_selected_long_tail_queries() -> None:
             deterministic,
             sqlbot,
             mode=EngineMode.CANARY,
-            canary=CanaryPolicy(percentage=0),
+            canary=CanaryPolicy(
+                percentage=0,
+                tenants=frozenset({"tenant-a"}),
+                workspaces=frozenset({"workspace-a"}),
+                users=frozenset({"user:canary"}),
+                scenarios=frozenset({"sales_ops"}),
+            ),
         ).execute(_request(), _context(), deterministic_supported=False)
     assert rejected.value.code == "CANARY_NOT_SELECTED"
+
+
+@pytest.mark.parametrize("missing", ("tenants", "workspaces", "users", "scenarios"))
+def test_canary_requires_all_four_allowlists(missing: str) -> None:
+    scope = {
+        "tenants": frozenset({"tenant-a"}),
+        "workspaces": frozenset({"workspace-a"}),
+        "users": frozenset({"user:canary"}),
+        "scenarios": frozenset({"sales_ops"}),
+    }
+    scope[missing] = frozenset()
+    with pytest.raises(ValueError, match="requires tenant, workspace, user, and scenario"):
+        EngineRouter(
+            FakeEngine("deterministic", _result("deterministic")),
+            FakeEngine("sqlbot", _result("sqlbot")),
+            mode=EngineMode.CANARY,
+            canary=CanaryPolicy(percentage=5, **scope),
+        )
 
 
 def test_core_query_remains_deterministic_even_when_sqlbot_enabled() -> None:
@@ -203,3 +231,31 @@ def test_disabled_mode_fails_closed() -> None:
     with pytest.raises(QueryRoutingError) as exc:
         router.execute(_request(), _context(), deterministic_supported=False)
     assert exc.value.code == "QUERY_ENGINE_DISABLED"
+
+
+@pytest.mark.parametrize("configured_mode", ("SHADOW", "CANARY", "SCOPED_STABLE"))
+def test_sqlbot_enabled_false_is_a_single_switch_emergency_fallback(
+    configured_mode: str,
+) -> None:
+    deterministic = FakeEngine("deterministic", _result("deterministic"))
+    sqlbot = FakeEngine("sqlbot", _result("sqlbot"))
+    settings = SimpleNamespace(
+        effective_query_engine_mode=configured_mode,
+        sqlbot_engine_enabled=False,
+        query_engine_canary_scope={
+            "tenants": frozenset({"tenant-a"}),
+            "workspaces": frozenset({"workspace-a"}),
+            "users": frozenset({"user:canary"}),
+            "scenarios": frozenset({"sales_ops"}),
+        },
+        query_engine_canary_percentage=20.0,
+        query_engine_feature_flag_version="sqlbot-4.1d-test",
+        query_engine_auto_fallback_enabled=True,
+    )
+    with patch("app.query_engines.router.get_settings", return_value=settings):
+        routed = EngineRouter.from_settings(deterministic, sqlbot).execute(
+            _request(), _context(), deterministic_supported=False
+        )
+    assert routed.route_decision == "DETERMINISTIC_ONLY"
+    assert deterministic.calls == 1
+    assert sqlbot.calls == 0

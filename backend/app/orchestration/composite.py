@@ -1,6 +1,7 @@
 import re
 from dataclasses import dataclass
 from enum import StrEnum
+from time import perf_counter
 from uuid import uuid4
 
 from sqlalchemy.orm import Session
@@ -68,11 +69,25 @@ class CompositeQueryOrchestrator:
         conversation_id: str | None = None,
         requested_route: CompositeRoute | None = None,
     ) -> CompositeResult:
+        orchestration_started = perf_counter()
+        orchestration_timings: dict[str, int] = {
+            "authorization_ms": 0,
+            "procedure_match_ms": 0,
+            "memory_load_ms": 0,
+            "data_query_ms": 0,
+            "knowledge_query_ms": 0,
+            "response_compose_ms": 0,
+            "audit_commit_ms": 0,
+            "memory_policy_ms": 0,
+            "episodic_write_ms": 0,
+            "working_memory_write_ms": 0,
+        }
         route = requested_route or self.classify(question)
         trace_id = f"TRACE-{uuid4()}"
         run_id = f"COMPOSITE-{uuid4()}"
         identity = IdentityContextFactory.from_user(self.user)
         authorizer = AuthorizationService(self.db, identity)
+        phase_started = perf_counter()
         if route in {CompositeRoute.DATA, CompositeRoute.DATA_AND_KNOWLEDGE}:
             for action, resource_type in (
                 ("datasource.view", "datasource"),
@@ -96,10 +111,18 @@ class CompositeQueryOrchestrator:
                 environment=get_settings().app_env,
                 trace_id=trace_id,
             ))
+        orchestration_timings["authorization_ms"] = int(
+            (perf_counter() - phase_started) * 1000
+        )
+        phase_started = perf_counter()
         matched_skill = ProcedureMatcher(self.db, identity).match(
             question=question,
             scenario_id=scenario_id,
         )
+        orchestration_timings["procedure_match_ms"] = int(
+            (perf_counter() - phase_started) * 1000
+        )
+        phase_started = perf_counter()
         loaded_memory = MemoryContextLoader(self.db, identity).load(
             scenario_id=scenario_id,
             user_question=question,
@@ -113,10 +136,14 @@ class CompositeQueryOrchestrator:
                 if matched_skill else None
             ),
         )
+        orchestration_timings["memory_load_ms"] = int(
+            (perf_counter() - phase_started) * 1000
+        )
         data_payload = None
         data_evidence = None
         bound_conversation = conversation_id
         if route in {CompositeRoute.DATA, CompositeRoute.DATA_AND_KNOWLEDGE}:
+            phase_started = perf_counter()
             data_payload = get_scenario_chat_registry().execute(
                 self.db,
                 self.user,
@@ -124,12 +151,16 @@ class CompositeQueryOrchestrator:
                 conversation_id=conversation_id,
                 question=question,
             )
+            orchestration_timings["data_query_ms"] = int(
+                (perf_counter() - phase_started) * 1000
+            )
             bound_conversation = data_payload.get("conversation_id")
             data_evidence = self._adapt_data_evidence(data_payload, scenario_id, run_id)
 
         knowledge_result = None
         knowledge_evidence = None
         if route in {CompositeRoute.KNOWLEDGE, CompositeRoute.DATA_AND_KNOWLEDGE}:
+            phase_started = perf_counter()
             knowledge_result = KnowledgeRetrievalService(self.db).retrieve(
                 question,
                 RetrievalIdentity(
@@ -143,8 +174,12 @@ class CompositeQueryOrchestrator:
                 trace_id=trace_id,
                 run_id=run_id,
             )
+            orchestration_timings["knowledge_query_ms"] = int(
+                (perf_counter() - phase_started) * 1000
+            )
             knowledge_evidence = self._adapt_knowledge_evidence(question, knowledge_result)
 
+        phase_started = perf_counter()
         truth = current_data_truth(self.db)
         response = ResponseComposer().compose(CompositionRequest(
             question=question,
@@ -156,6 +191,10 @@ class CompositeQueryOrchestrator:
             can_show_sql=self.user.role == "analyst_admin",
             data_classification=truth["data_classification"],
         ))
+        orchestration_timings["response_compose_ms"] = int(
+            (perf_counter() - phase_started) * 1000
+        )
+        phase_started = perf_counter()
         self.db.add(AuditLog(
             actor_user_id=self.user.id,
             action="assistant.composite_query",
@@ -167,10 +206,18 @@ class CompositeQueryOrchestrator:
             ),
         ))
         self.db.commit()
+        orchestration_timings["audit_commit_ms"] = int(
+            (perf_counter() - phase_started) * 1000
+        )
+        phase_started = perf_counter()
         memory_enabled = MemoryPolicyService(self.db, identity).is_enabled(
             scenario_id=scenario_id
         )
+        orchestration_timings["memory_policy_ms"] = int(
+            (perf_counter() - phase_started) * 1000
+        )
         if memory_enabled:
+            phase_started = perf_counter()
             EpisodicMemoryService(self.db, identity).record_success(EpisodicRun(
                 run_id=run_id,
                 trace_id=trace_id,
@@ -214,7 +261,11 @@ class CompositeQueryOrchestrator:
                 runtime_cost={"token_usage": 0},
                 latency_ms=0,
             ))
+            orchestration_timings["episodic_write_ms"] = int(
+                (perf_counter() - phase_started) * 1000
+            )
             if bound_conversation:
+                phase_started = perf_counter()
                 working = WorkingMemoryService.from_runtime(self.db, identity).save(
                     session_id=bound_conversation,
                     state=WorkingMemoryState(
@@ -242,11 +293,21 @@ class CompositeQueryOrchestrator:
                         run_id=run_id,
                     ),
                 )
+                orchestration_timings["working_memory_write_ms"] = int(
+                    (perf_counter() - phase_started) * 1000
+                )
                 working_status = working.status
             else:
                 working_status = loaded_memory.working_status
         else:
             working_status = "DISABLED"
+        orchestration_timings["orchestration_total_ms"] = int(
+            (perf_counter() - orchestration_started) * 1000
+        )
+        if data_payload is not None:
+            data_payload.setdefault("evidence", {})[
+                "orchestration_latency_profile"
+            ] = orchestration_timings
         return CompositeResult(
             route=route,
             response=response.model_dump(mode="json"),

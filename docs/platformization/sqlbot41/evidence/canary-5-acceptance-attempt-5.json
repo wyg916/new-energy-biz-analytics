@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "sqlbot41d_failed_attempt",
+  "stage": "canary-5-probe",
+  "status": "FAIL",
+  "failure_stage": "acceptance_credential_adapter",
+  "error_code": "SQLBOT_RESPONSE_INVALID",
+  "reason": "The acceptance runner patched SQLBotClient._credentials with the raw governed reference value and unintentionally bypassed the frozen domain-separated runtime password derivation used by 4.1C.",
+  "probe_request_count": 2,
+  "sqlbot_primary_success_count": 0,
+  "automatic_fallback_count": 2,
+  "http_500_count": 0,
+  "unguarded_sql_count": 0,
+  "secret_values_persisted": false,
+  "production_traffic_claimed": false,
+  "corrective_action": "Apply derive_runtime_account_password in-memory before the patched client returns credentials; do not change the CredentialReference, runtime account, model, prompt, or Guard."
+}

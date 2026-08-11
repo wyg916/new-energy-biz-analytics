@@ -1,0 +1,71 @@
+﻿{
+    "canary_configuration":  {
+                                 "activation_source":  "SQLBOT_41D_MODE controlled environment variable",
+                                 "business_api_global_sqlbot_activated":  false,
+                                 "business_api_startup_mode":  "SHADOW",
+                                 "canary_percentage":  0.0,
+                                 "controlled_acceptance_mode":  "SHADOW",
+                                 "controlled_mode_requires_all_four_allowlists":  false,
+                                 "default_is_global_stable":  false,
+                                 "query_engine_mode":  "SHADOW",
+                                 "scenario_allowlist":  [
+                                                            "charging_ops",
+                                                            "sales_ops"
+                                                        ],
+                                 "startup_mode":  "SHADOW",
+                                 "tenant_allowlist_required":  false,
+                                 "user_allowlist_required":  false,
+                                 "workspace_allowlist_required":  false
+                             },
+    "checks":  {
+                   "credential_reference_ready":  true,
+                   "data41_binding_ready":  true,
+                   "postgresql_ready":  true,
+                   "readonly_roles_ready":  true,
+                   "redis_ready":  true,
+                   "router_configuration_visible":  true,
+                   "safe_default":  true,
+                   "semantic_views_6_10":  true
+               },
+    "evidence_type":  "sqlbot41d_startup_readiness",
+    "generated_at":  "2026-08-11T11:33:55.356629+00:00",
+    "runtime":  {
+                    "active_binding_count":  2,
+                    "binding_relation_counts":  {
+                                                    "charging_ops":  6,
+                                                    "sales_ops":  10
+                                                },
+                    "credential_reference_count":  2,
+                    "migration":  "sqlbot_41c2",
+                    "readonly_role_count":  2,
+                    "semantic_view_counts":  {
+                                                 "charging_ops":  6,
+                                                 "sales_ops":  10
+                                             }
+                },
+    "schema_version":  "1.0",
+    "secret_values_persisted":  false,
+    "status":  "PASS",
+    "truth_boundary":  {
+                           "production_traffic_claimed":  false,
+                           "real_customer_usage_claimed":  false
+                       },
+    "sqlbot_runtime_healthy":  true,
+    "api_ready":  true,
+    "dependency_startup":  {
+                               "status":  "PASS",
+                               "redis":  {
+                                             "container":  "renewable-data41-redis-1",
+                                             "action":  "REUSED",
+                                             "authenticated_health":  "PONG"
+                                         },
+                               "sqlbot":  {
+                                              "status":  "READY",
+                                              "action":  "REUSED",
+                                              "upstream":  "v1.10.0",
+                                              "secret_values_exposed":  false
+                                          },
+                               "platform_network":  "renewable-data41-network",
+                               "secret_values_exposed":  false
+                           }
+}

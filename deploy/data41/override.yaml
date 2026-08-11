@@ -13,7 +13,7 @@ x-data41-api-environment: &data41-api-environment
   CORS_ORIGINS: https://p5b.localhost:8446
   TRUSTED_HOSTS: p5b.localhost,localhost,api,testserver
   RELEASE_VERSION: 4.1.0-integration.1
-  EXPECTED_DATABASE_REVISION: integration_41_merge_0001
+  EXPECTED_DATABASE_REVISION: p6_41_0001
   ACCEPTANCE_POSTGRES_DB: renewable_p5b
   DATABASE_POOL_SIZE: "20"
   DATABASE_MAX_OVERFLOW: "10"

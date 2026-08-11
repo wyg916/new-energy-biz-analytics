@@ -1,0 +1,859 @@
+{
+  "evidence_type": "sqlbot_runtime_smoke20",
+  "evaluated_at": "2026-08-10T05:17:31.481216+00:00",
+  "runtime_status": "PASS",
+  "provider": "deepseek",
+  "actual_model": "deepseek-v4-flash",
+  "sqlbot_upstream": "v1.10.0",
+  "data_classification": "simulated",
+  "credential_source": "CREDENTIAL_REFERENCE",
+  "credential_versions": {
+    "username": 1,
+    "password": 1
+  },
+  "source_stats": {
+    "charging_ops": {
+      "min_date": "2020-05-10",
+      "max_date": "2026-06-30",
+      "row_count": 300026
+    },
+    "sales_ops": {
+      "min_date": "2010-12-01",
+      "max_date": "2026-06-30",
+      "row_count": 63665
+    }
+  },
+  "total": 1,
+  "executed": 1,
+  "passed": 1,
+  "failed": 0,
+  "scenario_counts": {
+    "sales_ops": 1
+  },
+  "external_request_count": 1,
+  "evidence_recovered_from_sqlbot_records": false,
+  "reconstructed_trace_count": 0,
+  "metrics": {
+    "runtime_response_rate": 1.0,
+    "model_call_success_rate": 1.0,
+    "sql_generation_rate": 1.0,
+    "sql_guard_pass_rate": 1.0,
+    "sql_execution_rate": 1.0,
+    "guarded_query_completion_rate": 1.0,
+    "execution_accuracy": null,
+    "execution_accuracy_reason": "no result-value oracle is present in the fixed Golden source",
+    "metric_value_accuracy": null,
+    "metric_value_accuracy_reason": "fixed Golden cases contain metric labels but no expected result values",
+    "semantic_outcome_accuracy": 1.0,
+    "time_range_accuracy": null,
+    "dimension_accuracy": 1.0,
+    "sort_accuracy": null,
+    "permission_violation_rate": 0.0,
+    "cross_scenario_generation_rate": 0.0,
+    "hallucinated_table_rate": 0.0,
+    "hallucinated_field_rate": 0.0,
+    "rejection_accuracy": null,
+    "clarification_expected_accuracy": null,
+    "dangerous_sql_allowed_count": 0,
+    "unauthorized_relation_allowed_count": 0,
+    "pii_sql_allowed_count": 0,
+    "p50_latency_ms": 6807,
+    "p95_latency_ms": 6807,
+    "token_usage": {
+      "observed_count": 1,
+      "total": 9542,
+      "mean": 9542
+    },
+    "estimated_cost_per_request": null
+  },
+  "latency_profile": {
+    "stages": {
+      "schema_retrieval_ms": {
+        "observed": 1,
+        "p50": 4,
+        "p95": 4,
+        "max": 4
+      },
+      "prompt_build_ms": {
+        "observed": 1,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "runtime_connection_ms": {
+        "observed": 1,
+        "p50": 316,
+        "p95": 316,
+        "max": 316
+      },
+      "model_ttft_ms": {
+        "observed": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      },
+      "model_generation_ms": {
+        "observed": 1,
+        "p50": 5957,
+        "p95": 5957,
+        "max": 5957
+      },
+      "retry_ms": {
+        "observed": 1,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "normalization_ms": {
+        "observed": 1,
+        "p50": 2,
+        "p95": 2,
+        "max": 2
+      },
+      "guard_ms": {
+        "observed": 1,
+        "p50": 9,
+        "p95": 9,
+        "max": 9
+      },
+      "execution_ms": {
+        "observed": 1,
+        "p50": 408,
+        "p95": 408,
+        "max": 408
+      },
+      "answer_ms": {
+        "observed": 1,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "total_ms": {
+        "observed": 1,
+        "p50": 6807,
+        "p95": 6807,
+        "max": 6807
+      }
+    },
+    "largest_p95_stage": "model_generation_ms",
+    "ttft_available": false
+  },
+  "results": [
+    {
+      "case_id": "MD-012",
+      "scenario": "sales_ops",
+      "category": "multi_table_dimension",
+      "expected_decision": "QUERY",
+      "question": "按产品和类别查看销量与退款金额。",
+      "normalized_question": "按产品和类别查看销量与退款金额。",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 1,
+      "attempts": 1,
+      "sqlbot_session_created": true,
+      "generated_sql": "SELECT \"p\".\"product_name\" AS \"product_name\", \"c\".\"category_name\" AS \"category_name\", SUM(\"i\".\"quantity\") AS \"sales_quantity\", SUM(\"i\".\"refund_amount\") AS \"refund_amount\" FROM \"sales_order_item\" AS \"i\" JOIN \"sales_product\" AS \"p\" ON \"i\".\"product_id\" = \"p\".\"product_id\" JOIN \"sales_product_category\" AS \"c\" ON \"p\".\"category_id\" = \"c\".\"category_id\" GROUP BY \"p\".\"product_name\", \"c\".\"category_name\" ORDER BY \"sales_quantity\" DESC LIMIT 500",
+      "limit_policy_warnings": [],
+      "sql_hash": "ca6f92cb55612f442f5986839eabd6264f2bec2e8348924133e1871f31e7e49f",
+      "guard_result": "PASSED",
+      "execution_status": "PLATFORM_READONLY_COMPLETED",
+      "execution_error_detail": null,
+      "row_count": 500,
+      "result_hash": "35aa1e99b5d78b77aedafdaf506df30a5bfcd11b71c4fca7041011fbbd90a628",
+      "latency_ms": 6807,
+      "latency_profile": {
+        "schema_retrieval_ms": 4,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 316,
+        "model_ttft_ms": null,
+        "model_generation_ms": 5957,
+        "retry_ms": 0,
+        "normalization_ms": 2,
+        "guard_ms": 9,
+        "execution_ms": 408,
+        "answer_ms": 0,
+        "total_ms": 6807
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c2",
+      "prompt_profile": {
+        "characters": 4891,
+        "utf8_bytes": 5219,
+        "schema_relation_count": 4,
+        "schema_field_count": 24
+      },
+      "query_understanding": {
+        "status": "READY",
+        "route_class": "core_metric",
+        "risk": "controlled",
+        "deterministic_preferred": true,
+        "reason": "core_metric_pinned",
+        "clarification_codes": [],
+        "clarification_question": null,
+        "matched_metrics": [
+          "refund_amount",
+          "sales_quantity"
+        ],
+        "matched_dimensions": [
+          "category",
+          "product"
+        ]
+      },
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "8274ee5fd713771ef39930e63fe5e15397022d65d582b1ff17fc07be143cb45d",
+        "authorized_tables": [
+          {
+            "code": "order_fact",
+            "name": "模拟销售订单事实",
+            "relation": "sales_order",
+            "fields": [
+              {
+                "code": "channel_id",
+                "name": "渠道编码",
+                "physical_field": "channel_id",
+                "data_type": "string"
+              },
+              {
+                "code": "customer_id",
+                "name": "客户编码",
+                "physical_field": "customer_id",
+                "data_type": "string"
+              },
+              {
+                "code": "gross_amount",
+                "name": "订单原价",
+                "physical_field": "gross_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "gross_profit",
+                "name": "销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "is_new_customer",
+                "name": "新客户标识",
+                "physical_field": "is_new_customer",
+                "data_type": "boolean"
+              },
+              {
+                "code": "net_revenue",
+                "name": "销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_date",
+                "name": "订单日期",
+                "physical_field": "order_date",
+                "data_type": "date"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "organization_code",
+                "name": "组织编码",
+                "physical_field": "organization_code",
+                "data_type": "string"
+              },
+              {
+                "code": "refund_amount",
+                "name": "退款金额",
+                "physical_field": "refund_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "salesperson_id",
+                "name": "销售人员编码",
+                "physical_field": "salesperson_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "order_item_fact",
+            "name": "模拟销售订单明细",
+            "relation": "sales_order_item",
+            "fields": [
+              {
+                "code": "gross_profit",
+                "name": "明细销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "net_revenue",
+                "name": "明细销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "order_item_id",
+                "name": "订单明细编码",
+                "physical_field": "order_item_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "quantity",
+                "name": "销售数量",
+                "physical_field": "quantity",
+                "data_type": "integer"
+              },
+              {
+                "code": "refund_amount",
+                "name": "明细退款金额",
+                "physical_field": "refund_amount",
+                "data_type": "number"
+              }
+            ]
+          },
+          {
+            "code": "product_dimension",
+            "name": "模拟产品",
+            "relation": "sales_product",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_name",
+                "name": "产品名称",
+                "physical_field": "product_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "category_dimension",
+            "name": "模拟产品类别",
+            "relation": "sales_product_category",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "category_name",
+                "name": "类别名称",
+                "physical_field": "category_name",
+                "data_type": "string"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "item_to_order",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "order_id"
+            ],
+            "target_table": "sales_order",
+            "target_fields": [
+              "order_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "item_to_product",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "product_id"
+            ],
+            "target_table": "sales_product",
+            "target_fields": [
+              "product_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "product_to_category",
+            "source_table": "sales_product",
+            "source_fields": [
+              "category_id"
+            ],
+            "target_table": "sales_product_category",
+            "target_fields": [
+              "category_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [
+          {
+            "code": "refund_amount",
+            "name": "退款金额",
+            "aliases": [
+              "退款额"
+            ],
+            "expression": "SUM(order_fact.refund_amount)",
+            "aggregation": "sum",
+            "time_field": "order_fact.order_date",
+            "lineage": {
+              "fields": [
+                "order_fact.refund_amount"
+              ]
+            },
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          },
+          {
+            "code": "sales_quantity",
+            "name": "销售数量",
+            "aliases": [
+              "销量"
+            ],
+            "expression": "SUM(order_item_fact.quantity)",
+            "aggregation": "sum",
+            "time_field": "order_fact.order_date",
+            "lineage": {
+              "fields": [
+                "order_item_fact.quantity"
+              ]
+            },
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [
+          {
+            "code": "category",
+            "name": "产品类别",
+            "aliases": [
+              "品类",
+              "类别"
+            ],
+            "field_ref": "category_dimension.category_id",
+            "data_type": "string"
+          },
+          {
+            "code": "product",
+            "name": "产品",
+            "aliases": [
+              "商品"
+            ],
+            "field_ref": "product_dimension.product_id",
+            "data_type": "string"
+          }
+        ],
+        "time_dimensions": [
+          {
+            "code": "order_date",
+            "field_ref": "order_fact.order_date",
+            "timezone": "Asia/Shanghai",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ],
+        "retrieval_terms": [
+          "按产品和类别查看销量与退款金额"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [
+          {
+            "code": "order_fact",
+            "name": "模拟销售订单事实",
+            "relation": "sales_order",
+            "fields": [
+              {
+                "code": "channel_id",
+                "name": "渠道编码",
+                "physical_field": "channel_id",
+                "data_type": "string"
+              },
+              {
+                "code": "customer_id",
+                "name": "客户编码",
+                "physical_field": "customer_id",
+                "data_type": "string"
+              },
+              {
+                "code": "gross_amount",
+                "name": "订单原价",
+                "physical_field": "gross_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "gross_profit",
+                "name": "销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "is_new_customer",
+                "name": "新客户标识",
+                "physical_field": "is_new_customer",
+                "data_type": "boolean"
+              },
+              {
+                "code": "net_revenue",
+                "name": "销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_date",
+                "name": "订单日期",
+                "physical_field": "order_date",
+                "data_type": "date"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "organization_code",
+                "name": "组织编码",
+                "physical_field": "organization_code",
+                "data_type": "string"
+              },
+              {
+                "code": "refund_amount",
+                "name": "退款金额",
+                "physical_field": "refund_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "salesperson_id",
+                "name": "销售人员编码",
+                "physical_field": "salesperson_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "order_item_fact",
+            "name": "模拟销售订单明细",
+            "relation": "sales_order_item",
+            "fields": [
+              {
+                "code": "gross_profit",
+                "name": "明细销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "net_revenue",
+                "name": "明细销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "order_item_id",
+                "name": "订单明细编码",
+                "physical_field": "order_item_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "quantity",
+                "name": "销售数量",
+                "physical_field": "quantity",
+                "data_type": "integer"
+              },
+              {
+                "code": "refund_amount",
+                "name": "明细退款金额",
+                "physical_field": "refund_amount",
+                "data_type": "number"
+              }
+            ]
+          },
+          {
+            "code": "product_dimension",
+            "name": "模拟产品",
+            "relation": "sales_product",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_name",
+                "name": "产品名称",
+                "physical_field": "product_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "category_dimension",
+            "name": "模拟产品类别",
+            "relation": "sales_product_category",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "category_name",
+                "name": "类别名称",
+                "physical_field": "category_name",
+                "data_type": "string"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "item_to_order",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "order_id"
+            ],
+            "target_table": "sales_order",
+            "target_fields": [
+              "order_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "item_to_product",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "product_id"
+            ],
+            "target_table": "sales_product",
+            "target_fields": [
+              "product_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "product_to_category",
+            "source_table": "sales_product",
+            "source_fields": [
+              "category_id"
+            ],
+            "target_table": "sales_product_category",
+            "target_fields": [
+              "category_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [
+          {
+            "code": "refund_amount",
+            "name": "退款金额",
+            "aliases": [
+              "退款额"
+            ],
+            "expression": "SUM(order_fact.refund_amount)",
+            "aggregation": "sum",
+            "time_field": "order_fact.order_date",
+            "lineage": {
+              "fields": [
+                "order_fact.refund_amount"
+              ]
+            },
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          },
+          {
+            "code": "sales_quantity",
+            "name": "销售数量",
+            "aliases": [
+              "销量"
+            ],
+            "expression": "SUM(order_item_fact.quantity)",
+            "aggregation": "sum",
+            "time_field": "order_fact.order_date",
+            "lineage": {
+              "fields": [
+                "order_item_fact.quantity"
+              ]
+            },
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [
+          {
+            "code": "category",
+            "name": "产品类别",
+            "aliases": [
+              "品类",
+              "类别"
+            ],
+            "field_ref": "category_dimension.category_id",
+            "data_type": "string"
+          },
+          {
+            "code": "product",
+            "name": "产品",
+            "aliases": [
+              "商品"
+            ],
+            "field_ref": "product_dimension.product_id",
+            "data_type": "string"
+          }
+        ],
+        "time_dimensions": [
+          {
+            "code": "order_date",
+            "field_ref": "order_fact.order_date",
+            "timezone": "Asia/Shanghai",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": {
+        "code": 0,
+        "data": {
+          "success": true,
+          "record_id": 590,
+          "title": "按产品和类别查看销量与退款金额",
+          "sql": "SELECT \"p\".\"product_name\" AS \"product_name\", \"c\".\"category_name\" AS \"category_name\", SUM(\"i\".\"quantity\") AS \"sales_quantity\", SUM(\"i\".\"refund_amount\") AS \"refund_amount\" FROM \"semantic_sqlbot_sales\".\"sales_order_item\" \"i\" JOIN \"semantic_sqlbot_sales\".\"sales_product\" \"p\" ON \"i\".\"product_id\" = \"p\".\"product_id\" JOIN \"semantic_sqlbot_sales\".\"sales_product_category\" \"c\" ON \"p\".\"category_id\" = \"c\".\"category_id\" GROUP BY \"p\".\"product_name\", \"c\".\"category_name\" ORDER BY \"sales_quantity\" DESC LIMIT 500"
+        },
+        "msg": null
+      },
+      "model_response_received": true,
+      "model_refusal": false,
+      "generation_attempts": [
+        {
+          "generation_attempt": 1,
+          "sql_hash": "ca6f92cb55612f442f5986839eabd6264f2bec2e8348924133e1871f31e7e49f",
+          "guard_result": "PASSED",
+          "error": null
+        }
+      ],
+      "repair_attempt": 0,
+      "repair_input": null,
+      "repair_output": null,
+      "governed_exact_example_fallback": false,
+      "governed_exact_example_fallback_reason": null,
+      "token_usage": 9542,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-ba404880-0be0-4fd1-aed7-20c422c3edc5",
+      "semantic_version": "1.0.1",
+      "semantic_model_version_id": "SMV-41C2-d4eb2c50cbc47179b30a721fadc474a5",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-MD-012-20260810T051724674576",
+      "trace_id": "P2A-MD-012-20260810T051724674576",
+      "error": null,
+      "final_status": "PASS",
+      "permission_pass": true,
+      "time_range_alignment": null,
+      "dimension_alignment": true,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": [],
+      "result_guard": "PASSED",
+      "answer_guard": "PASSED"
+    }
+  ],
+  "secret_values_exposed": false,
+  "model_response_prose_exposed": false
+}

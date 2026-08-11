@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "sqlbot41d_failed_attempt",
+  "stage": "canary-5",
+  "status": "FAIL",
+  "failure_stage": "credential_policy_authorization",
+  "error_code": "AUTHORIZATION_DENIED",
+  "reason": "The isolated acceptance container used APP_ENV=test, which did not match the existing governed CredentialReference use policy.",
+  "sqlbot_request_count": 0,
+  "sql_executed_count": 0,
+  "secret_values_persisted": false,
+  "production_traffic_claimed": false,
+  "corrective_action": "Align the isolated acceptance runtime with the already-approved controlled credential policy; do not change model, prompt, Guard, readonly roles, or production gates."
+}

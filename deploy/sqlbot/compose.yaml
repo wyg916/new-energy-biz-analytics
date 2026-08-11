@@ -2,8 +2,11 @@ name: renewable-sqlbot
 
 services:
   sqlbot:
-    image: dataease/sqlbot:v1.8.0
-    container_name: renewable-sqlbot-v1-8-0
+    image: registry.cn-qingdao.aliyuncs.com/dataease/sqlbot:v1.10.0
+    container_name: renewable-sqlbot-v1-10-0
+    entrypoint:
+      - /bin/sh
+      - /usr/local/bin/sqlbot-local-acceptance-start.sh
     restart: unless-stopped
     privileged: true
     environment:
@@ -18,7 +21,12 @@ services:
       BACKEND_CORS_ORIGINS: http://127.0.0.1:18080
       LOG_LEVEL: INFO
       SQL_DEBUG: "false"
+      SQLBOT_LOCAL_DB_READY_ATTEMPTS: ${SQLBOT_LOCAL_DB_READY_ATTEMPTS:-180}
+      SQLBOT_LOCAL_DB_READY_INTERVAL_SECONDS: ${SQLBOT_LOCAL_DB_READY_INTERVAL_SECONDS:-5}
     volumes:
+      - ./start-local-acceptance.sh:/usr/local/bin/sqlbot-local-acceptance-start.sh:ro
+      - ./sqlbot41_runtime.py:/opt/sqlbot/app/sqlbot41_runtime.py:ro
+      - ./provision_model_runtime_api.py:/opt/sqlbot/app/sqlbot41_provision_model.py:ro
       - sqlbot_excel:/opt/sqlbot/data/excel
       - sqlbot_file:/opt/sqlbot/data/file
       - sqlbot_images:/opt/sqlbot/data/images
@@ -40,7 +48,7 @@ services:
       interval: 15s
       timeout: 5s
       retries: 20
-      start_period: 60s
+      start_period: 15m
 
 networks:
   sqlbot_internal:

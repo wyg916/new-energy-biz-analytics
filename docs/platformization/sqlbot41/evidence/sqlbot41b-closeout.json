@@ -1,0 +1,78 @@
+{
+  "boundaries": {
+    "deterministic_engine_preserved": true,
+    "free_sql_admin_entry": false,
+    "missing_scenario_connection": "fail_closed",
+    "platform_query_guard_required": true,
+    "scenario_readonly_role_required": true,
+    "sqlbot_endpoint": "generate-only /api/v1/mcp/mcp_generate_sql",
+    "sqlbot_executes_sql": false
+  },
+  "data_classification": "simulated_and_open_source_real_data",
+  "evidence_type": "sqlbot_41b_closeout",
+  "generated_at": "2026-08-09T09:00:53.996540+00:00",
+  "inputs": {
+    "sqlbot41b-golden-contract-100.json": {
+      "sha256": "66b25e3310b9302776c145d4a53863536f14dafed40c813586884cd527aea00e"
+    },
+    "sqlbot41b-live-smoke-env-acceptance.json": {
+      "sha256": "4ed375b74b8b9444e096c1f1629748aba1077707cc138237fdafd2b32a79bd43"
+    },
+    "sqlbot41b-postgres-full-final.json": {
+      "sha256": "ed9075004997209ce6b723714f0f945bae25528cd36b820f12e6d73fbe8b5523"
+    },
+    "sqlbot41b-targeted-current.xml": {
+      "sha256": "3e0b17c4ee5b74a68a0b0601b32081d5089dac9aebbabfc7538a495e4aa08508"
+    }
+  },
+  "integration_allowed": false,
+  "rollout": {
+    "automatic_fallback": "PASS_CONTRACT_ONLY",
+    "canary_20_percent": "NOT_EXECUTED",
+    "canary_5_percent": "NOT_EXECUTED",
+    "promotion_blockers": [
+      "live runtime smoke is 0/10",
+      "CredentialReference authentication does not match the SQLBot runtime account",
+      "no successful Guard-to-platform-readonly live query exists after schema normalization"
+    ],
+    "scoped_stable": "NOT_EXECUTED",
+    "shadow": "NOT_ELIGIBLE"
+  },
+  "status": "PARTIAL",
+  "tests": {
+    "live_runtime_smoke": {
+      "credential_source": "ENV_ALLOWLIST_ACCEPTANCE",
+      "cross_scenario_violations": 0,
+      "failed": 10,
+      "guard_passed": 0,
+      "passed": 0,
+      "permission_violations": 0,
+      "platform_queries_executed": 0,
+      "sql_generated": 6,
+      "status": "FAIL",
+      "tests": 10,
+      "upstream_sql_execution": false
+    },
+    "offline_golden": {
+      "dangerous_sql_successes": 0,
+      "passed": 100,
+      "permission_attack_successes": 0,
+      "status": "PASS",
+      "tests": 100
+    },
+    "postgresql_regression": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "tests": 368
+    },
+    "targeted": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "status": "PASS",
+      "tests": 74
+    }
+  }
+}

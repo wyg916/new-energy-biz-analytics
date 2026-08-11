@@ -1,13 +1,31 @@
 """Negative validation for scenario-isolated SQLBot read-only roles."""
 
+import argparse
 import json
 import os
+from pathlib import Path
 from time import perf_counter
 
 try:
     import psycopg
 except ModuleNotFoundError:  # SQLBot v1.8.0 bundles psycopg2.
     import psycopg2 as psycopg
+
+
+def _runtime_credential(role_env: str) -> tuple[str, str]:
+    scenario = {
+        "SQLBOT_READONLY_CHARGING_ROLE": "charging_ops",
+        "SQLBOT_READONLY_SALES_ROLE": "sales_ops",
+    }[role_env]
+    path = Path(os.getenv(
+        "SQLBOT_PLATFORM_READONLY_CREDENTIAL_FILE",
+        "/run/p4-runtime/sqlbot41b_readonly_credentials.json",
+    ))
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    item = payload.get(scenario) if isinstance(payload, dict) else None
+    if not isinstance(item, dict) or not item.get("role") or not item.get("password"):
+        raise RuntimeError("readonly role CredentialReference is invalid")
+    return str(item["role"]), str(item["password"])
 
 
 def _connection_kwargs(role_env: str, password_env: str) -> dict:
@@ -17,7 +35,7 @@ def _connection_kwargs(role_env: str, password_env: str) -> dict:
     role = os.getenv(role_env)
     password = os.getenv(password_env)
     if not role or not password:
-        raise RuntimeError("readonly role CredentialReference is unavailable")
+        role, password = _runtime_credential(role_env)
     return {
         "host": host,
         "port": int(port),
@@ -117,6 +135,9 @@ def _verify(
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
     results = [_verify(
         _connection_kwargs(
             "SQLBOT_READONLY_CHARGING_ROLE",
@@ -128,6 +149,9 @@ def main() -> None:
             "active_context",
             "dim_station",
             "fact_charging_session",
+            "fact_device_status_event",
+            "fact_energy_cost",
+            "fact_operation_expense",
         },
     ), _verify(
         _connection_kwargs(
@@ -143,16 +167,27 @@ def main() -> None:
             "sales_region",
             "sales_channel",
             "sales_product",
+            "sales_product_category",
+            "sales_customer",
+            "sales_business_date",
+            "salesperson",
         },
     )]
-    print(json.dumps({
+    report = {
         "status": "PASS",
         "results": results,
         "dangerous_successes": 0,
         "cross_scenario_successes": 0,
         "public_base_table_successes": 0,
         "secret_values_exposed": False,
-    }, sort_keys=True))
+    }
+    if args.output is not None:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(
+            json.dumps(report, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+    print(json.dumps(report, sort_keys=True))
 
 
 if __name__ == "__main__":

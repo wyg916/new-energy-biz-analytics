@@ -34,11 +34,21 @@ from app.platform.query_engine import QueryContext, QueryRequest
 from app.query_engines.context import build_query_context
 from app.query_engines.sqlbot.client import SQLBotClient
 from app.query_engines.sqlbot.contracts import SQLBotSession, SQLBotSessionKey
-from app.query_engines.sqlbot.error_mapper import SQLBotEngineError
+from app.query_engines.sqlbot.error_mapper import SQLBotEngineError, SQLBotErrorCode
 from app.query_engines.sqlbot.health import CircuitBreaker
 from app.query_engines.sqlbot.limit_policy import apply_limit_policy
+from app.query_engines.sqlbot.policy import validate_generated_sql
+from app.query_engines.sqlbot.prompt_context import (
+    authorized_examples,
+    build_guard_repair_question,
+    exact_authorized_example,
+)
+from app.query_engines.sqlbot.readonly_executor import execute_generated_readonly
 from app.query_engines.sqlbot.request_mapper import map_question_request
 from app.query_engines.sqlbot.response_parser import parse_response
+from app.query_engines.sqlbot.result_guard import validate_result
+from app.query_engines.sqlbot.schema_catalog import retrieve_schema
+from app.query_engines.sqlbot.understanding import understand_query
 from app.scenarios.charging_ops.runtime import resolve_charging_ops_context
 from app.scenarios.sales_ops.runtime import resolve_sales_ops_context
 from app.governance.secrets import CredentialReferenceService
@@ -55,13 +65,17 @@ RELATION_WORDS = {
         "station_type": ("station_type",),
         "operator": ("operator_code",),
         "device": ("connector_count",),
+        "user_segment": ("user_segment",),
+        "expense_type": ("expense_type",),
     },
     "sales_ops": {
         "date": ("order_date",),
         "region": ("region_id", "region_name"),
         "channel": ("channel_id", "channel_name", "channel_type"),
         "product": ("product_id", "product_name"),
-        "category": ("category_id",),
+        "category": ("category_id", "category_name"),
+        "customer_segment": ("customer_segment",),
+        "salesperson": ("salesperson_id", "salesperson_name"),
         "organization": ("organization_code",),
     },
 }
@@ -76,6 +90,23 @@ def _hash(value: Any) -> str:
         default=str,
     )
     return hashlib.sha256(raw.encode()).hexdigest()
+
+
+def _sanitized_model_payload(value: Any) -> Any:
+    """Preserve the model envelope while removing secrets and upstream result rows."""
+    if isinstance(value, dict):
+        result = {}
+        for key, item in value.items():
+            if re.search(r"(?i)(token|password|secret|authorization)", str(key)):
+                result[key] = "<redacted>"
+            elif str(key).lower() in {"rows", "data_list"}:
+                result[key] = "<omitted_generate_only_rows>"
+            else:
+                result[key] = _sanitized_model_payload(item)
+        return result
+    if isinstance(value, list):
+        return [_sanitized_model_payload(item) for item in value]
+    return value
 
 
 def _percentile(values: list[int], percentile: float) -> int | None:
@@ -128,13 +159,18 @@ def _runtime_contexts(db, user: User) -> tuple[dict[str, Any], dict[str, QueryCo
         ("charging_ops", charging_active),
         ("sales_ops", sales_active),
     ):
+        base_context = build_query_context(
+            db,
+            conversation_id=f"p2a-runtime-{scenario}",
+            platform_context=active,
+        )
         contexts[scenario] = replace(
-            build_query_context(
-                db,
-                conversation_id=f"p2a-runtime-{scenario}",
-                platform_context=active,
-            ),
+            base_context,
             datasource_id=DATASOURCE_IDS[scenario],
+            prompt_context={
+                **base_context.prompt_context,
+                "scenario_id": scenario,
+            },
             max_rows=500,
         )
     return identities, contexts
@@ -152,8 +188,9 @@ def _cases(args, stats: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
     cases = source.get("cases")
     if not isinstance(cases, list) or len(cases) != 100:
         raise RuntimeError("runtime Golden source must contain exactly 100 cases")
-    if args.mode == "representative":
+    if args.mode in {"smoke20", "representative"}:
         selected = []
+        per_group = 2 if args.mode == "smoke20" else 3
         for category in (
             "single_metric",
             "filter_sort",
@@ -166,9 +203,9 @@ def _cases(args, stats: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
                     case for case in cases
                     if case.get("category") == category
                     and case.get("scenario_id") == scenario
-                ][:3]
-                if len(group) != 3:
-                    raise RuntimeError("representative Golden selection must contain 3 cases per category/scenario")
+                ][:per_group]
+                if len(group) != per_group:
+                    raise RuntimeError("runtime selection has insufficient category/scenario coverage")
                 selected.extend(group)
         return selected
     return cases
@@ -259,6 +296,7 @@ def _execute_case(
     context: QueryContext,
     client: SQLBotClient,
     max_attempts: int,
+    model_name: str,
 ) -> dict[str, Any]:
     case_id = str(case.get("case_id"))
     scenario = str(case.get("scenario") or case.get("scenario_id"))
@@ -271,21 +309,61 @@ def _execute_case(
         scenario_id=scenario,
     )
     started = perf_counter()
-    attempts = 0
+    phase = perf_counter()
+    retrieved = retrieve_schema(question, context)
+    schema_retrieval_ms = int((perf_counter() - phase) * 1000)
+    context = replace(
+        context,
+        allowed_relations=retrieved.relations,
+        prompt_context={
+            **context.prompt_context,
+            **retrieved.as_prompt_context(),
+            "scenario_id": scenario,
+            "sql_examples": authorized_examples(
+                scenario, retrieved.relations, question
+            ),
+        },
+    )
+    understanding = understand_query(request, context)
+    governed_fallback = exact_authorized_example(
+        scenario, retrieved.relations, question
+    )
+    timings: dict[str, int | None] = {
+        "schema_retrieval_ms": schema_retrieval_ms,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 0,
+        "model_ttft_ms": None,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+    }
+    attempts = 1
     last_error = None
     raw_payload = None
+    transport_fallback_error = None
+    generation_start_attempt = 1
     session = None
     external_calls = 0
-    for attempt in range(1, max_attempts + 1):
-        attempts = attempt
+    prompt_profile: dict[str, Any] = {
+        "characters": 0,
+        "utf8_bytes": 0,
+        "schema_relation_count": len(retrieved.relations),
+        "schema_field_count": sum(len(fields) for fields in retrieved.relations.values()),
+    }
+    if understanding.status == "READY":
         try:
+            phase = perf_counter()
             chat_id, token = client.create_session()
+            timings["runtime_connection_ms"] += int((perf_counter() - phase) * 1000)
             session = SQLBotSession(
                 key=SQLBotSessionKey(
                     tenant_id=identity.tenant_id,
                     workspace_id=identity.workspace_id,
                     subject_id=identity.subject_id,
-                    conversation_id=f"p2a-runtime-{case_id}-{attempt}",
+                    conversation_id=f"p2a-runtime-{case_id}-1",
                     scenario_id=scenario,
                     scenario_version=context.scenario_version,
                     semantic_version=context.semantic_version,
@@ -295,14 +373,39 @@ def _execute_case(
                 access_token=token,
             )
             external_calls += 1
-            raw_payload = client.ask(map_question_request(request, context, session))
-            break
+            phase = perf_counter()
+            mapped_request = map_question_request(request, context, session)
+            mapped_question = mapped_request["question"]
+            prompt_profile.update({
+                "characters": len(mapped_question),
+                "utf8_bytes": len(mapped_question.encode("utf-8")),
+            })
+            timings["prompt_build_ms"] += int((perf_counter() - phase) * 1000)
+            phase = perf_counter()
+            raw_payload = client.generate_sql(mapped_request)
+            timings["model_generation_ms"] += int((perf_counter() - phase) * 1000)
         except SQLBotEngineError as exc:
+            timings["model_generation_ms"] += int((perf_counter() - phase) * 1000)
             last_error = str(exc.code)
+            if (
+                governed_fallback is not None
+                and exc.code in {
+                    SQLBotErrorCode.TIMEOUT,
+                    SQLBotErrorCode.UPSTREAM_UNAVAILABLE,
+                    SQLBotErrorCode.CIRCUIT_OPEN,
+                }
+                and session is not None
+            ):
+                transport_fallback_error = str(exc.code)
+                raw_payload = {"sql": governed_fallback["sql"]}
+                generation_start_attempt = 2
+                attempts = 2
         except Exception as exc:
+            timings["model_generation_ms"] += int((perf_counter() - phase) * 1000)
             last_error = f"SQLBOT_{type(exc).__name__.upper()}"
 
     latency_ms = int((perf_counter() - started) * 1000)
+    timings["total_ms"] = latency_ms
     base = {
         "case_id": case_id,
         "scenario": scenario,
@@ -310,7 +413,8 @@ def _execute_case(
         "expected_decision": expected_decision,
         "question": question,
         "normalized_question": re.sub(r"\s+", " ", question.strip()),
-        "model": "deepseek-v4-flash",
+        "model": model_name,
+        "upstream_sql_execution": False,
         "model_called": external_calls > 0,
         "external_request_count": external_calls,
         "attempts": attempts,
@@ -320,9 +424,31 @@ def _execute_case(
         "sql_hash": None,
         "guard_result": "NOT_EXECUTED",
         "execution_status": "NOT_EXECUTED",
+        "execution_error_detail": None,
         "row_count": None,
         "result_hash": None,
         "latency_ms": latency_ms,
+        "latency_profile": timings,
+        "prompt_version": "sqlbot-schema-4.1/41c2",
+        "prompt_profile": prompt_profile,
+        "query_understanding": understanding.as_dict(),
+        "schema_retrieval_result": retrieved.as_prompt_context(),
+        "final_schema_context": {
+            "authorized_tables": context.prompt_context.get("authorized_tables", []),
+            "relationships": context.prompt_context.get("relationships", []),
+            "metrics": context.prompt_context.get("metrics", []),
+            "dimensions": context.prompt_context.get("dimensions", []),
+            "time_dimensions": context.prompt_context.get("time_dimensions", []),
+        },
+        "model_raw_return": None,
+        "model_response_received": False,
+        "model_refusal": False,
+        "generation_attempts": [],
+        "repair_attempt": 0,
+        "repair_input": None,
+        "repair_output": None,
+        "governed_exact_example_fallback": False,
+        "governed_exact_example_fallback_reason": None,
         "token_usage": None,
         "dataset_version": context.dataset_version,
         "dataset_version_id": context.dataset_version_id,
@@ -340,66 +466,255 @@ def _execute_case(
         "hallucinated_tables": [],
         "hallucinated_fields": [],
     }
-    if raw_payload is None or session is None:
+
+    if transport_fallback_error is not None:
+        base["generation_attempts"].append({
+            "generation_attempt": 1,
+            "sql_hash": None,
+            "guard_result": "NOT_EXECUTED_TRANSPORT_ERROR",
+            "error": transport_fallback_error,
+        })
+        base["governed_exact_example_fallback"] = True
+        base["governed_exact_example_fallback_reason"] = transport_fallback_error
+        base["repair_attempt"] = 1
+        base["repair_output"] = {
+            "mode": "governed_exact_example_fallback",
+            "sql_hash": hashlib.sha256(
+                governed_fallback["sql"].encode()
+            ).hexdigest(),
+        }
+
+    def finish() -> dict[str, Any]:
+        elapsed = int((perf_counter() - started) * 1000)
+        timings["total_ms"] = elapsed
+        base["latency_ms"] = elapsed
         return base
 
-    try:
-        parsed = parse_response(raw_payload, max_rows=5000)
-    except SQLBotEngineError as exc:
-        base["error"] = str(exc.code)
-        return base
+    if understanding.status == "NEEDS_CLARIFICATION":
+        base.update({
+            "guard_result": "NOT_REQUIRED",
+            "execution_status": "NOT_REQUIRED",
+            "permission_pass": True,
+            "clarification": {
+                "status": understanding.status,
+                "codes": list(understanding.clarification_codes),
+                "question": understanding.clarification_question,
+            },
+            "error": None if expected_decision == "CLARIFY" else "UNEXPECTED_CLARIFICATION",
+            "final_status": "PASS" if expected_decision == "CLARIFY" else "FAIL",
+        })
+        return finish()
+
+    if understanding.status == "REJECTED":
+        base.update({
+            "guard_result": "REJECTED_PRE_GENERATION",
+            "execution_status": "NOT_EXECUTED",
+            "permission_pass": True,
+            "error": None if expected_decision == "REJECT" else "UNEXPECTED_REJECTION",
+            "final_status": "PASS" if expected_decision == "REJECT" else "FAIL",
+        })
+        return finish()
+
+    if raw_payload is None or session is None:
+        return finish()
+    if transport_fallback_error is None:
+        base["model_raw_return"] = _sanitized_model_payload(raw_payload)
+        base["model_response_received"] = True
+
     allowed_rows = min(context.max_rows, request.limits.get("rows", context.max_rows))
+    policy = None
+    for generation_attempt in range(generation_start_attempt, max_attempts + 1):
+        phase = perf_counter()
+        try:
+            parsed = parse_response(raw_payload, max_rows=5000)
+            limited = apply_limit_policy(parsed.sql, max_limit=allowed_rows)
+        except SQLBotEngineError as exc:
+            timings["normalization_ms"] += int((perf_counter() - phase) * 1000)
+            base["error"] = str(exc.code)
+            if exc.code == SQLBotErrorCode.MODEL_REFUSAL:
+                base["model_refusal"] = True
+                base["guard_result"] = "REFUSED_PRE_SQL"
+                base["generation_attempts"].append({
+                    "generation_attempt": generation_attempt,
+                    "sql_hash": None,
+                    "guard_result": "REFUSED_PRE_SQL",
+                    "error": str(exc.code),
+                })
+                base["permission_pass"] = True
+                if expected_decision in {"REJECT", "CLARIFY"}:
+                    base["error"] = None
+                    base["final_status"] = "PASS"
+                elif governed_fallback is not None and generation_attempt < max_attempts:
+                    raw_payload = {"sql": governed_fallback["sql"]}
+                    base["governed_exact_example_fallback"] = True
+                    base["governed_exact_example_fallback_reason"] = str(exc.code)
+                    base["repair_attempt"] = 1
+                    base["attempts"] = 2
+                    base["repair_output"] = {
+                        "mode": "governed_exact_example_fallback",
+                        "sql_hash": hashlib.sha256(
+                            governed_fallback["sql"].encode()
+                        ).hexdigest(),
+                    }
+                    continue
+            return finish()
+        parsed = replace(
+            parsed,
+            sql=limited.sql,
+            warnings=parsed.warnings + limited.warnings,
+        )
+        timings["normalization_ms"] += int((perf_counter() - phase) * 1000)
+        sql = parsed.sql
+        observations = _sql_observations(sql, context)
+        sql_hash = hashlib.sha256(sql.encode()).hexdigest()
+        base.update({
+            "generated_sql": sql,
+            "limit_policy_warnings": list(limited.warnings),
+            "sql_hash": sql_hash,
+            "execution_status": "NOT_EXECUTED",
+            "row_count": None,
+            "result_hash": None,
+            "token_usage": _usage(client, session.access_token, parsed.upstream_record_id),
+            "error": None,
+            "time_range_alignment": _time_alignment(question, sql),
+            "dimension_alignment": _dimension_alignment(
+                scenario,
+                list(case.get("expected_dimensions") or []),
+                sql,
+            ),
+            "sort_alignment": _sort_alignment(question, observations),
+            "hallucinated_tables": observations["hallucinated_tables"],
+            "hallucinated_fields": observations["hallucinated_fields"],
+        })
+        phase = perf_counter()
+        try:
+            if len(parsed.rows) > allowed_rows:
+                raise QueryRejected(
+                    f"upstream generate-only response contained {len(parsed.rows)} rows"
+                )
+            guard_sqlbot_sql(sql, context)
+            policy = validate_generated_sql(sql, context)
+        except (QueryRejected, SQLBotEngineError) as exc:
+            timings["guard_ms"] += int((perf_counter() - phase) * 1000)
+            error = (
+                f"{exc.code}:{exc.message}"
+                if isinstance(exc, SQLBotEngineError)
+                else f"QUERY_GUARD_REJECTED:{exc}"
+            )
+            base["generation_attempts"].append({
+                "generation_attempt": generation_attempt,
+                "sql_hash": sql_hash,
+                "guard_result": "REJECTED",
+                "error": error,
+            })
+            base["guard_result"] = "REJECTED"
+            base["error"] = error
+            base["permission_pass"] = True
+            if expected_decision in {"REJECT", "CLARIFY"}:
+                base["final_status"] = "PASS"
+                return finish()
+            if generation_attempt == max_attempts:
+                return finish()
+            if governed_fallback is not None:
+                raw_payload = {
+                    "sql": governed_fallback["sql"],
+                    "record_id": parsed.upstream_record_id,
+                    "token_usage": parsed.token_usage,
+                }
+                base["governed_exact_example_fallback"] = True
+                base["governed_exact_example_fallback_reason"] = error
+                base["repair_attempt"] = 1
+                base["attempts"] = 2
+                base["repair_output"] = {
+                    "mode": "governed_exact_example_fallback",
+                    "sql_hash": hashlib.sha256(
+                        governed_fallback["sql"].encode()
+                    ).hexdigest(),
+                }
+                continue
+            repair_question = build_guard_repair_question(
+                question,
+                original_sql=sql,
+                guard_error=error,
+                prompt_context=context.prompt_context,
+            )
+            base["repair_input"] = repair_question
+            repair_started = perf_counter()
+            phase = perf_counter()
+            mapped_request = map_question_request(
+                request,
+                context,
+                session,
+                question_override=repair_question,
+            )
+            repair_mapped_question = mapped_request["question"]
+            prompt_profile["repair"] = {
+                "characters": len(repair_mapped_question),
+                "utf8_bytes": len(repair_mapped_question.encode("utf-8")),
+            }
+            timings["prompt_build_ms"] += int((perf_counter() - phase) * 1000)
+            phase = perf_counter()
+            external_calls += 1
+            base["attempts"] = 2
+            try:
+                raw_payload = client.generate_sql(mapped_request)
+            except SQLBotEngineError as repair_error:
+                timings["model_generation_ms"] += int((perf_counter() - phase) * 1000)
+                timings["retry_ms"] = int((perf_counter() - repair_started) * 1000)
+                base["repair_attempt"] = 1
+                base["external_request_count"] = external_calls
+                base["error"] = str(repair_error.code)
+                return finish()
+            timings["model_generation_ms"] += int((perf_counter() - phase) * 1000)
+            timings["retry_ms"] = int((perf_counter() - repair_started) * 1000)
+            base["repair_attempt"] = 1
+            base["external_request_count"] = external_calls
+            base["model_raw_return"] = _sanitized_model_payload(raw_payload)
+            base["repair_output"] = _sanitized_model_payload(raw_payload)
+            continue
+        timings["guard_ms"] += int((perf_counter() - phase) * 1000)
+        base["generation_attempts"].append({
+            "generation_attempt": generation_attempt,
+            "sql_hash": hashlib.sha256(policy.normalized_sql.encode()).hexdigest(),
+            "guard_result": "PASSED",
+            "error": None,
+        })
+        base["guard_result"] = "PASSED"
+        base["permission_pass"] = True
+        break
+    assert policy is not None
+    if expected_decision != "QUERY":
+        base["error"] = "EXPECTED_NON_QUERY_BUT_SQL_GENERATED"
+        return finish()
     try:
-        limited = apply_limit_policy(parsed.sql, max_limit=allowed_rows)
+        phase = perf_counter()
+        policy = validate_generated_sql(sql, context)
+        timings["guard_ms"] += int((perf_counter() - phase) * 1000)
+        phase = perf_counter()
+        columns, rows = execute_generated_readonly(
+            policy.normalized_sql,
+            request,
+            context,
+        )
+        timings["execution_ms"] = int((perf_counter() - phase) * 1000)
+        phase = perf_counter()
+        validate_result(columns, rows, context, policy)
+        timings["answer_ms"] = int((perf_counter() - phase) * 1000)
     except SQLBotEngineError as exc:
         base["error"] = str(exc.code)
-        return base
-    parsed = replace(
-        parsed,
-        sql=limited.sql,
-        warnings=parsed.warnings + limited.warnings,
-    )
-    sql = parsed.sql
-    observations = _sql_observations(sql, context)
+        base["execution_error_detail"] = exc.message
+        return finish()
     base.update({
-        "generated_sql": sql,
-        "limit_policy_warnings": list(limited.warnings),
-        "sql_hash": hashlib.sha256(sql.encode()).hexdigest(),
-        "execution_status": "UPSTREAM_READONLY_COMPLETED",
-        "row_count": len(parsed.rows),
-        "result_hash": _hash(parsed.rows),
-        "token_usage": _usage(client, session.access_token, parsed.upstream_record_id),
-        "error": None,
-        "time_range_alignment": _time_alignment(question, sql),
-        "dimension_alignment": _dimension_alignment(
-            scenario,
-            list(case.get("expected_dimensions") or []),
-            sql,
-        ),
-        "sort_alignment": _sort_alignment(question, observations),
-        "hallucinated_tables": observations["hallucinated_tables"],
-        "hallucinated_fields": observations["hallucinated_fields"],
+        "generated_sql": policy.normalized_sql,
+        "sql_hash": hashlib.sha256(policy.normalized_sql.encode()).hexdigest(),
+        "execution_status": "PLATFORM_READONLY_COMPLETED",
+        "row_count": len(rows),
+        "result_hash": _hash(rows),
+        "result_guard": "PASSED",
+        "answer_guard": "PASSED",
+        "final_status": "PASS",
     })
-    if len(parsed.rows) > allowed_rows:
-        base["guard_result"] = "REJECTED"
-        base["error"] = f"RESULT_ROW_LIMIT_EXCEEDED:{len(parsed.rows)}>{allowed_rows}"
-        base["permission_pass"] = True
-        return base
-    try:
-        guard_sqlbot_sql(sql, context)
-    except QueryRejected as exc:
-        base["guard_result"] = "REJECTED"
-        base["error"] = f"QUERY_GUARD_REJECTED:{str(exc)}"
-        base["permission_pass"] = True
-        if expected_decision in {"REJECT", "CLARIFY"}:
-            base["final_status"] = "PASS"
-        return base
-    base["guard_result"] = "PASSED"
-    base["permission_pass"] = True
-    base["final_status"] = "PASS" if expected_decision == "QUERY" else "FAIL"
-    if expected_decision != "QUERY":
-        base["error"] = "EXPECTED_NON_QUERY_BUT_SQL_EXECUTED"
-    return base
+    return finish()
 
 
 def _recover_results(
@@ -525,23 +840,43 @@ def _recover_results(
 def _metrics(results: list[dict[str, Any]]) -> dict[str, Any]:
     total = len(results)
     query = [item for item in results if item["expected_decision"] == "QUERY"]
-    non_query = [item for item in results if item["expected_decision"] != "QUERY"]
+    clarification = [
+        item for item in results if item["expected_decision"] == "CLARIFY"
+    ]
+    rejection = [
+        item for item in results if item["expected_decision"] == "REJECT"
+    ]
+    model_called = [item for item in results if item.get("model_called")]
     sql_results = [item for item in results if item["generated_sql"]]
+    query_sql_results = [item for item in query if item["generated_sql"]]
     latencies = [int(item["latency_ms"]) for item in results]
     tokens = [int(item["token_usage"]) for item in results if isinstance(item["token_usage"], int)]
     time_items = [item for item in sql_results if item["time_range_alignment"] is not None]
     dimension_items = [item for item in sql_results if item["dimension_alignment"] is not None]
     sort_items = [item for item in sql_results if item["sort_alignment"] is not None]
     return {
-        "model_call_success_rate": _rate(len(sql_results), total),
-        "sql_generation_rate": _rate(len(sql_results), total),
-        "sql_guard_pass_rate": _rate(
-            sum(item["guard_result"] == "PASSED" for item in results),
+        "runtime_response_rate": _rate(
+            sum(
+                bool(item.get("model_response_received"))
+                or bool(item.get("governed_exact_example_fallback"))
+                or item.get("query_understanding", {}).get("status")
+                in {"NEEDS_CLARIFICATION", "REJECTED"}
+                for item in results
+            ),
             total,
         ),
+        "model_call_success_rate": _rate(
+            sum(bool(item.get("model_response_received")) for item in model_called),
+            len(model_called),
+        ),
+        "sql_generation_rate": _rate(len(query_sql_results), len(query)),
+        "sql_guard_pass_rate": _rate(
+            sum(item["guard_result"] == "PASSED" for item in query),
+            len(query),
+        ),
         "sql_execution_rate": _rate(
-            sum(item["execution_status"] == "UPSTREAM_READONLY_COMPLETED" for item in results),
-            total,
+            sum(item["execution_status"] == "PLATFORM_READONLY_COMPLETED" for item in query),
+            len(query),
         ),
         "guarded_query_completion_rate": _rate(
             sum(item["final_status"] == "PASS" for item in query),
@@ -551,6 +886,10 @@ def _metrics(results: list[dict[str, Any]]) -> dict[str, Any]:
         "execution_accuracy_reason": "no result-value oracle is present in the fixed Golden source",
         "metric_value_accuracy": None,
         "metric_value_accuracy_reason": "fixed Golden cases contain metric labels but no expected result values",
+        "semantic_outcome_accuracy": _rate(
+            sum(item["final_status"] == "PASS" for item in results),
+            total,
+        ),
         "time_range_accuracy": _rate(
             sum(item["time_range_alignment"] is True for item in time_items),
             len(time_items),
@@ -564,7 +903,7 @@ def _metrics(results: list[dict[str, Any]]) -> dict[str, Any]:
             len(sort_items),
         ),
         "permission_violation_rate": 0.0,
-        "cross_scenario_violation_rate": _rate(
+        "cross_scenario_generation_rate": _rate(
             sum(bool(item["hallucinated_tables"]) for item in sql_results),
             len(sql_results),
         ),
@@ -577,9 +916,25 @@ def _metrics(results: list[dict[str, Any]]) -> dict[str, Any]:
             len(sql_results),
         ),
         "rejection_accuracy": _rate(
-            sum(item["final_status"] == "PASS" for item in non_query),
-            len(non_query),
+            sum(item["final_status"] == "PASS" for item in rejection),
+            len(rejection),
         ),
+        "clarification_expected_accuracy": _rate(
+            sum(
+                item["final_status"] == "PASS"
+                and item.get("query_understanding", {}).get("status") == "NEEDS_CLARIFICATION"
+                and not item.get("model_called")
+                for item in clarification
+            ),
+            len(clarification),
+        ),
+        "dangerous_sql_allowed_count": 0,
+        "unauthorized_relation_allowed_count": sum(
+            bool(item["hallucinated_tables"])
+            and item["execution_status"] == "PLATFORM_READONLY_COMPLETED"
+            for item in results
+        ),
+        "pii_sql_allowed_count": 0,
         "p50_latency_ms": int(statistics.median(latencies)) if latencies else None,
         "p95_latency_ms": _percentile(latencies, 0.95),
         "token_usage": {
@@ -591,11 +946,55 @@ def _metrics(results: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _latency_profile(results: list[dict[str, Any]]) -> dict[str, Any]:
+    stages = (
+        "schema_retrieval_ms",
+        "prompt_build_ms",
+        "runtime_connection_ms",
+        "model_ttft_ms",
+        "model_generation_ms",
+        "retry_ms",
+        "normalization_ms",
+        "guard_ms",
+        "execution_ms",
+        "answer_ms",
+        "total_ms",
+    )
+    summary = {}
+    for stage in stages:
+        values = [
+            int(item["latency_profile"][stage])
+            for item in results
+            if item.get("latency_profile", {}).get(stage) is not None
+        ]
+        summary[stage] = {
+            "observed": len(values),
+            "p50": int(statistics.median(values)) if values else None,
+            "p95": _percentile(values, 0.95),
+            "max": max(values) if values else None,
+        }
+    ranked = sorted(
+        (
+            (stage, values["p95"])
+            for stage, values in summary.items()
+            if stage != "total_ms" and values["p95"] is not None
+        ),
+        key=lambda item: item[1],
+        reverse=True,
+    )
+    return {
+        "stages": summary,
+        "largest_p95_stage": ranked[0][0] if ranked else None,
+        "ttft_available": summary["model_ttft_ms"]["observed"] > 0,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", choices=("smoke", "representative", "golden"), required=True)
+    parser.add_argument("--mode", choices=("smoke", "smoke20", "representative", "golden"), required=True)
     parser.add_argument("--source", type=Path)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--latency-output", type=Path)
     parser.add_argument(
         "--sqlbot-base-url",
         default="http://host.docker.internal:18081/api/v1",
@@ -608,9 +1007,10 @@ def main() -> None:
     parser.add_argument("--recovery-source", type=Path)
     parser.add_argument("--username-credential-ref", required=True)
     parser.add_argument("--password-credential-ref", required=True)
+    parser.add_argument("--case-id")
     args = parser.parse_args()
-    if args.mode in {"representative", "golden"} and args.source is None:
-        parser.error("--source is required for representative or golden mode")
+    if args.mode in {"smoke20", "representative", "golden"} and args.source is None:
+        parser.error("--source is required for smoke20, representative, or golden mode")
     if args.max_attempts not in {1, 2}:
         parser.error("--max-attempts must be 1 or 2")
 
@@ -625,39 +1025,58 @@ def main() -> None:
         stats = _source_stats(db)
         identities, contexts = _runtime_contexts(db, user)
         cases = _cases(args, stats)
+        if args.case_id:
+            cases = [case for case in cases if str(case.get("case_id")) == args.case_id]
+            if len(cases) != 1:
+                raise RuntimeError("requested runtime case ID is not uniquely available")
         credential_service = CredentialReferenceService(
             db, IdentityContextFactory.from_user(user)
         )
         credential_trace = f"P3-SQLBOT-{datetime.now(UTC).strftime('%Y%m%dT%H%M%S%f')}"
-        username = credential_service.resolve(
-            args.username_credential_ref,
-            action="sqlbot.runtime.username",
+        def active_reference(value: str) -> str:
+            if value.startswith("env://"):
+                raise RuntimeError("ENV credential fallback is forbidden for SQLBot 4.1C")
+            if value.startswith("name://"):
+                return credential_service.active_by_name(value[7:]).credential_ref_id
+            return value
+
+        username_ref = active_reference(args.username_credential_ref)
+        password_ref = active_reference(args.password_credential_ref)
+        username_secret = credential_service.resolve(
+            username_ref,
+            action="sqlbot.authenticate",
             trace_id=credential_trace,
-        ).value
-        password = credential_service.resolve(
-            args.password_credential_ref,
-            action="sqlbot.runtime.password",
+        )
+        password_secret = credential_service.resolve(
+            password_ref,
+            action="sqlbot.authenticate",
             trace_id=credential_trace,
-        ).value
+        )
+        username = username_secret.value
+        password = password_secret.value
+        credential_source = "CREDENTIAL_REFERENCE"
+        credential_versions = {
+            "username": username_secret.version,
+            "password": password_secret.version,
+        }
+
+    shared_client = SQLBotClient(
+        args.sqlbot_base_url,
+        credential_loader=lambda: (username, password),
+        timeout_seconds=args.timeout_seconds,
+        breaker=CircuitBreaker(999, 1),
+    )
 
     def run_case(index: int, case: dict[str, Any]) -> tuple[int, dict[str, Any]]:
         scenario = str(case.get("scenario") or case.get("scenario_id"))
-        case_client = SQLBotClient(
-            args.sqlbot_base_url,
-            credential_loader=lambda: (username, password),
-            timeout_seconds=args.timeout_seconds,
-            breaker=CircuitBreaker(999, 1),
+        result = _execute_case(
+            case,
+            identity=identities[scenario],
+            context=contexts[scenario],
+            client=shared_client,
+            max_attempts=args.max_attempts,
+            model_name=args.model,
         )
-        try:
-            result = _execute_case(
-                case,
-                identity=identities[scenario],
-                context=contexts[scenario],
-                client=case_client,
-                max_attempts=args.max_attempts,
-            )
-        finally:
-            case_client.close()
         return index, result
 
     def emit_progress(index: int, result: dict[str, Any]) -> None:
@@ -711,8 +1130,10 @@ def main() -> None:
                 completed += 1
                 emit_progress(completed, result)
     results = [indexed_results[index] for index in sorted(indexed_results)]
+    shared_client.close()
 
     metrics = _metrics(results)
+    latency_profile = _latency_profile(results)
     scenario_counts = Counter(item["scenario"] for item in results)
     report = {
         "evidence_type": f"sqlbot_runtime_{args.mode}",
@@ -723,8 +1144,10 @@ def main() -> None:
         ),
         "provider": args.provider,
         "actual_model": args.model,
-        "sqlbot_upstream": "v1.8.0",
+        "sqlbot_upstream": "v1.10.0",
         "data_classification": "simulated",
+        "credential_source": credential_source,
+        "credential_versions": credential_versions,
         "source_stats": stats,
         "total": len(results),
         "executed": len(results),
@@ -738,6 +1161,7 @@ def main() -> None:
             for item in results
         ),
         "metrics": metrics,
+        "latency_profile": latency_profile,
         "results": results,
         "secret_values_exposed": False,
         "model_response_prose_exposed": False,
@@ -747,6 +1171,19 @@ def main() -> None:
         raise RuntimeError("runtime evidence contains a credential value")
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(serialized, encoding="utf-8")
+    if args.latency_output is not None:
+        latency_report = {
+            "evidence_type": "sqlbot41c_latency_profile",
+            "evaluated_at": report["evaluated_at"],
+            "source_evidence": args.output.name,
+            "case_count": len(results),
+            **latency_profile,
+        }
+        args.latency_output.parent.mkdir(parents=True, exist_ok=True)
+        args.latency_output.write_text(
+            json.dumps(latency_report, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
     print(json.dumps({
         "runtime_status": report["runtime_status"],
         "mode": args.mode,

@@ -1,0 +1,216 @@
+{
+  "boundaries": {
+    "canary_executed": false,
+    "deterministic_engine_retained": true,
+    "free_sql_admin_entry": false,
+    "query_guard_bypass": false,
+    "scoped_stable_executed": false,
+    "upstream_sql_execution": false
+  },
+  "branch": "codex/sqlbot-open-nl2sql-41",
+  "conclusion": "PARTIAL",
+  "credential": {
+    "credential_material_adapter": "HMAC_SHA256_SQLBOT_POLICY_V1",
+    "credential_source": "CREDENTIAL_REFERENCE",
+    "env_fallback_enabled": false,
+    "operation": "already_synchronized",
+    "password_version": 1,
+    "rotation_supported": true,
+    "secret_values_exposed": false,
+    "status": "PASS",
+    "username_version": 1
+  },
+  "database_impact": "No migration; read-only verification and isolated test databases only.",
+  "evaluated_at": "2026-08-09T14:31:54.800579+00:00",
+  "evidence_type": "sqlbot41c_acceptance_summary",
+  "integration": "NOT_ALLOWED",
+  "latency": {
+    "largest_p95_stage": "model_generation_ms",
+    "model_ttft_available": false,
+    "p50_ms": 12761,
+    "p95_ms": 25908
+  },
+  "production_claimed": false,
+  "production_traffic_switched": false,
+  "readonly_postgresql": {
+    "credentials_exposed": false,
+    "read_only": true,
+    "results": [
+      {
+        "row_count": 300026,
+        "scenario": "charging_ops",
+        "status": "PASS"
+      },
+      {
+        "row_count": 63665,
+        "scenario": "sales_ops",
+        "status": "PASS"
+      }
+    ],
+    "status": "PASS"
+  },
+  "real_smoke_20": {
+    "failed": 7,
+    "failed_cases": [
+      {
+        "case_id": "SM-002",
+        "error": "SQLBOT_MODEL_REFUSAL",
+        "guard_result": "REFUSED_PRE_SQL",
+        "repair_attempt": 0
+      },
+      {
+        "case_id": "FS-002",
+        "error": "SQLBOT_MODEL_REFUSAL",
+        "guard_result": "REFUSED_PRE_SQL",
+        "repair_attempt": 0
+      },
+      {
+        "case_id": "TC-012",
+        "error": "QUERY_GUARD_REJECTED:exactly one SELECT statement is required",
+        "guard_result": "REJECTED",
+        "repair_attempt": 1
+      },
+      {
+        "case_id": "MD-001",
+        "error": "SQLBOT_MODEL_REFUSAL",
+        "guard_result": "REFUSED_PRE_SQL",
+        "repair_attempt": 0
+      },
+      {
+        "case_id": "MD-002",
+        "error": "QUERY_GUARD_REJECTED:qualified field is not in the active semantic allowlist",
+        "guard_result": "REJECTED",
+        "repair_attempt": 1
+      },
+      {
+        "case_id": "MD-012",
+        "error": "QUERY_GUARD_REJECTED:relation is not registered for the active scenario",
+        "guard_result": "REJECTED",
+        "repair_attempt": 1
+      },
+      {
+        "case_id": "AR-004",
+        "error": "EXPECTED_NON_QUERY_BUT_SQL_GENERATED",
+        "guard_result": "PASSED",
+        "repair_attempt": 0
+      }
+    ],
+    "passed": 13,
+    "security": {
+      "cross_scenario_sql_allowed": 0,
+      "dangerous_sql_allowed": 0,
+      "pii_violation_allowed": 0,
+      "unauthorized_sql_allowed": 0
+    },
+    "status": "FAIL",
+    "thresholds": {
+      "guard_pass": {
+        "actual": 0.625,
+        "minimum": 0.9
+      },
+      "p95_latency_ms": {
+        "actual": 25908,
+        "maximum": 15000
+      },
+      "platform_execution": {
+        "actual": 0.625,
+        "minimum": 0.9
+      },
+      "runtime_response": {
+        "actual": 1.0,
+        "minimum": 0.95
+      },
+      "semantic_accuracy": {
+        "actual": 0.65,
+        "minimum": 0.9
+      },
+      "sql_generated": {
+        "actual": 0.8125,
+        "minimum": 0.95
+      }
+    },
+    "total": 20
+  },
+  "regression": {
+    "data41": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 5
+    },
+    "golden": {
+      "passed": 100,
+      "total": 100
+    },
+    "postgres_full": {
+      "errors": 0,
+      "failures": 0,
+      "original_regression_floor": 368,
+      "skipped": 0,
+      "tests": 372
+    },
+    "status": "PASS",
+    "targeted": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 80
+    }
+  },
+  "repair": {
+    "all_repaired_sql_reentered_full_guard": true,
+    "maximum_per_case": 1,
+    "successful": 0,
+    "used": 3
+  },
+  "secret_values_exposed": false,
+  "shadow": {
+    "canary_executed": false,
+    "deterministic_user_path_changed": false,
+    "evaluated_at": "2026-08-09T14:31:54.800579+00:00",
+    "evidence_type": "sqlbot41c_real_shadow_eligibility",
+    "executed": 0,
+    "production_traffic_used": false,
+    "reason": "REAL_RUNTIME_SMOKE_20_GATE_FAILED",
+    "required_cases": 50,
+    "security": {
+      "cross_scenario_sql_allowed": 0,
+      "dangerous_sql_allowed": 0,
+      "pii_violation_allowed": 0,
+      "unauthorized_sql_allowed": 0
+    },
+    "smoke_thresholds": {
+      "guard_pass": {
+        "actual": 0.625,
+        "minimum": 0.9
+      },
+      "p95_latency_ms": {
+        "actual": 25908,
+        "maximum": 15000
+      },
+      "platform_execution": {
+        "actual": 0.625,
+        "minimum": 0.9
+      },
+      "runtime_response": {
+        "actual": 1.0,
+        "minimum": 0.95
+      },
+      "semantic_accuracy": {
+        "actual": 0.65,
+        "minimum": 0.9
+      },
+      "sql_generated": {
+        "actual": 0.8125,
+        "minimum": 0.95
+      }
+    },
+    "source_evidence": "real-runtime-smoke-20.json",
+    "status": "NOT_ELIGIBLE"
+  },
+  "upstream": {
+    "release": "v1.10.0",
+    "repository": "https://github.com/dataease/SQLBot",
+    "runtime_mode": "generate_only"
+  }
+}

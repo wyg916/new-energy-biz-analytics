@@ -1,0 +1,21 @@
+{
+  "evidence_type": "sqlbot41c2_migration_cycle",
+  "database": "sqlbot41c2_migration_verify",
+  "expected_head": "sqlbot_41c2",
+  "upgrade": true,
+  "rollback": true,
+  "reupgrade": true,
+  "database_removed": true,
+  "new_relations": [
+    "semantic_sqlbot_charging.fact_device_status_event",
+    "semantic_sqlbot_charging.fact_energy_cost",
+    "semantic_sqlbot_charging.fact_operation_expense",
+    "semantic_sqlbot_sales.sales_business_date",
+    "semantic_sqlbot_sales.sales_customer",
+    "semantic_sqlbot_sales.sales_product_category",
+    "semantic_sqlbot_sales.salesperson"
+  ],
+  "secret_values_exposed": false,
+  "active_dataset_binding": true,
+  "status": "PASS"
+}

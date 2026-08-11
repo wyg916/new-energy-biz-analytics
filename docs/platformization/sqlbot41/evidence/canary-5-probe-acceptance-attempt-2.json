@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "sqlbot41d_failed_attempt",
+  "stage": "canary-5-probe",
+  "status": "FAIL",
+  "failure_stage": "sales_sqlbot_response_adaptation",
+  "error_code": "MISSING_TIME_RANGE_CONTRACT",
+  "reason": "Both scenarios reached SQLBOT_CANARY and generated guarded SQL, but SalesOpsChatService assumed deterministic evidence always contained time_range and raised KeyError, producing one HTTP 500.",
+  "sqlbot_canary_route_count": 2,
+  "charging_api_status": 200,
+  "sales_api_status": 500,
+  "secret_values_persisted": false,
+  "unguarded_sql_count": 0,
+  "production_traffic_claimed": false,
+  "corrective_action": "Add SQL-derived time-range, metric, and dimension evidence to SQLBot results and make the Sales response composer consume grouped structured results without assuming a deterministic single-metric row."
+}

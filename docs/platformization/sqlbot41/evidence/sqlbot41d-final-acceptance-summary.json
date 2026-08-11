@@ -1,0 +1,320 @@
+{
+  "artifacts": {
+    "canary-20-acceptance.json": {
+      "sha256": "abd8aced3275f6a7b3d4a5fae378e96ab8664e95df60689bc41778886b1dd7b9",
+      "size": 1917
+    },
+    "canary-20-route-events.json": {
+      "sha256": "e03c505edd237ca7ae27945b2e3baae46f45b0d9f93ba72485b34c5b87b45a37",
+      "size": 433446
+    },
+    "canary-20-stability.json": {
+      "sha256": "f45c12019f81ed3bd5e6b5636647d711ef29ca7564ce2f1d6f08d61126a09ae7",
+      "size": 318057
+    },
+    "canary-5-acceptance.json": {
+      "sha256": "4cd18946284ea8b2c32b87ca98cf9bd1f188668823cc2e35a6c43b0eb18e7a7b",
+      "size": 1903
+    },
+    "canary-5-fault-injection.json": {
+      "sha256": "60c685ea97e6556b7543d45a2fe982eb948c2ad501a3e8780b60734b26580f0f",
+      "size": 6305
+    },
+    "canary-5-route-events.json": {
+      "sha256": "0d458a252b82bce634c06914922309d3d1c0501a68eff5037e754897cede381a",
+      "size": 206011
+    },
+    "cold-start.json": {
+      "sha256": "33c2cdc89f76e098a71c08fa92abfd1b7320c949caf6022922405a176d7a6ece",
+      "size": 5174
+    },
+    "data41-regression-41d.json": {
+      "sha256": "64cee94c64af1941681c23dcf13e72f240b5661df0e62c3d664d8890c8353fe5",
+      "size": 1577
+    },
+    "data41-regression-5.json": {
+      "sha256": "8ddb521e900cb3ae1d936f81b058f95d48909a2a92c7bc10ee3245c81e004b93",
+      "size": 1639
+    },
+    "emergency-fallback.json": {
+      "sha256": "e3c521ced67adae2885e613a56ac897054cc266a6a72dd2f4d41dbe3dbd2a552",
+      "size": 1040
+    },
+    "golden-41d/dual_engine_golden_contract_v1.json": {
+      "sha256": "12f836e9436fd0936006411a36533d4a591f8d270b49732c11f00b687026282c",
+      "size": 9746
+    },
+    "migration-current-live-41d.json": {
+      "sha256": "902573871f9238a783ecc2d3648102936baee5a2b3f99a9e52629084acb0e618",
+      "size": 2592
+    },
+    "one-click-start.json": {
+      "sha256": "5d1962fc984cf6f10605d36efe6377c34da9433202e2866bf4b10e0a39500bcd",
+      "size": 3807
+    },
+    "platform-readonly-current-41d.json": {
+      "sha256": "2a2c75fb84dc2602f7024b5feb558974e3282269aac5b82dfe3aea7955dc9270",
+      "size": 1616
+    },
+    "postgres-regression-41d.json": {
+      "sha256": "678d3795872338bda4c0ee26b3f9791d100a97e9faf4872aff488e1b05fb1b30",
+      "size": 6079
+    },
+    "postgres-regression-453.json": {
+      "sha256": "c6f2436fa23a7c6fe5812d5e958c46ac28d0aa0027748bb1bde1c3b36748ddf9",
+      "size": 6233
+    },
+    "readonly-wrapper-negative-41d.json": {
+      "sha256": "5fa4314e802407358e9c513fcf3c378a7d14aeba10682ae9d7fde3c533e83c47",
+      "size": 912
+    },
+    "real-shadow-50-final.json": {
+      "sha256": "7cc778f03615edc5d4ff3ff88ae876baa104b7a29d689054ae5f93f2de608564",
+      "size": 127237
+    },
+    "real-smoke-20-final.json": {
+      "sha256": "ea1e7a2bb9917c4371b41aff5de271816f1a5fb657171cbb2f842fd93f02e2ec",
+      "size": 354127
+    },
+    "scoped-stable-acceptance.json": {
+      "sha256": "6cc4d3270fffdef3f890a660c935d35ca5457f647a1908dc4515fbbb0a9c8d3f",
+      "size": 1978
+    },
+    "scoped-stable-route-events.json": {
+      "sha256": "6e467ad856669dbaa18939514ca5220dbe6478ab40bf54622eaf3fe8e7468430",
+      "size": 96513
+    },
+    "secret-scan-41d.json": {
+      "sha256": "9d7fcddbea2cbd4a6679d6de11a99efd82da0a3cbb83a6d6cd826ea6e098a135",
+      "size": 1132
+    },
+    "sqlbot41d-focused.xml": {
+      "sha256": "7e9476ac860bb607ee1931791acee2a0c9de0648cee035261701743c0fc0eaac",
+      "size": 27705
+    }
+  },
+  "canary_20_metrics": {
+    "charging_request_count": 100,
+    "cohort_selected_count": 40,
+    "cohort_selected_rate": 0.2,
+    "controlled_exact_example_fallback_count": 1,
+    "controlled_example_fallback_rate": 0.025,
+    "core_deterministic_count": 104,
+    "deterministic_fallback_count": 0,
+    "deterministic_fallback_rate": 0.0,
+    "execution_success_rate": 1.0,
+    "fallback_count": 1,
+    "fallback_final_answer_success_rate": 1.0,
+    "fallback_rate": 0.025,
+    "follow_up_request_count": 38,
+    "guard_pass_rate": 1.0,
+    "high_risk_governed_count": 112,
+    "p50_latency_ms": 5233,
+    "p95_latency_ms": 7307,
+    "permission_violation_count": 0,
+    "pii_violation_count": 0,
+    "readonly_violation_count": 0,
+    "real_model_success_count": 39,
+    "real_model_success_rate": 0.975,
+    "request_count": 200,
+    "result_consistency_rate": 1.0,
+    "runtime_availability_rate": 1.0,
+    "sales_request_count": 100,
+    "scoped_stable_sqlbot_count": 0,
+    "semantic_accuracy": 1.0,
+    "sqlbot_attempt_count": 40,
+    "unguarded_sql_count": 0
+  },
+  "canary_5_metrics": {
+    "charging_request_count": 50,
+    "cohort_selected_count": 5,
+    "cohort_selected_rate": 0.05,
+    "controlled_exact_example_fallback_count": 0,
+    "controlled_example_fallback_rate": 0.0,
+    "core_deterministic_count": 60,
+    "deterministic_fallback_count": 0,
+    "deterministic_fallback_rate": 0.0,
+    "execution_success_rate": 1.0,
+    "fallback_count": 0,
+    "fallback_final_answer_success_rate": 1.0,
+    "fallback_rate": 0.0,
+    "follow_up_request_count": 3,
+    "guard_pass_rate": 1.0,
+    "high_risk_governed_count": 70,
+    "p50_latency_ms": 5035,
+    "p95_latency_ms": 5595,
+    "permission_violation_count": 0,
+    "pii_violation_count": 0,
+    "readonly_violation_count": 0,
+    "real_model_success_count": 5,
+    "real_model_success_rate": 1.0,
+    "request_count": 100,
+    "result_consistency_rate": 1.0,
+    "runtime_availability_rate": 1.0,
+    "sales_request_count": 50,
+    "scoped_stable_sqlbot_count": 0,
+    "semantic_accuracy": 1.0,
+    "sqlbot_attempt_count": 5,
+    "unguarded_sql_count": 0
+  },
+  "checks": {
+    "audit_contract": true,
+    "canary_20": true,
+    "canary_20_stability": true,
+    "canary_5": true,
+    "cold_start": true,
+    "current_data41_5": true,
+    "current_postgres_regression": true,
+    "emergency_fallback": true,
+    "fault_injection": true,
+    "focused_122": true,
+    "frozen_data41_5": true,
+    "frozen_postgres_453": true,
+    "frozen_shadow_50": true,
+    "frozen_smoke_20": true,
+    "golden_100": true,
+    "migration": true,
+    "one_click_start": true,
+    "readonly_fail_closed": true,
+    "readonly_live": true,
+    "scoped_stable": true,
+    "secret_scan": true
+  },
+  "database_impact": {
+    "business_data_mutation": false,
+    "business_schema_migration": false,
+    "data_classification": "simulated/open-source-derived DATA-4.1 acceptance data",
+    "existing_acceptance_audit_records_appended": true
+  },
+  "evidence_type": "sqlbot41d_final_acceptance",
+  "full_integration_allowed": true,
+  "generated_at": "2026-08-11T12:20:36.646748+00:00",
+  "migration": {
+    "alembic_heads": [
+      "sqlbot_41c2"
+    ],
+    "business_schema_changed_in_41d": false,
+    "status": "PASS"
+  },
+  "open_nl2sql_boundary": {
+    "deterministic_pinned": [
+      "core financial metrics",
+      "PII",
+      "system governance",
+      "unpublished schema",
+      "unknown joins",
+      "incomplete permission context",
+      "unrecognized scenarios",
+      "very-high-cost queries",
+      "Query Guard high risk"
+    ],
+    "eligible_queries": "registered-schema low/medium-risk exploration only",
+    "free_sql_admin_entry": false,
+    "guard_or_readonly_bypass": false,
+    "scope": "tenant+workspace+user+scenario allowlists are all required"
+  },
+  "regression_counts": {
+    "current_postgres": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 478
+    },
+    "data41": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 5
+    },
+    "focused": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 158
+    },
+    "frozen_postgres": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 453
+    },
+    "golden": {
+      "passed": 100,
+      "tests": 100
+    }
+  },
+  "rollback": {
+    "code": "git revert the SQLBot 4.1D commit",
+    "database": "no business migration or business-data rollback required",
+    "immediate": "set SQLBOT_ENGINE_ENABLED=false or QUERY_ENGINE_MODE=DETERMINISTIC_ONLY"
+  },
+  "schema_version": "1.0",
+  "scoped_stable_metrics": {
+    "charging_request_count": 20,
+    "cohort_selected_count": 40,
+    "cohort_selected_rate": 1.0,
+    "controlled_exact_example_fallback_count": 0,
+    "controlled_example_fallback_rate": 0.0,
+    "core_deterministic_count": 15,
+    "deterministic_fallback_count": 0,
+    "deterministic_fallback_rate": 0.0,
+    "execution_success_rate": 1.0,
+    "fallback_count": 0,
+    "fallback_final_answer_success_rate": 1.0,
+    "fallback_rate": 0.0,
+    "follow_up_request_count": 38,
+    "guard_pass_rate": 1.0,
+    "high_risk_governed_count": 10,
+    "p50_latency_ms": 5451,
+    "p95_latency_ms": 7061,
+    "permission_violation_count": 0,
+    "pii_violation_count": 0,
+    "readonly_violation_count": 0,
+    "real_model_success_count": 20,
+    "real_model_success_rate": 1.0,
+    "request_count": 40,
+    "result_consistency_rate": 1.0,
+    "runtime_availability_rate": 1.0,
+    "sales_request_count": 20,
+    "scoped_stable_sqlbot_count": 20,
+    "semantic_accuracy": 1.0,
+    "sqlbot_attempt_count": 20,
+    "unguarded_sql_count": 0
+  },
+  "stability_metrics": {
+    "api_5xx_error_rate": 0.0,
+    "controlled_example_fallback_rate": 0.0417,
+    "deterministic_fallback_rate": 0.0,
+    "execution_success_rate": 1.0,
+    "fallback_final_answer_success_rate": 1.0,
+    "fallback_rate": 0.0417,
+    "guard_pass_rate": 1.0,
+    "guard_reject_rate": 0.0,
+    "max_database_connections": 5,
+    "observed_elapsed_seconds": 1800.003,
+    "p50_sqlbot_api_latency_ms": 6156,
+    "p95_sqlbot_api_latency_ms": 8762,
+    "real_model_success_rate": 0.9583,
+    "request_count": 120,
+    "runtime_health_rate": 0.9833,
+    "sample_count": 120,
+    "sqlbot_attempt_count": 24,
+    "timeout_rate": 0.0
+  },
+  "startup": {
+    "cold_start": {
+      "business_data_snapshot_preserved": true,
+      "status": "PASS"
+    },
+    "one_click": {
+      "mode": "SHADOW",
+      "status": "PASS"
+    }
+  },
+  "status": "PASS",
+  "truth_boundary": {
+    "production_traffic_claimed": false,
+    "real_business_benefit_claimed": false,
+    "real_customer_usage_claimed": false
+  }
+}

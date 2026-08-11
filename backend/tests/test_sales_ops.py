@@ -1,6 +1,7 @@
 from datetime import date
 
 import pytest
+from sqlalchemy import event
 
 from app.bootstrap import bootstrap_demo_users
 from app.core.database import SessionLocal
@@ -94,11 +95,38 @@ def test_sales_seed_metrics_versions_engine_and_scenario_isolation() -> None:
         assert sales["data_classification"] == "simulated"
 
         _, active_sales = resolve_sales_ops_context(db, analyst)
-        query_context = build_query_context(
-            db,
-            conversation_id="sales-conversation",
-            platform_context=active_sales,
-        )
+        semantic_field_selects = 0
+
+        def count_semantic_field_selects(
+            _connection, _cursor, statement, _parameters, _context, _executemany
+        ) -> None:
+            nonlocal semantic_field_selects
+            normalized = statement.strip().lower()
+            if normalized.startswith("select") and "semantic_field" in normalized:
+                semantic_field_selects += 1
+
+        event.listen(db.bind, "before_cursor_execute", count_semantic_field_selects)
+        try:
+            query_context = build_query_context(
+                db,
+                conversation_id="sales-conversation",
+                platform_context=active_sales,
+            )
+            cached_query_context = build_query_context(
+                db,
+                conversation_id="sales-conversation-cached",
+                platform_context=active_sales,
+            )
+        finally:
+            event.remove(
+                db.bind,
+                "before_cursor_execute",
+                count_semantic_field_selects,
+            )
+        assert semantic_field_selects == 1
+        assert cached_query_context.allowed_relations == query_context.allowed_relations
+        assert cached_query_context.prompt_context == query_context.prompt_context
+        assert cached_query_context.prompt_context is not query_context.prompt_context
         assert query_context.scenario_version == "1.0.0"
         assert query_context.semantic_version == "1.0.0"
         assert "sales_order" in query_context.allowed_relations

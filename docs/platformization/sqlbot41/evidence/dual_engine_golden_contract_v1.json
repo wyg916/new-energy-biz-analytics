@@ -1,0 +1,562 @@
+{
+  "evaluation_set": "P1B 双引擎多场景 NL2SQL Golden Set",
+  "evaluation_version": "1.0.0",
+  "data_classification": "simulated",
+  "contract_status": "PASS",
+  "contract_scope": "offline structure, semantic references, refusal labels, and Query Guard negative candidates",
+  "total": 100,
+  "passed": 100,
+  "failed": 0,
+  "failed_ids": [],
+  "global_errors": [],
+  "category_counts": {
+    "ambiguity_security_refusal": 20,
+    "filter_sort": 20,
+    "multi_table_dimension": 20,
+    "single_metric": 20,
+    "trend_comparison": 20
+  },
+  "scenario_counts": {
+    "charging_ops": 48,
+    "sales_ops": 52
+  },
+  "target_engine_counts": {
+    "deterministic": 28,
+    "none": 10,
+    "query_guard": 10,
+    "sqlbot_long_tail": 52
+  },
+  "decision_counts": {
+    "CLARIFY": 5,
+    "QUERY": 80,
+    "REJECT": 15
+  },
+  "security_candidates": 10,
+  "dangerous_sql_successes": 0,
+  "permission_attack_candidates": 2,
+  "permission_attack_successes": 0,
+  "runtime_evaluation": {
+    "status": "SQLBOT_RUNTIME_PENDING",
+    "sql_execution_success_rate": null,
+    "execution_accuracy": null,
+    "metric_value_accuracy": null,
+    "time_range_accuracy": null,
+    "dimension_accuracy": null,
+    "permission_violation_rate": null,
+    "hallucinated_table_rate": null,
+    "hallucinated_field_rate": null,
+    "refusal_accuracy": null,
+    "p50_ms": null,
+    "p95_ms": null,
+    "token_usage": null,
+    "shadow_consistency": null
+  },
+  "canary_eligible": false,
+  "canary_blockers": [
+    "SQLBOT_RUNTIME_PENDING",
+    "runtime execution metrics are unavailable"
+  ],
+  "results": [
+    {
+      "case_id": "SM-001",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-002",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-003",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-004",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-005",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-006",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-007",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-008",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-009",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-010",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-011",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-012",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-013",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-014",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-015",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-016",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-017",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-018",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-019",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "SM-020",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-001",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-002",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-003",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-004",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-005",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-006",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-007",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-008",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-009",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-010",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-011",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-012",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-013",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-014",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-015",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-016",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-017",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-018",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-019",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "FS-020",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-001",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-002",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-003",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-004",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-005",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-006",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-007",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-008",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-009",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-010",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-011",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-012",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-013",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-014",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-015",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-016",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-017",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-018",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-019",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "TC-020",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-001",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-002",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-003",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-004",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-005",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-006",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-007",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-008",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-009",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-010",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-011",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-012",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-013",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-014",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-015",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-016",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-017",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-018",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-019",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "MD-020",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-001",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-002",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-003",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-004",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-005",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-006",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-007",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-008",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-009",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-010",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-011",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-012",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-013",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-014",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-015",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-016",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-017",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-018",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-019",
+      "passed": true,
+      "errors": []
+    },
+    {
+      "case_id": "AR-020",
+      "passed": true,
+      "errors": []
+    }
+  ],
+  "evaluated_at": "2026-08-08T15:14:05.036399+00:00"
+}

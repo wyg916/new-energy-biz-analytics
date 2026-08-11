@@ -11,5 +11,5 @@ This repository does not vendor or modify SQLBot source code and does not embed
 the SQLBot user interface. The upstream image retains its original Logo,
 copyright, and license information.
 
-Authoritative license text:
-https://github.com/dataease/SQLBot/blob/v1.8.0/LICENSE
+Authoritative license text for the pinned release:
+https://github.com/dataease/SQLBot/blob/v1.10.0/LICENSE

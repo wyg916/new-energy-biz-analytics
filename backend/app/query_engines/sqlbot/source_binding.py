@@ -15,7 +15,11 @@ from app.platform.identity import IdentityContext
 EXPECTED_BINDINGS = {
     "charging_ops": {
         "datasource_id": "1",
-        "approved_relations": ("active_context", "dim_station", "fact_charging_session"),
+        "approved_relations": (
+            "active_context", "dim_station", "fact_charging_session",
+            "fact_device_status_event", "fact_energy_cost",
+            "fact_operation_expense",
+        ),
     },
     "sales_ops": {
         "datasource_id": "2",

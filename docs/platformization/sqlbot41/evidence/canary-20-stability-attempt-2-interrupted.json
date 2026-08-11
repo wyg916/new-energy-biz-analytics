@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "sqlbot41d_canary20_stability_interrupted_attempt",
+  "status": "FAIL",
+  "attempt": 2,
+  "started_at": "2026-08-11T09:59:05.09235703Z",
+  "finished_at": "2026-08-11T10:11:20.715993232Z",
+  "observed_elapsed_seconds": 735.624,
+  "observed_api_request_log_count": 13,
+  "container_exit_code": 255,
+  "canonical_evidence_written": false,
+  "failure_reason": "acceptance wrapper was interrupted during the desktop permission and turn transition before the mandatory 30-minute window completed",
+  "quality_gate_interpretation": "not eligible for promotion; a fresh uninterrupted 30-minute attempt is required",
+  "secret_values_persisted": false,
+  "truth_boundary": {
+    "production_traffic_claimed": false,
+    "real_customer_usage_claimed": false
+  }
+}

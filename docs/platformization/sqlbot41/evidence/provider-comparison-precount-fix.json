@@ -1,0 +1,31 @@
+{
+  "configuration_frozen": true,
+  "deepseek": {
+    "model_and_fallback_counts": {
+      "controlled_exact_example_fallback": 1,
+      "model_call_attempted": 16,
+      "model_call_success": 16
+    },
+    "p95_latency_ms": 6410,
+    "passed": 20,
+    "status": "PASS",
+    "total": 20
+  },
+  "evidence_type": "sqlbot41c2_provider_comparison",
+  "kimi_retained_failure": {
+    "model_and_fallback_counts": {
+      "controlled_exact_example_fallback": 0,
+      "model_call_attempted": 15,
+      "model_call_success": 13
+    },
+    "p95_latency_ms": 31938,
+    "passed": 4,
+    "status": "COMPLETED_WITH_FAILURES",
+    "total": 20
+  },
+  "restore_evidence_status": "PASS",
+  "secret_values_exposed": false,
+  "selected_model": "deepseek-v4-flash",
+  "selected_provider": "deepseek",
+  "status": "PASS"
+}

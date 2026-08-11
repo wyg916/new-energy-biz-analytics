@@ -113,6 +113,16 @@ function Test-ImageExists {
     return $LASTEXITCODE -eq 0
 }
 
+function Test-DataApiImageCompatible {
+    param([string]$Image)
+    if (-not (Test-ImageExists -Image $Image)) { return $false }
+    & docker run --rm --entrypoint sh $Image -lc @"
+test -f /app/alembic/versions/sqlbot_41c2_semantic_views.py &&
+grep -q 'revision = "sqlbot_41c2"' /app/alembic/versions/sqlbot_41c2_semantic_views.py
+"@ 1>$null 2>$null
+    return $LASTEXITCODE -eq 0
+}
+
 function Write-StartupReport {
     param([string]$Status)
     $resolvedEvidence = if ([IO.Path]::IsPathRooted($EvidencePath)) {
@@ -208,6 +218,67 @@ try {
         Invoke-CheckedNative -FilePath "docker" -Arguments ($dataComposeArgs + @("down", "--remove-orphans")) -FailureMessage "Unable to stop the superseded DATA-4.1 runtime safely" | Out-Null
         Invoke-CheckedNative -FilePath "docker" -Arguments ($legacyComposeArgs + @("down", "--remove-orphans")) -FailureMessage "Unable to stop the superseded P5B runtime safely" | Out-Null
         "Stopped P6, Integration, DATA-4.1 and P5B containers without deleting rollback volumes"
+    }
+    Invoke-Step "DATA-4.1 standalone runtime handoff" {
+        $targets = @(
+            [ordered]@{
+                name = 'renewable-data41-db-1'
+                required_volumes = @('renewable-data41_p4_postgres', 'renewable-data41_p4_runtime')
+            },
+            [ordered]@{
+                name = 'renewable-data41-redis-1'
+                required_volumes = @('renewable-data41_p4_redis', 'renewable-data41_p4_runtime')
+            },
+            [ordered]@{
+                name = 'renewable-data41-vault-1'
+                required_volumes = @('renewable-data41_p4_vault_rc1', 'renewable-data41_p4_vault_audit')
+            }
+        )
+        $handedOff = @()
+        foreach ($target in $targets) {
+            $existing = & docker ps -a -q --filter "name=^/$($target.name)$"
+            if (-not $existing) { continue }
+            $details = (& docker inspect $target.name | Out-String) | ConvertFrom-Json
+            $labels = $details[0].Config.Labels
+            $composeProjectLabel = $null
+            if ($null -ne $labels) {
+                $composeProjectProperty =
+                    $labels.PSObject.Properties['com.docker.compose.project']
+                if ($null -ne $composeProjectProperty) {
+                    $composeProjectLabel = $composeProjectProperty.Value
+                }
+            }
+            if ($composeProjectLabel -eq $project) { continue }
+            $mountNames = @(
+                foreach ($mount in @($details[0].Mounts)) {
+                    $nameProperty = $mount.PSObject.Properties['Name']
+                    if ($null -ne $nameProperty -and $nameProperty.Value) {
+                        $nameProperty.Value
+                    }
+                }
+            )
+            $missingVolumes = @(
+                $target.required_volumes | Where-Object { $mountNames -notcontains $_ }
+            )
+            if ($missingVolumes.Count -gt 0) {
+                throw "Refusing unsafe standalone handoff for $($target.name); missing expected volumes: $($missingVolumes -join ', ')"
+            }
+            if ($details[0].State.Running) {
+                Invoke-CheckedNative -FilePath "docker" -Arguments @(
+                    "stop", "--time", "30", $target.name
+                ) -FailureMessage "Unable to stop standalone DATA-4.1 service $($target.name)" | Out-Null
+            }
+            Invoke-CheckedNative -FilePath "docker" -Arguments @(
+                "rm", $target.name
+            ) -FailureMessage "Unable to remove standalone DATA-4.1 service container $($target.name)" | Out-Null
+            $handedOff += $target.name
+        }
+        if ($handedOff.Count) {
+            "Recreated by Compose with named data volumes preserved: $($handedOff -join ', ')"
+        }
+        else {
+            'No standalone DATA-4.1 service handoff was required'
+        }
     }
     Invoke-Step "P6 4.1 services" {
         Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("up", "-d", "--wait", "--wait-timeout", "$TimeoutSeconds")) -FailureMessage "P6 4.1 Compose startup failed"

@@ -1,0 +1,5208 @@
+{
+  "evidence_type": "sqlbot_runtime_smoke20",
+  "evaluated_at": "2026-08-09T11:44:09.438043+00:00",
+  "runtime_status": "COMPLETED_WITH_FAILURES",
+  "provider": "deepseek",
+  "actual_model": "deepseek-v4-flash",
+  "sqlbot_upstream": "v1.10.0",
+  "data_classification": "simulated",
+  "credential_source": "CREDENTIAL_REFERENCE",
+  "credential_versions": {
+    "username": 1,
+    "password": 1
+  },
+  "source_stats": {
+    "charging_ops": {
+      "min_date": "2020-05-10",
+      "max_date": "2026-06-30",
+      "row_count": 300026
+    },
+    "sales_ops": {
+      "min_date": "2010-12-01",
+      "max_date": "2026-06-30",
+      "row_count": 63665
+    }
+  },
+  "total": 20,
+  "executed": 20,
+  "passed": 0,
+  "failed": 20,
+  "scenario_counts": {
+    "charging_ops": 10,
+    "sales_ops": 10
+  },
+  "external_request_count": 40,
+  "evidence_recovered_from_sqlbot_records": false,
+  "reconstructed_trace_count": 0,
+  "metrics": {
+    "model_call_success_rate": 0.0,
+    "sql_generation_rate": 0.0,
+    "sql_guard_pass_rate": 0.0,
+    "sql_execution_rate": 0.0,
+    "guarded_query_completion_rate": 0.0,
+    "execution_accuracy": null,
+    "execution_accuracy_reason": "no result-value oracle is present in the fixed Golden source",
+    "metric_value_accuracy": null,
+    "metric_value_accuracy_reason": "fixed Golden cases contain metric labels but no expected result values",
+    "time_range_accuracy": null,
+    "dimension_accuracy": null,
+    "sort_accuracy": null,
+    "permission_violation_rate": 0.0,
+    "cross_scenario_violation_rate": null,
+    "hallucinated_table_rate": null,
+    "hallucinated_field_rate": null,
+    "rejection_accuracy": 0.0,
+    "p50_latency_ms": 2424,
+    "p95_latency_ms": 6026,
+    "token_usage": {
+      "observed_count": 0,
+      "total": 0,
+      "mean": null
+    },
+    "estimated_cost_per_request": null
+  },
+  "latency_profile": {
+    "stages": {
+      "schema_retrieval_ms": {
+        "observed": 20,
+        "p50": 1,
+        "p95": 2,
+        "max": 3
+      },
+      "prompt_build_ms": {
+        "observed": 20,
+        "p50": 0,
+        "p95": 1,
+        "max": 7
+      },
+      "runtime_connection_ms": {
+        "observed": 20,
+        "p50": 1572,
+        "p95": 5942,
+        "max": 5971
+      },
+      "model_ttft_ms": {
+        "observed": 0,
+        "p50": null,
+        "p95": null,
+        "max": null
+      },
+      "model_generation_ms": {
+        "observed": 20,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "retry_ms": {
+        "observed": 20,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "normalization_ms": {
+        "observed": 20,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "guard_ms": {
+        "observed": 20,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "execution_ms": {
+        "observed": 20,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "answer_ms": {
+        "observed": 20,
+        "p50": 0,
+        "p95": 0,
+        "max": 0
+      },
+      "total_ms": {
+        "observed": 20,
+        "p50": 2424,
+        "p95": 6026,
+        "max": 6029
+      }
+    },
+    "largest_p95_stage": "runtime_connection_ms",
+    "ttft_available": false
+  },
+  "results": [
+    {
+      "case_id": "SM-001",
+      "scenario": "charging_ops",
+      "category": "single_metric",
+      "expected_decision": "QUERY",
+      "question": "2026年6月充电收入是多少？",
+      "normalized_question": "2026年6月充电收入是多少？",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 849,
+      "latency_profile": {
+        "schema_retrieval_ms": 1,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 617,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 849
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "a088e7d734d9ee94cc83c8614f0925c3081fdfe2d402dc65d1c613f8e36159ca",
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "charging_revenue",
+            "name": "充电收入",
+            "expression": "electricity_fee_net_amount + service_fee_net_amount",
+            "aggregation": "sum",
+            "time_field": "session_fact.settlement_time",
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "quarter",
+              "region",
+              "city",
+              "station"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "retrieval_terms": [
+          "2026年6月充电收入是多少"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "charging_revenue",
+            "name": "充电收入",
+            "expression": "electricity_fee_net_amount + service_fee_net_amount",
+            "aggregation": "sum",
+            "time_field": "session_fact.settlement_time",
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "quarter",
+              "region",
+              "city",
+              "station"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "time_dimensions": [
+          {
+            "code": "settlement_time",
+            "field_ref": "session_fact.settlement_time",
+            "timezone": "UTC",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-98969282-1a79-4fc0-b268-2f6e462f873a",
+      "semantic_version": "0.1.0",
+      "semantic_model_version_id": "SMV-de099d2e-0e49-4bbd-a993-17ec1894c74e",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-SM-001-20260809T114343939270",
+      "trace_id": "P2A-SM-001-20260809T114343939270",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "SM-002",
+      "scenario": "charging_ops",
+      "category": "single_metric",
+      "expected_decision": "QUERY",
+      "question": "2026年6月经营毛利是多少？",
+      "normalized_question": "2026年6月经营毛利是多少？",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 863,
+      "latency_profile": {
+        "schema_retrieval_ms": 2,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 789,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 863
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "a088e7d734d9ee94cc83c8614f0925c3081fdfe2d402dc65d1c613f8e36159ca",
+        "authorized_tables": [
+          {
+            "code": "session_fact",
+            "name": "充电会话事实",
+            "relation": "fact_charging_session",
+            "fields": [
+              {
+                "code": "charging_duration_seconds",
+                "name": "充电时长",
+                "physical_field": "charging_duration_seconds",
+                "data_type": "integer"
+              },
+              {
+                "code": "device_id",
+                "name": "设备编码",
+                "physical_field": "device_id",
+                "data_type": "string"
+              },
+              {
+                "code": "electricity_fee_net_amount",
+                "name": "电费净额",
+                "physical_field": "electricity_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "energy_kwh",
+                "name": "充电电量",
+                "physical_field": "energy_kwh",
+                "data_type": "number"
+              },
+              {
+                "code": "service_fee_net_amount",
+                "name": "服务费净额",
+                "physical_field": "service_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "session_id",
+                "name": "会话编码",
+                "physical_field": "session_id",
+                "data_type": "string"
+              },
+              {
+                "code": "settlement_time",
+                "name": "结算时间",
+                "physical_field": "settlement_time",
+                "data_type": "datetime"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              },
+              {
+                "code": "user_id",
+                "name": "用户编码",
+                "physical_field": "user_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "station_dimension",
+            "name": "场站维度",
+            "relation": "dim_station",
+            "fields": [
+              {
+                "code": "city_id",
+                "name": "城市编码",
+                "physical_field": "city_id",
+                "data_type": "string"
+              },
+              {
+                "code": "connector_count",
+                "name": "枪口数",
+                "physical_field": "connector_count",
+                "data_type": "integer"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "session_to_station",
+            "source_table": "fact_charging_session",
+            "source_fields": [
+              "station_id"
+            ],
+            "target_table": "dim_station",
+            "target_fields": [
+              "station_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [],
+        "dimensions": [],
+        "retrieval_terms": [
+          "2026年6月经营毛利是多少"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [
+          {
+            "code": "session_fact",
+            "name": "充电会话事实",
+            "relation": "fact_charging_session",
+            "fields": [
+              {
+                "code": "charging_duration_seconds",
+                "name": "充电时长",
+                "physical_field": "charging_duration_seconds",
+                "data_type": "integer"
+              },
+              {
+                "code": "device_id",
+                "name": "设备编码",
+                "physical_field": "device_id",
+                "data_type": "string"
+              },
+              {
+                "code": "electricity_fee_net_amount",
+                "name": "电费净额",
+                "physical_field": "electricity_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "energy_kwh",
+                "name": "充电电量",
+                "physical_field": "energy_kwh",
+                "data_type": "number"
+              },
+              {
+                "code": "service_fee_net_amount",
+                "name": "服务费净额",
+                "physical_field": "service_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "session_id",
+                "name": "会话编码",
+                "physical_field": "session_id",
+                "data_type": "string"
+              },
+              {
+                "code": "settlement_time",
+                "name": "结算时间",
+                "physical_field": "settlement_time",
+                "data_type": "datetime"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              },
+              {
+                "code": "user_id",
+                "name": "用户编码",
+                "physical_field": "user_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "station_dimension",
+            "name": "场站维度",
+            "relation": "dim_station",
+            "fields": [
+              {
+                "code": "city_id",
+                "name": "城市编码",
+                "physical_field": "city_id",
+                "data_type": "string"
+              },
+              {
+                "code": "connector_count",
+                "name": "枪口数",
+                "physical_field": "connector_count",
+                "data_type": "integer"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "session_to_station",
+            "source_table": "fact_charging_session",
+            "source_fields": [
+              "station_id"
+            ],
+            "target_table": "dim_station",
+            "target_fields": [
+              "station_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [],
+        "dimensions": [],
+        "time_dimensions": [
+          {
+            "code": "settlement_time",
+            "field_ref": "session_fact.settlement_time",
+            "timezone": "UTC",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-98969282-1a79-4fc0-b268-2f6e462f873a",
+      "semantic_version": "0.1.0",
+      "semantic_model_version_id": "SMV-de099d2e-0e49-4bbd-a993-17ec1894c74e",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-SM-002-20260809T114343943118",
+      "trace_id": "P2A-SM-002-20260809T114343943118",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "SM-011",
+      "scenario": "sales_ops",
+      "category": "single_metric",
+      "expected_decision": "QUERY",
+      "question": "2026年6月销售收入是多少？",
+      "normalized_question": "2026年6月销售收入是多少？",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 3131,
+      "latency_profile": {
+        "schema_retrieval_ms": 1,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 1285,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 3131
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "e5740cf7c99ac99667eae5b53e2f3fa1f0cda9c0b77c30b21bd745ff83b17965",
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "sales_revenue",
+            "name": "销售收入",
+            "expression": "SUM(order_fact.net_revenue)",
+            "aggregation": "sum",
+            "time_field": "order_fact.order_date",
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "retrieval_terms": [
+          "2026年6月销售收入是多少"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "sales_revenue",
+            "name": "销售收入",
+            "expression": "SUM(order_fact.net_revenue)",
+            "aggregation": "sum",
+            "time_field": "order_fact.order_date",
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "time_dimensions": [
+          {
+            "code": "order_date",
+            "field_ref": "order_fact.order_date",
+            "timezone": "Asia/Shanghai",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-ba404880-0be0-4fd1-aed7-20c422c3edc5",
+      "semantic_version": "1.0.0",
+      "semantic_model_version_id": "SMV-d3effc8c-1c82-4d6e-8b7f-735c00135393",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-SM-011-20260809T114344788610",
+      "trace_id": "P2A-SM-011-20260809T114344788610",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "SM-012",
+      "scenario": "sales_ops",
+      "category": "single_metric",
+      "expected_decision": "QUERY",
+      "question": "2026年6月销售订单数是多少？",
+      "normalized_question": "2026年6月销售订单数是多少？",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 3138,
+      "latency_profile": {
+        "schema_retrieval_ms": 1,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 1979,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 3138
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "e5740cf7c99ac99667eae5b53e2f3fa1f0cda9c0b77c30b21bd745ff83b17965",
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "order_count",
+            "name": "订单数",
+            "expression": "COUNT(DISTINCT order_fact.order_id)",
+            "aggregation": "count_distinct",
+            "time_field": "order_fact.order_date",
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "retrieval_terms": [
+          "2026年6月销售订单数是多少"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "order_count",
+            "name": "订单数",
+            "expression": "COUNT(DISTINCT order_fact.order_id)",
+            "aggregation": "count_distinct",
+            "time_field": "order_fact.order_date",
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "time_dimensions": [
+          {
+            "code": "order_date",
+            "field_ref": "order_fact.order_date",
+            "timezone": "Asia/Shanghai",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-ba404880-0be0-4fd1-aed7-20c422c3edc5",
+      "semantic_version": "1.0.0",
+      "semantic_model_version_id": "SMV-d3effc8c-1c82-4d6e-8b7f-735c00135393",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-SM-012-20260809T114344806734",
+      "trace_id": "P2A-SM-012-20260809T114344806734",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "FS-001",
+      "scenario": "charging_ops",
+      "category": "filter_sort",
+      "expected_decision": "QUERY",
+      "question": "2026年6月区域A充电收入最高的5个场站。",
+      "normalized_question": "2026年6月区域A充电收入最高的5个场站。",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 3450,
+      "latency_profile": {
+        "schema_retrieval_ms": 1,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 3372,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 3450
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "a088e7d734d9ee94cc83c8614f0925c3081fdfe2d402dc65d1c613f8e36159ca",
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "charging_revenue",
+            "name": "充电收入",
+            "expression": "electricity_fee_net_amount + service_fee_net_amount",
+            "aggregation": "sum",
+            "time_field": "session_fact.settlement_time",
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "quarter",
+              "region",
+              "city",
+              "station"
+            ]
+          }
+        ],
+        "dimensions": [
+          {
+            "code": "station",
+            "name": "场站",
+            "field_ref": "station_dimension.station_id",
+            "data_type": "string"
+          }
+        ],
+        "retrieval_terms": [
+          "2026年6月区域a充电收入最高的5个场站"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "charging_revenue",
+            "name": "充电收入",
+            "expression": "electricity_fee_net_amount + service_fee_net_amount",
+            "aggregation": "sum",
+            "time_field": "session_fact.settlement_time",
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "quarter",
+              "region",
+              "city",
+              "station"
+            ]
+          }
+        ],
+        "dimensions": [
+          {
+            "code": "station",
+            "name": "场站",
+            "field_ref": "station_dimension.station_id",
+            "data_type": "string"
+          }
+        ],
+        "time_dimensions": [
+          {
+            "code": "settlement_time",
+            "field_ref": "session_fact.settlement_time",
+            "timezone": "UTC",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-98969282-1a79-4fc0-b268-2f6e462f873a",
+      "semantic_version": "0.1.0",
+      "semantic_model_version_id": "SMV-de099d2e-0e49-4bbd-a993-17ec1894c74e",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-FS-001-20260809T114347920310",
+      "trace_id": "P2A-FS-001-20260809T114347920310",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "FS-002",
+      "scenario": "charging_ops",
+      "category": "filter_sort",
+      "expected_decision": "QUERY",
+      "question": "2026年6月区域B毛利最低的3个场站。",
+      "normalized_question": "2026年6月区域B毛利最低的3个场站。",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 3412,
+      "latency_profile": {
+        "schema_retrieval_ms": 1,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 3349,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 3412
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "a088e7d734d9ee94cc83c8614f0925c3081fdfe2d402dc65d1c613f8e36159ca",
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [],
+        "dimensions": [
+          {
+            "code": "station",
+            "name": "场站",
+            "field_ref": "station_dimension.station_id",
+            "data_type": "string"
+          }
+        ],
+        "retrieval_terms": [
+          "2026年6月区域b毛利最低的3个场站"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [],
+        "dimensions": [
+          {
+            "code": "station",
+            "name": "场站",
+            "field_ref": "station_dimension.station_id",
+            "data_type": "string"
+          }
+        ],
+        "time_dimensions": [
+          {
+            "code": "settlement_time",
+            "field_ref": "session_fact.settlement_time",
+            "timezone": "UTC",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-98969282-1a79-4fc0-b268-2f6e462f873a",
+      "semantic_version": "0.1.0",
+      "semantic_model_version_id": "SMV-de099d2e-0e49-4bbd-a993-17ec1894c74e",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-FS-002-20260809T114347945432",
+      "trace_id": "P2A-FS-002-20260809T114347945432",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "FS-011",
+      "scenario": "sales_ops",
+      "category": "filter_sort",
+      "expected_decision": "QUERY",
+      "question": "2026年6月销售收入最高的5个区域。",
+      "normalized_question": "2026年6月销售收入最高的5个区域。",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 3049,
+      "latency_profile": {
+        "schema_retrieval_ms": 1,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 1841,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 3049
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "e5740cf7c99ac99667eae5b53e2f3fa1f0cda9c0b77c30b21bd745ff83b17965",
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "sales_revenue",
+            "name": "销售收入",
+            "expression": "SUM(order_fact.net_revenue)",
+            "aggregation": "sum",
+            "time_field": "order_fact.order_date",
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "retrieval_terms": [
+          "2026年6月销售收入最高的5个区域"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "sales_revenue",
+            "name": "销售收入",
+            "expression": "SUM(order_fact.net_revenue)",
+            "aggregation": "sum",
+            "time_field": "order_fact.order_date",
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "time_dimensions": [
+          {
+            "code": "order_date",
+            "field_ref": "order_fact.order_date",
+            "timezone": "Asia/Shanghai",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-ba404880-0be0-4fd1-aed7-20c422c3edc5",
+      "semantic_version": "1.0.0",
+      "semantic_model_version_id": "SMV-d3effc8c-1c82-4d6e-8b7f-735c00135393",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-FS-011-20260809T114351357835",
+      "trace_id": "P2A-FS-011-20260809T114351357835",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "FS-012",
+      "scenario": "sales_ops",
+      "category": "filter_sort",
+      "expected_decision": "QUERY",
+      "question": "2026年6月按渠道倒序查看订单数。",
+      "normalized_question": "2026年6月按渠道倒序查看订单数。",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 3055,
+      "latency_profile": {
+        "schema_retrieval_ms": 1,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 2977,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 3055
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "e5740cf7c99ac99667eae5b53e2f3fa1f0cda9c0b77c30b21bd745ff83b17965",
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "order_count",
+            "name": "订单数",
+            "expression": "COUNT(DISTINCT order_fact.order_id)",
+            "aggregation": "count_distinct",
+            "time_field": "order_fact.order_date",
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "retrieval_terms": [
+          "2026年6月按渠道倒序查看订单数"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "order_count",
+            "name": "订单数",
+            "expression": "COUNT(DISTINCT order_fact.order_id)",
+            "aggregation": "count_distinct",
+            "time_field": "order_fact.order_date",
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "time_dimensions": [
+          {
+            "code": "order_date",
+            "field_ref": "order_fact.order_date",
+            "timezone": "Asia/Shanghai",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-ba404880-0be0-4fd1-aed7-20c422c3edc5",
+      "semantic_version": "1.0.0",
+      "semantic_model_version_id": "SMV-d3effc8c-1c82-4d6e-8b7f-735c00135393",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-FS-012-20260809T114351371401",
+      "trace_id": "P2A-FS-012-20260809T114351371401",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "TC-001",
+      "scenario": "charging_ops",
+      "category": "trend_comparison",
+      "expected_decision": "QUERY",
+      "question": "展示2026年上半年每月充电收入趋势。",
+      "normalized_question": "展示2026年上半年每月充电收入趋势。",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 3429,
+      "latency_profile": {
+        "schema_retrieval_ms": 0,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 1186,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 3429
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "a088e7d734d9ee94cc83c8614f0925c3081fdfe2d402dc65d1c613f8e36159ca",
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "charging_revenue",
+            "name": "充电收入",
+            "expression": "electricity_fee_net_amount + service_fee_net_amount",
+            "aggregation": "sum",
+            "time_field": "session_fact.settlement_time",
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "quarter",
+              "region",
+              "city",
+              "station"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "retrieval_terms": [
+          "展示2026年上半年每月充电收入趋势"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "charging_revenue",
+            "name": "充电收入",
+            "expression": "electricity_fee_net_amount + service_fee_net_amount",
+            "aggregation": "sum",
+            "time_field": "session_fact.settlement_time",
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "quarter",
+              "region",
+              "city",
+              "station"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "time_dimensions": [
+          {
+            "code": "settlement_time",
+            "field_ref": "session_fact.settlement_time",
+            "timezone": "UTC",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-98969282-1a79-4fc0-b268-2f6e462f873a",
+      "semantic_version": "0.1.0",
+      "semantic_model_version_id": "SMV-de099d2e-0e49-4bbd-a993-17ec1894c74e",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-TC-001-20260809T114354405494",
+      "trace_id": "P2A-TC-001-20260809T114354405494",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "TC-002",
+      "scenario": "charging_ops",
+      "category": "trend_comparison",
+      "expected_decision": "QUERY",
+      "question": "2026年6月充电收入环比如何？",
+      "normalized_question": "2026年6月充电收入环比如何？",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 3428,
+      "latency_profile": {
+        "schema_retrieval_ms": 1,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 3341,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 3428
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "a088e7d734d9ee94cc83c8614f0925c3081fdfe2d402dc65d1c613f8e36159ca",
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "charging_revenue",
+            "name": "充电收入",
+            "expression": "electricity_fee_net_amount + service_fee_net_amount",
+            "aggregation": "sum",
+            "time_field": "session_fact.settlement_time",
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "quarter",
+              "region",
+              "city",
+              "station"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "retrieval_terms": [
+          "2026年6月充电收入环比如何"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "charging_revenue",
+            "name": "充电收入",
+            "expression": "electricity_fee_net_amount + service_fee_net_amount",
+            "aggregation": "sum",
+            "time_field": "session_fact.settlement_time",
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "quarter",
+              "region",
+              "city",
+              "station"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "time_dimensions": [
+          {
+            "code": "settlement_time",
+            "field_ref": "session_fact.settlement_time",
+            "timezone": "UTC",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-98969282-1a79-4fc0-b268-2f6e462f873a",
+      "semantic_version": "0.1.0",
+      "semantic_model_version_id": "SMV-de099d2e-0e49-4bbd-a993-17ec1894c74e",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-TC-002-20260809T114354425241",
+      "trace_id": "P2A-TC-002-20260809T114354425241",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "TC-011",
+      "scenario": "sales_ops",
+      "category": "trend_comparison",
+      "expected_decision": "QUERY",
+      "question": "展示2026年上半年每月销售收入趋势。",
+      "normalized_question": "展示2026年上半年每月销售收入趋势。",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 6029,
+      "latency_profile": {
+        "schema_retrieval_ms": 1,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 5971,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 6029
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "e5740cf7c99ac99667eae5b53e2f3fa1f0cda9c0b77c30b21bd745ff83b17965",
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "sales_revenue",
+            "name": "销售收入",
+            "expression": "SUM(order_fact.net_revenue)",
+            "aggregation": "sum",
+            "time_field": "order_fact.order_date",
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "retrieval_terms": [
+          "展示2026年上半年每月销售收入趋势"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "sales_revenue",
+            "name": "销售收入",
+            "expression": "SUM(order_fact.net_revenue)",
+            "aggregation": "sum",
+            "time_field": "order_fact.order_date",
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "time_dimensions": [
+          {
+            "code": "order_date",
+            "field_ref": "order_fact.order_date",
+            "timezone": "Asia/Shanghai",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-ba404880-0be0-4fd1-aed7-20c422c3edc5",
+      "semantic_version": "1.0.0",
+      "semantic_model_version_id": "SMV-d3effc8c-1c82-4d6e-8b7f-735c00135393",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-TC-011-20260809T114357835371",
+      "trace_id": "P2A-TC-011-20260809T114357835371",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "TC-012",
+      "scenario": "sales_ops",
+      "category": "trend_comparison",
+      "expected_decision": "QUERY",
+      "question": "2026年6月销售收入环比变化。",
+      "normalized_question": "2026年6月销售收入环比变化。",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 6026,
+      "latency_profile": {
+        "schema_retrieval_ms": 1,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 5942,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 6026
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "e5740cf7c99ac99667eae5b53e2f3fa1f0cda9c0b77c30b21bd745ff83b17965",
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "sales_revenue",
+            "name": "销售收入",
+            "expression": "SUM(order_fact.net_revenue)",
+            "aggregation": "sum",
+            "time_field": "order_fact.order_date",
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "retrieval_terms": [
+          "2026年6月销售收入环比变化"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "sales_revenue",
+            "name": "销售收入",
+            "expression": "SUM(order_fact.net_revenue)",
+            "aggregation": "sum",
+            "time_field": "order_fact.order_date",
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [],
+        "time_dimensions": [
+          {
+            "code": "order_date",
+            "field_ref": "order_fact.order_date",
+            "timezone": "Asia/Shanghai",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-ba404880-0be0-4fd1-aed7-20c422c3edc5",
+      "semantic_version": "1.0.0",
+      "semantic_model_version_id": "SMV-d3effc8c-1c82-4d6e-8b7f-735c00135393",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-TC-012-20260809T114357853954",
+      "trace_id": "P2A-TC-012-20260809T114357853954",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "MD-001",
+      "scenario": "charging_ops",
+      "category": "multi_table_dimension",
+      "expected_decision": "QUERY",
+      "question": "按区域和城市查看2026年6月收入、订单和毛利。",
+      "normalized_question": "按区域和城市查看2026年6月收入、订单和毛利。",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 1068,
+      "latency_profile": {
+        "schema_retrieval_ms": 0,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 1017,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 1068
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "a088e7d734d9ee94cc83c8614f0925c3081fdfe2d402dc65d1c613f8e36159ca",
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [],
+        "dimensions": [
+          {
+            "code": "city",
+            "name": "城市",
+            "field_ref": "station_dimension.city_id",
+            "data_type": "string"
+          }
+        ],
+        "retrieval_terms": [
+          "按区域和城市查看2026年6月收入",
+          "订单和毛利"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [],
+        "dimensions": [
+          {
+            "code": "city",
+            "name": "城市",
+            "field_ref": "station_dimension.city_id",
+            "data_type": "string"
+          }
+        ],
+        "time_dimensions": [
+          {
+            "code": "settlement_time",
+            "field_ref": "session_fact.settlement_time",
+            "timezone": "UTC",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-98969282-1a79-4fc0-b268-2f6e462f873a",
+      "semantic_version": "0.1.0",
+      "semantic_model_version_id": "SMV-de099d2e-0e49-4bbd-a993-17ec1894c74e",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-MD-001-20260809T114403865426",
+      "trace_id": "P2A-MD-001-20260809T114403865426",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "MD-002",
+      "scenario": "charging_ops",
+      "category": "multi_table_dimension",
+      "expected_decision": "QUERY",
+      "question": "按场站类型比较2026年6月充电量和利用率。",
+      "normalized_question": "按场站类型比较2026年6月充电量和利用率。",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 1070,
+      "latency_profile": {
+        "schema_retrieval_ms": 0,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 993,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 1070
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "a088e7d734d9ee94cc83c8614f0925c3081fdfe2d402dc65d1c613f8e36159ca",
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "charging_volume_kwh",
+            "name": "充电量",
+            "expression": "SUM(energy_kwh)",
+            "aggregation": "sum",
+            "time_field": "session_fact.settlement_time",
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "region",
+              "city",
+              "station"
+            ]
+          }
+        ],
+        "dimensions": [
+          {
+            "code": "station",
+            "name": "场站",
+            "field_ref": "station_dimension.station_id",
+            "data_type": "string"
+          },
+          {
+            "code": "station_type",
+            "name": "场站类型",
+            "field_ref": "station_dimension.station_type",
+            "data_type": "string"
+          }
+        ],
+        "retrieval_terms": [
+          "按场站类型比较2026年6月充电量和利用率"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "charging_volume_kwh",
+            "name": "充电量",
+            "expression": "SUM(energy_kwh)",
+            "aggregation": "sum",
+            "time_field": "session_fact.settlement_time",
+            "supported_dimensions": [
+              "date",
+              "week",
+              "month",
+              "region",
+              "city",
+              "station"
+            ]
+          }
+        ],
+        "dimensions": [
+          {
+            "code": "station",
+            "name": "场站",
+            "field_ref": "station_dimension.station_id",
+            "data_type": "string"
+          },
+          {
+            "code": "station_type",
+            "name": "场站类型",
+            "field_ref": "station_dimension.station_type",
+            "data_type": "string"
+          }
+        ],
+        "time_dimensions": [
+          {
+            "code": "settlement_time",
+            "field_ref": "session_fact.settlement_time",
+            "timezone": "UTC",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-98969282-1a79-4fc0-b268-2f6e462f873a",
+      "semantic_version": "0.1.0",
+      "semantic_model_version_id": "SMV-de099d2e-0e49-4bbd-a993-17ec1894c74e",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-MD-002-20260809T114403880324",
+      "trace_id": "P2A-MD-002-20260809T114403880324",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "MD-011",
+      "scenario": "sales_ops",
+      "category": "multi_table_dimension",
+      "expected_decision": "QUERY",
+      "question": "按区域和渠道查看2026年6月收入、订单和毛利。",
+      "normalized_question": "按区域和渠道查看2026年6月收入、订单和毛利。",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 1105,
+      "latency_profile": {
+        "schema_retrieval_ms": 2,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 766,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 1105
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "e5740cf7c99ac99667eae5b53e2f3fa1f0cda9c0b77c30b21bd745ff83b17965",
+        "authorized_tables": [
+          {
+            "code": "order_fact",
+            "name": "模拟销售订单事实",
+            "relation": "sales_order",
+            "fields": [
+              {
+                "code": "channel_id",
+                "name": "渠道编码",
+                "physical_field": "channel_id",
+                "data_type": "string"
+              },
+              {
+                "code": "customer_id",
+                "name": "客户编码",
+                "physical_field": "customer_id",
+                "data_type": "string"
+              },
+              {
+                "code": "gross_amount",
+                "name": "订单原价",
+                "physical_field": "gross_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "gross_profit",
+                "name": "销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "is_new_customer",
+                "name": "新客户标识",
+                "physical_field": "is_new_customer",
+                "data_type": "boolean"
+              },
+              {
+                "code": "net_revenue",
+                "name": "销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_date",
+                "name": "订单日期",
+                "physical_field": "order_date",
+                "data_type": "date"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "organization_code",
+                "name": "组织编码",
+                "physical_field": "organization_code",
+                "data_type": "string"
+              },
+              {
+                "code": "refund_amount",
+                "name": "退款金额",
+                "physical_field": "refund_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "salesperson_id",
+                "name": "销售人员编码",
+                "physical_field": "salesperson_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "order_item_fact",
+            "name": "模拟销售订单明细",
+            "relation": "sales_order_item",
+            "fields": [
+              {
+                "code": "gross_profit",
+                "name": "明细销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "net_revenue",
+                "name": "明细销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "order_item_id",
+                "name": "订单明细编码",
+                "physical_field": "order_item_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "quantity",
+                "name": "销售数量",
+                "physical_field": "quantity",
+                "data_type": "integer"
+              }
+            ]
+          },
+          {
+            "code": "customer_dimension",
+            "name": "模拟客户",
+            "relation": "sales_customer",
+            "fields": [
+              {
+                "code": "customer_id",
+                "name": "客户编码",
+                "physical_field": "customer_id",
+                "data_type": "string"
+              },
+              {
+                "code": "customer_segment",
+                "name": "客户分群",
+                "physical_field": "customer_segment",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "product_dimension",
+            "name": "模拟产品",
+            "relation": "sales_product",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_name",
+                "name": "产品名称",
+                "physical_field": "product_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "category_dimension",
+            "name": "模拟产品类别",
+            "relation": "sales_product_category",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "category_name",
+                "name": "类别名称",
+                "physical_field": "category_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "channel_dimension",
+            "name": "模拟销售渠道",
+            "relation": "sales_channel",
+            "fields": [
+              {
+                "code": "channel_id",
+                "name": "渠道编码",
+                "physical_field": "channel_id",
+                "data_type": "string"
+              },
+              {
+                "code": "channel_name",
+                "name": "渠道名称",
+                "physical_field": "channel_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "region_dimension",
+            "name": "模拟销售区域",
+            "relation": "sales_region",
+            "fields": [
+              {
+                "code": "organization_code",
+                "name": "组织编码",
+                "physical_field": "organization_code",
+                "data_type": "string"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "region_name",
+                "name": "区域名称",
+                "physical_field": "region_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "salesperson_dimension",
+            "name": "模拟销售人员",
+            "relation": "salesperson",
+            "fields": [
+              {
+                "code": "salesperson_id",
+                "name": "销售人员编码",
+                "physical_field": "salesperson_id",
+                "data_type": "string"
+              },
+              {
+                "code": "salesperson_name",
+                "name": "销售人员名称",
+                "physical_field": "salesperson_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "date_dimension",
+            "name": "业务日期",
+            "relation": "sales_business_date",
+            "fields": [
+              {
+                "code": "business_date",
+                "name": "业务日期",
+                "physical_field": "business_date",
+                "data_type": "date"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "item_to_order",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "order_id"
+            ],
+            "target_table": "sales_order",
+            "target_fields": [
+              "order_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "item_to_product",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "product_id"
+            ],
+            "target_table": "sales_product",
+            "target_fields": [
+              "product_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_channel",
+            "source_table": "sales_order",
+            "source_fields": [
+              "channel_id"
+            ],
+            "target_table": "sales_channel",
+            "target_fields": [
+              "channel_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_customer",
+            "source_table": "sales_order",
+            "source_fields": [
+              "customer_id"
+            ],
+            "target_table": "sales_customer",
+            "target_fields": [
+              "customer_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_date",
+            "source_table": "sales_order",
+            "source_fields": [
+              "order_date"
+            ],
+            "target_table": "sales_business_date",
+            "target_fields": [
+              "business_date"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_region",
+            "source_table": "sales_order",
+            "source_fields": [
+              "region_id"
+            ],
+            "target_table": "sales_region",
+            "target_fields": [
+              "region_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_salesperson",
+            "source_table": "sales_order",
+            "source_fields": [
+              "salesperson_id"
+            ],
+            "target_table": "salesperson",
+            "target_fields": [
+              "salesperson_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "product_to_category",
+            "source_table": "sales_product",
+            "source_fields": [
+              "category_id"
+            ],
+            "target_table": "sales_product_category",
+            "target_fields": [
+              "category_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [],
+        "dimensions": [],
+        "retrieval_terms": [
+          "按区域和渠道查看2026年6月收入",
+          "订单和毛利"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [
+          {
+            "code": "order_fact",
+            "name": "模拟销售订单事实",
+            "relation": "sales_order",
+            "fields": [
+              {
+                "code": "channel_id",
+                "name": "渠道编码",
+                "physical_field": "channel_id",
+                "data_type": "string"
+              },
+              {
+                "code": "customer_id",
+                "name": "客户编码",
+                "physical_field": "customer_id",
+                "data_type": "string"
+              },
+              {
+                "code": "gross_amount",
+                "name": "订单原价",
+                "physical_field": "gross_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "gross_profit",
+                "name": "销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "is_new_customer",
+                "name": "新客户标识",
+                "physical_field": "is_new_customer",
+                "data_type": "boolean"
+              },
+              {
+                "code": "net_revenue",
+                "name": "销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_date",
+                "name": "订单日期",
+                "physical_field": "order_date",
+                "data_type": "date"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "organization_code",
+                "name": "组织编码",
+                "physical_field": "organization_code",
+                "data_type": "string"
+              },
+              {
+                "code": "refund_amount",
+                "name": "退款金额",
+                "physical_field": "refund_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "salesperson_id",
+                "name": "销售人员编码",
+                "physical_field": "salesperson_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "order_item_fact",
+            "name": "模拟销售订单明细",
+            "relation": "sales_order_item",
+            "fields": [
+              {
+                "code": "gross_profit",
+                "name": "明细销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "net_revenue",
+                "name": "明细销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "order_item_id",
+                "name": "订单明细编码",
+                "physical_field": "order_item_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "quantity",
+                "name": "销售数量",
+                "physical_field": "quantity",
+                "data_type": "integer"
+              }
+            ]
+          },
+          {
+            "code": "customer_dimension",
+            "name": "模拟客户",
+            "relation": "sales_customer",
+            "fields": [
+              {
+                "code": "customer_id",
+                "name": "客户编码",
+                "physical_field": "customer_id",
+                "data_type": "string"
+              },
+              {
+                "code": "customer_segment",
+                "name": "客户分群",
+                "physical_field": "customer_segment",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "product_dimension",
+            "name": "模拟产品",
+            "relation": "sales_product",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_name",
+                "name": "产品名称",
+                "physical_field": "product_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "category_dimension",
+            "name": "模拟产品类别",
+            "relation": "sales_product_category",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "category_name",
+                "name": "类别名称",
+                "physical_field": "category_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "channel_dimension",
+            "name": "模拟销售渠道",
+            "relation": "sales_channel",
+            "fields": [
+              {
+                "code": "channel_id",
+                "name": "渠道编码",
+                "physical_field": "channel_id",
+                "data_type": "string"
+              },
+              {
+                "code": "channel_name",
+                "name": "渠道名称",
+                "physical_field": "channel_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "region_dimension",
+            "name": "模拟销售区域",
+            "relation": "sales_region",
+            "fields": [
+              {
+                "code": "organization_code",
+                "name": "组织编码",
+                "physical_field": "organization_code",
+                "data_type": "string"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "region_name",
+                "name": "区域名称",
+                "physical_field": "region_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "salesperson_dimension",
+            "name": "模拟销售人员",
+            "relation": "salesperson",
+            "fields": [
+              {
+                "code": "salesperson_id",
+                "name": "销售人员编码",
+                "physical_field": "salesperson_id",
+                "data_type": "string"
+              },
+              {
+                "code": "salesperson_name",
+                "name": "销售人员名称",
+                "physical_field": "salesperson_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "date_dimension",
+            "name": "业务日期",
+            "relation": "sales_business_date",
+            "fields": [
+              {
+                "code": "business_date",
+                "name": "业务日期",
+                "physical_field": "business_date",
+                "data_type": "date"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "item_to_order",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "order_id"
+            ],
+            "target_table": "sales_order",
+            "target_fields": [
+              "order_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "item_to_product",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "product_id"
+            ],
+            "target_table": "sales_product",
+            "target_fields": [
+              "product_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_channel",
+            "source_table": "sales_order",
+            "source_fields": [
+              "channel_id"
+            ],
+            "target_table": "sales_channel",
+            "target_fields": [
+              "channel_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_customer",
+            "source_table": "sales_order",
+            "source_fields": [
+              "customer_id"
+            ],
+            "target_table": "sales_customer",
+            "target_fields": [
+              "customer_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_date",
+            "source_table": "sales_order",
+            "source_fields": [
+              "order_date"
+            ],
+            "target_table": "sales_business_date",
+            "target_fields": [
+              "business_date"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_region",
+            "source_table": "sales_order",
+            "source_fields": [
+              "region_id"
+            ],
+            "target_table": "sales_region",
+            "target_fields": [
+              "region_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_salesperson",
+            "source_table": "sales_order",
+            "source_fields": [
+              "salesperson_id"
+            ],
+            "target_table": "salesperson",
+            "target_fields": [
+              "salesperson_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "product_to_category",
+            "source_table": "sales_product",
+            "source_fields": [
+              "category_id"
+            ],
+            "target_table": "sales_product_category",
+            "target_fields": [
+              "category_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [],
+        "dimensions": [],
+        "time_dimensions": [
+          {
+            "code": "order_date",
+            "field_ref": "order_fact.order_date",
+            "timezone": "Asia/Shanghai",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-ba404880-0be0-4fd1-aed7-20c422c3edc5",
+      "semantic_version": "1.0.0",
+      "semantic_model_version_id": "SMV-d3effc8c-1c82-4d6e-8b7f-735c00135393",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-MD-011-20260809T114404934106",
+      "trace_id": "P2A-MD-011-20260809T114404934106",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "MD-012",
+      "scenario": "sales_ops",
+      "category": "multi_table_dimension",
+      "expected_decision": "QUERY",
+      "question": "按产品和类别查看销量与退款金额。",
+      "normalized_question": "按产品和类别查看销量与退款金额。",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 1102,
+      "latency_profile": {
+        "schema_retrieval_ms": 1,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 1023,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 1102
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "e5740cf7c99ac99667eae5b53e2f3fa1f0cda9c0b77c30b21bd745ff83b17965",
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "refund_amount",
+            "name": "退款金额",
+            "expression": "SUM(order_fact.refund_amount)",
+            "aggregation": "sum",
+            "time_field": "order_fact.order_date",
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [
+          {
+            "code": "product",
+            "name": "产品",
+            "field_ref": "product_dimension.product_id",
+            "data_type": "string"
+          }
+        ],
+        "retrieval_terms": [
+          "按产品和类别查看销量与退款金额"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [],
+        "relationships": [],
+        "metrics": [
+          {
+            "code": "refund_amount",
+            "name": "退款金额",
+            "expression": "SUM(order_fact.refund_amount)",
+            "aggregation": "sum",
+            "time_field": "order_fact.order_date",
+            "supported_dimensions": [
+              "date",
+              "region",
+              "channel",
+              "product",
+              "category",
+              "customer_segment",
+              "salesperson",
+              "organization"
+            ]
+          }
+        ],
+        "dimensions": [
+          {
+            "code": "product",
+            "name": "产品",
+            "field_ref": "product_dimension.product_id",
+            "data_type": "string"
+          }
+        ],
+        "time_dimensions": [
+          {
+            "code": "order_date",
+            "field_ref": "order_fact.order_date",
+            "timezone": "Asia/Shanghai",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-ba404880-0be0-4fd1-aed7-20c422c3edc5",
+      "semantic_version": "1.0.0",
+      "semantic_model_version_id": "SMV-d3effc8c-1c82-4d6e-8b7f-735c00135393",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-MD-012-20260809T114404951031",
+      "trace_id": "P2A-MD-012-20260809T114404951031",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "AR-001",
+      "scenario": "charging_ops",
+      "category": "ambiguity_security_refusal",
+      "expected_decision": "CLARIFY",
+      "question": "最近经营怎么样？",
+      "normalized_question": "最近经营怎么样？",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 1783,
+      "latency_profile": {
+        "schema_retrieval_ms": 0,
+        "prompt_build_ms": 1,
+        "runtime_connection_ms": 1664,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 1783
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "a088e7d734d9ee94cc83c8614f0925c3081fdfe2d402dc65d1c613f8e36159ca",
+        "authorized_tables": [
+          {
+            "code": "session_fact",
+            "name": "充电会话事实",
+            "relation": "fact_charging_session",
+            "fields": [
+              {
+                "code": "charging_duration_seconds",
+                "name": "充电时长",
+                "physical_field": "charging_duration_seconds",
+                "data_type": "integer"
+              },
+              {
+                "code": "device_id",
+                "name": "设备编码",
+                "physical_field": "device_id",
+                "data_type": "string"
+              },
+              {
+                "code": "electricity_fee_net_amount",
+                "name": "电费净额",
+                "physical_field": "electricity_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "energy_kwh",
+                "name": "充电电量",
+                "physical_field": "energy_kwh",
+                "data_type": "number"
+              },
+              {
+                "code": "service_fee_net_amount",
+                "name": "服务费净额",
+                "physical_field": "service_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "session_id",
+                "name": "会话编码",
+                "physical_field": "session_id",
+                "data_type": "string"
+              },
+              {
+                "code": "settlement_time",
+                "name": "结算时间",
+                "physical_field": "settlement_time",
+                "data_type": "datetime"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              },
+              {
+                "code": "user_id",
+                "name": "用户编码",
+                "physical_field": "user_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "station_dimension",
+            "name": "场站维度",
+            "relation": "dim_station",
+            "fields": [
+              {
+                "code": "city_id",
+                "name": "城市编码",
+                "physical_field": "city_id",
+                "data_type": "string"
+              },
+              {
+                "code": "connector_count",
+                "name": "枪口数",
+                "physical_field": "connector_count",
+                "data_type": "integer"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "session_to_station",
+            "source_table": "fact_charging_session",
+            "source_fields": [
+              "station_id"
+            ],
+            "target_table": "dim_station",
+            "target_fields": [
+              "station_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [],
+        "dimensions": [],
+        "retrieval_terms": [
+          "最近经营怎么样"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [
+          {
+            "code": "session_fact",
+            "name": "充电会话事实",
+            "relation": "fact_charging_session",
+            "fields": [
+              {
+                "code": "charging_duration_seconds",
+                "name": "充电时长",
+                "physical_field": "charging_duration_seconds",
+                "data_type": "integer"
+              },
+              {
+                "code": "device_id",
+                "name": "设备编码",
+                "physical_field": "device_id",
+                "data_type": "string"
+              },
+              {
+                "code": "electricity_fee_net_amount",
+                "name": "电费净额",
+                "physical_field": "electricity_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "energy_kwh",
+                "name": "充电电量",
+                "physical_field": "energy_kwh",
+                "data_type": "number"
+              },
+              {
+                "code": "service_fee_net_amount",
+                "name": "服务费净额",
+                "physical_field": "service_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "session_id",
+                "name": "会话编码",
+                "physical_field": "session_id",
+                "data_type": "string"
+              },
+              {
+                "code": "settlement_time",
+                "name": "结算时间",
+                "physical_field": "settlement_time",
+                "data_type": "datetime"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              },
+              {
+                "code": "user_id",
+                "name": "用户编码",
+                "physical_field": "user_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "station_dimension",
+            "name": "场站维度",
+            "relation": "dim_station",
+            "fields": [
+              {
+                "code": "city_id",
+                "name": "城市编码",
+                "physical_field": "city_id",
+                "data_type": "string"
+              },
+              {
+                "code": "connector_count",
+                "name": "枪口数",
+                "physical_field": "connector_count",
+                "data_type": "integer"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "session_to_station",
+            "source_table": "fact_charging_session",
+            "source_fields": [
+              "station_id"
+            ],
+            "target_table": "dim_station",
+            "target_fields": [
+              "station_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [],
+        "dimensions": [],
+        "time_dimensions": [
+          {
+            "code": "settlement_time",
+            "field_ref": "session_fact.settlement_time",
+            "timezone": "UTC",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-98969282-1a79-4fc0-b268-2f6e462f873a",
+      "semantic_version": "0.1.0",
+      "semantic_model_version_id": "SMV-de099d2e-0e49-4bbd-a993-17ec1894c74e",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-AR-001-20260809T114406039740",
+      "trace_id": "P2A-AR-001-20260809T114406039740",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "AR-003",
+      "scenario": "charging_ops",
+      "category": "ambiguity_security_refusal",
+      "expected_decision": "CLARIFY",
+      "question": "哪个站最好？",
+      "normalized_question": "哪个站最好？",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 1799,
+      "latency_profile": {
+        "schema_retrieval_ms": 0,
+        "prompt_build_ms": 7,
+        "runtime_connection_ms": 1636,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 1799
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "a088e7d734d9ee94cc83c8614f0925c3081fdfe2d402dc65d1c613f8e36159ca",
+        "authorized_tables": [
+          {
+            "code": "session_fact",
+            "name": "充电会话事实",
+            "relation": "fact_charging_session",
+            "fields": [
+              {
+                "code": "charging_duration_seconds",
+                "name": "充电时长",
+                "physical_field": "charging_duration_seconds",
+                "data_type": "integer"
+              },
+              {
+                "code": "device_id",
+                "name": "设备编码",
+                "physical_field": "device_id",
+                "data_type": "string"
+              },
+              {
+                "code": "electricity_fee_net_amount",
+                "name": "电费净额",
+                "physical_field": "electricity_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "energy_kwh",
+                "name": "充电电量",
+                "physical_field": "energy_kwh",
+                "data_type": "number"
+              },
+              {
+                "code": "service_fee_net_amount",
+                "name": "服务费净额",
+                "physical_field": "service_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "session_id",
+                "name": "会话编码",
+                "physical_field": "session_id",
+                "data_type": "string"
+              },
+              {
+                "code": "settlement_time",
+                "name": "结算时间",
+                "physical_field": "settlement_time",
+                "data_type": "datetime"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              },
+              {
+                "code": "user_id",
+                "name": "用户编码",
+                "physical_field": "user_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "station_dimension",
+            "name": "场站维度",
+            "relation": "dim_station",
+            "fields": [
+              {
+                "code": "city_id",
+                "name": "城市编码",
+                "physical_field": "city_id",
+                "data_type": "string"
+              },
+              {
+                "code": "connector_count",
+                "name": "枪口数",
+                "physical_field": "connector_count",
+                "data_type": "integer"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "session_to_station",
+            "source_table": "fact_charging_session",
+            "source_fields": [
+              "station_id"
+            ],
+            "target_table": "dim_station",
+            "target_fields": [
+              "station_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [],
+        "dimensions": [],
+        "retrieval_terms": [
+          "哪个站最好"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [
+          {
+            "code": "session_fact",
+            "name": "充电会话事实",
+            "relation": "fact_charging_session",
+            "fields": [
+              {
+                "code": "charging_duration_seconds",
+                "name": "充电时长",
+                "physical_field": "charging_duration_seconds",
+                "data_type": "integer"
+              },
+              {
+                "code": "device_id",
+                "name": "设备编码",
+                "physical_field": "device_id",
+                "data_type": "string"
+              },
+              {
+                "code": "electricity_fee_net_amount",
+                "name": "电费净额",
+                "physical_field": "electricity_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "energy_kwh",
+                "name": "充电电量",
+                "physical_field": "energy_kwh",
+                "data_type": "number"
+              },
+              {
+                "code": "service_fee_net_amount",
+                "name": "服务费净额",
+                "physical_field": "service_fee_net_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "session_id",
+                "name": "会话编码",
+                "physical_field": "session_id",
+                "data_type": "string"
+              },
+              {
+                "code": "settlement_time",
+                "name": "结算时间",
+                "physical_field": "settlement_time",
+                "data_type": "datetime"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              },
+              {
+                "code": "user_id",
+                "name": "用户编码",
+                "physical_field": "user_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "station_dimension",
+            "name": "场站维度",
+            "relation": "dim_station",
+            "fields": [
+              {
+                "code": "city_id",
+                "name": "城市编码",
+                "physical_field": "city_id",
+                "data_type": "string"
+              },
+              {
+                "code": "connector_count",
+                "name": "枪口数",
+                "physical_field": "connector_count",
+                "data_type": "integer"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "station_id",
+                "name": "场站编码",
+                "physical_field": "station_id",
+                "data_type": "string"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "session_to_station",
+            "source_table": "fact_charging_session",
+            "source_fields": [
+              "station_id"
+            ],
+            "target_table": "dim_station",
+            "target_fields": [
+              "station_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [],
+        "dimensions": [],
+        "time_dimensions": [
+          {
+            "code": "settlement_time",
+            "field_ref": "session_fact.settlement_time",
+            "timezone": "UTC",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-98969282-1a79-4fc0-b268-2f6e462f873a",
+      "semantic_version": "0.1.0",
+      "semantic_model_version_id": "SMV-de099d2e-0e49-4bbd-a993-17ec1894c74e",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-AR-003-20260809T114406053221",
+      "trace_id": "P2A-AR-003-20260809T114406053221",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "AR-002",
+      "scenario": "sales_ops",
+      "category": "ambiguity_security_refusal",
+      "expected_decision": "CLARIFY",
+      "question": "最近销售表现如何？",
+      "normalized_question": "最近销售表现如何？",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 1601,
+      "latency_profile": {
+        "schema_retrieval_ms": 3,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 851,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 1601
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "e5740cf7c99ac99667eae5b53e2f3fa1f0cda9c0b77c30b21bd745ff83b17965",
+        "authorized_tables": [
+          {
+            "code": "order_fact",
+            "name": "模拟销售订单事实",
+            "relation": "sales_order",
+            "fields": [
+              {
+                "code": "channel_id",
+                "name": "渠道编码",
+                "physical_field": "channel_id",
+                "data_type": "string"
+              },
+              {
+                "code": "customer_id",
+                "name": "客户编码",
+                "physical_field": "customer_id",
+                "data_type": "string"
+              },
+              {
+                "code": "gross_amount",
+                "name": "订单原价",
+                "physical_field": "gross_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "gross_profit",
+                "name": "销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "is_new_customer",
+                "name": "新客户标识",
+                "physical_field": "is_new_customer",
+                "data_type": "boolean"
+              },
+              {
+                "code": "net_revenue",
+                "name": "销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_date",
+                "name": "订单日期",
+                "physical_field": "order_date",
+                "data_type": "date"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "organization_code",
+                "name": "组织编码",
+                "physical_field": "organization_code",
+                "data_type": "string"
+              },
+              {
+                "code": "refund_amount",
+                "name": "退款金额",
+                "physical_field": "refund_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "salesperson_id",
+                "name": "销售人员编码",
+                "physical_field": "salesperson_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "order_item_fact",
+            "name": "模拟销售订单明细",
+            "relation": "sales_order_item",
+            "fields": [
+              {
+                "code": "gross_profit",
+                "name": "明细销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "net_revenue",
+                "name": "明细销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "order_item_id",
+                "name": "订单明细编码",
+                "physical_field": "order_item_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "quantity",
+                "name": "销售数量",
+                "physical_field": "quantity",
+                "data_type": "integer"
+              }
+            ]
+          },
+          {
+            "code": "customer_dimension",
+            "name": "模拟客户",
+            "relation": "sales_customer",
+            "fields": [
+              {
+                "code": "customer_id",
+                "name": "客户编码",
+                "physical_field": "customer_id",
+                "data_type": "string"
+              },
+              {
+                "code": "customer_segment",
+                "name": "客户分群",
+                "physical_field": "customer_segment",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "product_dimension",
+            "name": "模拟产品",
+            "relation": "sales_product",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_name",
+                "name": "产品名称",
+                "physical_field": "product_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "category_dimension",
+            "name": "模拟产品类别",
+            "relation": "sales_product_category",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "category_name",
+                "name": "类别名称",
+                "physical_field": "category_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "channel_dimension",
+            "name": "模拟销售渠道",
+            "relation": "sales_channel",
+            "fields": [
+              {
+                "code": "channel_id",
+                "name": "渠道编码",
+                "physical_field": "channel_id",
+                "data_type": "string"
+              },
+              {
+                "code": "channel_name",
+                "name": "渠道名称",
+                "physical_field": "channel_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "region_dimension",
+            "name": "模拟销售区域",
+            "relation": "sales_region",
+            "fields": [
+              {
+                "code": "organization_code",
+                "name": "组织编码",
+                "physical_field": "organization_code",
+                "data_type": "string"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "region_name",
+                "name": "区域名称",
+                "physical_field": "region_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "salesperson_dimension",
+            "name": "模拟销售人员",
+            "relation": "salesperson",
+            "fields": [
+              {
+                "code": "salesperson_id",
+                "name": "销售人员编码",
+                "physical_field": "salesperson_id",
+                "data_type": "string"
+              },
+              {
+                "code": "salesperson_name",
+                "name": "销售人员名称",
+                "physical_field": "salesperson_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "date_dimension",
+            "name": "业务日期",
+            "relation": "sales_business_date",
+            "fields": [
+              {
+                "code": "business_date",
+                "name": "业务日期",
+                "physical_field": "business_date",
+                "data_type": "date"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "item_to_order",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "order_id"
+            ],
+            "target_table": "sales_order",
+            "target_fields": [
+              "order_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "item_to_product",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "product_id"
+            ],
+            "target_table": "sales_product",
+            "target_fields": [
+              "product_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_channel",
+            "source_table": "sales_order",
+            "source_fields": [
+              "channel_id"
+            ],
+            "target_table": "sales_channel",
+            "target_fields": [
+              "channel_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_customer",
+            "source_table": "sales_order",
+            "source_fields": [
+              "customer_id"
+            ],
+            "target_table": "sales_customer",
+            "target_fields": [
+              "customer_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_date",
+            "source_table": "sales_order",
+            "source_fields": [
+              "order_date"
+            ],
+            "target_table": "sales_business_date",
+            "target_fields": [
+              "business_date"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_region",
+            "source_table": "sales_order",
+            "source_fields": [
+              "region_id"
+            ],
+            "target_table": "sales_region",
+            "target_fields": [
+              "region_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_salesperson",
+            "source_table": "sales_order",
+            "source_fields": [
+              "salesperson_id"
+            ],
+            "target_table": "salesperson",
+            "target_fields": [
+              "salesperson_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "product_to_category",
+            "source_table": "sales_product",
+            "source_fields": [
+              "category_id"
+            ],
+            "target_table": "sales_product_category",
+            "target_fields": [
+              "category_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [],
+        "dimensions": [],
+        "retrieval_terms": [
+          "最近销售表现如何"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [
+          {
+            "code": "order_fact",
+            "name": "模拟销售订单事实",
+            "relation": "sales_order",
+            "fields": [
+              {
+                "code": "channel_id",
+                "name": "渠道编码",
+                "physical_field": "channel_id",
+                "data_type": "string"
+              },
+              {
+                "code": "customer_id",
+                "name": "客户编码",
+                "physical_field": "customer_id",
+                "data_type": "string"
+              },
+              {
+                "code": "gross_amount",
+                "name": "订单原价",
+                "physical_field": "gross_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "gross_profit",
+                "name": "销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "is_new_customer",
+                "name": "新客户标识",
+                "physical_field": "is_new_customer",
+                "data_type": "boolean"
+              },
+              {
+                "code": "net_revenue",
+                "name": "销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_date",
+                "name": "订单日期",
+                "physical_field": "order_date",
+                "data_type": "date"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "organization_code",
+                "name": "组织编码",
+                "physical_field": "organization_code",
+                "data_type": "string"
+              },
+              {
+                "code": "refund_amount",
+                "name": "退款金额",
+                "physical_field": "refund_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "salesperson_id",
+                "name": "销售人员编码",
+                "physical_field": "salesperson_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "order_item_fact",
+            "name": "模拟销售订单明细",
+            "relation": "sales_order_item",
+            "fields": [
+              {
+                "code": "gross_profit",
+                "name": "明细销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "net_revenue",
+                "name": "明细销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "order_item_id",
+                "name": "订单明细编码",
+                "physical_field": "order_item_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "quantity",
+                "name": "销售数量",
+                "physical_field": "quantity",
+                "data_type": "integer"
+              }
+            ]
+          },
+          {
+            "code": "customer_dimension",
+            "name": "模拟客户",
+            "relation": "sales_customer",
+            "fields": [
+              {
+                "code": "customer_id",
+                "name": "客户编码",
+                "physical_field": "customer_id",
+                "data_type": "string"
+              },
+              {
+                "code": "customer_segment",
+                "name": "客户分群",
+                "physical_field": "customer_segment",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "product_dimension",
+            "name": "模拟产品",
+            "relation": "sales_product",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_name",
+                "name": "产品名称",
+                "physical_field": "product_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "category_dimension",
+            "name": "模拟产品类别",
+            "relation": "sales_product_category",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "category_name",
+                "name": "类别名称",
+                "physical_field": "category_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "channel_dimension",
+            "name": "模拟销售渠道",
+            "relation": "sales_channel",
+            "fields": [
+              {
+                "code": "channel_id",
+                "name": "渠道编码",
+                "physical_field": "channel_id",
+                "data_type": "string"
+              },
+              {
+                "code": "channel_name",
+                "name": "渠道名称",
+                "physical_field": "channel_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "region_dimension",
+            "name": "模拟销售区域",
+            "relation": "sales_region",
+            "fields": [
+              {
+                "code": "organization_code",
+                "name": "组织编码",
+                "physical_field": "organization_code",
+                "data_type": "string"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "region_name",
+                "name": "区域名称",
+                "physical_field": "region_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "salesperson_dimension",
+            "name": "模拟销售人员",
+            "relation": "salesperson",
+            "fields": [
+              {
+                "code": "salesperson_id",
+                "name": "销售人员编码",
+                "physical_field": "salesperson_id",
+                "data_type": "string"
+              },
+              {
+                "code": "salesperson_name",
+                "name": "销售人员名称",
+                "physical_field": "salesperson_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "date_dimension",
+            "name": "业务日期",
+            "relation": "sales_business_date",
+            "fields": [
+              {
+                "code": "business_date",
+                "name": "业务日期",
+                "physical_field": "business_date",
+                "data_type": "date"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "item_to_order",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "order_id"
+            ],
+            "target_table": "sales_order",
+            "target_fields": [
+              "order_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "item_to_product",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "product_id"
+            ],
+            "target_table": "sales_product",
+            "target_fields": [
+              "product_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_channel",
+            "source_table": "sales_order",
+            "source_fields": [
+              "channel_id"
+            ],
+            "target_table": "sales_channel",
+            "target_fields": [
+              "channel_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_customer",
+            "source_table": "sales_order",
+            "source_fields": [
+              "customer_id"
+            ],
+            "target_table": "sales_customer",
+            "target_fields": [
+              "customer_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_date",
+            "source_table": "sales_order",
+            "source_fields": [
+              "order_date"
+            ],
+            "target_table": "sales_business_date",
+            "target_fields": [
+              "business_date"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_region",
+            "source_table": "sales_order",
+            "source_fields": [
+              "region_id"
+            ],
+            "target_table": "sales_region",
+            "target_fields": [
+              "region_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_salesperson",
+            "source_table": "sales_order",
+            "source_fields": [
+              "salesperson_id"
+            ],
+            "target_table": "salesperson",
+            "target_fields": [
+              "salesperson_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "product_to_category",
+            "source_table": "sales_product",
+            "source_fields": [
+              "category_id"
+            ],
+            "target_table": "sales_product_category",
+            "target_fields": [
+              "category_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [],
+        "dimensions": [],
+        "time_dimensions": [
+          {
+            "code": "order_date",
+            "field_ref": "order_fact.order_date",
+            "timezone": "Asia/Shanghai",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-ba404880-0be0-4fd1-aed7-20c422c3edc5",
+      "semantic_version": "1.0.0",
+      "semantic_model_version_id": "SMV-d3effc8c-1c82-4d6e-8b7f-735c00135393",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-AR-002-20260809T114407823580",
+      "trace_id": "P2A-AR-002-20260809T114407823580",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    },
+    {
+      "case_id": "AR-004",
+      "scenario": "sales_ops",
+      "category": "ambiguity_security_refusal",
+      "expected_decision": "CLARIFY",
+      "question": "哪个渠道最好？",
+      "normalized_question": "哪个渠道最好？",
+      "model": "deepseek-v4-flash",
+      "upstream_sql_execution": false,
+      "model_called": true,
+      "external_request_count": 2,
+      "attempts": 2,
+      "sqlbot_session_created": true,
+      "generated_sql": null,
+      "limit_policy_warnings": [],
+      "sql_hash": null,
+      "guard_result": "NOT_EXECUTED",
+      "execution_status": "NOT_EXECUTED",
+      "row_count": null,
+      "result_hash": null,
+      "latency_ms": 1583,
+      "latency_profile": {
+        "schema_retrieval_ms": 2,
+        "prompt_build_ms": 0,
+        "runtime_connection_ms": 1508,
+        "model_ttft_ms": null,
+        "model_generation_ms": 0,
+        "retry_ms": 0,
+        "normalization_ms": 0,
+        "guard_ms": 0,
+        "execution_ms": 0,
+        "answer_ms": 0,
+        "total_ms": 1583
+      },
+      "prompt_version": "sqlbot-schema-4.1/41c",
+      "schema_retrieval_result": {
+        "schema_catalog_version": "sqlbot-schema-4.1",
+        "schema_catalog_hash": "e5740cf7c99ac99667eae5b53e2f3fa1f0cda9c0b77c30b21bd745ff83b17965",
+        "authorized_tables": [
+          {
+            "code": "order_fact",
+            "name": "模拟销售订单事实",
+            "relation": "sales_order",
+            "fields": [
+              {
+                "code": "channel_id",
+                "name": "渠道编码",
+                "physical_field": "channel_id",
+                "data_type": "string"
+              },
+              {
+                "code": "customer_id",
+                "name": "客户编码",
+                "physical_field": "customer_id",
+                "data_type": "string"
+              },
+              {
+                "code": "gross_amount",
+                "name": "订单原价",
+                "physical_field": "gross_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "gross_profit",
+                "name": "销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "is_new_customer",
+                "name": "新客户标识",
+                "physical_field": "is_new_customer",
+                "data_type": "boolean"
+              },
+              {
+                "code": "net_revenue",
+                "name": "销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_date",
+                "name": "订单日期",
+                "physical_field": "order_date",
+                "data_type": "date"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "organization_code",
+                "name": "组织编码",
+                "physical_field": "organization_code",
+                "data_type": "string"
+              },
+              {
+                "code": "refund_amount",
+                "name": "退款金额",
+                "physical_field": "refund_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "salesperson_id",
+                "name": "销售人员编码",
+                "physical_field": "salesperson_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "order_item_fact",
+            "name": "模拟销售订单明细",
+            "relation": "sales_order_item",
+            "fields": [
+              {
+                "code": "gross_profit",
+                "name": "明细销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "net_revenue",
+                "name": "明细销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "order_item_id",
+                "name": "订单明细编码",
+                "physical_field": "order_item_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "quantity",
+                "name": "销售数量",
+                "physical_field": "quantity",
+                "data_type": "integer"
+              }
+            ]
+          },
+          {
+            "code": "customer_dimension",
+            "name": "模拟客户",
+            "relation": "sales_customer",
+            "fields": [
+              {
+                "code": "customer_id",
+                "name": "客户编码",
+                "physical_field": "customer_id",
+                "data_type": "string"
+              },
+              {
+                "code": "customer_segment",
+                "name": "客户分群",
+                "physical_field": "customer_segment",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "product_dimension",
+            "name": "模拟产品",
+            "relation": "sales_product",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_name",
+                "name": "产品名称",
+                "physical_field": "product_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "category_dimension",
+            "name": "模拟产品类别",
+            "relation": "sales_product_category",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "category_name",
+                "name": "类别名称",
+                "physical_field": "category_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "channel_dimension",
+            "name": "模拟销售渠道",
+            "relation": "sales_channel",
+            "fields": [
+              {
+                "code": "channel_id",
+                "name": "渠道编码",
+                "physical_field": "channel_id",
+                "data_type": "string"
+              },
+              {
+                "code": "channel_name",
+                "name": "渠道名称",
+                "physical_field": "channel_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "region_dimension",
+            "name": "模拟销售区域",
+            "relation": "sales_region",
+            "fields": [
+              {
+                "code": "organization_code",
+                "name": "组织编码",
+                "physical_field": "organization_code",
+                "data_type": "string"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "region_name",
+                "name": "区域名称",
+                "physical_field": "region_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "salesperson_dimension",
+            "name": "模拟销售人员",
+            "relation": "salesperson",
+            "fields": [
+              {
+                "code": "salesperson_id",
+                "name": "销售人员编码",
+                "physical_field": "salesperson_id",
+                "data_type": "string"
+              },
+              {
+                "code": "salesperson_name",
+                "name": "销售人员名称",
+                "physical_field": "salesperson_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "date_dimension",
+            "name": "业务日期",
+            "relation": "sales_business_date",
+            "fields": [
+              {
+                "code": "business_date",
+                "name": "业务日期",
+                "physical_field": "business_date",
+                "data_type": "date"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "item_to_order",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "order_id"
+            ],
+            "target_table": "sales_order",
+            "target_fields": [
+              "order_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "item_to_product",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "product_id"
+            ],
+            "target_table": "sales_product",
+            "target_fields": [
+              "product_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_channel",
+            "source_table": "sales_order",
+            "source_fields": [
+              "channel_id"
+            ],
+            "target_table": "sales_channel",
+            "target_fields": [
+              "channel_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_customer",
+            "source_table": "sales_order",
+            "source_fields": [
+              "customer_id"
+            ],
+            "target_table": "sales_customer",
+            "target_fields": [
+              "customer_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_date",
+            "source_table": "sales_order",
+            "source_fields": [
+              "order_date"
+            ],
+            "target_table": "sales_business_date",
+            "target_fields": [
+              "business_date"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_region",
+            "source_table": "sales_order",
+            "source_fields": [
+              "region_id"
+            ],
+            "target_table": "sales_region",
+            "target_fields": [
+              "region_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_salesperson",
+            "source_table": "sales_order",
+            "source_fields": [
+              "salesperson_id"
+            ],
+            "target_table": "salesperson",
+            "target_fields": [
+              "salesperson_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "product_to_category",
+            "source_table": "sales_product",
+            "source_fields": [
+              "category_id"
+            ],
+            "target_table": "sales_product_category",
+            "target_fields": [
+              "category_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [],
+        "dimensions": [],
+        "retrieval_terms": [
+          "哪个渠道最好"
+        ]
+      },
+      "final_schema_context": {
+        "authorized_tables": [
+          {
+            "code": "order_fact",
+            "name": "模拟销售订单事实",
+            "relation": "sales_order",
+            "fields": [
+              {
+                "code": "channel_id",
+                "name": "渠道编码",
+                "physical_field": "channel_id",
+                "data_type": "string"
+              },
+              {
+                "code": "customer_id",
+                "name": "客户编码",
+                "physical_field": "customer_id",
+                "data_type": "string"
+              },
+              {
+                "code": "gross_amount",
+                "name": "订单原价",
+                "physical_field": "gross_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "gross_profit",
+                "name": "销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "is_new_customer",
+                "name": "新客户标识",
+                "physical_field": "is_new_customer",
+                "data_type": "boolean"
+              },
+              {
+                "code": "net_revenue",
+                "name": "销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_date",
+                "name": "订单日期",
+                "physical_field": "order_date",
+                "data_type": "date"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "organization_code",
+                "name": "组织编码",
+                "physical_field": "organization_code",
+                "data_type": "string"
+              },
+              {
+                "code": "refund_amount",
+                "name": "退款金额",
+                "physical_field": "refund_amount",
+                "data_type": "number"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "salesperson_id",
+                "name": "销售人员编码",
+                "physical_field": "salesperson_id",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "order_item_fact",
+            "name": "模拟销售订单明细",
+            "relation": "sales_order_item",
+            "fields": [
+              {
+                "code": "gross_profit",
+                "name": "明细销售毛利",
+                "physical_field": "gross_profit",
+                "data_type": "number"
+              },
+              {
+                "code": "net_revenue",
+                "name": "明细销售收入",
+                "physical_field": "net_revenue",
+                "data_type": "number"
+              },
+              {
+                "code": "order_id",
+                "name": "订单编码",
+                "physical_field": "order_id",
+                "data_type": "string"
+              },
+              {
+                "code": "order_item_id",
+                "name": "订单明细编码",
+                "physical_field": "order_item_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "quantity",
+                "name": "销售数量",
+                "physical_field": "quantity",
+                "data_type": "integer"
+              }
+            ]
+          },
+          {
+            "code": "customer_dimension",
+            "name": "模拟客户",
+            "relation": "sales_customer",
+            "fields": [
+              {
+                "code": "customer_id",
+                "name": "客户编码",
+                "physical_field": "customer_id",
+                "data_type": "string"
+              },
+              {
+                "code": "customer_segment",
+                "name": "客户分群",
+                "physical_field": "customer_segment",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "product_dimension",
+            "name": "模拟产品",
+            "relation": "sales_product",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_id",
+                "name": "产品编码",
+                "physical_field": "product_id",
+                "data_type": "string"
+              },
+              {
+                "code": "product_name",
+                "name": "产品名称",
+                "physical_field": "product_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "category_dimension",
+            "name": "模拟产品类别",
+            "relation": "sales_product_category",
+            "fields": [
+              {
+                "code": "category_id",
+                "name": "类别编码",
+                "physical_field": "category_id",
+                "data_type": "string"
+              },
+              {
+                "code": "category_name",
+                "name": "类别名称",
+                "physical_field": "category_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "channel_dimension",
+            "name": "模拟销售渠道",
+            "relation": "sales_channel",
+            "fields": [
+              {
+                "code": "channel_id",
+                "name": "渠道编码",
+                "physical_field": "channel_id",
+                "data_type": "string"
+              },
+              {
+                "code": "channel_name",
+                "name": "渠道名称",
+                "physical_field": "channel_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "region_dimension",
+            "name": "模拟销售区域",
+            "relation": "sales_region",
+            "fields": [
+              {
+                "code": "organization_code",
+                "name": "组织编码",
+                "physical_field": "organization_code",
+                "data_type": "string"
+              },
+              {
+                "code": "region_id",
+                "name": "区域编码",
+                "physical_field": "region_id",
+                "data_type": "string"
+              },
+              {
+                "code": "region_name",
+                "name": "区域名称",
+                "physical_field": "region_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "salesperson_dimension",
+            "name": "模拟销售人员",
+            "relation": "salesperson",
+            "fields": [
+              {
+                "code": "salesperson_id",
+                "name": "销售人员编码",
+                "physical_field": "salesperson_id",
+                "data_type": "string"
+              },
+              {
+                "code": "salesperson_name",
+                "name": "销售人员名称",
+                "physical_field": "salesperson_name",
+                "data_type": "string"
+              }
+            ]
+          },
+          {
+            "code": "date_dimension",
+            "name": "业务日期",
+            "relation": "sales_business_date",
+            "fields": [
+              {
+                "code": "business_date",
+                "name": "业务日期",
+                "physical_field": "business_date",
+                "data_type": "date"
+              }
+            ]
+          }
+        ],
+        "relationships": [
+          {
+            "code": "item_to_order",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "order_id"
+            ],
+            "target_table": "sales_order",
+            "target_fields": [
+              "order_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "item_to_product",
+            "source_table": "sales_order_item",
+            "source_fields": [
+              "product_id"
+            ],
+            "target_table": "sales_product",
+            "target_fields": [
+              "product_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_channel",
+            "source_table": "sales_order",
+            "source_fields": [
+              "channel_id"
+            ],
+            "target_table": "sales_channel",
+            "target_fields": [
+              "channel_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_customer",
+            "source_table": "sales_order",
+            "source_fields": [
+              "customer_id"
+            ],
+            "target_table": "sales_customer",
+            "target_fields": [
+              "customer_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_date",
+            "source_table": "sales_order",
+            "source_fields": [
+              "order_date"
+            ],
+            "target_table": "sales_business_date",
+            "target_fields": [
+              "business_date"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_region",
+            "source_table": "sales_order",
+            "source_fields": [
+              "region_id"
+            ],
+            "target_table": "sales_region",
+            "target_fields": [
+              "region_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "order_to_salesperson",
+            "source_table": "sales_order",
+            "source_fields": [
+              "salesperson_id"
+            ],
+            "target_table": "salesperson",
+            "target_fields": [
+              "salesperson_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          },
+          {
+            "code": "product_to_category",
+            "source_table": "sales_product",
+            "source_fields": [
+              "category_id"
+            ],
+            "target_table": "sales_product_category",
+            "target_fields": [
+              "category_id"
+            ],
+            "cardinality": "many_to_one",
+            "join_type": "inner"
+          }
+        ],
+        "metrics": [],
+        "dimensions": [],
+        "time_dimensions": [
+          {
+            "code": "order_date",
+            "field_ref": "order_fact.order_date",
+            "timezone": "Asia/Shanghai",
+            "grains": [
+              "day",
+              "week",
+              "month",
+              "quarter",
+              "year"
+            ]
+          }
+        ]
+      },
+      "model_raw_return": null,
+      "generation_attempts": [],
+      "repair_attempt": 0,
+      "token_usage": null,
+      "dataset_version": "2",
+      "dataset_version_id": "DSV-ba404880-0be0-4fd1-aed7-20c422c3edc5",
+      "semantic_version": "1.0.0",
+      "semantic_model_version_id": "SMV-d3effc8c-1c82-4d6e-8b7f-735c00135393",
+      "scenario_version": "1.0.0",
+      "run_id": "P2A-AR-004-20260809T114407853289",
+      "trace_id": "P2A-AR-004-20260809T114407853289",
+      "error": "SQLBOT_UPSTREAM_UNAVAILABLE",
+      "final_status": "FAIL",
+      "permission_pass": null,
+      "time_range_alignment": null,
+      "dimension_alignment": null,
+      "sort_alignment": null,
+      "hallucinated_tables": [],
+      "hallucinated_fields": []
+    }
+  ],
+  "secret_values_exposed": false,
+  "model_response_prose_exposed": false
+}

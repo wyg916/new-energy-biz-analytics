@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "sqlbot41d_aborted_preflight",
+  "stage": "canary-20",
+  "status": "ABORTED_PREFLIGHT",
+  "formal_acceptance": false,
+  "started_at": "2026-08-11T05:37:24.682081+00:00",
+  "stopped_at": "2026-08-11T05:39:08.404495+00:00",
+  "observed_database_route_decisions": 13,
+  "observed_sqlbot_route_decisions": 13,
+  "gate_eligible": false,
+  "reason": "The route-event audit contract lacked explicit model_call_status, primary_engine, fallback_engine, and sqlbot_failure_stage fields. The preflight was stopped before formal evidence generation and is not counted toward the 200-request gate.",
+  "secret_values_persisted": false
+}

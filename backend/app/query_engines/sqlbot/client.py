@@ -1,4 +1,5 @@
 import os
+from functools import lru_cache
 from time import perf_counter
 from typing import Callable
 from urllib.parse import urlsplit, urlunsplit
@@ -6,12 +7,14 @@ from urllib.parse import urlsplit, urlunsplit
 import httpx
 
 from app.query_engines.sqlbot.contracts import SQLBotHealth
+from app.query_engines.sqlbot.credentials import derive_runtime_account_password
 from app.query_engines.sqlbot.error_mapper import (
     SQLBotEngineError,
     SQLBotErrorCode,
     map_http_error,
 )
 from app.query_engines.sqlbot.health import CircuitBreaker
+from app.core.config import get_settings
 
 
 class SQLBotClient:
@@ -47,6 +50,7 @@ class SQLBotClient:
     def _credentials(self) -> tuple[str, str]:
         if self.credential_loader is not None:
             username, password = self.credential_loader()
+            password = derive_runtime_account_password(password)
         else:
             username = os.getenv(self.username_env_key) if self.username_env_key else None
             password = os.getenv(self.password_env_key) if self.password_env_key else None
@@ -95,9 +99,10 @@ class SQLBotClient:
             )
         return str(chat_id), token
 
-    def ask(self, payload: dict) -> dict:
+    def generate_sql(self, payload: dict) -> dict:
+        """Call the governed SQLBot generate-only runtime extension."""
         return self._call(
-            lambda: self.http.post("mcp/mcp_question", json=payload)
+            lambda: self.http.post("mcp/mcp_generate_sql", json=payload)
         )
 
     def record_usage(self, record_id: str, access_token: str) -> int | None:
@@ -134,3 +139,29 @@ class SQLBotClient:
 
     def close(self) -> None:
         self.http.close()
+
+
+@lru_cache(maxsize=1)
+def runtime_sqlbot_client() -> SQLBotClient:
+    """Return the process-scoped HTTP pool and circuit breaker.
+
+    Request-scoped SQLBotEngine objects retain their own audit callback while
+    sharing transport connections and failure state across controlled traffic.
+    """
+    settings = get_settings()
+    return SQLBotClient(
+        settings.sqlbot_base_url,
+        username_env_key=settings.sqlbot_username_env_key,
+        password_env_key=settings.sqlbot_password_env_key,
+        timeout_seconds=settings.sqlbot_timeout_seconds,
+        breaker=CircuitBreaker(
+            settings.sqlbot_circuit_failure_threshold,
+            settings.sqlbot_circuit_recovery_seconds,
+        ),
+    )
+
+
+def close_runtime_sqlbot_client() -> None:
+    if runtime_sqlbot_client.cache_info().currsize:
+        runtime_sqlbot_client().close()
+        runtime_sqlbot_client.cache_clear()
