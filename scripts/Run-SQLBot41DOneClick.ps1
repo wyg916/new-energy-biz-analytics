@@ -9,6 +9,7 @@ param(
     [string]$RuntimeVolume = 'renewable-data41_p4_runtime',
     [string]$RedisDataVolume = 'renewable-data41_p4_redis',
     [string]$RedisContainer = 'renewable-data41-redis-1',
+    [string]$PlatformApiContainer = 'renewable-integration41-core-api-1',
     [string]$PlatformDatabaseHost = 'renewable-data41-db-1',
     [string]$PlatformApiImage = 'renewable-sqlbot41-api:test',
     [string]$ExpectedRevision = 'sqlbot_41c2',
@@ -27,6 +28,12 @@ if (-not $outputPath.StartsWith($root, [StringComparison]::OrdinalIgnoreCase)) {
 }
 if (Test-Path -LiteralPath $outputPath) {
     throw "Refusing to overwrite startup evidence: $outputPath"
+}
+$credentialSyncOutputPath = Join-Path `
+    (Split-Path -Parent $outputPath) `
+    (([IO.Path]::GetFileNameWithoutExtension($outputPath)) + '-credential-sync.json')
+if (Test-Path -LiteralPath $credentialSyncOutputPath) {
+    throw "Refusing to overwrite credential-sync evidence: $credentialSyncOutputPath"
 }
 if ($Mode -ne 'SHADOW') {
     $requiredScope = @(
@@ -54,6 +61,22 @@ $dependencies = & (Join-Path $PSScriptRoot 'Start-SQLBot41DDependencies.ps1') `
     -SQLBotHostPort $SQLBotHostPort `
     -SQLBotVolumePrefix $SQLBotVolumePrefix
 if ($LASTEXITCODE -ne 0) { throw 'SQLBot 4.1D dependency startup failed' }
+
+$credentialSyncOutput = $credentialSyncOutputPath.Substring($root.Length).TrimStart('\', '/')
+$credentialSync = & (Join-Path $PSScriptRoot 'Sync-SQLBot41CCredentialReference.ps1') `
+    -PlatformApiContainer $PlatformApiContainer `
+    -PlatformNetwork $PlatformNetwork `
+    -RuntimeVolume $RuntimeVolume `
+    -PlatformDatabaseHost $PlatformDatabaseHost `
+    -SQLBotContainer $SQLBotContainer `
+    -SQLBotBaseUrl "http://${SQLBotContainer}:8000/api/v1" `
+    -Output $credentialSyncOutput
+if ($LASTEXITCODE -ne 0) { throw 'SQLBot governed credential synchronization failed' }
+$credentialSyncReport = Get-Content -LiteralPath $credentialSyncOutputPath -Raw -Encoding utf8 |
+    ConvertFrom-Json
+if ($credentialSyncReport.status -ne 'PASS') {
+    throw "SQLBot governed credential synchronization did not pass: $($credentialSyncReport.status)"
+}
 
 function Wait-Http {
     param([string]$Url, [string[]]$ExtraArguments = @())
@@ -120,6 +143,7 @@ try {
     $report | Add-Member -NotePropertyName api_ready -NotePropertyValue $apiReady
     $report | Add-Member -NotePropertyName dependency_startup -NotePropertyValue `
         (($dependencies | Out-String).Trim() | ConvertFrom-Json)
+    $report | Add-Member -NotePropertyName credential_sync -NotePropertyValue $credentialSyncReport
     $report | ConvertTo-Json -Depth 20 | Set-Content -LiteralPath $outputPath -Encoding utf8
     Write-Output "SQLBOT41D_STARTUP_EVIDENCE=$outputPath"
 }

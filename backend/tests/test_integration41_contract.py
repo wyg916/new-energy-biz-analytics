@@ -47,8 +47,10 @@ def test_single_launcher_converges_full_integration_runtime():
 
     assert "Full Integration 4.1" in launcher
     assert "integration_41_full_0001" in launcher
-    assert "renewable-integration41-full-sqlbot-runtime-v1-10-0" in launcher
-    assert "-SQLBotHostPort 18083" in launcher
+    assert '"renewable-sqlbot-41c-runtime-v1-10-0"' in launcher
+    assert "-SQLBotHostPort 18082" in launcher
+    assert '"renewable-sqlbot41c"' in launcher
+    assert '"renewable-integration41-full-api-1"' in launcher
     assert '$project = "renewable-integration41-full"' in startup
     assert "$configProperty.Value.PSObject.Properties['Labels']" in startup
     assert '$expectedMigration = "integration_41_full_0001"' in startup
@@ -80,6 +82,12 @@ def test_single_launcher_converges_full_integration_runtime():
     assert "[string]$SQLBotRuntimeContainer" in canary
     assert '"VAULT_ADDRESS=http://${VaultContainer}:8200"' in canary
     assert "$PlatformApiImage" in canary
+    one_click = (ROOT / "scripts/Run-SQLBot41DOneClick.ps1").read_text(
+        encoding="utf-8-sig"
+    )
+    assert "Sync-SQLBot41CCredentialReference.ps1" in one_click
+    assert '"http://${SQLBotContainer}:8000/api/v1"' in one_click
+    assert "credential_sync" in one_click
     assert "python -m pytest backend/tests -q" in backend_regression
     assert "MEMORY41_TEST_REDIS_URL" in backend_regression
     assert "isolated tmpfs PostgreSQL 16.14" in backend_regression
