@@ -44,6 +44,7 @@ def test_single_launcher_converges_full_integration_runtime():
     assert "renewable-integration41-full-sqlbot-runtime-v1-10-0" in launcher
     assert "-SQLBotHostPort 18083" in launcher
     assert '$project = "renewable-integration41-full"' in startup
+    assert "$configProperty.Value.PSObject.Properties['Labels']" in startup
     assert '$expectedMigration = "integration_41_full_0001"' in startup
     assert '"renewable-integration41-core"' in startup
     assert 'query_engine_mode = "SHADOW"' in startup

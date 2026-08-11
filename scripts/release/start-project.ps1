@@ -129,8 +129,11 @@ function Test-ImageRevision {
     param([string]$Image)
     if (-not (Test-ImageExists -Image $Image)) { return $false }
     $inspect = (& docker image inspect $Image | Out-String) | ConvertFrom-Json
-    $labels = $inspect[0].Config.Labels
-    if ($null -eq $labels) { return $false }
+    $configProperty = $inspect[0].PSObject.Properties['Config']
+    if ($null -eq $configProperty) { return $false }
+    $labelsProperty = $configProperty.Value.PSObject.Properties['Labels']
+    if ($null -eq $labelsProperty -or $null -eq $labelsProperty.Value) { return $false }
+    $labels = $labelsProperty.Value
     $revisionProperty = $labels.PSObject.Properties['org.opencontainers.image.revision']
     return $null -ne $revisionProperty -and $revisionProperty.Value -eq $sourceHead
 }
@@ -283,7 +286,12 @@ try {
             $existing = & docker ps -a -q --filter "name=^/$($target.name)$"
             if (-not $existing) { continue }
             $details = (& docker inspect $target.name | Out-String) | ConvertFrom-Json
-            $labels = $details[0].Config.Labels
+            $configProperty = $details[0].PSObject.Properties['Config']
+            $labelsProperty = if ($null -ne $configProperty) {
+                $configProperty.Value.PSObject.Properties['Labels']
+            }
+            else { $null }
+            $labels = if ($null -ne $labelsProperty) { $labelsProperty.Value } else { $null }
             $composeProjectLabel = $null
             if ($null -ne $labels) {
                 $composeProjectProperty =
