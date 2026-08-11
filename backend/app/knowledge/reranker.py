@@ -12,6 +12,14 @@ from app.models.knowledge import (
 )
 
 RRF_K = 60
+# The deterministic feature-hash vector is lexical and collision-prone. It may
+# fuse and rerank an FTS-supported candidate, but cannot establish evidence by
+# itself. This keeps hash collisions from crossing the no-evidence boundary.
+MIN_VECTOR_SIMILARITY = 0.30
+_QUERY_FORM_TERMS = frozenset({
+    "什么", "怎么", "如何", "多少", "是多", "是否", "能否", "为何",
+    "为什", "怎样", "哪一", "哪些", "请问", "告诉", "解释", "说明",
+})
 
 
 @dataclass(frozen=True)
@@ -26,7 +34,10 @@ class RankedChunk:
 
 
 def keyword_terms(value: str) -> set[str]:
-    return set(tokenize(value))
+    # Question-form bigrams are not business evidence. Without this boundary,
+    # an unrelated question such as "火星基地量子税率是多少" can match a chunk
+    # solely because both texts contain "是多少".
+    return set(tokenize(value)) - _QUERY_FORM_TERMS
 
 
 def _bm25(query_tokens: list[str], rows: list[tuple]) -> dict[str, float]:
@@ -67,15 +78,24 @@ def _vector_scores(query_tokens: list[str], rows: list[tuple]) -> dict[str, floa
 
 
 def rank_candidates(query: str, candidates: list[tuple], *, limit: int) -> list[RankedChunk]:
-    query_tokens = tokenize(query)
+    query_tokens = [term for term in tokenize(query) if term not in _QUERY_FORM_TERMS]
     keyword = _bm25(query_tokens, candidates)
     vector = _vector_scores(query_tokens, candidates)
     stable_key = {
         row[0].chunk_id: f"{row[2].source_path}:{row[0].ordinal:08d}"
         for row in candidates
     }
-    keyword_order = sorted(keyword, key=lambda key: (-keyword[key], stable_key[key]))
-    vector_order = sorted(vector, key=lambda key: (-vector[key], stable_key[key]))
+    keyword_order = sorted(
+        (key for key, score in keyword.items() if score > 0),
+        key=lambda key: (-keyword[key], stable_key[key]),
+    )
+    vector_order = sorted(
+        (
+            key for key, score in vector.items()
+            if score >= MIN_VECTOR_SIMILARITY and keyword.get(key, 0.0) > 0
+        ),
+        key=lambda key: (-vector[key], stable_key[key]),
+    )
     keyword_rank = {chunk_id: rank for rank, chunk_id in enumerate(keyword_order, 1)}
     vector_rank = {chunk_id: rank for rank, chunk_id in enumerate(vector_order, 1)}
     by_id = {row[0].chunk_id: row for row in candidates}
@@ -88,8 +108,6 @@ def rank_candidates(query: str, candidates: list[tuple], *, limit: int) -> list[
             continue
         keyword_score = keyword.get(chunk_id, 0.0)
         vector_score = vector.get(chunk_id, 0.0)
-        if keyword_score <= 0 and vector_score < 0.18:
-            continue
         rrf = (
             (1 / (RRF_K + keyword_rank[chunk_id]) if chunk_id in keyword_rank else 0)
             + (1 / (RRF_K + vector_rank[chunk_id]) if chunk_id in vector_rank else 0)

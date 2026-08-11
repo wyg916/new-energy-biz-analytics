@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "knowledge_baseline_v1_regression",
+  "status": "PASS",
+  "generated_at": "2026-08-10T02:00:00+08:00",
+  "environment": {
+    "python": "3.11",
+    "dependency_source": "backend/requirements.lock",
+    "database": "isolated_sqlite_static_pool",
+    "runtime_directory_ignored": true
+  },
+  "full_backend_suite": {
+    "command": "python -m pytest backend/tests -q",
+    "exit_code": 0,
+    "collected": 397,
+    "passed": 396,
+    "skipped": 1,
+    "skip_reason": "MEMORY41_TEST_REDIS_URL is required for isolated Redis integration",
+    "failures": 0,
+    "tests_deleted_or_weakened": false
+  },
+  "rag_focused_suite": {
+    "command": "python -m pytest backend/tests/test_rag_hybrid_unit.py backend/tests/test_rag_hybrid_120.py -q -s",
+    "exit_code": 0,
+    "case_count": 120,
+    "recall_at_10": 1.0,
+    "mrr": 0.8664,
+    "citation_accuracy": 1.0,
+    "citation_contract_checks": 299,
+    "unauthorized_retrievals": 0,
+    "cross_scenario_retrievals": 0,
+    "prompt_injection_effects": 0,
+    "no_evidence_refusal": "NO_PUBLISHED_EVIDENCE",
+    "retrieval_mode": "hybrid_bm25_vector_rrf_rerank",
+    "vector_status": "EQUIVALENT_VECTOR_READY"
+  },
+  "package_integrity": {
+    "command": "python scripts/install_knowledge_baseline_v1.py --verify-only",
+    "exit_code": 0,
+    "verified_files": 20
+  }
+}

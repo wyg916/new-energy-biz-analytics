@@ -1,0 +1,29 @@
+{
+  "package_version": "1.0.0",
+  "generated_date": "2026-08-09",
+  "base_integration_sha": "0a2c776cd6ba47598a17286a793f3c570823cf77",
+  "project_repository": "wyg916/new-energy-biz-analytics",
+  "source_files": [
+    "docs/metric_dictionary_v0.1.md",
+    "docs/data/OPEN_SOURCE_DATA_MAPPING.md",
+    "docs/data/open_source_data_mapping.json",
+    "docs/data/schema_catalog.json",
+    "docs/data_contract_v0.1.md",
+    "docs/query_plan_contract_v0.1.md",
+    "docs/rbac_and_sql_security_contract_v0.1.md",
+    "docs/platformization/p1b/06_SALES_OPS_SCENARIO.md",
+    "backend/app/services/diagnostics.py",
+    "backend/app/knowledge/api.py",
+    "backend/app/knowledge/ingestion.py",
+    "backend/app/knowledge/publication.py",
+    "backend/app/knowledge/models.py",
+    "backend/app/knowledge/approved_sources.py",
+    "backend/app/core/config.py"
+  ],
+  "notes": [
+    "知识文本以 Integration-4.1-Core 与 DATA-4.1 当前事实为优先。",
+    "历史文档中与当前公开源数据基线冲突的旧数据性质/时间范围不直接沿用。",
+    "销售成本 70% 与 charging_ops 金额/能源成本中的派生规则均作为版本化经营规则处理。",
+    "当前 charging_ops 活动源无完整设备状态事实，因此相关指标不得补值。"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "knowledge_baseline_v1_index_inventory",
+  "status": "PASS",
+  "generated_at": "2026-08-10T01:55:00+08:00",
+  "verification_basis": "read_only_live_database_query",
+  "entry_count": 17,
+  "published_chunk_count": 276,
+  "indexed_chunk_count": 276,
+  "index_backfill_required": false,
+  "entries": [
+    {"source":"docs/knowledge_baseline/v1/KB00_知识基线说明.md","scenario_id":"charging_ops","knowledge_domain":"system_help","document_id":"kdoc-d39897eafb8a4d749a97708e5b10ff4e","document_version_id":"kdv-db5c2bb2ffaf420eb757d11b7aca61a0","version":1,"status":"PUBLISHED","chunk_count":5,"indexed_chunk_count":5},
+    {"source":"docs/knowledge_baseline/v1/KB00_知识基线说明.md","scenario_id":"sales_ops","knowledge_domain":"system_help","document_id":"kdoc-0dfe9fc16bae461098784972586e5aee","document_version_id":"kdv-a35f4c8506124703b033a9a283faf6d3","version":1,"status":"PUBLISHED","chunk_count":5,"indexed_chunk_count":5},
+    {"source":"docs/knowledge_baseline/v1/KB01_15项核心指标定义.md","scenario_id":"charging_ops","knowledge_domain":"metric_definition","document_id":"kdoc-8dca301394214c5ea27a8760142def43","document_version_id":"kdv-48ce96bb005e4423b77fa24ef6c467b5","version":1,"status":"PUBLISHED","chunk_count":14,"indexed_chunk_count":14},
+    {"source":"docs/knowledge_baseline/v1/KB02_数据字典.md","scenario_id":"charging_ops","knowledge_domain":"data_dictionary","document_id":"kdoc-983b37bc5dad4a3ab6315e371cb420ee","document_version_id":"kdv-48c9659b5bfd4169b5acc2c608ad5d96","version":1,"status":"PUBLISHED","chunk_count":22,"indexed_chunk_count":22},
+    {"source":"docs/knowledge_baseline/v1/KB02_数据字典.md","scenario_id":"sales_ops","knowledge_domain":"data_dictionary","document_id":"kdoc-2a142128985b477ea33758925efac244","document_version_id":"kdv-d88f78007f554b9583ec98de7dfb46e4","version":1,"status":"PUBLISHED","chunk_count":22,"indexed_chunk_count":22},
+    {"source":"docs/knowledge_baseline/v1/KB03_charging_ops业务规则.md","scenario_id":"charging_ops","knowledge_domain":"business_rule","document_id":"kdoc-3513a27c03584fbfb07fab6032b57617","document_version_id":"kdv-623ab7275a9944a2bab73828a329a454","version":1,"status":"PUBLISHED","chunk_count":14,"indexed_chunk_count":14},
+    {"source":"docs/knowledge_baseline/v1/KB04_sales_ops业务规则.md","scenario_id":"sales_ops","knowledge_domain":"business_rule","document_id":"kdoc-91b83d4005864182975ee03af3260b17","document_version_id":"kdv-f8ae3546d97944f88cead4f813ab5b08","version":1,"status":"PUBLISHED","chunk_count":14,"indexed_chunk_count":14},
+    {"source":"docs/knowledge_baseline/v1/KB05_收入与成本计算规则.md","scenario_id":"charging_ops","knowledge_domain":"business_rule","document_id":"kdoc-19891a0d083340f4bbb9c551d9c53d0a","document_version_id":"kdv-163f26d576b7415e9433e074b22e444c","version":1,"status":"PUBLISHED","chunk_count":19,"indexed_chunk_count":19},
+    {"source":"docs/knowledge_baseline/v1/KB05_收入与成本计算规则.md","scenario_id":"sales_ops","knowledge_domain":"business_rule","document_id":"kdoc-22b41ae231974446bf6f1dbb076a909b","document_version_id":"kdv-5279c4c02ae14f9ca1675537e411b47f","version":1,"status":"PUBLISHED","chunk_count":19,"indexed_chunk_count":19},
+    {"source":"docs/knowledge_baseline/v1/KB06_数据接入说明.md","scenario_id":"charging_ops","knowledge_domain":"scenario_guide","document_id":"kdoc-58c4ba28aa6f4a168f92b744bf015b65","document_version_id":"kdv-725f5185bb64414eaed19dc0bbb59afd","version":1,"status":"PUBLISHED","chunk_count":17,"indexed_chunk_count":17},
+    {"source":"docs/knowledge_baseline/v1/KB06_数据接入说明.md","scenario_id":"sales_ops","knowledge_domain":"scenario_guide","document_id":"kdoc-a8e37d6e0c774b57a244873de8b190a1","document_version_id":"kdv-d0fce5ea08434bbd818af36c50627a3c","version":1,"status":"PUBLISHED","chunk_count":17,"indexed_chunk_count":17},
+    {"source":"docs/knowledge_baseline/v1/KB07_业务分析方法.md","scenario_id":"charging_ops","knowledge_domain":"analysis_method","document_id":"kdoc-5dbb808747394c75943e56e039d2f6ba","document_version_id":"kdv-5f105a93e4524dd6ba6ebccfc0523288","version":1,"status":"PUBLISHED","chunk_count":21,"indexed_chunk_count":21},
+    {"source":"docs/knowledge_baseline/v1/KB07_业务分析方法.md","scenario_id":"sales_ops","knowledge_domain":"analysis_method","document_id":"kdoc-ab5bd857092e4baa819eb04181374db6","document_version_id":"kdv-a52b57449065461fb165f159ac61e347","version":1,"status":"PUBLISHED","chunk_count":21,"indexed_chunk_count":21},
+    {"source":"docs/knowledge_baseline/v1/KB08_SQL安全规则.md","scenario_id":"charging_ops","knowledge_domain":"security_rule","document_id":"kdoc-c8d38544baf3492dab08cf1fe1af719a","document_version_id":"kdv-dd60e4ff13a547fda0375c86fb2f4c1a","version":1,"status":"PUBLISHED","chunk_count":13,"indexed_chunk_count":13},
+    {"source":"docs/knowledge_baseline/v1/KB08_SQL安全规则.md","scenario_id":"sales_ops","knowledge_domain":"security_rule","document_id":"kdoc-3f7b917790584cf48d6a8aec63eaebc1","document_version_id":"kdv-0453b30a85c949f6921397af68fd3ff1","version":1,"status":"PUBLISHED","chunk_count":13,"indexed_chunk_count":13},
+    {"source":"docs/knowledge_baseline/v1/KB09_项目功能使用说明.md","scenario_id":"charging_ops","knowledge_domain":"system_help","document_id":"kdoc-8ee5973aa3924e9eaca03175f1ab9b88","document_version_id":"kdv-f2739453139e4e4f9b772a6ebfb7ddf1","version":1,"status":"PUBLISHED","chunk_count":20,"indexed_chunk_count":20},
+    {"source":"docs/knowledge_baseline/v1/KB09_项目功能使用说明.md","scenario_id":"sales_ops","knowledge_domain":"system_help","document_id":"kdoc-eeb463b42a8d445986128c77d31fd692","document_version_id":"kdv-0b4d0f7b2900407098cbff4ea225438c","version":1,"status":"PUBLISHED","chunk_count":20,"indexed_chunk_count":20}
+  ],
+  "secret_recorded": false
+}

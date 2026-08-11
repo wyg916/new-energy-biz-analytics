@@ -1,0 +1,259 @@
+{
+  "package_version": "1.0.0",
+  "base_sha": "0a2c776cd6ba47598a17286a793f3c570823cf77",
+  "entries": [
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB00_知识基线说明.md",
+      "title": "项目二知识基线说明",
+      "scenario_id": "charging_ops",
+      "knowledge_domain": "system_help",
+      "roles": [
+        "executive",
+        "regional_manager",
+        "analyst",
+        "analyst_admin",
+        "system_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB00_知识基线说明.md",
+      "title": "项目二知识基线说明",
+      "scenario_id": "sales_ops",
+      "knowledge_domain": "system_help",
+      "roles": [
+        "executive",
+        "regional_manager",
+        "analyst",
+        "analyst_admin",
+        "system_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB01_15项核心指标定义.md",
+      "title": "15项核心经营指标定义",
+      "scenario_id": "charging_ops",
+      "knowledge_domain": "metric_definition",
+      "roles": [
+        "executive",
+        "regional_manager",
+        "analyst",
+        "analyst_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB02_数据字典.md",
+      "title": "DATA-4.1数据字典",
+      "scenario_id": "charging_ops",
+      "knowledge_domain": "data_dictionary",
+      "roles": [
+        "analyst",
+        "analyst_admin",
+        "system_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB02_数据字典.md",
+      "title": "DATA-4.1数据字典",
+      "scenario_id": "sales_ops",
+      "knowledge_domain": "data_dictionary",
+      "roles": [
+        "analyst",
+        "analyst_admin",
+        "system_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB03_charging_ops业务规则.md",
+      "title": "charging_ops业务规则",
+      "scenario_id": "charging_ops",
+      "knowledge_domain": "business_rule",
+      "roles": [
+        "executive",
+        "regional_manager",
+        "analyst",
+        "analyst_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB04_sales_ops业务规则.md",
+      "title": "sales_ops业务规则",
+      "scenario_id": "sales_ops",
+      "knowledge_domain": "business_rule",
+      "roles": [
+        "executive",
+        "regional_manager",
+        "analyst",
+        "analyst_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB05_收入与成本计算规则.md",
+      "title": "收入与成本计算规则",
+      "scenario_id": "charging_ops",
+      "knowledge_domain": "business_rule",
+      "roles": [
+        "executive",
+        "regional_manager",
+        "analyst",
+        "analyst_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB05_收入与成本计算规则.md",
+      "title": "收入与成本计算规则",
+      "scenario_id": "sales_ops",
+      "knowledge_domain": "business_rule",
+      "roles": [
+        "executive",
+        "regional_manager",
+        "analyst",
+        "analyst_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB06_数据接入说明.md",
+      "title": "公开数据接入质量与发布说明",
+      "scenario_id": "charging_ops",
+      "knowledge_domain": "scenario_guide",
+      "roles": [
+        "analyst",
+        "analyst_admin",
+        "system_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB06_数据接入说明.md",
+      "title": "公开数据接入质量与发布说明",
+      "scenario_id": "sales_ops",
+      "knowledge_domain": "scenario_guide",
+      "roles": [
+        "analyst",
+        "analyst_admin",
+        "system_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB07_业务分析方法.md",
+      "title": "业务分析方法与诊断边界",
+      "scenario_id": "charging_ops",
+      "knowledge_domain": "analysis_method",
+      "roles": [
+        "executive",
+        "regional_manager",
+        "analyst",
+        "analyst_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB07_业务分析方法.md",
+      "title": "业务分析方法与诊断边界",
+      "scenario_id": "sales_ops",
+      "knowledge_domain": "analysis_method",
+      "roles": [
+        "executive",
+        "regional_manager",
+        "analyst",
+        "analyst_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB08_SQL安全规则.md",
+      "title": "SQL权限与开放式NL2SQL安全规则",
+      "scenario_id": "charging_ops",
+      "knowledge_domain": "security_rule",
+      "roles": [
+        "analyst",
+        "analyst_admin",
+        "system_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB08_SQL安全规则.md",
+      "title": "SQL权限与开放式NL2SQL安全规则",
+      "scenario_id": "sales_ops",
+      "knowledge_domain": "security_rule",
+      "roles": [
+        "analyst",
+        "analyst_admin",
+        "system_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB09_项目功能使用说明.md",
+      "title": "项目功能与提问使用说明",
+      "scenario_id": "charging_ops",
+      "knowledge_domain": "system_help",
+      "roles": [
+        "executive",
+        "regional_manager",
+        "analyst",
+        "analyst_admin",
+        "system_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    },
+    {
+      "source_path": "docs/knowledge_baseline/v1/KB09_项目功能使用说明.md",
+      "title": "项目功能与提问使用说明",
+      "scenario_id": "sales_ops",
+      "knowledge_domain": "system_help",
+      "roles": [
+        "executive",
+        "regional_manager",
+        "analyst",
+        "analyst_admin",
+        "system_admin"
+      ],
+      "data_scopes": [
+        "workspace:all"
+      ]
+    }
+  ]
+}
