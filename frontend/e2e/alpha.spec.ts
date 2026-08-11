@@ -21,18 +21,17 @@ test('product alpha core journey uses live backend data', async ({ page }) => {
 
   await page.getByRole('button', { name: '经营预警' }).click()
   await expect(page.getByRole('heading', { name: '经营预警', exact: true })).toBeVisible()
-  await expect(page.locator('.global-data-status')).toContainText(/run_id：DASH-/, { timeout: 90_000 })
-  await expect(page.getByText('关联因素说明，不构成因果结论')).toBeVisible()
+  await expect(page.getByTestId('p6-alert-center')).toBeVisible({ timeout: 90_000 })
   await page.screenshot({ fullPage: true })
 
   const reportResponse = page.waitForResponse(
-    response => response.url().includes('/api/v1/reports/draft') && response.ok(),
+    response => response.url().endsWith('/api/v1/reports') && response.request().method() === 'GET' && response.ok(),
   )
   await page.getByRole('button', { name: '经营报告' }).click()
   await reportResponse
   await expect(page.getByRole('heading', { name: '经营报告', exact: true })).toBeVisible()
   await expect(page.locator('.global-data-status')).toContainText('run_id：', { timeout: 90_000 })
-  await expect(page.getByText(/报告只生成可审核草稿/)).toBeVisible()
+  await expect(page.getByTestId('p6-report-center')).toBeVisible()
   await page.screenshot({ fullPage: true })
   expect(consoleErrors).toEqual([])
 })

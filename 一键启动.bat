@@ -1,15 +1,15 @@
 @echo off
 setlocal EnableExtensions
-title Renewable Operations - Integration 4.1 Core Startup
+title Renewable Operations - P6 4.1 Business Loop Startup
 
 cd /d "%~dp0"
 
 echo.
 echo ============================================================
-echo   Renewable Operations Analytics - Integration 4.1 Core
-echo   Version: 4.1.0-integration.1 ^| Migration: integration_41_merge_0001
-echo   Open-source data, governed RAG and Memory lifecycle.
-echo   SQLBot remains Shadow/disabled. Not production approved.
+echo   Renewable Operations Analytics - P6 Business Closed Loops
+echo   Version: 4.1.0-p6.1 ^| Migration: p6_41_0001
+echo   Alerts, reports and metric governance; DATA/RAG/Memory retained.
+echo   SQLBot remains Shadow/disabled. Notifications use a controlled receiver.
 echo ============================================================
 echo.
 
@@ -23,8 +23,8 @@ exit /b 0
 
 :failed
 echo.
-echo [FAILED] Integration 4.1 Core startup did not pass all checks.
-echo Review runtime\integration41-startup-report.json for non-secret diagnostics.
+echo [FAILED] P6-4.1 startup did not pass all checks.
+echo Review runtime\p6-41-startup-report.json for non-secret diagnostics.
 echo.
 echo Press any key to close this window.
 pause >nul

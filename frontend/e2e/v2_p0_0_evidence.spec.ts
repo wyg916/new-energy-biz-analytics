@@ -37,7 +37,7 @@ test('capture current Alpha product pages without changing business data', async
   await page.getByRole('button', { name: '经营预警' }).click()
   await expect(page.getByRole('heading', { name: '经营预警', exact: true })).toBeVisible()
   await expect(page.locator('.global-data-status')).toContainText(/run_id：DASH-/, { timeout: 90_000 })
-  await expect(page.getByText('关联因素说明，不构成因果结论')).toBeVisible()
+  await expect(page.getByTestId('p6-alert-center')).toBeVisible()
   await capture('经营预警', '07-diagnostics.png')
 
   await page.getByRole('button', { name: 'AI经营分析' }).click()
@@ -48,12 +48,12 @@ test('capture current Alpha product pages without changing business data', async
   await capture('AI经营分析 / ChatBI', '08-chatbi.png')
 
   const reportResponse = page.waitForResponse(
-    item => item.url().includes('/api/v1/reports/draft') && item.ok(),
+    item => item.url().endsWith('/api/v1/reports') && item.request().method() === 'GET' && item.ok(),
   )
   await page.getByRole('button', { name: '经营报告' }).click()
   await reportResponse
   await expect(page.locator('.global-data-status')).toContainText('run_id：', { timeout: 90_000 })
-  await expect(page.getByText(/报告只生成可审核草稿/)).toBeVisible()
+  await expect(page.getByTestId('p6-report-center')).toBeVisible()
   await capture('经营报告草稿', '09-report.png')
 
   const manifest = {

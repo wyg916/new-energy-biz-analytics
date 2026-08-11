@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { formatMetric, metricNames } from './format'
-import { MetricsPage } from './metrics'
+import { BusinessAlertPage, MetricGovernancePage, ReportGovernancePage } from './business-loop'
 import { RevenuePage } from './revenue'
 import { KnowledgePage } from './knowledge'
 import { MemoryPage, SkillPage } from './memory-skills'
@@ -2317,13 +2317,13 @@ function ProductShell({ token, logout }: { token: string; logout: () => void }) 
   else if (active === 'stations') content = <>{error && <div className="notice error">{error}</div>}<StationPage token={token} summary={summary} stations={stations} trend={trend} start={start} end={end} setStart={setStart} setEnd={setEnd} refresh={() => setRefreshKey(value => value + 1)} navigate={setActive} /></>
   else if (active === 'devices') content = <>{error && <div className="notice error">{error}</div>}<DevicePage token={token} summary={summary} start={start} end={end} setStart={setStart} setEnd={setEnd} refresh={() => setRefreshKey(value => value + 1)} /></>
   else if (active === 'chat') content = <ChatPage token={token} start={start} end={end} />
-  else if (active === 'alerts') content = <DiagnosticsPage token={token} start={start} end={end} />
-  else if (active === 'reports') content = <ReportPage token={token} start={start} end={end} summary={summary} stations={stations} trend={trend} />
+  else if (active === 'alerts') content = <BusinessAlertPage token={token} start={start} end={end} />
+  else if (active === 'reports') content = <ReportGovernancePage token={token} start={start} end={end} />
   else if (active === 'knowledge') content = <KnowledgePage token={token} />
   else if (active === 'memory') content = <MemoryPage token={token} />
   else if (active === 'skills') content = <SkillPage token={token} />
   else if (active === 'mapping') content = <MappingPage token={token} start={start} end={end} />
-  else if (active === 'metrics') content = <MetricsPage token={token} summary={summary} start={start} end={end} />
+  else if (active === 'metrics') content = <MetricGovernancePage token={token} />
   else if (active === 'governance') content = <GovernancePage token={token} />
   else content = <>{error && <div className="notice error">{error}</div>}<DetailPage active={active} summary={summary} stations={stations} trend={trend} /></>
   const shellMode = active === 'revenue' ? ' revenue-mode' : active === 'margin' ? ' margin-mode' : active === 'stations' ? ' station-mode' : active === 'devices' ? ' device-mode' : active === 'alerts' ? ' alert-mode' : active === 'reports' ? ' report-mode' : active === 'knowledge' ? ' knowledge-mode' : active === 'memory' || active === 'skills' || active === 'governance' ? ' governance-mode' : active === 'mapping' ? ' mapping-mode' : active === 'metrics' ? ' metrics-mode' : ''

@@ -58,6 +58,11 @@ from app.governance.models import (
 )
 from app.preproduction.models import PreproductionAcceptanceRecord, PreproductionDataSourceGovernance, ExternalAlertDelivery
 from app.production_acceptance.models import ProductionGate, ProductionGateHistory
+from app.business_loop.models import (
+    AlertEvent, AlertTimelineEvent, AlertNotificationAttempt,
+    BusinessAuditEvent, Report, ReportVersion, ReportEvidenceSnapshot,
+    ReportReview, ReportPublication, MetricGovernanceVersion,
+)
 from app.models.open_data import (
     OpenDataIngestionRun, OpenDataQualityCheck, OpenDataSnapshot, OpenDataSource,
     RawAcnSession, RawUciRetailLine, StagingAcnSession, StagingUciRetailLine,
@@ -93,6 +98,9 @@ __all__ = [
     "RetentionPolicy", "LegalHold", "GovernanceAuditEvent", "SecurityAlert",
     "PlatformRelease", "PreproductionAcceptanceRecord", "PreproductionDataSourceGovernance", "ExternalAlertDelivery",
     "ProductionGate", "ProductionGateHistory",
+    "AlertEvent", "AlertTimelineEvent", "AlertNotificationAttempt",
+    "BusinessAuditEvent", "Report", "ReportVersion", "ReportEvidenceSnapshot",
+    "ReportReview", "ReportPublication", "MetricGovernanceVersion",
     "OpenDataIngestionRun", "OpenDataQualityCheck", "OpenDataSnapshot",
     "OpenDataSource", "RawAcnSession", "RawUciRetailLine",
     "StagingAcnSession", "StagingUciRetailLine",

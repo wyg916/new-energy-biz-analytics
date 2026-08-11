@@ -56,6 +56,7 @@ app.include_router(api_router)
 async def observe_request(request: Request, call_next):
     supplied_request_id = request.headers.get("x-request-id", "")
     request_id = supplied_request_id if REQUEST_ID_PATTERN.fullmatch(supplied_request_id) else f"REQ-{uuid4()}"
+    request.state.request_id = request_id
     started = perf_counter()
     status_code = 500
     try:
