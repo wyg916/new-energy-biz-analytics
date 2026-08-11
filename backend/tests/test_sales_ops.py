@@ -128,7 +128,7 @@ def test_sales_seed_metrics_versions_engine_and_scenario_isolation() -> None:
         assert cached_query_context.prompt_context == query_context.prompt_context
         assert cached_query_context.prompt_context is not query_context.prompt_context
         assert query_context.scenario_version == "1.0.0"
-        assert query_context.semantic_version == "1.0.0"
+        assert query_context.semantic_version == "1.0.1"
         assert "sales_order" in query_context.allowed_relations
         assert "customer_name" not in query_context.allowed_relations["sales_customer"]
         result = SalesOpsDeterministicEngine(db).execute(

@@ -61,10 +61,6 @@ try {
     } while ([DateTimeOffset]::UtcNow -lt $deadline)
     if ($LASTEXITCODE -ne 0) { throw 'Isolated PostgreSQL readiness timed out' }
 
-    $testCommand = @'
-export MEMORY41_TEST_REDIS_URL="redis://:$(cat /run/p4-runtime/redis_password)@REDIS_HOST_PLACEHOLDER:6379/15"
-exec python scripts/p4_entrypoint.py python -m pytest backend/tests -q --tb=short --junitxml=/tmp/backend-full.xml
-'@ -replace 'REDIS_HOST_PLACEHOLDER', $RedisHost
     docker create --name $testContainer `
         --network $PlatformNetwork `
         -v "${RuntimeVolume}:/run/p4-runtime:ro" `
@@ -72,14 +68,23 @@ exec python scripts/p4_entrypoint.py python -m pytest backend/tests -q --tb=shor
         -e 'AUTO_BOOTSTRAP_DEMO_USERS=true' `
         -e 'SIMULATED_DATA_ONLY=true' `
         -e 'MEMORY_LIFECYCLE_REDIS_ENABLED=false' `
+        -e "INTEGRATION41_REDIS_HOST=$RedisHost" `
         -e "ACCEPTANCE_POSTGRES_HOST=$dbContainer" `
         -e "ACCEPTANCE_POSTGRES_DB=$database" `
         -e 'ACCEPTANCE_TEST_DATABASE_URL_FROM_RUNTIME=true' `
         -w '/app' `
-        $ApiImage sh -ec $testCommand | Out-Null
+        $ApiImage sh scripts/run_integration41full_backend_regression.sh | Out-Null
     if ($LASTEXITCODE -ne 0) { throw 'Backend regression container creation failed' }
     $testCreated = $true
+    $launcherName = (-join @(
+        [char]0x4e00,
+        [char]0x952e,
+        [char]0x542f,
+        [char]0x52a8
+    )) + '.bat'
+    $launcherPath = Join-Path $root $launcherName
     docker cp backend "${testContainer}:/app/backend" | Out-Null
+    docker cp $launcherPath "${testContainer}:/app/$launcherName" | Out-Null
     docker cp backend/app/. "${testContainer}:/app/app" | Out-Null
     docker cp deploy "${testContainer}:/app/deploy" | Out-Null
     docker cp scripts/. "${testContainer}:/app/scripts" | Out-Null

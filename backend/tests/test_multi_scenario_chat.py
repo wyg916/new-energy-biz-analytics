@@ -66,7 +66,7 @@ def test_chatbi_uses_registry_for_two_isolated_scenarios(
     assert sales_body["query_result"]["scenario"] == "sales_ops"
     assert sales_body["query_result"]["engine"] == "deterministic"
     assert sales_body["query_result"]["scenario_version"] == "1.0.0"
-    assert sales_body["query_result"]["semantic_version"] == "1.0.0"
+    assert sales_body["query_result"]["semantic_version"] == "1.0.1"
     assert sales_body["query_result"]["dataset_version"] == "1"
     assert sales_body["query_result"]["warnings"] == ["SQLBOT_DISABLED"]
     assert set(sales_body["query_result"]["rows"][0]) == {
