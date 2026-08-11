@@ -114,8 +114,15 @@ function Wait-Http {
 
 function Test-ImageExists {
     param([string]$Image)
-    & docker image inspect $Image --format "{{.Id}}" 1>$null 2>$null
-    return $LASTEXITCODE -eq 0
+    $previousPreference = $ErrorActionPreference
+    try {
+        $ErrorActionPreference = 'Continue'
+        $imageId = (& docker image inspect $Image --format "{{.Id}}" 2>$null | Out-String).Trim()
+        return $LASTEXITCODE -eq 0 -and -not [string]::IsNullOrWhiteSpace($imageId)
+    }
+    finally {
+        $ErrorActionPreference = $previousPreference
+    }
 }
 
 function Test-ImageRevision {
