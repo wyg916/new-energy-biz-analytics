@@ -4,6 +4,7 @@ x-full-environment: &full-environment
   RELEASE_VERSION: 4.1.0-integration-full.1
   EXPECTED_DATABASE_REVISION: integration_41_full_0001
   ACCEPTANCE_LABEL: INTEGRATION-4.1-FULL
+  ACCEPTANCE_POSTGRES_DB: renewable_p5b
   RUNTIME_DATA_CLASSIFICATION: OPEN_SOURCE_DERIVED
 
 services:

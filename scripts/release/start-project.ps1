@@ -393,7 +393,7 @@ try {
     Invoke-Step "SQLBot readonly roles and Source Bindings" {
         $readonly = Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @(
             "run", "--rm", "--no-deps", "runtime-bootstrap", "python",
-            "scripts/p4_entrypoint.py", "python", "deploy/sqlbot/provision_platform_readonly_runtime.py"
+            "scripts/p4_entrypoint.py", "python", "scripts/provision_platform_readonly_runtime.py"
         )) -FailureMessage "SQLBot readonly role provisioning failed"
         $bindings = Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @(
             "exec", "-T", "api", "python", "scripts/p4_entrypoint.py", "python",

@@ -10,6 +10,7 @@ RUN python -m pip install --no-cache-dir --upgrade pip==26.2 \
 COPY backend/ .
 COPY scenarios/ /app/scenarios/
 COPY scripts/ /app/scripts/
+COPY deploy/sqlbot/provision_platform_readonly_runtime.py /app/scripts/provision_platform_readonly_runtime.py
 COPY data/open_source/ /app/data/open_source/
 COPY tests/evaluation/ /app/tests/evaluation/
 COPY docs/v2/ /app/docs/v2/

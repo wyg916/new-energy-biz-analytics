@@ -24,6 +24,7 @@ def test_merge_revision_and_runtime_flags_are_frozen():
     assert 'revision = "integration_41_full_0001"' in migration
     assert 'down_revision = ("p6_41_0001", "sqlbot_41c2")' in migration
     assert "EXPECTED_DATABASE_REVISION: integration_41_full_0001" in override
+    assert "ACCEPTANCE_POSTGRES_DB: renewable_p5b" in override
     assert "QUERY_ENGINE_MODE: SHADOW" in override
     assert "SQLBOT_ENGINE_ENABLED: \"false\"" in override
     assert Settings().expected_database_revision == "integration_41_full_0001"
@@ -53,7 +54,9 @@ def test_single_launcher_converges_full_integration_runtime():
     assert '"scripts/rebuild_rag_indexes.py"' in startup
     assert startup.index("apply_knowledge_baseline_bootstrap.py") < startup.index("scripts/rebuild_rag_indexes.py")
     assert "COPY integration/knowledge_import_plan.json /app/integration/knowledge_import_plan.json" in dockerfile
+    assert "COPY deploy/sqlbot/provision_platform_readonly_runtime.py /app/scripts/provision_platform_readonly_runtime.py" in dockerfile
     assert "provision_platform_readonly_runtime.py" in startup
+    assert '"scripts/provision_platform_readonly_runtime.py"' in startup
     assert "activate_sqlbot41c2_source_bindings.py" in startup
     assert '"python", "scripts/p4_entrypoint.py", "python", "scripts/verify_integration41_runtime.py"' in startup
     assert '"--expected-revision", $expectedMigration' in startup
