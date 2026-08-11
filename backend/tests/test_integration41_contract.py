@@ -32,6 +32,9 @@ def test_merge_revision_and_runtime_flags_are_frozen():
 def test_single_launcher_converges_full_integration_runtime():
     launcher = (ROOT / "一键启动.bat").read_text(encoding="utf-8-sig")
     startup = (ROOT / "scripts/release/start-project.ps1").read_text(encoding="utf-8-sig")
+    stability = (ROOT / "scripts/Run-SQLBot41DStability.ps1").read_text(
+        encoding="utf-8-sig"
+    )
     override = (ROOT / "deploy/integration41full/override.yaml").read_text(encoding="utf-8")
     dockerfile = (ROOT / "backend/Dockerfile").read_text(encoding="utf-8")
 
@@ -56,6 +59,13 @@ def test_single_launcher_converges_full_integration_runtime():
     assert '"--expected-revision", $expectedMigration' in startup
     assert '"scripts/run_p3_migration_acceptance.py"' in startup
     assert '"--rollback-revision", "integration_41_merge_0001"' in startup
+    assert '"--rollback-via-revision", "data_0001"' in startup
+    assert "[string]$Output" in stability
+    assert "[string]$PlatformNetwork" in stability
+    assert "resource_monitor_started_before_window" in stability
+    assert stability.index("Get-SQLBotRuntimeSample -Phase 'pre_window'") < stability.index(
+        "docker start $AcceptanceContainer"
+    )
     assert '$env:PLAYWRIGHT_BROWSERS_PATH = Join-Path $workspace ".cache/ms-playwright"' in startup
     assert 'P6 runtime-only OIDC acceptance credential is unavailable' in startup
     assert '$env:P4_OIDC_PASSWORD = ($runtimePassword | Out-String).Trim()' in startup

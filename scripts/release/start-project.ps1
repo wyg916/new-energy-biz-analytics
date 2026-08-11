@@ -341,10 +341,11 @@ try {
     }
     Invoke-Step "Full Integration isolated PostgreSQL migration cycle" {
         $cycle = Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @(
-            "exec", "-T", "api", "python", "scripts/p4_entrypoint.py", "python",
-            "scripts/run_p3_migration_acceptance.py", "--database", "integration_41_full_migration_verify",
-            "--rollback-revision", "integration_41_merge_0001"
-        )) -FailureMessage "Full Integration isolated PostgreSQL migration cycle failed"
+              "exec", "-T", "api", "python", "scripts/p4_entrypoint.py", "python",
+              "scripts/run_p3_migration_acceptance.py", "--database", "integration_41_full_migration_verify",
+              "--rollback-revision", "integration_41_merge_0001",
+              "--rollback-via-revision", "data_0001"
+          )) -FailureMessage "Full Integration isolated PostgreSQL migration cycle failed"
         $joined = ($cycle -join "`n")
         if ($joined -notmatch '"passed": true' -or $joined -notmatch '"head_revision": "integration_41_full_0001"') {
             throw "Full Integration migration cycle did not prove upgrade, downgrade and re-upgrade"

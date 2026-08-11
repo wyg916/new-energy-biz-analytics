@@ -35,6 +35,14 @@ def main() -> None:
         default="base",
         help="revision to downgrade to before the final upgrade",
     )
+    parser.add_argument(
+        "--rollback-via-revision",
+        default=None,
+        help=(
+            "optional common ancestor used when the target is on one branch of a "
+            "multi-head graph; downgrade to it, then upgrade to --rollback-revision"
+        ),
+    )
     args = parser.parse_args()
     if not SAFE_DATABASE_NAME.fullmatch(args.database):
         parser.error("--database must be a safe lowercase PostgreSQL identifier")
@@ -55,6 +63,8 @@ def main() -> None:
         "head_revision": None,
         "base_to_head": False,
         "rollback_revision": args.rollback_revision,
+        "rollback_via_revision": args.rollback_via_revision,
+        "observed_via_heads": None,
         "head_to_rollback": False,
         "rollback_to_head": False,
         "database_removed": False,
@@ -86,22 +96,46 @@ def main() -> None:
         command.upgrade(config, "head")
         verification_engine = create_engine(verification_url, pool_pre_ping=True)
         with verification_engine.connect() as connection:
-            revision = MigrationContext.configure(connection).get_current_revision()
-        report["base_to_head"] = revision == report["head_revision"]
+            heads = tuple(MigrationContext.configure(connection).get_current_heads())
+        report["observed_head_revisions"] = list(heads)
+        report["base_to_head"] = heads == (report["head_revision"],)
 
         if args.rollback_revision != "base" and scripts.get_revision(args.rollback_revision) is None:
             raise RuntimeError(f"unknown rollback revision: {args.rollback_revision}")
-        command.downgrade(config, args.rollback_revision)
+        if args.rollback_via_revision is not None:
+            if args.rollback_revision == "base":
+                raise RuntimeError("--rollback-via-revision cannot be used with a base target")
+            if scripts.get_revision(args.rollback_via_revision) is None:
+                raise RuntimeError(
+                    f"unknown rollback via revision: {args.rollback_via_revision}"
+                )
+            command.downgrade(config, args.rollback_via_revision)
+            with verification_engine.connect() as connection:
+                via_heads = tuple(
+                    MigrationContext.configure(connection).get_current_heads()
+                )
+            report["observed_via_heads"] = list(via_heads)
+            if via_heads != (args.rollback_via_revision,):
+                raise RuntimeError(
+                    "downgrade did not converge on the requested common ancestor: "
+                    f"expected {(args.rollback_via_revision,)}, observed {via_heads}"
+                )
+            command.upgrade(config, args.rollback_revision)
+        else:
+            command.downgrade(config, args.rollback_revision)
         with verification_engine.connect() as connection:
-            revision = MigrationContext.configure(connection).get_current_revision()
-        expected_rollback = None if args.rollback_revision == "base" else args.rollback_revision
-        report["observed_rollback_revision"] = revision
-        report["head_to_rollback"] = revision == expected_rollback
+            rollback_heads = tuple(
+                MigrationContext.configure(connection).get_current_heads()
+            )
+        expected_rollback = () if args.rollback_revision == "base" else (args.rollback_revision,)
+        report["observed_rollback_revisions"] = list(rollback_heads)
+        report["head_to_rollback"] = rollback_heads == expected_rollback
 
         command.upgrade(config, "head")
         with verification_engine.connect() as connection:
-            revision = MigrationContext.configure(connection).get_current_revision()
-        report["rollback_to_head"] = revision == report["head_revision"]
+            heads = tuple(MigrationContext.configure(connection).get_current_heads())
+        report["observed_reupgrade_revisions"] = list(heads)
+        report["rollback_to_head"] = heads == (report["head_revision"],)
     finally:
         os.environ["DATABASE_URL"] = original_url
         if verification_engine is not None:
