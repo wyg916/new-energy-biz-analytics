@@ -36,7 +36,35 @@ ROLES = {
 
 def main() -> None:
     if TARGET.exists():
-        raise RuntimeError("refusing to overwrite existing SQLBot runtime credentials")
+        existing = json.loads(TARGET.read_text(encoding="utf-8"))
+        if set(existing) != set(ROLES) or any(
+            existing.get(scenario, {}).get("role") != role
+            or not existing.get(scenario, {}).get("password")
+            for scenario, (role, _) in ROLES.items()
+        ):
+            raise RuntimeError("existing SQLBot runtime credential file is invalid")
+        database_url = os.environ["DATABASE_URL"].replace(
+            "postgresql+psycopg://", "postgresql://", 1
+        )
+        with psycopg.connect(database_url) as connection:
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT rolname FROM pg_roles WHERE rolname = ANY(%s)",
+                    ([role for role, _ in ROLES.values()],),
+                )
+                actual_roles = {row[0] for row in cursor.fetchall()}
+        expected_roles = {role for role, _ in ROLES.values()}
+        if actual_roles != expected_roles:
+            raise RuntimeError("readonly credential file exists but database roles differ")
+        print(json.dumps({
+            "status": "PASS",
+            "action": "REUSED",
+            "roles_created": 0,
+            "scenario_isolated": True,
+            "credential_file_tracked": False,
+            "secret_values_exposed": False,
+        }, sort_keys=True))
+        return
     credentials = {
         scenario: {"role": role, "password": secrets.token_urlsafe(36)}
         for scenario, (role, _) in ROLES.items()
@@ -113,6 +141,7 @@ def main() -> None:
         handle.write("\n")
     print(json.dumps({
         "status": "PASS",
+        "action": "CREATED",
         "roles_created": len(ROLES),
         "scenario_isolated": True,
         "credential_file_tracked": False,

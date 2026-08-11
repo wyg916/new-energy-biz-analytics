@@ -497,7 +497,7 @@ class SQLBotEngine(QueryEngine):
         timings["answer_ms"] = int((perf_counter() - phase) * 1000)
         run_id = context.run_id or f"SQLBOT-{uuid4()}"
         evidence = {
-            "data_classification": "simulated",
+            "data_classification": context.data_classification,
             "source": "sqlbot_adapter",
             "upstream_version": "v1.10.0",
             "execution_mode": context.execution_mode,

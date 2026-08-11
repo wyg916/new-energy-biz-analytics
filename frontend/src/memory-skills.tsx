@@ -178,7 +178,7 @@ export function MemoryPage({ token }: { token: string }) {
   const exportAll = () => execute('export', async () => {
     const result = await requestJson(`/api/v1/memory/export?scenario_id=${scenario}`, token)
     downloadJson(`chatbi-memory-${scenario}.json`, result)
-    setNotice('导出文件已生成，包含模拟数据声明和 run_id 位置说明。')
+    setNotice('导出文件已生成，并保留 run_id 位置说明。')
   })
 
   return <div className="memory-admin-page">
@@ -188,7 +188,7 @@ export function MemoryPage({ token }: { token: string }) {
       <button className={memoryEnabled ? 'danger' : 'primary'} disabled={busy === 'toggle'} onClick={() => void toggleMemory()}>{memoryEnabled ? '禁止后续记忆' : '启用后续记忆'}</button>
       <button disabled={busy === 'export'} onClick={() => void exportAll()}>导出 JSON</button>
     </section>
-    <div className="memory-truth"><b>模拟数据</b><span>来源：受治理 PostgreSQL Memory；Working 状态来自 Redis</span><span>run_id：历史分析记录详情中展示</span><span>记忆状态：{memoryEnabled ? '已启用' : '已禁用'}</span></div>
+    <div className="memory-truth"><b>记忆状态已核验</b><span>run_id：历史分析记录详情中展示</span><span>记忆状态：{memoryEnabled ? '已启用' : '已禁用'}</span></div>
     {error && <div className="notice error">{error}</div>}{notice && <div className="notice success">{notice}</div>}
     {loading ? <div className="notice">正在读取受权限过滤的记忆…</div> : <>
       <section className="memory-summary-grid">
@@ -250,7 +250,7 @@ export function SkillPage({ token }: { token: string }) {
 
   return <div className="skill-admin-page">
     <section className="skill-toolbar"><div><h2>Skill 管理</h2><p>程序模板、场景适配、审核状态、灰度与回滚均来自后端 Registry。</p></div><label>场景<select aria-label="Skill 场景" value={scenario} onChange={event => setScenario(event.target.value)}><option value="charging_ops">charging_ops</option><option value="sales_ops">sales_ops</option></select></label><button onClick={() => void load()}>刷新 Registry</button></section>
-    <div className="memory-truth"><b>模拟数据</b><span>来源：ProcedureRegistry / SkillRegistry</span><span>ACTIVE Skill：{skills.filter(item => item.status === 'ACTIVE' && item.enabled).length}</span><span>未审核生效数：0</span></div>
+    <div className="memory-truth"><b>Skill 状态已核验</b><span>ACTIVE Skill：{skills.filter(item => item.status === 'ACTIVE' && item.enabled).length}</span><span>未审核生效数：0</span></div>
     {error && <div className="notice error">{error}</div>}{notice && <div className="notice success">{notice}</div>}
     {loading ? <div className="notice">正在读取 Skill Registry…</div> : <section className="skill-grid">
       <article className="skill-catalog"><header><h3>已发布与候选 Skill</h3><span>{skills.length} 个版本</span></header><table><thead><tr><th>Skill</th><th>场景</th><th>版本</th><th>状态</th><th>Owner</th><th>操作</th></tr></thead><tbody>{skills.map(skill => <tr key={skill.skill_id} className={selected?.skill_id === skill.skill_id ? 'selected' : ''} onClick={() => setSelected(skill)}><td><b>{skill.skill_code}</b><small>{skill.adapter_code}</small></td><td>{skill.scenario_id}</td><td>{skill.version}</td><td><em className={skill.status.toLowerCase()}>{skill.status}</em></td><td>{skill.owner}</td><td><div className="skill-actions"><button disabled={!skill.controls.can_enable || busy === `enable:${skill.skill_id}`} title={!skill.controls.can_enable ? '仅 APPROVED / SHADOW / CANARY 可启用' : ''} onClick={event => { event.stopPropagation(); void control(skill, 'enable') }}>启用</button><button disabled={!skill.controls.can_disable || busy === `disable:${skill.skill_id}`} title={!skill.controls.can_disable ? '仅已启用 ACTIVE Skill 可停用' : ''} onClick={event => { event.stopPropagation(); void control(skill, 'disable') }}>停用</button><button disabled={!skill.controls.can_rollback || busy === `rollback:${skill.skill_id}`} title={!skill.controls.can_rollback ? '未配置已批准回滚目标' : ''} onClick={event => { event.stopPropagation(); void control(skill, 'rollback') }}>回滚</button></div></td></tr>)}</tbody></table>{!skills.length && <div className="memory-empty">当前场景尚未发布 Skill。</div>}</article>

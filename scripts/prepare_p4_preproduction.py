@@ -103,12 +103,45 @@ def main() -> None:
                 group_id="GROUP-P4-ANALYSTS", tenant_id=identity.tenant_id,
                 workspace_id=identity.workspace_id, status="ACTIVE",
             ))
+        bootstrap_principal = db.get(Principal, "PRN-INTEGRATION-KNOWLEDGE-BOOTSTRAP")
+        if bootstrap_principal is None:
+            db.add(Principal(
+                principal_id="PRN-INTEGRATION-KNOWLEDGE-BOOTSTRAP",
+                principal_type="SERVICE_USER", provider_code="OIDC_PREPROD",
+                external_subject="44444444-4444-4444-8444-444444444444",
+                local_user_id=analyst.id, tenant_id=identity.tenant_id,
+                organization_id=identity.org_id, workspace_id=identity.workspace_id,
+                display_name="Integration / Preproduction Knowledge Bootstrap Principal",
+                status="ACTIVE", auth_strength="oidc-pkce",
+                attributes_json=json.dumps({
+                    "roles": ["analyst_admin"], "required_groups": ["analysts"],
+                    "data_scopes": ["workspace:all"],
+                    "purpose": "knowledge_baseline_bootstrap",
+                }, sort_keys=True),
+            ))
+            db.flush()
+        if db.get(IdentityGroupMembership, "MEMBERSHIP-INTEGRATION-KNOWLEDGE-BOOTSTRAP") is None:
+            db.add(IdentityGroupMembership(
+                membership_id="MEMBERSHIP-INTEGRATION-KNOWLEDGE-BOOTSTRAP",
+                principal_id="PRN-INTEGRATION-KNOWLEDGE-BOOTSTRAP",
+                group_id="GROUP-P4-ANALYSTS", tenant_id=identity.tenant_id,
+                workspace_id=identity.workspace_id, status="ACTIVE",
+            ))
         if db.get(GovernanceBinding, "BIND-P4-OIDC-ANALYST") is None:
             db.add(GovernanceBinding(
                 binding_id="BIND-P4-OIDC-ANALYST", tenant_id=identity.tenant_id,
                 workspace_id=identity.workspace_id, principal_id="PRN-P4-OIDC-ANALYST",
                 role_id="ROLE-ANALYST_ADMIN", resource_type="*", environment="preproduction",
                 status="ACTIVE", created_by="system:p4-bootstrap",
+            ))
+        if db.get(GovernanceBinding, "BIND-INTEGRATION-KNOWLEDGE-BOOTSTRAP") is None:
+            db.add(GovernanceBinding(
+                binding_id="BIND-INTEGRATION-KNOWLEDGE-BOOTSTRAP",
+                tenant_id=identity.tenant_id, workspace_id=identity.workspace_id,
+                principal_id="PRN-INTEGRATION-KNOWLEDGE-BOOTSTRAP",
+                role_id="ROLE-ANALYST_ADMIN", resource_type="knowledge",
+                environment="preproduction", status="ACTIVE",
+                created_by="system:integration-knowledge-bootstrap",
             ))
         db.commit()
 
@@ -121,6 +154,13 @@ def main() -> None:
         credential(secrets_service, "preprod-webhook-signing", "preprod-kv/chatbi/webhook#signing_key@1", "P4 local webhook signing", ["alert.sign"])
         credential(secrets_service, "preprod-sqlbot-username", "preprod-kv/chatbi/sqlbot#username@1", "P4 SQLBot runtime username", ["sqlbot.authenticate"])
         credential(secrets_service, "preprod-sqlbot-password", "preprod-kv/chatbi/sqlbot#password@1", "P4 SQLBot runtime password", ["sqlbot.authenticate"])
+        credential(
+            secrets_service,
+            "preprod-knowledge-bootstrap-password",
+            "preprod-kv/chatbi/knowledge-bootstrap#password@1",
+            "Integration / Preproduction Knowledge Bootstrap Principal",
+            ["knowledge.bootstrap.authenticate"],
+        )
 
         data_service = DataSourceGovernanceService(db, identity)
         governed = db.scalar(select(DataSourceConnection).join(

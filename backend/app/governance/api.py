@@ -300,7 +300,7 @@ def snapshot(
             "sqlbot_engine_enabled": get_settings().sqlbot_engine_enabled,
             "sqlbot_canary_eligible": False,
             "production_release_enabled": False,
-            "data_classification": "simulated",
+            "data_classification": get_settings().runtime_data_classification,
         },
     }
 
@@ -729,5 +729,5 @@ def runtime_health(db: Session = Depends(get_db), identity: IdentityContext = De
         "sqlbot_canary_eligible": False,
         "production_release_enabled": False,
         "capacity_evidence": "isolated_test_only",
-        "data_classification": "simulated",
+        "data_classification": get_settings().runtime_data_classification,
     }

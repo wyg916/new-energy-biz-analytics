@@ -142,7 +142,7 @@ def list_records(
         "memory_enabled": MemoryPolicyService(db, identity).is_enabled(
             scenario_id=scenario_id
         ),
-        "data_classification": "simulated",
+        "data_classification": get_settings().runtime_data_classification,
     }
 
 

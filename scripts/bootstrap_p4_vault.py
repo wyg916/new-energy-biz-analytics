@@ -110,18 +110,35 @@ path "sys/health" { capabilities = ["read"] }
         "secret_id_ttl": "0", "secret_id_num_uses": 0,
     }).raise_for_status()
 
+    knowledge_password_file = root / "knowledge_bootstrap_password"
+    knowledge_password = (
+        knowledge_password_file.read_text(encoding="utf-8").strip()
+        if knowledge_password_file.exists() else ""
+    )
     values = {
         "acceptance": {"value": secrets.token_urlsafe(32)},
         "datasource": {"password": (root / "postgres_password").read_text(encoding="utf-8").strip()},
         "webhook": {"signing_key": secrets.token_urlsafe(48)},
         "sqlbot": {"username": f"p4-{secrets.token_hex(8)}", "password": secrets.token_urlsafe(36)},
     }
+    if knowledge_password:
+        values["knowledge-bootstrap"] = {"password": knowledge_password}
     for path, data in values.items():
         response = request(client, "GET", f"/v1/preprod-kv/data/chatbi/{path}", token=root_token)
         if response.status_code == 404:
             request(client, "POST", f"/v1/preprod-kv/data/chatbi/{path}", token=root_token, json={"data": data}).raise_for_status()
         elif not response.is_success:
             response.raise_for_status()
+    knowledge_response = request(
+        client, "GET", "/v1/preprod-kv/data/chatbi/knowledge-bootstrap",
+        token=root_token,
+    )
+    if not knowledge_response.is_success:
+        raise RuntimeError("Vault knowledge bootstrap credential is unavailable")
+    if knowledge_password_file.exists() and knowledge_password:
+        knowledge_password_file.write_text("", encoding="utf-8")
+        os.chmod(knowledge_password_file, 0o600)
+    knowledge_password = ""
     role_id = request(client, "GET", "/v1/auth/approle/role/chatbi-api/role-id", token=root_token).json()["data"]["role_id"]
     secret_id = request(client, "POST", "/v1/auth/approle/role/chatbi-api/secret-id", token=root_token).json()["data"]["secret_id"]
     rotation_role_id = request(
@@ -145,6 +162,7 @@ path "sys/health" { capabilities = ["read"] }
     print(json.dumps({
         "status": "READY", "initialized": True, "unsealed": True,
         "provider": "VAULT_KV_V2", "kv_version": 2, "audit_enabled": True,
+        "knowledge_bootstrap_credential": "READY",
         "root_token_persisted": False, "secret_values_printed": False,
     }, sort_keys=True))
 

@@ -130,19 +130,10 @@ function GlobalDataStatus({ metadata }: { metadata: Metadata | null }) {
   if (!metadata) {
     return <footer className="global-data-status" aria-label="数据状态">正在核验数据库数据状态…</footer>
   }
-  const classification = metadata.data_classification === 'simulated'
-    ? '模拟数据'
-    : metadata.data_classification === 'open_source_real_data'
-      ? '公开数据样本'
-      : metadata.data_classification
-  const source = metadata.source === 'platform_database'
-    ? '平台数据库'
-    : metadata.source
   return <footer className="global-data-status" aria-label="数据状态">
-    <b>{classification}</b>
-    <span>数据时间：{metadata.data_time_range.start} 至 {endInclusive(metadata.data_time_range.end_exclusive)}</span>
-    <span>来源：{source}</span>
-    <span>run_id：{metadata.analysis_run_id}</span>
+    <b>经营数据状态已核验</b>
+    <span>统计期间：{metadata.data_time_range.start} 至 {endInclusive(metadata.data_time_range.end_exclusive)}</span>
+    <span>分析 run_id：{metadata.analysis_run_id}</span>
   </footer>
 }
 
@@ -1778,7 +1769,7 @@ type PlatformFoundationState = {
     reason: string
     run_id: string
   }>
-  data_classification: 'simulated'
+  data_classification: string
 }
 
 function MappingPage({ token, start, end }: { token: string; start: string; end: string }) {

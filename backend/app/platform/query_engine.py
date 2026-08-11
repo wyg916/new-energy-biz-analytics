@@ -26,6 +26,7 @@ class QueryContext:
     datasource_id: str | None
     allowed_relations: dict[str, tuple[str, ...]]
     prompt_context: dict[str, Any] = field(default_factory=dict)
+    data_classification: str = "simulated"
     execution_mode: str = "upstream_readonly"
     run_id: str | None = None
     max_rows: int = 500

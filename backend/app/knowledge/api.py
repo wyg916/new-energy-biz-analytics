@@ -160,7 +160,7 @@ def runtime(
             else "READY" if settings.sqlbot_runtime_verified else "RUNTIME_PENDING"
         ),
         "model_gateway": runtime_model_status(),
-        "data_classification": "simulated",
+        "data_classification": settings.runtime_data_classification,
     }
 
 
@@ -211,7 +211,7 @@ def documents(
                 KnowledgeChunk.document_version_id == version.document_version_id
             )),
         } for document, version in rows],
-        "data_classification": "simulated",
+        "data_classification": get_settings().runtime_data_classification,
     }
 
 

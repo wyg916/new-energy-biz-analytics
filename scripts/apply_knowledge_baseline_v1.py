@@ -98,6 +98,7 @@ def _json_request(opener, method: str, url: str, payload=None, token: str | None
 
 def acquire_token(
     api_base: str,
+    username: str,
     password: str,
     insecure: bool,
     oidc_login_base: str | None = None,
@@ -113,7 +114,7 @@ def acquire_token(
         raise RuntimeError("OIDC login form was not returned")
 
     login_body = urllib.parse.urlencode({
-        "username": "p4.analyst",
+        "username": username,
         "password": password,
         "credentialId": "",
     }).encode("utf-8")
@@ -158,13 +159,14 @@ def acquire_token(
     return token
 
 
-def main() -> None:
+def main(argv=None) -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--api-base",
         default=os.getenv("KNOWLEDGE_API_BASE", "https://p5b.localhost:8446/api/v1"),
     )
     parser.add_argument("--password-env", default="P4_OIDC_PASSWORD")
+    parser.add_argument("--username", default="p4.analyst")
     parser.add_argument(
         "--oidc-login-base",
         help="Integration-only internal Keycloak base, for example http://oidc:8080",
@@ -174,13 +176,14 @@ def main() -> None:
         "--output",
         default="integration/knowledge_baseline_v1_acceptance.json",
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     password = os.getenv(args.password_env, "").strip()
     if not password:
         raise SystemExit(f"missing {args.password_env}; Integration runtime credential is required")
 
     token = acquire_token(
         args.api_base,
+        args.username,
         password,
         args.insecure,
         args.oidc_login_base,
@@ -192,7 +195,10 @@ def main() -> None:
         common.append("--insecure")
     try:
         publisher.main(common)
-        verifier.main([*common, "--output", args.output])
+        verifier.main([
+            *common, "--output", args.output,
+            "--identity-username", args.username,
+        ])
     finally:
         if previous is None:
             os.environ.pop("KNOWLEDGE_ADMIN_TOKEN", None)

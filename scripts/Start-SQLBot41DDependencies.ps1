@@ -5,7 +5,8 @@ param(
     [string]$RedisContainer = 'renewable-data41-redis-1',
     [string]$RedisImage = 'redis:7.4.10-alpine@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2',
     [string]$SQLBotContainer = 'renewable-sqlbot-41c-runtime-v1-10-0',
-    [int]$SQLBotHostPort = 18082
+    [int]$SQLBotHostPort = 18082,
+    [string]$SQLBotVolumePrefix = 'renewable-sqlbot41c'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -61,7 +62,8 @@ if ($LASTEXITCODE -ne 0 -or ($redisPing | Out-String).Trim() -ne 'PONG') {
 $sqlbotResult = & (Join-Path $PSScriptRoot 'Start-SQLBot41CV110Acceptance.ps1') `
     -TargetContainer $SQLBotContainer `
     -HostPort $SQLBotHostPort `
-    -PlatformNetwork $PlatformNetwork
+    -PlatformNetwork $PlatformNetwork `
+    -VolumePrefix $SQLBotVolumePrefix
 if ($LASTEXITCODE -ne 0) { throw 'SQLBot Runtime startup failed' }
 
 [ordered]@{

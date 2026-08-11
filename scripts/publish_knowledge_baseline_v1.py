@@ -38,7 +38,10 @@ def list_docs(api_base, token, scenario_id, insecure):
 
 def local_content_sha(source_path):
     # Markdown parser content hash is over decoded text; normalize only BOM/newline loading here.
-    text = (PACKAGE_ROOT / source_path).read_text(encoding="utf-8-sig")
+    source = PACKAGE_ROOT / source_path
+    if not source.is_file():
+        source = Path(os.getenv("KNOWLEDGE_SOURCE_ROOT", "/app/knowledge_sources")) / source_path
+    text = source.read_text(encoding="utf-8-sig")
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 def main(argv=None):

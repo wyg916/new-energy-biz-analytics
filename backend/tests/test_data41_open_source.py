@@ -46,9 +46,9 @@ def test_answer_composer_preserves_open_source_truth_label():
         ),
         trace_id="TRACE-DATA41-TEST",
         run_id="COMPOSITE-DATA41-TEST",
-        data_classification="open_source_real_data",
+        data_classification="OPEN_SOURCE_DERIVED",
     ))
-    assert response.data_classification == "open_source_real_data"
+    assert response.data_classification == "OPEN_SOURCE_DERIVED"
     assert "公开数据样本" in response.warnings[0]
     assert "模拟数据" not in response.warnings[0]
 

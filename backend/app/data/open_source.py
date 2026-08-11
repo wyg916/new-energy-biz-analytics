@@ -31,7 +31,17 @@ from app.platform.identity import IdentityContextFactory
 from app.scenarios.registry import install_charging_ops
 
 
-DATA_CLASSIFICATION = "open_source_real_data"
+OPEN_SOURCE_REAL_DATA = "OPEN_SOURCE_REAL_DATA"
+OPEN_SOURCE_DERIVED = "OPEN_SOURCE_DERIVED"
+BUSINESS_ASSUMPTION = "BUSINESS_ASSUMPTION"
+TEST_FIXTURE = "TEST_FIXTURE"
+DATA_CLASSIFICATION = OPEN_SOURCE_DERIVED
+DATA_CLASSIFICATION_TAXONOMY = {
+    OPEN_SOURCE_REAL_DATA: "ACN/UCI fields copied from the approved public snapshot",
+    OPEN_SOURCE_DERIVED: "fields deterministically derived from approved public-source records",
+    BUSINESS_ASSUMPTION: "operating values produced from an explicit approved business assumption",
+    TEST_FIXTURE: "legacy deterministic seed rows retained only for tests and rollback",
+}
 ACN_RUN_ID = "DATA41-ACN-ORNL-26-V1"
 UCI_RUN_ID = "DATA41-UCI-ONLINE-RETAIL-352-V1"
 ACN_BATCH_ID = ACN_RUN_ID
@@ -382,17 +392,17 @@ def ingest_uci(db: Session, snapshot: dict, repository_root: Path | None = None)
 
     for country, region_id in regions.items():
         if db.get(SalesRegion, region_id) is None:
-            db.add(SalesRegion(region_id=region_id, region_name=country, organization_code="UCI-ONLINE-RETAIL", data_classification=DATA_CLASSIFICATION))
+            db.add(SalesRegion(region_id=region_id, region_name=country, organization_code="UCI-ONLINE-RETAIL", data_classification=OPEN_SOURCE_REAL_DATA))
     db.flush()
     for region_id in regions.values():
         salesperson_id = f"UNASSIGNED-{_hash(region_id, 16).upper()}"
         if db.get(SalesPerson, salesperson_id) is None:
-            db.add(SalesPerson(salesperson_id=salesperson_id, salesperson_name="Not provided by source", region_id=region_id, organization_code="UCI-ONLINE-RETAIL", data_classification="derived_not_provided"))
+            db.add(SalesPerson(salesperson_id=salesperson_id, salesperson_name="Not provided by source", region_id=region_id, organization_code="UCI-ONLINE-RETAIL", data_classification=OPEN_SOURCE_DERIVED))
     db.flush()
     if db.get(SalesChannel, "UCI-ONLINE") is None:
-        db.add(SalesChannel(channel_id="UCI-ONLINE", channel_name="UCI Online Retail", channel_type="online", data_classification=DATA_CLASSIFICATION))
+        db.add(SalesChannel(channel_id="UCI-ONLINE", channel_name="UCI Online Retail", channel_type="online", data_classification=OPEN_SOURCE_REAL_DATA))
     if db.get(SalesProductCategory, "UCI-UNCLASSIFIED") is None:
-        db.add(SalesProductCategory(category_id="UCI-UNCLASSIFIED", category_name="Not provided by source", data_classification="derived_not_provided"))
+        db.add(SalesProductCategory(category_id="UCI-UNCLASSIFIED", category_name="Not provided by source", data_classification=OPEN_SOURCE_DERIVED))
     db.flush()
     for day in sorted({row["invoice_time"].date() for row in stg_rows}):
         if db.get(SalesBusinessDate, day) is None:
@@ -403,12 +413,12 @@ def ingest_uci(db: Session, snapshot: dict, repository_root: Path | None = None)
             db.add(SalesProduct(
                 **values, category_id="UCI-UNCLASSIFIED",
                 standard_cost=_money(values["list_price"] * UCI_DERIVED_COST_RATE),
-                data_classification=DATA_CLASSIFICATION,
+                data_classification=BUSINESS_ASSUMPTION,
             ))
     for values in customers.values():
         if db.get(SalesCustomer, values["customer_id"]) is None:
             db.add(SalesCustomer(
-                **values, customer_segment="not_provided", data_classification=DATA_CLASSIFICATION,
+                **values, customer_segment="not_provided", data_classification=OPEN_SOURCE_DERIVED,
             ))
     db.flush()
 
@@ -433,7 +443,7 @@ def ingest_uci(db: Session, snapshot: dict, repository_root: Path | None = None)
             organization_code="UCI-ONLINE-RETAIL", gross_amount=gross, discount_amount=Decimal("0.00"),
             refund_amount=refund, net_revenue=net, cost_amount=cost, gross_profit=profit,
             status="refunded" if is_cancel else "completed", is_new_customer=int(customer_id not in seen_customers),
-            data_classification=DATA_CLASSIFICATION, seed_run_id=UCI_RUN_ID, created_at=now,
+            data_classification=BUSINESS_ASSUMPTION, seed_run_id=UCI_RUN_ID, created_at=now,
         ))
         seen_customers.add(customer_id)
         order_count += 1
@@ -448,7 +458,7 @@ def ingest_uci(db: Session, snapshot: dict, repository_root: Path | None = None)
                 "quantity": abs(row["quantity"]), "unit_price": row["unit_price"],
                 "gross_amount": gross_line, "discount_amount": Decimal("0.00"),
                 "refund_amount": refund_line, "net_revenue": net_line, "cost_amount": cost_line,
-                "gross_profit": net_line - cost_line, "data_classification": DATA_CLASSIFICATION,
+                "gross_profit": net_line - cost_line, "data_classification": BUSINESS_ASSUMPTION,
                 "seed_run_id": UCI_RUN_ID,
             })
     db.flush()
@@ -605,6 +615,7 @@ def lineage_status(db: Session) -> dict:
     return {
         "status": "PASS" if runs and all(row.status == "COMPLETED" for row in runs) else "NOT_READY",
         "data_classification": DATA_CLASSIFICATION,
+        "data_classification_taxonomy": DATA_CLASSIFICATION_TAXONOMY,
         "runs": [{
             "run_id": row.run_id,
             "source_name": sources[row.source_id].source_name,

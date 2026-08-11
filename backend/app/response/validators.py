@@ -3,6 +3,11 @@ from app.response.contracts import CompositionRequest
 
 
 def validate_composition_request(request: CompositionRequest) -> None:
+    if (
+        request.report_evidence is not None
+        and request.report_evidence.run_id != request.run_id
+    ):
+        raise ValueError("report evidence run_id does not match response run_id")
     if request.data_evidence is None and request.knowledge_evidence is None:
         return
     if request.data_evidence is not None:

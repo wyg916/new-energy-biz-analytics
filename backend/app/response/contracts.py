@@ -79,6 +79,33 @@ class KnowledgeEvidence(BaseModel):
     warnings: tuple[str, ...] = ()
 
 
+class MemoryEvidence(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    working_status: str
+    recalled_memory_ids: tuple[str, ...] = ()
+    procedure_id: str | None = None
+    lifecycle_status: str | None = None
+    legal_hold_applied: bool = False
+    deletion_verified: bool | None = None
+
+
+class P6ReportEvidence(BaseModel):
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    snapshot_id: str
+    report_id: str
+    report_version_id: str
+    analysis_run_id: str
+    run_id: str
+    query_plan_hash: str
+    sql_hash: str
+    dataset_version: str
+    semantic_version: str
+    snapshot_hash: str
+    citations: tuple[CitationEvidence, ...] = ()
+
+
 class CompositionRequest(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
@@ -86,6 +113,8 @@ class CompositionRequest(BaseModel):
     profile: ResponseProfileName
     data_evidence: DataEvidence | None = None
     knowledge_evidence: KnowledgeEvidence | None = None
+    memory_evidence: MemoryEvidence | None = None
+    report_evidence: P6ReportEvidence | None = None
     trace_id: str = Field(min_length=8, max_length=96)
     run_id: str = Field(min_length=8, max_length=96)
     can_show_sql: bool = False
@@ -113,3 +142,5 @@ class FinalResponse(BaseModel):
     sql: str | None
     refused: bool
     data_classification: str
+    memory_evidence: MemoryEvidence | None = None
+    report_evidence: P6ReportEvidence | None = None

@@ -72,6 +72,9 @@ def _realm(root: Path, *, public_base_url: str, label: str) -> bool:
     if realm_path.exists():
         return False
     user_password = (root / "keycloak_user_password").read_text(encoding="utf-8").strip()
+    knowledge_password = (root / "knowledge_bootstrap_password").read_text(
+        encoding="utf-8"
+    ).strip()
     realm = {
         "realm": "chatbi",
         "enabled": True,
@@ -108,6 +111,15 @@ def _realm(root: Path, *, public_base_url: str, label: str) -> bool:
                 "id": "11111111-1111-4111-8111-111111111111", "username": "p4.analyst", "enabled": True,
                 "emailVerified": True, "email": "p4.analyst@example.invalid", "firstName": "P4", "lastName": "Analyst",
                 "groups": ["/analysts"], "credentials": [{"type": "password", "value": user_password, "temporary": False}],
+            },
+            {
+                "id": "44444444-4444-4444-8444-444444444444",
+                "username": "integration.knowledge-bootstrap", "enabled": True,
+                "emailVerified": True,
+                "email": "knowledge-bootstrap@integration.invalid",
+                "firstName": "Integration", "lastName": "Knowledge Bootstrap",
+                "groups": ["/analysts"],
+                "credentials": [{"type": "password", "value": knowledge_password, "temporary": False}],
             },
             {
                 "id": "22222222-2222-4222-8222-222222222222", "username": "p4.disabled", "enabled": False,
@@ -156,6 +168,23 @@ def main() -> None:
             args.runtime_dir, hostname=parsed_base_url.hostname, label=args.label,
         ),
     }
+    knowledge_runtime_path = args.runtime_dir / "knowledge_bootstrap_password"
+    knowledge_keycloak_path = args.keycloak_dir / "knowledge_bootstrap_password"
+    if not knowledge_runtime_path.exists() and not knowledge_keycloak_path.exists():
+        knowledge_password = secrets.token_urlsafe(36)
+        created["knowledge_bootstrap_password"] = _write_once(
+            knowledge_runtime_path, knowledge_password
+        )
+        _write_once(knowledge_keycloak_path, knowledge_password)
+        knowledge_password = ""
+    else:
+        created["knowledge_bootstrap_password"] = False
+    if not knowledge_keycloak_path.exists():
+        staged_password = knowledge_runtime_path.read_text(encoding="utf-8").strip()
+        if not staged_password:
+            raise RuntimeError("knowledge bootstrap credential cannot be reconstructed")
+        _write_once(knowledge_keycloak_path, staged_password)
+        staged_password = ""
     redis_configuration = args.runtime_dir / "redis.conf"
     if not redis_configuration.exists():
         redis_configuration.write_text(
@@ -171,7 +200,10 @@ def main() -> None:
         os.chmod(redis_configuration, 0o644)
     database_password = (args.runtime_dir / "postgres_password").read_text(encoding="utf-8").strip()
     created["keycloak_database_password"] = _write_once(args.keycloak_dir / "postgres_password", database_password)
-    for name in ("keycloak_admin_password", "keycloak_user_password", "postgres_password"):
+    for name in (
+        "keycloak_admin_password", "keycloak_user_password",
+        "knowledge_bootstrap_password", "postgres_password",
+    ):
         os.chmod(args.keycloak_dir / name, 0o640)
     created["keycloak_realm"] = _realm(
         args.keycloak_dir, public_base_url=public_base_url, label=args.label,

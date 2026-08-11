@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from app.memory.audit import audit_memory_use
 from app.memory.models import SQLBotSourceBindingRelease
+from app.data.truth import current_data_truth
 from app.platform.identity import IdentityContext
 
 
@@ -80,7 +81,7 @@ class SQLBotSourceBindingRegistry:
                     "execution_mode": "upstream_readonly",
                     "approved_relations": list(spec["approved_relations"]),
                     "deterministic_engine_unchanged": True,
-                    "data_classification": "simulated",
+                    "data_classification": current_data_truth(self.db)["data_classification"],
                 },
                 ensure_ascii=False,
                 sort_keys=True,
@@ -181,10 +182,12 @@ def install_initial_source_bindings(db: Session, identity: IdentityContext) -> d
         active_payload = json.loads(active.binding_json) if active is not None else {}
         active_relations = set(active_payload.get("approved_relations") or ())
         expected_relations = set(spec["approved_relations"])
+        expected_classification = current_data_truth(db)["data_classification"]
         if (
             active is None
             or active.datasource_id != datasource_id
             or active_relations != expected_relations
+            or active_payload.get("data_classification") != expected_classification
         ):
             draft = registry.register(
                 scenario_id=scenario_id,

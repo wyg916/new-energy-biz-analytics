@@ -4,6 +4,12 @@
   "database": "PostgreSQL",
   "purpose": "Governed Schema Catalog input for a future SQLBot phase; SQLBot is disabled in DATA-4.1.",
   "sqlbot_enabled": false,
+  "data_classification_taxonomy": {
+    "OPEN_SOURCE_REAL_DATA": "direct fields from approved ACN/UCI snapshots",
+    "OPEN_SOURCE_DERIVED": "deterministic derivations from approved public-source records",
+    "BUSINESS_ASSUMPTION": "explicit approved business assumptions such as the UCI 70 percent cost rule",
+    "TEST_FIXTURE": "legacy deterministic seed rows retained only for tests and rollback"
+  },
   "tables": [
     {
       "name": "open_data_source",

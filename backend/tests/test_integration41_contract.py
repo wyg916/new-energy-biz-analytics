@@ -7,36 +7,51 @@ from app.core.config import Settings
 
 
 ROOT = Path(__file__).resolve().parents[2]
+pytestmark = pytest.mark.no_db
 
 
 def test_merge_revision_and_runtime_flags_are_frozen():
-    migration = (ROOT / "backend/alembic/versions/integration_41_merge_0001.py").read_text(
+    core_migration = (ROOT / "backend/alembic/versions/integration_41_merge_0001.py").read_text(
         encoding="utf-8"
     )
-    override = (ROOT / "deploy/data41/override.yaml").read_text(encoding="utf-8")
+    migration = (ROOT / "backend/alembic/versions/integration_41_full_0001_merge.py").read_text(
+        encoding="utf-8"
+    )
+    override = (ROOT / "deploy/integration41full/override.yaml").read_text(encoding="utf-8")
 
-    assert 'revision = "integration_41_merge_0001"' in migration
-    assert 'down_revision = ("memory_41_0001", "rag_0001")' in migration
-    assert "EXPECTED_DATABASE_REVISION: integration_41_merge_0001" in override
-    assert "MEMORY_LIFECYCLE_SCHEDULER_ENABLED: \"true\"" in override
-    assert "start_period: 1800s" in override
+    assert 'revision = "integration_41_merge_0001"' in core_migration
+    assert 'down_revision = ("memory_41_0001", "rag_0001")' in core_migration
+    assert 'revision = "integration_41_full_0001"' in migration
+    assert 'down_revision = ("p6_41_0001", "sqlbot_41c2")' in migration
+    assert "EXPECTED_DATABASE_REVISION: integration_41_full_0001" in override
     assert "QUERY_ENGINE_MODE: SHADOW" in override
     assert "SQLBOT_ENGINE_ENABLED: \"false\"" in override
-    assert Settings().expected_database_revision == "integration_41_merge_0001"
+    assert Settings().expected_database_revision == "integration_41_full_0001"
 
 
-def test_single_launcher_extends_integration_runtime_with_p6_gates():
+def test_single_launcher_converges_full_integration_runtime():
     launcher = (ROOT / "一键启动.bat").read_text(encoding="utf-8-sig")
     startup = (ROOT / "scripts/release/start-project.ps1").read_text(encoding="utf-8-sig")
+    override = (ROOT / "deploy/integration41full/override.yaml").read_text(encoding="utf-8")
+    dockerfile = (ROOT / "backend/Dockerfile").read_text(encoding="utf-8")
 
-    assert "P6 4.1 Business Loop" in launcher
-    assert "p6_41_0001" in launcher
-    assert '$project = "renewable-p6-business-loop-41"' in startup
-    assert '$expectedMigration = "p6_41_0001"' in startup
+    assert "Full Integration 4.1" in launcher
+    assert "integration_41_full_0001" in launcher
+    assert "renewable-integration41-full-sqlbot-runtime-v1-10-0" in launcher
+    assert "-SQLBotHostPort 18083" in launcher
+    assert '$project = "renewable-integration41-full"' in startup
+    assert '$expectedMigration = "integration_41_full_0001"' in startup
     assert '"renewable-integration41-core"' in startup
     assert 'query_engine_mode = "SHADOW"' in startup
     assert "verify_integration41_runtime.py" in startup
-    assert '"python", "scripts/p4_entrypoint.py", "python", "scripts/rebuild_rag_indexes.py"' in startup
+    assert "prepare_integration41_full.py" in override
+    assert "PENDING_GOVERNED_API" in startup
+    assert "apply_knowledge_baseline_bootstrap.py" in startup
+    assert '"scripts/rebuild_rag_indexes.py"' in startup
+    assert startup.index("apply_knowledge_baseline_bootstrap.py") < startup.index("scripts/rebuild_rag_indexes.py")
+    assert "COPY integration/knowledge_import_plan.json /app/integration/knowledge_import_plan.json" in dockerfile
+    assert "provision_platform_readonly_runtime.py" in startup
+    assert "activate_sqlbot41c2_source_bindings.py" in startup
     assert '"python", "scripts/p4_entrypoint.py", "python", "scripts/verify_integration41_runtime.py"' in startup
     assert '"--expected-revision", $expectedMigration' in startup
     assert '"scripts/run_p3_migration_acceptance.py"' in startup
@@ -85,6 +100,13 @@ def test_integration_preproduction_accepts_approved_open_source_data_mode():
 
 def test_p6_preproduction_inherits_approved_open_source_data_mode():
     settings = _preproduction_settings(release_version="4.1.0-p6.1")
+
+    assert settings.simulated_data_only is False
+    assert settings.data41_open_source_enabled is True
+
+
+def test_full_integration_preproduction_inherits_approved_open_source_data_mode():
+    settings = _preproduction_settings(release_version="4.1.0-integration-full.1")
 
     assert settings.simulated_data_only is False
     assert settings.data41_open_source_enabled is True

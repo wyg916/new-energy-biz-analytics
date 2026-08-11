@@ -1,0 +1,51 @@
+name: renewable-integration41-full
+
+x-full-environment: &full-environment
+  RELEASE_VERSION: 4.1.0-integration-full.1
+  EXPECTED_DATABASE_REVISION: integration_41_full_0001
+  ACCEPTANCE_LABEL: INTEGRATION-4.1-FULL
+  RUNTIME_DATA_CLASSIFICATION: OPEN_SOURCE_DERIVED
+
+services:
+  runtime-bootstrap:
+    image: renewable-integration41-full-api:4.1.0-integration-full.1
+    pull_policy: never
+    environment: *full-environment
+
+  vault-bootstrap:
+    image: renewable-integration41-full-api:4.1.0-integration-full.1
+    pull_policy: never
+    environment: *full-environment
+
+  migrate:
+    image: renewable-integration41-full-api:4.1.0-integration-full.1
+    pull_policy: never
+    environment: *full-environment
+
+  init:
+    image: renewable-integration41-full-api:4.1.0-integration-full.1
+    pull_policy: never
+    command: ["python", "scripts/p4_entrypoint.py", "python", "scripts/prepare_integration41_full.py"]
+    environment: *full-environment
+
+  alert-receiver:
+    image: renewable-integration41-full-api:4.1.0-integration-full.1
+    pull_policy: never
+
+  api:
+    image: renewable-integration41-full-api:4.1.0-integration-full.1
+    pull_policy: never
+    environment:
+      <<: *full-environment
+      QUERY_ENGINE_MODE: SHADOW
+      SQLBOT_INCLUDED_IN_V4_RELEASE: "true"
+      SQLBOT_ENGINE_ENABLED: "false"
+      SQLBOT_RUNTIME_VERIFIED: "false"
+
+  web:
+    image: renewable-integration41-full-web:4.1.0-integration-full.1
+    pull_policy: never
+
+networks:
+  default:
+    name: renewable-integration41-full-network

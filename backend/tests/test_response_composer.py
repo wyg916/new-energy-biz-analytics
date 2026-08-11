@@ -9,6 +9,8 @@ from app.response.contracts import (
     EvidenceClaim,
     KeyMetric,
     KnowledgeEvidence,
+    MemoryEvidence,
+    P6ReportEvidence,
     ResponseProfileName,
 )
 
@@ -104,6 +106,51 @@ def test_missing_evidence_refuses() -> None:
 
     assert result.refused is True
     assert result.confidence == 0
+
+
+def test_full_integration_contract_preserves_memory_and_p6_report_evidence() -> None:
+    memory = MemoryEvidence(
+        working_status="ACTIVE",
+        recalled_memory_ids=("MEM-1",),
+        lifecycle_status="RECALLED",
+        legal_hold_applied=False,
+    )
+    report = P6ReportEvidence(
+        snapshot_id="RSE-1", report_id="RPT-1", report_version_id="RPV-1",
+        analysis_run_id="ANALYSIS-1", run_id="run-response-test",
+        query_plan_hash="a" * 64, sql_hash="b" * 64,
+        dataset_version="1.0.0", semantic_version="1.0.1",
+        snapshot_hash="c" * 64, citations=(citation(),),
+    )
+    result = ResponseComposer().compose(CompositionRequest(
+        question="生成有证据的报告草稿",
+        profile=ResponseProfileName.ANALYST_DETAILED,
+        data_evidence=data(), knowledge_evidence=knowledge(),
+        memory_evidence=memory, report_evidence=report,
+        trace_id="trace-full-contract", run_id="run-response-test",
+    ))
+
+    assert result.memory_evidence == memory
+    assert result.report_evidence == report
+    assert result.citations[0].paragraph_start is None
+    assert result.citations[0].locator == "document"
+
+
+def test_full_integration_contract_rejects_mismatched_report_run() -> None:
+    report = P6ReportEvidence(
+        snapshot_id="RSE-1", report_id="RPT-1", report_version_id="RPV-1",
+        analysis_run_id="ANALYSIS-1", run_id="other-run",
+        query_plan_hash="a" * 64, sql_hash="b" * 64,
+        dataset_version="1.0.0", semantic_version="1.0.1",
+        snapshot_hash="c" * 64,
+    )
+    with pytest.raises(ValueError, match="report evidence run_id"):
+        ResponseComposer().compose(CompositionRequest(
+            question="run_id mismatch",
+            profile=ResponseProfileName.ANALYST_DETAILED,
+            data_evidence=data(), report_evidence=report,
+            trace_id="trace-full-contract", run_id="run-response-test",
+        ))
 
 
 def test_unbound_claim_is_rejected() -> None:

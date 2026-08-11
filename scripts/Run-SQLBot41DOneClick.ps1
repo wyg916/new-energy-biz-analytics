@@ -7,8 +7,14 @@ param(
     ),
     [string]$PlatformNetwork = 'renewable-data41-network',
     [string]$RuntimeVolume = 'renewable-data41_p4_runtime',
+    [string]$RedisDataVolume = 'renewable-data41_p4_redis',
+    [string]$RedisContainer = 'renewable-data41-redis-1',
     [string]$PlatformDatabaseHost = 'renewable-data41-db-1',
     [string]$PlatformApiImage = 'renewable-sqlbot41-api:test',
+    [string]$ExpectedRevision = 'sqlbot_41c2',
+    [string]$SQLBotContainer = 'renewable-sqlbot-41c-runtime-v1-10-0',
+    [int]$SQLBotHostPort = 18082,
+    [string]$SQLBotVolumePrefix = 'renewable-sqlbot41c',
     [int]$TimeoutSeconds = 180
 )
 
@@ -39,7 +45,14 @@ if ($Mode -ne 'SHADOW') {
     }
 }
 
-$dependencies = & (Join-Path $PSScriptRoot 'Start-SQLBot41DDependencies.ps1')
+$dependencies = & (Join-Path $PSScriptRoot 'Start-SQLBot41DDependencies.ps1') `
+    -PlatformNetwork $PlatformNetwork `
+    -RuntimeVolume $RuntimeVolume `
+    -RedisDataVolume $RedisDataVolume `
+    -RedisContainer $RedisContainer `
+    -SQLBotContainer $SQLBotContainer `
+    -SQLBotHostPort $SQLBotHostPort `
+    -SQLBotVolumePrefix $SQLBotVolumePrefix
 if ($LASTEXITCODE -ne 0) { throw 'SQLBot 4.1D dependency startup failed' }
 
 function Wait-Http {
@@ -61,7 +74,7 @@ function Wait-Http {
     return $false
 }
 
-$runtimeReady = Wait-Http -Url 'http://127.0.0.1:18082/'
+$runtimeReady = Wait-Http -Url "http://127.0.0.1:${SQLBotHostPort}/"
 $apiReady = Wait-Http `
     -Url 'https://p5b.localhost:8446/api/v1/health/ready' `
     -ExtraArguments @('--resolve', 'p5b.localhost:8446:127.0.0.1')
@@ -89,7 +102,8 @@ $arguments = @(
     'python', 'scripts/p4_entrypoint.py',
     'python', 'scripts/verify_sqlbot41d_startup_readiness.py',
     '--output', "/evidence/$([IO.Path]::GetFileName($outputPath))",
-    '--mode', $Mode
+    '--mode', $Mode,
+    '--expected-revision', $ExpectedRevision
 )
 $created = $false
 try {

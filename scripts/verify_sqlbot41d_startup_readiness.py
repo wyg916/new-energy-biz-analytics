@@ -76,6 +76,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", required=True, type=Path)
     parser.add_argument("--mode", default="SHADOW", choices=sorted(MODES))
+    parser.add_argument("--expected-revision", default="sqlbot_41c2")
     args = parser.parse_args()
     if args.output.exists():
         raise RuntimeError(f"refusing to overwrite evidence: {args.output}")
@@ -145,7 +146,7 @@ def main() -> None:
     redis_ready = bool(Redis.from_url(get_settings().redis_url).ping())
     relation_counts = database_state.get("binding_relation_counts") or {}
     checks = {
-        "postgresql_ready": database_state.get("migration") == "sqlbot_41c2",
+        "postgresql_ready": database_state.get("migration") == args.expected_revision,
         "credential_reference_ready": (
             database_state.get("credential_reference_count") == 2
         ),
@@ -172,6 +173,7 @@ def main() -> None:
         "checks": checks,
         "runtime": {
             "migration": database_state.get("migration"),
+            "expected_migration": args.expected_revision,
             "credential_reference_count": database_state.get(
                 "credential_reference_count"
             ),

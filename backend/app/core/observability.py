@@ -124,7 +124,7 @@ def readiness_snapshot() -> tuple[dict[str, Any], int]:
         "status": "ready" if ready else "not_ready",
         "service": "renewable-operations-api",
         "release_version": settings.release_version,
-        "data_classification": "simulated",
+        "data_classification": settings.runtime_data_classification,
         "components": components,
     }
     return payload, 200 if ready else 503

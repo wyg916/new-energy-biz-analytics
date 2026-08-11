@@ -1,4 +1,4 @@
-"""Activate the 4.1C2 simulated acceptance Source Binding contract.
+"""Activate the 4.1C2 governed current-data Source Binding contract.
 
 This is an automated local acceptance action, not evidence of human approval
 or production activation.  The existing registry still enforces the admin
@@ -30,7 +30,7 @@ def main() -> None:
             .order_by(User.id)
         )
         if user is None:
-            raise RuntimeError("no active simulated acceptance administrator")
+            raise RuntimeError("no active controlled acceptance administrator")
         identity = IdentityContextFactory.from_user(
             user,
             request_id=(
@@ -60,7 +60,7 @@ def main() -> None:
             })
     print(json.dumps({
         "status": "PASS",
-        "activation_scope": "local_simulated_acceptance",
+        "activation_scope": "local_full_integration_acceptance",
         "approval_mechanism": "automated_existing_admin_registry_workflow",
         "human_approval_claimed": False,
         "production_activation_claimed": False,

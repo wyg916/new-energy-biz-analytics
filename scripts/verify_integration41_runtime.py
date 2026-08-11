@@ -8,14 +8,16 @@ import time
 from pathlib import Path
 
 from sqlalchemy import func, select, text
+from redis import Redis
 
 from app.core.config import get_settings
 from app.core.database import SessionLocal
 from app.memory.models import MemoryLifecycleTask
+from app.models.knowledge import KnowledgeDocumentVersion
 from scripts.rebuild_rag_indexes import inspect_index_state
 
 
-EXPECTED_REVISION = "integration_41_merge_0001"
+EXPECTED_REVISION = "integration_41_full_0001"
 
 
 def snapshot(expected_revision: str = EXPECTED_REVISION) -> dict:
@@ -30,17 +32,42 @@ def snapshot(expected_revision: str = EXPECTED_REVISION) -> dict:
                 MemoryLifecycleTask.status == "FAILED"
             )
         ) or 0)
+        published_document_count = int(db.scalar(
+            select(func.count()).select_from(KnowledgeDocumentVersion).where(
+                KnowledgeDocumentVersion.status == "PUBLISHED"
+            )
+        ) or 0)
+        p6_table_count = int(db.scalar(text("""
+            SELECT COUNT(*) FROM information_schema.tables
+            WHERE table_schema = 'public' AND table_name LIKE 'p6_%'
+        """)) or 0)
+        semantic_view_count = int(db.scalar(text("""
+            SELECT COUNT(*) FROM information_schema.views
+            WHERE table_schema IN ('semantic_sqlbot_charging', 'semantic_sqlbot_sales')
+        """)) or 0)
+        active_binding_count = int(db.scalar(text("""
+            SELECT COUNT(*) FROM sqlbot_source_binding_release WHERE status = 'ACTIVE'
+        """)) or 0)
     rag = inspect_index_state()
+    redis_ready = bool(Redis.from_url(settings.redis_url).ping())
+    readonly_file = Path("/run/p4-runtime/sqlbot41b_readonly_credentials.json")
     checks = {
         "migration_head": revision == expected_revision,
         "settings_revision": settings.expected_database_revision == expected_revision,
         "rag_index_reconciled": bool(rag["index_ready"]),
+        "knowledge_published": published_document_count > 0,
+        "knowledge_chunks_published": rag["chunk_count"] > 0,
         "memory_scheduler_enabled": settings.memory_lifecycle_scheduler_enabled,
         "memory_scheduler_created_tasks": lifecycle_task_count > 0,
         "memory_scheduler_no_failed_tasks": lifecycle_failed_count == 0,
+        "redis_ready": redis_ready,
+        "p6_tables_ready": p6_table_count >= 10,
+        "sqlbot_semantic_views_ready": semantic_view_count == 16,
+        "sqlbot_source_bindings_ready": active_binding_count == 2,
+        "sqlbot_readonly_credentials_ready": readonly_file.is_file(),
         "sqlbot_shadow": settings.effective_query_engine_mode == "SHADOW",
         "sqlbot_engine_disabled": not settings.sqlbot_engine_enabled,
-        "sqlbot_release_disabled": not settings.sqlbot_included_in_v4_release,
+        "sqlbot_release_included": settings.sqlbot_included_in_v4_release,
     }
     return {
         "status": "PASS" if all(checks.values()) else "WAITING",
@@ -49,6 +76,10 @@ def snapshot(expected_revision: str = EXPECTED_REVISION) -> dict:
         "rag": rag,
         "lifecycle_task_count": lifecycle_task_count,
         "lifecycle_failed_count": lifecycle_failed_count,
+        "published_document_count": published_document_count,
+        "p6_table_count": p6_table_count,
+        "semantic_view_count": semantic_view_count,
+        "active_binding_count": active_binding_count,
         "query_engine_mode": settings.effective_query_engine_mode,
         "checks": checks,
     }

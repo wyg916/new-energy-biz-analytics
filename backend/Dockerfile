@@ -15,4 +15,5 @@ COPY tests/evaluation/ /app/tests/evaluation/
 COPY docs/v2/ /app/docs/v2/
 COPY docs/data/ /app/docs/data/
 COPY docs/ /app/knowledge_sources/docs/
+COPY integration/knowledge_import_plan.json /app/integration/knowledge_import_plan.json
 CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"]

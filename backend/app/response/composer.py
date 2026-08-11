@@ -83,6 +83,8 @@ class ResponseComposer:
             ) else None,
             refused=False,
             data_classification=request.data_classification,
+            memory_evidence=request.memory_evidence,
+            report_evidence=request.report_evidence,
         )
 
     def _refusal(self, request: CompositionRequest, message: str) -> FinalResponse:
@@ -105,10 +107,18 @@ class ResponseComposer:
             sql=None,
             refused=True,
             data_classification=request.data_classification,
+            memory_evidence=request.memory_evidence,
+            report_evidence=request.report_evidence,
         )
 
     @staticmethod
     def _classification_warning(data_classification: str) -> str:
-        if data_classification == "open_source_real_data":
+        if data_classification in {"open_source_real_data", "OPEN_SOURCE_REAL_DATA"}:
             return "当前展示数据来自已登记公开数据样本；来源、许可、版本和转换血缘可审计。"
+        if data_classification == "OPEN_SOURCE_DERIVED":
+            return "当前经营结果由已登记公开数据样本按已发布规则确定性衍生；来源、版本、规则和 run_id 可审计。"
+        if data_classification == "BUSINESS_ASSUMPTION":
+            return "当前结果包含已登记业务假设；假设、规则、版本和 run_id 可审计。"
+        if data_classification == "TEST_FIXTURE":
+            return "当前数据仅为确定性测试夹具，不代表企业生产经营事实。"
         return "当前展示数据均为固定随机种子生成的模拟数据。"

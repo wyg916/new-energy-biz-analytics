@@ -123,6 +123,9 @@ def build_query_context(
             ),
             allowed_relations=relation_columns,
             prompt_context=prompt_context,
+            data_classification=str(
+                binding_payload.get("data_classification", "simulated")
+            ),
             execution_mode=str(
                 source_binding.get("sqlbot_execution_mode", "upstream_readonly")
             ),
@@ -326,6 +329,9 @@ def build_query_context(
         datasource_id=str(datasource_id) if datasource_id is not None else None,
         allowed_relations=relation_columns,
         prompt_context=prompt_context,
+        data_classification=str(
+            binding_payload.get("data_classification", "simulated")
+        ),
         execution_mode=execution_mode,
         run_id=run_id,
         max_rows=500,

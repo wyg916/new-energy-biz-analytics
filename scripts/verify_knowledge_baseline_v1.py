@@ -147,6 +147,7 @@ def main(argv=None) -> None:
         default=os.getenv("KNOWLEDGE_API_BASE", "https://p5b.localhost:8446/api/v1"),
     )
     parser.add_argument("--token-env", default="KNOWLEDGE_ADMIN_TOKEN")
+    parser.add_argument("--identity-username", default="p4.analyst")
     parser.add_argument("--insecure", action="store_true")
     parser.add_argument(
         "--output",
@@ -293,7 +294,7 @@ def main(argv=None) -> None:
         "status": "PASS",
         "generated_at": datetime.now(UTC).isoformat(),
         "identity": {
-            "username": "p4.analyst",
+            "username": args.identity_username,
             "role": "analyst_admin",
             "auth_flow": "authorization_code_pkce",
             "credential_drift_resolved": True,

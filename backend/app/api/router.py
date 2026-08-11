@@ -48,7 +48,7 @@ def health() -> dict:
         "status": "ok",
         "service": "renewable-operations-api",
         "release_version": get_settings().release_version,
-        "data_classification": "simulated",
+        "data_classification": get_settings().runtime_data_classification,
     }
 
 

@@ -3,6 +3,7 @@ param(
     [string]$TargetContainer = 'renewable-sqlbot-41c-runtime-v1-10-0',
     [int]$HostPort = 18082,
     [string]$PlatformNetwork = 'renewable-data41-network',
+    [string]$VolumePrefix = 'renewable-sqlbot41c',
     [int]$HealthTimeoutSeconds = 180
 )
 
@@ -74,11 +75,11 @@ $arguments += @(
     '-e', 'SQLBOT_UPSTREAM_VERSION=v1.10.0',
     '-v', "${root}\deploy\sqlbot\start-local-acceptance.sh:/usr/local/bin/sqlbot-local-acceptance-start.sh:ro",
     '-v', "${root}\deploy\sqlbot\sqlbot41_runtime.py:/opt/sqlbot/app/sqlbot41_runtime.py:ro",
-    '-v', 'renewable-sqlbot41c-postgresql:/var/lib/postgresql/data',
-    '-v', 'renewable-sqlbot41c-logs:/opt/sqlbot/app/logs',
-    '-v', 'renewable-sqlbot41c-excel:/opt/sqlbot/data/excel',
-    '-v', 'renewable-sqlbot41c-file:/opt/sqlbot/data/file',
-    '-v', 'renewable-sqlbot41c-images:/opt/sqlbot/data/images',
+    '-v', "${VolumePrefix}-postgresql:/var/lib/postgresql/data",
+    '-v', "${VolumePrefix}-logs:/opt/sqlbot/app/logs",
+    '-v', "${VolumePrefix}-excel:/opt/sqlbot/data/excel",
+    '-v', "${VolumePrefix}-file:/opt/sqlbot/data/file",
+    '-v', "${VolumePrefix}-images:/opt/sqlbot/data/images",
     '--entrypoint', '/bin/sh',
     'registry.cn-qingdao.aliyuncs.com/dataease/sqlbot:v1.10.0',
     '/usr/local/bin/sqlbot-local-acceptance-start.sh'

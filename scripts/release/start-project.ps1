@@ -3,7 +3,7 @@ param(
     [switch]$NoBrowser,
     [ValidateRange(60, 1800)]
     [int]$TimeoutSeconds = 1800,
-    [string]$EvidencePath = "runtime/p6-41-startup-report.json"
+    [string]$EvidencePath = "runtime/integration41full-startup-report.json"
 )
 
 Set-StrictMode -Version Latest
@@ -13,20 +13,25 @@ $baseCompose = Join-Path $workspace "deploy/preproduction/compose.yaml"
 $overrideCompose = Join-Path $workspace "deploy/production-acceptance/p5b.override.yaml"
 $dataOverrideCompose = Join-Path $workspace "deploy/data41/override.yaml"
 $p6OverrideCompose = Join-Path $workspace "deploy/p6/override.yaml"
-$project = "renewable-p6-business-loop-41"
-$releaseVersion = "4.1.0-p6.1"
-$expectedMigration = "p6_41_0001"
+$fullOverrideCompose = Join-Path $workspace "deploy/integration41full/override.yaml"
+$project = "renewable-integration41-full"
+$releaseVersion = "4.1.0-integration-full.1"
+$expectedMigration = "integration_41_full_0001"
+$apiImage = "renewable-integration41-full-api:4.1.0-integration-full.1"
+$webImage = "renewable-integration41-full-web:4.1.0-integration-full.1"
+$sourceHead = (& git -C $workspace rev-parse HEAD 2>$null | Out-String).Trim()
 $businessUrl = "https://p5b.localhost:8446"
 $apiHealthUrl = "$businessUrl/api/v1/health"
 $apiReadyUrl = "$businessUrl/api/v1/health/ready"
 $oidcUrl = "$businessUrl/oidc/realms/chatbi/.well-known/openid-configuration"
-$composeArgs = @("compose", "-p", $project, "-f", $baseCompose, "-f", $overrideCompose, "-f", $dataOverrideCompose, "-f", $p6OverrideCompose)
+$composeArgs = @("compose", "-p", $project, "-f", $baseCompose, "-f", $overrideCompose, "-f", $dataOverrideCompose, "-f", $p6OverrideCompose, "-f", $fullOverrideCompose)
 $integrationComposeArgs = @("compose", "-p", "renewable-integration41-core", "-f", $baseCompose, "-f", $overrideCompose, "-f", $dataOverrideCompose)
+$p6ComposeArgs = @("compose", "-p", "renewable-p6-business-loop-41", "-f", $baseCompose, "-f", $overrideCompose, "-f", $dataOverrideCompose, "-f", $p6OverrideCompose)
 $legacyComposeArgs = @("compose", "-p", "renewable-p5b-gate-closure", "-f", $baseCompose, "-f", $overrideCompose)
 $dataComposeArgs = @("compose", "-p", "renewable-data41", "-f", $baseCompose, "-f", $overrideCompose, "-f", $dataOverrideCompose)
 $requiredImages = @(
-    "renewable-p6-api:4.1.0-p6.1",
-    "renewable-p6-web:4.1.0-p6.1",
+    $apiImage,
+    $webImage,
     "renewable-p5b-postgres:16.14-hardened",
     "renewable-p5b-keycloak:26.7.0-hardened",
     "renewable-p5b-backup:16.14-hardened",
@@ -113,12 +118,22 @@ function Test-ImageExists {
     return $LASTEXITCODE -eq 0
 }
 
-function Test-DataApiImageCompatible {
+function Test-ImageRevision {
     param([string]$Image)
     if (-not (Test-ImageExists -Image $Image)) { return $false }
+    $inspect = (& docker image inspect $Image | Out-String) | ConvertFrom-Json
+    $labels = $inspect[0].Config.Labels
+    if ($null -eq $labels) { return $false }
+    $revisionProperty = $labels.PSObject.Properties['org.opencontainers.image.revision']
+    return $null -ne $revisionProperty -and $revisionProperty.Value -eq $sourceHead
+}
+
+function Test-FullApiImageCompatible {
+    param([string]$Image)
+    if (-not (Test-ImageRevision -Image $Image)) { return $false }
     & docker run --rm --entrypoint sh $Image -lc @"
-test -f /app/alembic/versions/sqlbot_41c2_semantic_views.py &&
-grep -q 'revision = "sqlbot_41c2"' /app/alembic/versions/sqlbot_41c2_semantic_views.py
+test -f /app/alembic/versions/integration_41_full_0001_merge.py &&
+grep -q 'revision = "integration_41_full_0001"' /app/alembic/versions/integration_41_full_0001_merge.py
 "@ 1>$null 2>$null
     return $LASTEXITCODE -eq 0
 }
@@ -139,7 +154,7 @@ function Write-StartupReport {
     $head = (& git -C $workspace rev-parse HEAD 2>$null | Out-String).Trim()
     $payload = [ordered]@{
         schema_version = "1.0"
-        evidence_type = "p6_41_cold_start"
+        evidence_type = "integration_41_full_startup"
         status = $Status
         started_at = $startedAt.ToString("o")
         finished_at = [DateTimeOffset]::UtcNow.ToString("o")
@@ -148,7 +163,7 @@ function Write-StartupReport {
             compose_project = $project
             release_version = $releaseVersion
             expected_migration_head = $expectedMigration
-            sqlbot_runtime = "SHADOW_DISABLED_NOT_A_P6_DEPENDENCY"
+            sqlbot_runtime = "CONTROLLED_SHADOW_WITH_SCOPED_STABLE_AVAILABLE"
             p6_business_loops = @("alerts", "reports", "metric_governance")
             rag_capability = "Governed Hybrid RAG V1"
             rag_mode = "hybrid_bm25_vector_rrf_rerank"
@@ -162,7 +177,13 @@ function Write-StartupReport {
             production_traffic_switched = $false
         }
         data = [ordered]@{
-            classification = "open_source_real_data"
+            classification = "OPEN_SOURCE_DERIVED"
+            classification_taxonomy = @(
+                "OPEN_SOURCE_REAL_DATA",
+                "OPEN_SOURCE_DERIVED",
+                "BUSINESS_ASSUMPTION",
+                "TEST_FIXTURE"
+            )
             period_start = "2020-05-09"
             period_end = "2020-06-09"
             source = "ACN-Data via ORNL OpenEnergyDataPortal; transformed into PostgreSQL core and semantic tables"
@@ -187,7 +208,7 @@ try {
         Invoke-CheckedNative -FilePath "docker" -Arguments @("info", "--format", "{{.ServerVersion}}") -FailureMessage "Docker engine is unavailable"
     }
     Invoke-Step "Compose contract" {
-        Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("config", "--quiet")) -FailureMessage "P6 Compose contract is invalid"
+        Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("config", "--quiet")) -FailureMessage "Full Integration Compose contract is invalid"
     }
     Invoke-Step "Committed source snapshot hashes" {
         $manifestPath = Join-Path $workspace "data/open_source/source_manifest.json"
@@ -201,23 +222,39 @@ try {
         }
         "Validated $($manifest.snapshots.Count) committed snapshots; no startup download"
     }
-    Invoke-Step "P6 4.1 application images" {
-        Invoke-CheckedNative -FilePath "docker" -Arguments @("build", "--file", "backend/Dockerfile", "--tag", "renewable-p6-api:4.1.0-p6.1", ".") -FailureMessage "P6 API image build failed" | Out-Null
-        Invoke-CheckedNative -FilePath "docker" -Arguments @("build", "--tag", "renewable-p6-web:4.1.0-p6.1", "frontend") -FailureMessage "P6 web image build failed" | Out-Null
-        "Application images were rebuilt from the current P6 worktree"
+    Invoke-Step "Full Integration application images" {
+        $actions = @()
+        if (-not (Test-FullApiImageCompatible -Image $apiImage)) {
+            Invoke-CheckedNative -FilePath "docker" -Arguments @(
+                "build", "--file", "backend/Dockerfile", "--label",
+                "org.opencontainers.image.revision=$sourceHead", "--tag", $apiImage, "."
+            ) -FailureMessage "Full Integration API image build failed" | Out-Null
+            $actions += "api=BUILT"
+        }
+        else { $actions += "api=REUSED" }
+        if (-not (Test-ImageRevision -Image $webImage)) {
+            Invoke-CheckedNative -FilePath "docker" -Arguments @(
+                "build", "--label", "org.opencontainers.image.revision=$sourceHead",
+                "--tag", $webImage, "frontend"
+            ) -FailureMessage "Full Integration web image build failed" | Out-Null
+            $actions += "web=BUILT"
+        }
+        else { $actions += "web=REUSED" }
+        "Application image actions: $($actions -join ', ')"
     }
     Invoke-Step "Required image inventory" {
         foreach ($image in $requiredImages) {
-            Invoke-CheckedNative -FilePath "docker" -Arguments @("image", "inspect", $image, "--format", "{{.Id}}") -FailureMessage "Required P6 dependency image is missing: $image" | Out-Null
+            Invoke-CheckedNative -FilePath "docker" -Arguments @("image", "inspect", $image, "--format", "{{.Id}}") -FailureMessage "Required Full Integration dependency image is missing: $image" | Out-Null
         }
         "Validated $($requiredImages.Count) required image references"
     }
     Invoke-Step "Superseded runtime handoff" {
-        Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("down", "--remove-orphans")) -FailureMessage "Unable to stop the previous P6 runtime safely" | Out-Null
+        Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("down", "--remove-orphans")) -FailureMessage "Unable to stop the previous Full Integration runtime safely" | Out-Null
+        Invoke-CheckedNative -FilePath "docker" -Arguments ($p6ComposeArgs + @("down", "--remove-orphans")) -FailureMessage "Unable to stop the previous P6 runtime safely" | Out-Null
         Invoke-CheckedNative -FilePath "docker" -Arguments ($integrationComposeArgs + @("down", "--remove-orphans")) -FailureMessage "Unable to stop the previous Integration runtime safely" | Out-Null
         Invoke-CheckedNative -FilePath "docker" -Arguments ($dataComposeArgs + @("down", "--remove-orphans")) -FailureMessage "Unable to stop the superseded DATA-4.1 runtime safely" | Out-Null
         Invoke-CheckedNative -FilePath "docker" -Arguments ($legacyComposeArgs + @("down", "--remove-orphans")) -FailureMessage "Unable to stop the superseded P5B runtime safely" | Out-Null
-        "Stopped P6, Integration, DATA-4.1 and P5B containers without deleting rollback volumes"
+        "Stopped Full Integration, P6, Integration-Core, DATA-4.1 and P5B containers without deleting rollback volumes"
     }
     Invoke-Step "DATA-4.1 standalone runtime handoff" {
         $targets = @(
@@ -280,8 +317,8 @@ try {
             'No standalone DATA-4.1 service handoff was required'
         }
     }
-    Invoke-Step "P6 4.1 services" {
-        Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("up", "-d", "--wait", "--wait-timeout", "$TimeoutSeconds")) -FailureMessage "P6 4.1 Compose startup failed"
+    Invoke-Step "Full Integration services" {
+        Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("up", "-d", "--wait", "--wait-timeout", "$TimeoutSeconds")) -FailureMessage "Full Integration Compose startup failed"
     }
     Invoke-Step "API health" { Wait-Http -Url $apiHealthUrl }
     Invoke-Step "API readiness" { Wait-Http -Url $apiReadyUrl }
@@ -295,38 +332,66 @@ try {
         }
         $joined
     }
-    Invoke-Step "P6 isolated PostgreSQL migration cycle" {
+    Invoke-Step "Full Integration isolated PostgreSQL migration cycle" {
         $cycle = Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @(
             "exec", "-T", "api", "python", "scripts/p4_entrypoint.py", "python",
-            "scripts/run_p3_migration_acceptance.py", "--database", "p6_41_migration_verify",
+            "scripts/run_p3_migration_acceptance.py", "--database", "integration_41_full_migration_verify",
             "--rollback-revision", "integration_41_merge_0001"
-        )) -FailureMessage "P6 isolated PostgreSQL migration cycle failed"
+        )) -FailureMessage "Full Integration isolated PostgreSQL migration cycle failed"
         $joined = ($cycle -join "`n")
-        if ($joined -notmatch '"passed": true' -or $joined -notmatch '"head_revision": "p6_41_0001"') {
-            throw "P6 migration cycle did not prove upgrade, downgrade and re-upgrade"
+        if ($joined -notmatch '"passed": true' -or $joined -notmatch '"head_revision": "integration_41_full_0001"') {
+            throw "Full Integration migration cycle did not prove upgrade, downgrade and re-upgrade"
         }
         $joined
     }
-    Invoke-Step "Open-source import, RAG and P6 bootstrap gate" {
+    Invoke-Step "Open-source import and P6 bootstrap gate" {
         $initLogs = Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("logs", "--no-color", "init")) -FailureMessage "Unable to read DATA-4.1 init logs"
         $joined = ($initLogs -join "`n")
         if (
             $joined -notmatch '"status": "PASS"' -or
             $joined -notmatch '"quality_check_fail_count": 0' -or
-            $joined -notmatch '"index_ready": true' -or
-            $joined -notmatch 'P6 enterprise operating-management closed loops'
+            $joined -notmatch 'P6 enterprise operating-management closed loops' -or
+            $joined -notmatch 'PENDING_GOVERNED_API'
         ) {
-            throw "P6 init did not report passing DATA quality, RAG index and business-loop readiness"
+            throw "Full init did not report passing DATA quality and P6 readiness"
         }
         $joined
     }
-    Invoke-Step "RAG index completeness" {
-        $index = Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("exec", "-T", "api", "python", "scripts/p4_entrypoint.py", "python", "scripts/rebuild_rag_indexes.py", "--check")) -FailureMessage "RAG index completeness check failed closed"
+    Invoke-Step "Governed Knowledge Baseline bootstrap" {
+        $knowledge = Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @(
+            "exec", "-T", "api", "python", "scripts/p4_entrypoint.py", "python",
+            "scripts/apply_knowledge_baseline_bootstrap.py",
+            "--api-base", "http://api:8000/api/v1",
+            "--oidc-login-base", "http://oidc:8080/oidc",
+            "--output", "/app/data/preproduction-evidence/knowledge-bootstrap.json"
+        )) -FailureMessage "Governed Knowledge Baseline bootstrap failed"
+        $joined = ($knowledge -join "`n")
+        if ($joined -notmatch '"status": "PASS"' -or $joined -notmatch '"principal": "integration.knowledge-bootstrap"') {
+            throw "Knowledge bootstrap did not prove the controlled Integration principal"
+        }
+        $joined
+    }
+    Invoke-Step "RAG rebuild and index completeness" {
+        $index = Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @(
+            "exec", "-T", "api", "python", "scripts/p4_entrypoint.py", "python",
+            "scripts/rebuild_rag_indexes.py"
+        )) -FailureMessage "RAG rebuild failed closed"
         $joined = ($index -join "`n")
-        if ($joined -notmatch '"index_ready": true') {
+        if ($joined -notmatch '"index_ready": true' -or $joined -notmatch '"chunk_count":') {
             throw "RAG index status is INDEX_BACKFILL_REQUIRED"
         }
         $joined
+    }
+    Invoke-Step "SQLBot readonly roles and Source Bindings" {
+        $readonly = Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @(
+            "run", "--rm", "--no-deps", "runtime-bootstrap", "python",
+            "scripts/p4_entrypoint.py", "python", "deploy/sqlbot/provision_platform_readonly_runtime.py"
+        )) -FailureMessage "SQLBot readonly role provisioning failed"
+        $bindings = Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @(
+            "exec", "-T", "api", "python", "scripts/p4_entrypoint.py", "python",
+            "scripts/activate_sqlbot41c2_source_bindings.py"
+        )) -FailureMessage "SQLBot Source Binding activation failed"
+        (($readonly + $bindings) -join "`n")
     }
     Invoke-Step "Memory scheduler and Integration runtime" {
         $runtime = Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("exec", "-T", "api", "python", "scripts/p4_entrypoint.py", "python", "scripts/verify_integration41_runtime.py", "--timeout-seconds", "45", "--expected-revision", $expectedMigration, "--output", "/app/data/preproduction-evidence/integration41-runtime.json")) -FailureMessage "Integrated runtime verification failed"
@@ -345,7 +410,7 @@ try {
         try {
             $env:PLAYWRIGHT_BASE_URL = $businessUrl
             $env:PLAYWRIGHT_BROWSERS_PATH = Join-Path $workspace ".cache/ms-playwright"
-            $runtimePassword = & docker run --rm -v "${project}_p4_keycloak_runtime:/run/p4-keycloak:ro" --entrypoint python renewable-p6-api:4.1.0-p6.1 -c "from pathlib import Path; print(Path('/run/p4-keycloak/keycloak_user_password').read_text().strip())" 2>$null
+            $runtimePassword = & docker run --rm -v "${project}_p4_keycloak_runtime:/run/p4-keycloak:ro" --entrypoint python $apiImage -c "from pathlib import Path; print(Path('/run/p4-keycloak/keycloak_user_password').read_text().strip())" 2>$null
             if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace(($runtimePassword | Out-String))) {
                 throw "P6 runtime-only OIDC acceptance credential is unavailable"
             }
@@ -371,7 +436,7 @@ try {
     }
     Write-StartupReport -Status "PASS"
     Write-Host ""
-    Write-Host "P6-4.1 ONE-CLICK COLD START PASSED"
+    Write-Host "INTEGRATION-4.1-FULL PLATFORM STARTUP PASSED"
     Write-Host "Web: $businessUrl"
     Write-Host "API: $apiReadyUrl"
     if (-not $NoBrowser) {
