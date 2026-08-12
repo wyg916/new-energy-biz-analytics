@@ -34,6 +34,11 @@ PROVIDER_CONTRACTS = {
         "model_name": "kimi-k2.6",
         "supplier": 8,
     },
+    "mimo": {
+        "api_domain": "https://api.xiaomimimo.com/v1",
+        "model_name": "mimo-v2.5",
+        "supplier": 0,
+    },
 }
 
 
@@ -51,6 +56,28 @@ def _fingerprint(value: str) -> str:
 
 
 def _read_provider_input() -> ProviderInput:
+    runtime_provider = os.getenv("SQLBOT_PROVIDER")
+    runtime_path = os.getenv("SQLBOT_PROVIDER_CREDENTIAL_FILE")
+    if runtime_provider or runtime_path:
+        if not runtime_provider or not runtime_path:
+            raise RuntimeError("runtime provider reference is incomplete")
+        contract = PROVIDER_CONTRACTS.get(runtime_provider)
+        if contract is None:
+            raise RuntimeError("provider is not an accepted SQLBot candidate")
+        expected_path = f"/run/provider-credentials/{runtime_provider}"
+        if runtime_path != expected_path:
+            raise RuntimeError("runtime credential file is outside the allowlist")
+        with open(runtime_path, encoding="utf-8") as credential_file:
+            api_key = credential_file.read().strip()
+        if not api_key or "\n" in api_key or "\r" in api_key:
+            raise RuntimeError("runtime provider credential is invalid")
+        return ProviderInput(
+            provider=runtime_provider,
+            api_key=api_key,
+            api_domain=str(contract["api_domain"]),
+            model_name=str(contract["model_name"]),
+            expected_fingerprint=_fingerprint(api_key),
+        )
     try:
         # Windows PowerShell 5 can prefix native-pipeline UTF-8 with a BOM.
         # Accept that transport marker while retaining the exact JSON contract.
@@ -133,8 +160,8 @@ def _admin_headers(client: httpx.Client) -> dict[str, str]:
 
 def _candidate(provider: ProviderInput) -> dict[str, Any]:
     contract = PROVIDER_CONTRACTS[provider.provider]
-    config_list = (
-        [
+    provider_configs = {
+        "deepseek": [
             {"key": "temperature", "val": 0, "name": "temperature"},
             # SQL generation is a constrained structured-output task. DeepSeek
             # V4 enables thinking by default, which dominated the measured
@@ -149,10 +176,36 @@ def _candidate(provider: ProviderInput) -> dict[str, Any]:
             # hidden SDK retries so provider delay cannot multiply silently.
             {"key": "max_retries", "val": 0, "name": "max_retries"},
             {"key": "timeout", "val": 12, "name": "timeout"},
-        ]
-        if provider.provider == "deepseek"
-        else []
-    )
+        ],
+        "kimi": [
+            {"key": "temperature", "val": 0.6, "name": "temperature"},
+            {
+                "key": "extra_body",
+                "val": {"thinking": {"type": "disabled"}},
+                "name": "extra_body",
+            },
+            {"key": "max_tokens", "val": 768, "name": "max_tokens"},
+            {"key": "max_retries", "val": 0, "name": "max_retries"},
+            {"key": "timeout", "val": 12, "name": "timeout"},
+        ],
+        "mimo": [
+            {"key": "temperature", "val": 1.0, "name": "temperature"},
+            {"key": "top_p", "val": 0.95, "name": "top_p"},
+            {
+                "key": "extra_body",
+                "val": {"thinking": {"type": "disabled"}},
+                "name": "extra_body",
+            },
+            {
+                "key": "max_completion_tokens",
+                "val": 768,
+                "name": "max_completion_tokens",
+            },
+            {"key": "max_retries", "val": 0, "name": "max_retries"},
+            {"key": "timeout", "val": 12, "name": "timeout"},
+        ],
+    }
+    config_list = provider_configs[provider.provider]
     return {
         "name": f"p2a-runtime-{provider.provider}-{provider.model_name}",
         "model_type": 0,

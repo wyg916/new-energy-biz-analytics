@@ -4,6 +4,7 @@ param(
     [int]$HostPort = 18082,
     [string]$PlatformNetwork = 'renewable-data41-network',
     [string]$VolumePrefix = 'renewable-sqlbot41c',
+    [string]$ProviderCredentialVolume = '',
     [int]$HealthTimeoutSeconds = 180
 )
 
@@ -79,7 +80,12 @@ $arguments += @(
     '-v', "${VolumePrefix}-logs:/opt/sqlbot/app/logs",
     '-v', "${VolumePrefix}-excel:/opt/sqlbot/data/excel",
     '-v', "${VolumePrefix}-file:/opt/sqlbot/data/file",
-    '-v', "${VolumePrefix}-images:/opt/sqlbot/data/images",
+    '-v', "${VolumePrefix}-images:/opt/sqlbot/data/images"
+)
+if ($ProviderCredentialVolume) {
+    $arguments += @('-v', "${ProviderCredentialVolume}:/run/provider-credentials:ro")
+}
+$arguments += @(
     '--entrypoint', '/bin/sh',
     'registry.cn-qingdao.aliyuncs.com/dataease/sqlbot:v1.10.0',
     '/usr/local/bin/sqlbot-local-acceptance-start.sh'

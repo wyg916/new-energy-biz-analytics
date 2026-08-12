@@ -1,0 +1,45 @@
+{
+  "evidence_type": "integration41full_model_gateway_provider_probe",
+  "status": "PASS",
+  "providers": [
+    {
+      "provider": "kimi",
+      "model": "kimi-k2.6",
+      "task_type": "rag_answer_generation",
+      "data_classification": "simulated",
+      "credential_ref": "runtime-file://provider-credentials/kimi",
+      "credential_fingerprint_sha256_12": "8de8aeb2b724",
+      "response_valid": true,
+      "finish_reason_present": true,
+      "latency_ms": 2506,
+      "status": "PASS"
+    },
+    {
+      "provider": "mimo",
+      "model": "mimo-v2.5",
+      "task_type": "rag_answer_generation",
+      "data_classification": "simulated",
+      "credential_ref": "runtime-file://provider-credentials/mimo",
+      "credential_fingerprint_sha256_12": "a3176a0ce95f",
+      "response_valid": true,
+      "finish_reason_present": true,
+      "latency_ms": 2093,
+      "status": "PASS"
+    },
+    {
+      "provider": "deepseek",
+      "model": "deepseek-v4-flash",
+      "task_type": "rag_answer_generation",
+      "data_classification": "simulated",
+      "credential_ref": "runtime-file://provider-credentials/deepseek",
+      "credential_fingerprint_sha256_12": "e1bf1d4615e9",
+      "response_valid": true,
+      "finish_reason_present": true,
+      "latency_ms": 1505,
+      "status": "PASS"
+    }
+  ],
+  "response_content_exposed": false,
+  "secret_values_exposed": false,
+  "tested_code_sha": "5945b51672849ded8cda6bbd36bfcd1d1cf676b6"
+}

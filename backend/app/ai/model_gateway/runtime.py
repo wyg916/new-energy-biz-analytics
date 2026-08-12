@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from app.ai.model_gateway.client import OpenAICompatibleProvider
+from app.ai.model_gateway.client import DeepSeekProvider, KimiProvider, MiMoProvider
 from app.ai.model_gateway.contracts import (
     DataClassification,
     ModelConfig,
@@ -19,12 +19,13 @@ def _config(
     credential_ref: str,
     enabled: bool,
     fallback_model: str | None,
+    provider: str,
 ) -> ModelConfig | None:
     if not base_url or not model_name:
         return None
     return ModelConfig(
         config_id=config_id,
-        provider="openai-compatible",
+        provider=provider,
         base_url=base_url,
         model_name=model_name,
         credential_ref=credential_ref,
@@ -51,15 +52,17 @@ def get_runtime_model_gateway() -> ModelGateway:
             model_name=settings.model_gateway_kimi_model_name,
             credential_ref=settings.model_gateway_kimi_credential_ref,
             enabled=settings.model_gateway_kimi_enabled,
-            fallback_model="mimo-rag-fallback",
+            fallback_model="mimo-rag-standby",
+            provider="kimi",
         ),
         _config(
-            "mimo-rag-fallback",
+            "mimo-rag-standby",
             base_url=settings.model_gateway_mimo_base_url,
             model_name=settings.model_gateway_mimo_model_name,
             credential_ref=settings.model_gateway_mimo_credential_ref,
             enabled=settings.model_gateway_mimo_enabled,
-            fallback_model="deepseek-rag-fallback",
+            fallback_model=None,
+            provider="mimo",
         ),
         _config(
             "deepseek-rag-fallback",
@@ -68,12 +71,17 @@ def get_runtime_model_gateway() -> ModelGateway:
             credential_ref=settings.model_gateway_deepseek_credential_ref,
             enabled=settings.model_gateway_deepseek_enabled,
             fallback_model=None,
+            provider="deepseek",
         ),
     ]
     registry = ModelRegistry([item for item in candidates if item is not None])
     return ModelGateway(
         registry,
-        {"openai-compatible": OpenAICompatibleProvider()},
+        {
+            "kimi": KimiProvider(),
+            "mimo": MiMoProvider(),
+            "deepseek": DeepSeekProvider(),
+        },
     )
 
 

@@ -1,0 +1,22 @@
+{
+  "evidence_type": "integration41full_acceptance_summary",
+  "status": "PARTIAL",
+  "tested_code_sha": "5945b51672849ded8cda6bbd36bfcd1d1cf676b6",
+  "final_rc_candidate": false,
+  "provider_discovery": "PASS",
+  "provider_health": "PASS",
+  "model_gateway_provider_probe": "PASS",
+  "provider_selection": "FAIL_NO_ELIGIBLE_PROVIDER",
+  "backend_regression": {
+    "status": "PASS",
+    "tests": 522,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "secret_scan": "PASS",
+  "downstream_gates": "NOT_EXECUTED_PREREQUISITE_FAILED",
+  "git_push": "NOT_PERFORMED_PARTIAL",
+  "rc_tag": "NOT_CREATED",
+  "secret_values_exposed": false
+}

@@ -1,5 +1,6 @@
 import json
 from collections.abc import Callable
+from dataclasses import dataclass
 from typing import Protocol
 
 import httpx
@@ -24,26 +25,52 @@ class ProviderClient(Protocol):
     def health(self, config: ModelConfig) -> bool: ...
 
 
+@dataclass(frozen=True)
+class OpenAIProviderProfile:
+    auth_header: str = "Authorization"
+    auth_prefix: str = "Bearer "
+    max_tokens_field: str = "max_tokens"
+    system_message: str | None = None
+    extra_body: dict | None = None
+    fixed_temperature: float | None = None
+
+
 class OpenAICompatibleProvider:
     def __init__(
         self,
         credential_resolver: CredentialResolver | None = None,
         transport: httpx.BaseTransport | None = None,
+        profile: OpenAIProviderProfile | None = None,
     ) -> None:
         self._credentials = credential_resolver or CredentialResolver()
         self._transport = transport
+        self._profile = profile or OpenAIProviderProfile()
 
     def complete(self, config: ModelConfig, request: GatewayRequest) -> ProviderResult:
         credential = self._credentials.resolve(config.credential_ref)
         headers = {"Content-Type": "application/json"}
         if credential is not None:
-            headers["Authorization"] = f"Bearer {credential.value}"
+            headers[self._profile.auth_header] = (
+                f"{self._profile.auth_prefix}{credential.value}"
+            )
+        messages = [message.model_dump() for message in request.messages]
+        if self._profile.system_message:
+            messages.insert(0, {
+                "role": "system",
+                "content": self._profile.system_message,
+            })
         payload: dict = {
             "model": config.model_name,
-            "messages": [message.model_dump() for message in request.messages],
-            "temperature": config.temperature,
-            "max_tokens": config.max_tokens,
+            "messages": messages,
+            "temperature": (
+                self._profile.fixed_temperature
+                if self._profile.fixed_temperature is not None
+                else config.temperature
+            ),
+            self._profile.max_tokens_field: config.max_tokens,
         }
+        if self._profile.extra_body:
+            payload.update(self._profile.extra_body)
         if request.response_format == "json_object":
             payload["response_format"] = {"type": "json_object"}
         try:
@@ -91,7 +118,13 @@ class OpenAICompatibleProvider:
     def health(self, config: ModelConfig) -> bool:
         try:
             credential = self._credentials.resolve(config.credential_ref)
-            headers = {"Authorization": f"Bearer {credential.value}"} if credential else {}
+            headers = (
+                {
+                    self._profile.auth_header:
+                        f"{self._profile.auth_prefix}{credential.value}"
+                }
+                if credential else {}
+            )
             with httpx.Client(
                 timeout=min(config.timeout_seconds, 5.0),
                 transport=self._transport,
@@ -101,6 +134,35 @@ class OpenAICompatibleProvider:
             return response.status_code < 500
         except Exception:
             return False
+
+
+class KimiProvider(OpenAICompatibleProvider):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(profile=OpenAIProviderProfile(
+            extra_body={"thinking": {"type": "disabled"}},
+            fixed_temperature=0.6,
+        ), **kwargs)
+
+
+class MiMoProvider(OpenAICompatibleProvider):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(profile=OpenAIProviderProfile(
+            auth_header="api-key",
+            auth_prefix="",
+            max_tokens_field="max_completion_tokens",
+            system_message=(
+                "你是MiMo（中文名称也是MiMo），是小米公司研发的AI智能助手。"
+            ),
+            extra_body={"thinking": {"type": "disabled"}, "top_p": 0.95},
+            fixed_temperature=1.0,
+        ), **kwargs)
+
+
+class DeepSeekProvider(OpenAICompatibleProvider):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(profile=OpenAIProviderProfile(
+            extra_body={"thinking": {"type": "disabled"}},
+        ), **kwargs)
 
 
 class MockProvider:

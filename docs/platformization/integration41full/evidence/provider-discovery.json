@@ -1,0 +1,105 @@
+{
+  "evidence_type": "integration41full_provider_discovery",
+  "status": "PASS",
+  "providers": [
+    {
+      "provider": "kimi",
+      "model": "kimi-k2.6",
+      "credential_ref": "runtime-file://provider-credentials/kimi",
+      "credential_fingerprint_sha256_12": "8de8aeb2b724",
+      "auth_method": "Authorization: Bearer",
+      "model_discovery": {
+        "http_status": 200,
+        "error_code": null,
+        "error_type": null,
+        "request_id": null,
+        "attempts": 1,
+        "latency_ms": 5596,
+        "response_valid": true,
+        "model_count": 2,
+        "target_present": true,
+        "discovered_models": [
+          "kimi-k2.7-code",
+          "kimi-k2.6"
+        ]
+      },
+      "minimal_chat": {
+        "http_status": 200,
+        "success": true,
+        "latency_ms": 2259,
+        "request_id": null,
+        "response_model": "kimi-k2.6",
+        "response_valid": true
+      },
+      "status": "PASS"
+    },
+    {
+      "provider": "mimo",
+      "model": "mimo-v2.5",
+      "credential_ref": "runtime-file://provider-credentials/mimo",
+      "credential_fingerprint_sha256_12": "a3176a0ce95f",
+      "auth_method": "api-key",
+      "model_discovery": {
+        "http_status": 200,
+        "error_code": null,
+        "error_type": null,
+        "request_id": null,
+        "attempts": 1,
+        "latency_ms": 911,
+        "response_valid": true,
+        "model_count": 6,
+        "target_present": true,
+        "discovered_models": [
+          "mimo-v2.5",
+          "mimo-v2.5-asr",
+          "mimo-v2.5-pro",
+          "mimo-v2.5-tts",
+          "mimo-v2.5-tts-voiceclone",
+          "mimo-v2.5-tts-voicedesign"
+        ]
+      },
+      "minimal_chat": {
+        "http_status": 200,
+        "success": true,
+        "latency_ms": 1891,
+        "request_id": null,
+        "response_model": "mimo-v2.5",
+        "response_valid": true
+      },
+      "status": "PASS"
+    },
+    {
+      "provider": "deepseek",
+      "model": "deepseek-v4-flash",
+      "credential_ref": "runtime-file://provider-credentials/deepseek",
+      "credential_fingerprint_sha256_12": "e1bf1d4615e9",
+      "auth_method": "Authorization: Bearer",
+      "model_discovery": {
+        "http_status": 200,
+        "error_code": null,
+        "error_type": null,
+        "request_id": null,
+        "attempts": 1,
+        "latency_ms": 753,
+        "response_valid": true,
+        "model_count": 2,
+        "target_present": true,
+        "discovered_models": [
+          "deepseek-v4-flash",
+          "deepseek-v4-pro"
+        ]
+      },
+      "minimal_chat": {
+        "http_status": 200,
+        "success": true,
+        "latency_ms": 1785,
+        "request_id": null,
+        "response_model": "deepseek-v4-flash",
+        "response_valid": true
+      },
+      "status": "PASS"
+    }
+  ],
+  "secret_values_exposed": false,
+  "tested_code_sha": "5945b51672849ded8cda6bbd36bfcd1d1cf676b6"
+}

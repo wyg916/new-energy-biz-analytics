@@ -29,7 +29,7 @@ OFFICIAL_PROVIDER_CONFIG = {
     },
     "mimo": {
         "base_url": "https://api.xiaomimimo.com/v1",
-        "preferred_model": "mimo-v2.5-pro",
+        "preferred_model": "mimo-v2.5",
         "key_env": "MIMO_API_KEY",
     },
 }
@@ -281,11 +281,8 @@ def _completion(result: HttpResult) -> tuple[str, dict[str, Any], str | None]:
 
 
 def _select_model(models: list[str], preferred_model: str, alias: str) -> str | None:
-    if preferred_model in models:
-        return preferred_model
-    needle = "kimi" if alias == "kimi" else "deepseek"
-    suitable = [model for model in models if needle in model.lower()]
-    return suitable[0] if suitable else (models[0] if models else None)
+    del alias
+    return preferred_model if preferred_model in models else None
 
 
 def _valid_sql(content: str) -> bool:
@@ -353,7 +350,16 @@ def _chat_payload(
             "max_completion_tokens": 32 if check_name == "text" else 256,
             "temperature": 1.0,
             "top_p": 0.95,
+            "thinking": {"type": "disabled"},
         })
+    elif alias == "kimi":
+        payload.update({
+            "max_tokens": 32 if check_name == "text" else 256,
+            "temperature": 0.6,
+            "thinking": {"type": "disabled"},
+        })
+    elif alias == "deepseek":
+        payload["thinking"] = {"type": "disabled"}
     if check_name == "json":
         payload["response_format"] = {"type": "json_object"}
     return payload
@@ -432,11 +438,13 @@ def _models_with_single_retry(
     spec: ProviderSpec,
     requester: Requester,
     timeout_seconds: float,
+    auth_method: str = "bearer",
 ) -> tuple[HttpResult, int]:
-    headers = {
-        "Authorization": f"Bearer {spec.api_key}",
-        "Accept": "application/json",
-    }
+    headers = {"Accept": "application/json"}
+    if auth_method == "api-key":
+        headers["api-key"] = spec.api_key
+    else:
+        headers["Authorization"] = f"Bearer {spec.api_key}"
     attempts = 0
     result: HttpResult | None = None
     while attempts < 2:
@@ -546,68 +554,50 @@ def _validate_mimo(
     except Exception as exc:
         result["checks"]["dns"] = {"error_type": type(exc).__name__}
         return result
-    probe_payload = _chat_payload(spec.alias, spec.preferred_model, "text")
-    api_key_result = requester(
-        "POST",
-        f"{spec.base_url}/chat/completions",
-        {"api-key": spec.api_key, "Content-Type": "application/json"},
-        probe_payload,
+    models_result, attempts = _models_with_single_retry(
+        spec,
+        requester,
         timeout_seconds,
+        auth_method="api-key",
     )
-    authentication: dict[str, Any] = {
-        "api_key": {
-            **_safe_error(api_key_result),
-            "latency_ms": api_key_result.latency_ms,
-        },
-        "bearer": None,
+    models_check = {
+        **_safe_error(models_result),
+        "attempts": attempts,
+        "latency_ms": models_result.latency_ms,
+        "success": False,
     }
-    selected_auth: str | None = "api-key" if api_key_result.status_code == 200 else None
-    probe_result = api_key_result
-    if api_key_result.status_code == 401:
-        bearer_result = requester(
-            "POST",
-            f"{spec.base_url}/chat/completions",
-            {
-                "Authorization": f"Bearer {spec.api_key}",
-                "Content-Type": "application/json",
-            },
-            probe_payload,
-            timeout_seconds,
-        )
-        authentication["bearer"] = {
-            **_safe_error(bearer_result),
-            "latency_ms": bearer_result.latency_ms,
-        }
-        probe_result = bearer_result
-        if bearer_result.status_code == 200:
-            selected_auth = "bearer"
-    result["checks"]["authentication"] = authentication
-    if selected_auth is None:
+    result["auth_method"] = "api-key"
+    if models_result.status_code != 200:
+        result["checks"]["models"] = models_check
         return result
-    result["auth_method"] = (
-        "api-key" if selected_auth == "api-key" else "Authorization: Bearer"
-    )
-    selected_model = spec.preferred_model
-    if probe_result.status_code == 200:
-        try:
-            _, _, response_model = _completion(probe_result)
-            if response_model:
-                selected_model = response_model
-        except (
-            UnicodeDecodeError,
-            json.JSONDecodeError,
-            KeyError,
-            IndexError,
-            TypeError,
-        ):
-            pass
+    try:
+        payload = _response_payload(models_result)
+        models = [
+            str(item["id"])
+            for item in payload.get("data", [])
+            if isinstance(item, dict) and item.get("id")
+        ]
+    except (UnicodeDecodeError, json.JSONDecodeError, KeyError, TypeError) as exc:
+        models_check["error_type"] = type(exc).__name__
+        result["checks"]["models"] = models_check
+        return result
+    selected_model = _select_model(models, spec.preferred_model, spec.alias)
+    models_check.update({
+        "success": selected_model is not None,
+        "count": len(models),
+        "preferred_present": spec.preferred_model in models,
+    })
+    result["checks"]["models"] = models_check
+    result["discovered_models"] = models
+    result["selected_model"] = selected_model
+    if selected_model is None:
+        return result
     smoke, selected_model = _run_smoke(
         spec,
         model=selected_model,
-        auth_method=selected_auth,
+        auth_method="api-key",
         requester=requester,
         timeout_seconds=timeout_seconds,
-        initial_text_result=probe_result,
     )
     result["checks"].update(smoke)
     result["selected_model"] = selected_model
@@ -644,10 +634,7 @@ def _all_credentials_rejected(providers: list[dict[str, Any]]) -> bool:
         return (
             by_alias["kimi"]["checks"]["models"]["http_status"] == 401
             and by_alias["deepseek"]["checks"]["models"]["http_status"] == 401
-            and by_alias["mimo"]["checks"]["authentication"]["api_key"]
-            ["http_status"] == 401
-            and by_alias["mimo"]["checks"]["authentication"]["bearer"]
-            ["http_status"] == 401
+            and by_alias["mimo"]["checks"]["models"]["http_status"] == 401
         )
     except (KeyError, TypeError):
         return False

@@ -1,0 +1,221 @@
+{
+  "evidence_type": "integration41full_provider_health_matrix",
+  "status": "FAIL",
+  "providers": [
+    {
+      "provider": "kimi",
+      "model": "kimi-k2.6",
+      "credential_ref": "runtime-file://provider-credentials/kimi",
+      "probe_count": 5,
+      "success_count": 0,
+      "timeout_count": 0,
+      "response_valid_count": 0,
+      "latency_ms": {
+        "p50": 1758,
+        "p95": 1807,
+        "min": 1554,
+        "max": 1807
+      },
+      "samples": [
+        {
+          "sequence": 1,
+          "http_status": 400,
+          "success": false,
+          "timeout": false,
+          "latency_ms": 1758,
+          "response_valid": false,
+          "response_model": null,
+          "request_id": null,
+          "error_code": "invalid_request_error",
+          "error_type": "HTTPError"
+        },
+        {
+          "sequence": 2,
+          "http_status": 400,
+          "success": false,
+          "timeout": false,
+          "latency_ms": 1807,
+          "response_valid": false,
+          "response_model": null,
+          "request_id": null,
+          "error_code": "invalid_request_error",
+          "error_type": "HTTPError"
+        },
+        {
+          "sequence": 3,
+          "http_status": 400,
+          "success": false,
+          "timeout": false,
+          "latency_ms": 1691,
+          "response_valid": false,
+          "response_model": null,
+          "request_id": null,
+          "error_code": "invalid_request_error",
+          "error_type": "HTTPError"
+        },
+        {
+          "sequence": 4,
+          "http_status": 400,
+          "success": false,
+          "timeout": false,
+          "latency_ms": 1554,
+          "response_valid": false,
+          "response_model": null,
+          "request_id": null,
+          "error_code": "invalid_request_error",
+          "error_type": "HTTPError"
+        },
+        {
+          "sequence": 5,
+          "http_status": 400,
+          "success": false,
+          "timeout": false,
+          "latency_ms": 1796,
+          "response_valid": false,
+          "response_model": null,
+          "request_id": null,
+          "error_code": "invalid_request_error",
+          "error_type": "HTTPError"
+        }
+      ],
+      "status": "FAIL"
+    },
+    {
+      "provider": "mimo",
+      "model": "mimo-v2.5",
+      "credential_ref": "runtime-file://provider-credentials/mimo",
+      "probe_count": 5,
+      "success_count": 4,
+      "timeout_count": 0,
+      "response_valid_count": 4,
+      "latency_ms": {
+        "p50": 1806,
+        "p95": 5713,
+        "min": 1353,
+        "max": 5713
+      },
+      "samples": [
+        {
+          "sequence": 1,
+          "http_status": 200,
+          "success": true,
+          "timeout": false,
+          "latency_ms": 1423,
+          "response_valid": true,
+          "response_model": "mimo-v2.5",
+          "request_id": null
+        },
+        {
+          "sequence": 2,
+          "http_status": 200,
+          "success": true,
+          "timeout": false,
+          "latency_ms": 5713,
+          "response_valid": true,
+          "response_model": "mimo-v2.5",
+          "request_id": null
+        },
+        {
+          "sequence": 3,
+          "http_status": 200,
+          "success": true,
+          "timeout": false,
+          "latency_ms": 1353,
+          "response_valid": true,
+          "response_model": "mimo-v2.5",
+          "request_id": null
+        },
+        {
+          "sequence": 4,
+          "http_status": 200,
+          "success": true,
+          "timeout": false,
+          "latency_ms": 1806,
+          "response_valid": true,
+          "response_model": "mimo-v2.5",
+          "request_id": null
+        },
+        {
+          "sequence": 5,
+          "http_status": 200,
+          "success": false,
+          "timeout": false,
+          "latency_ms": 2505,
+          "response_valid": false,
+          "response_model": "mimo-v2.5",
+          "request_id": null
+        }
+      ],
+      "status": "FAIL"
+    },
+    {
+      "provider": "deepseek",
+      "model": "deepseek-v4-flash",
+      "credential_ref": "runtime-file://provider-credentials/deepseek",
+      "probe_count": 5,
+      "success_count": 5,
+      "timeout_count": 0,
+      "response_valid_count": 5,
+      "latency_ms": {
+        "p50": 1728,
+        "p95": 1933,
+        "min": 1524,
+        "max": 1933
+      },
+      "samples": [
+        {
+          "sequence": 1,
+          "http_status": 200,
+          "success": true,
+          "timeout": false,
+          "latency_ms": 1933,
+          "response_valid": true,
+          "response_model": "deepseek-v4-flash",
+          "request_id": null
+        },
+        {
+          "sequence": 2,
+          "http_status": 200,
+          "success": true,
+          "timeout": false,
+          "latency_ms": 1728,
+          "response_valid": true,
+          "response_model": "deepseek-v4-flash",
+          "request_id": null
+        },
+        {
+          "sequence": 3,
+          "http_status": 200,
+          "success": true,
+          "timeout": false,
+          "latency_ms": 1524,
+          "response_valid": true,
+          "response_model": "deepseek-v4-flash",
+          "request_id": null
+        },
+        {
+          "sequence": 4,
+          "http_status": 200,
+          "success": true,
+          "timeout": false,
+          "latency_ms": 1604,
+          "response_valid": true,
+          "response_model": "deepseek-v4-flash",
+          "request_id": null
+        },
+        {
+          "sequence": 5,
+          "http_status": 200,
+          "success": true,
+          "timeout": false,
+          "latency_ms": 1817,
+          "response_valid": true,
+          "response_model": "deepseek-v4-flash",
+          "request_id": null
+        }
+      ],
+      "status": "PASS"
+    }
+  ],
+  "secret_values_exposed": false
+}

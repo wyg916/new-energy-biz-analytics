@@ -1,0 +1,61 @@
+{
+  "evidence_type": "integration41full_provider_benchmark_ranking",
+  "status": "NO_ELIGIBLE_PROVIDER",
+  "tested_code_sha": "5945b51672849ded8cda6bbd36bfcd1d1cf676b6",
+  "hard_gate": {
+    "smoke20": "20/20",
+    "p95_latency_ms_max": 15000,
+    "security_violations": 0
+  },
+  "providers": [
+    {
+      "rank": 1,
+      "provider": "deepseek",
+      "model": "deepseek-v4-flash",
+      "discovery": "PASS",
+      "health": "PASS",
+      "smoke_passed": 10,
+      "smoke_total": 20,
+      "semantic_accuracy": 0.5,
+      "execution_success": 0.375,
+      "p50_latency_ms": 12117,
+      "p95_latency_ms": 17844,
+      "security_violation_count": 0,
+      "hard_gate_pass": false,
+      "eligibility": "REGISTERED_NOT_ELIGIBLE"
+    },
+    {
+      "rank": 2,
+      "provider": "mimo",
+      "model": "mimo-v2.5",
+      "discovery": "PASS",
+      "health": "PASS",
+      "smoke_passed": 9,
+      "smoke_total": 20,
+      "semantic_accuracy": 0.45,
+      "execution_success": 0.3125,
+      "p50_latency_ms": 12089,
+      "p95_latency_ms": 23335,
+      "security_violation_count": 0,
+      "hard_gate_pass": false,
+      "eligibility": "REGISTERED_NOT_ELIGIBLE"
+    },
+    {
+      "rank": 3,
+      "provider": "kimi",
+      "model": "kimi-k2.6",
+      "discovery": "PASS",
+      "health": "PASS",
+      "smoke_passed": 8,
+      "smoke_total": 20,
+      "semantic_accuracy": 0.4,
+      "execution_success": 0.25,
+      "p50_latency_ms": 12122,
+      "p95_latency_ms": 22358,
+      "security_violation_count": 0,
+      "hard_gate_pass": false,
+      "eligibility": "REGISTERED_NOT_ELIGIBLE"
+    }
+  ],
+  "secret_values_exposed": false
+}

@@ -12,6 +12,39 @@ from typing import Optional
 from fastapi import APIRouter, HTTPException
 from starlette.responses import JSONResponse
 
+# SQLBot v1.10 uses one OpenAI-compatible factory for all protocol=1 models.
+# MiMo's official endpoint requires the credential in ``api-key`` rather than
+# relying on the standard Authorization header. Install the narrow adapter
+# before importing the assembled upstream application so status probes and
+# real chat traffic share exactly the same transport contract.
+from apps.ai_model.model_factory import BaseChatOpenAI, OpenAILLM
+
+
+MIMO_API_DOMAIN = "https://api.xiaomimimo.com/v1"
+_original_openai_init = OpenAILLM._init_llm
+
+
+def _provider_aware_openai_init(self):
+    if (self.config.api_base_url or "").rstrip("/") != MIMO_API_DOMAIN:
+        return _original_openai_init(self)
+    params = dict(self.config.additional_params)
+    if "default_headers" in params:
+        raise ValueError("persisted default_headers are not allowed")
+    return BaseChatOpenAI(
+        model=self.config.model_name,
+        # The OpenAI client always constructs an Authorization header. MiMo
+        # authenticates with the explicit api-key header below; use a harmless
+        # fixed placeholder so the real credential is not duplicated there.
+        api_key="mimo-runtime-api-key-header",
+        base_url=self.config.api_base_url,
+        default_headers={"api-key": self.config.api_key or ""},
+        stream_usage=True,
+        **params,
+    )
+
+
+OpenAILLM._init_llm = _provider_aware_openai_init
+
 # Import the fully assembled upstream application first. Importing chat modules
 # before main causes SQLBot datasource modules to re-enter each other.
 from main import app, mcp_app

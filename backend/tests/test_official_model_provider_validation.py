@@ -61,7 +61,7 @@ def test_env_file_parser_handles_bom_quotes_and_safe_audit(tmp_path):
         "KIMI_MODEL=kimi-k2.6\n"
         'MIMO_API_KEY="sk-mimo"\n'
         "MIMO_BASE_URL=https://api.xiaomimimo.com/v1\n"
-        "MIMO_MODEL=mimo-v2.5-pro\n"
+        "MIMO_MODEL=mimo-v2.5\n"
         "DEEPSEEK_API_KEY=sk-deepseek\n"
         "DEEPSEEK_BASE_URL=https://api.deepseek.com\n"
         "DEEPSEEK_MODEL=deepseek-v4-flash\n",
@@ -100,7 +100,7 @@ def test_official_specs_reject_non_official_base_url():
         "KIMI_MODEL": "kimi-k2.6",
         "MIMO_API_KEY": "sk-mimo",
         "MIMO_BASE_URL": "https://api.xiaomimimo.com/v1",
-        "MIMO_MODEL": "mimo-v2.5-pro",
+        "MIMO_MODEL": "mimo-v2.5",
         "DEEPSEEK_API_KEY": "sk-deepseek",
         "DEEPSEEK_BASE_URL": "https://api.deepseek.com",
         "DEEPSEEK_MODEL": "deepseek-v4-flash",
@@ -124,7 +124,8 @@ def test_kimi_uses_models_bearer_then_three_smokes(monkeypatch):
             return _result({"data": [{"id": "kimi-k2.6"}]})
         check_index = len([item for item in calls if item[0] == "POST"])
         if check_index == 1:
-            assert "temperature" not in payload
+            assert payload["temperature"] == 0.6
+            assert payload["thinking"] == {"type": "disabled"}
             return _completion("OK", "kimi-k2.6")
         if check_index == 2:
             return _completion(
@@ -180,7 +181,7 @@ def test_deepseek_401_retries_once_and_keeps_request_id(monkeypatch):
     ]
 
 
-def test_mimo_calls_chat_with_api_key_without_models(monkeypatch):
+def test_mimo_discovers_exact_model_and_calls_chat_with_api_key(monkeypatch):
     monkeypatch.setattr(
         "app.evaluation.official_model_provider_validation.socket.getaddrinfo",
         lambda *_args: [(None, None, None, None, None)],
@@ -189,23 +190,29 @@ def test_mimo_calls_chat_with_api_key_without_models(monkeypatch):
 
     def requester(method, url, headers, payload, timeout):
         calls.append((method, url, headers, payload))
+        assert headers["api-key"] == "sk-secret-value"
+        if method == "GET":
+            assert url.endswith("/models")
+            return _result({"data": [
+                {"id": "mimo-v2.5"},
+                {"id": "mimo-v2.5-pro"},
+            ]})
         assert method == "POST"
         assert url.endswith("/chat/completions")
-        assert headers["api-key"] == "sk-secret-value"
         assert payload["temperature"] == 1.0
         assert payload["top_p"] == 0.95
-        index = len(calls)
+        index = len([item for item in calls if item[0] == "POST"])
         if index == 1:
-            return _completion("OK", "mimo-v2.5-pro")
+            return _completion("OK", "mimo-v2.5")
         if index == 2:
             return _completion(
                 '{"status":"ok","provider":"mimo"}',
-                "mimo-v2.5-pro",
+                "mimo-v2.5",
             )
         return _completion(
             "SELECT region, SUM(revenue) AS revenue FROM orders "
             "GROUP BY region ORDER BY revenue DESC",
-            "mimo-v2.5-pro",
+            "mimo-v2.5",
         )
 
     report = validate_all_providers(
@@ -213,7 +220,7 @@ def test_mimo_calls_chat_with_api_key_without_models(monkeypatch):
             _spec(
                 "mimo",
                 "https://api.xiaomimimo.com/v1",
-                "mimo-v2.5-pro",
+                "mimo-v2.5",
             )
         ],
         requester=requester,
@@ -222,10 +229,12 @@ def test_mimo_calls_chat_with_api_key_without_models(monkeypatch):
     provider = report["providers"][0]
     assert provider["final_status"] == "PASS"
     assert provider["auth_method"] == "api-key"
-    assert len(calls) == 3
+    assert provider["selected_model"] == "mimo-v2.5"
+    assert provider["checks"]["models"]["preferred_present"] is True
+    assert len(calls) == 4
 
 
-def test_mimo_only_falls_back_to_bearer_after_api_key_401(monkeypatch):
+def test_mimo_does_not_silently_replace_missing_requested_model(monkeypatch):
     monkeypatch.setattr(
         "app.evaluation.official_model_provider_validation.socket.getaddrinfo",
         lambda *_args: [(None, None, None, None, None)],
@@ -233,35 +242,26 @@ def test_mimo_only_falls_back_to_bearer_after_api_key_401(monkeypatch):
     calls = []
 
     def requester(method, url, headers, payload, timeout):
-        calls.append(headers)
-        if len(calls) == 1:
-            return _result({"error": {"code": "401"}}, status=401)
-        if len(calls) == 2:
-            return _completion("OK", "mimo-v2.5-pro")
-        if len(calls) == 3:
-            return _completion(
-                '{"status":"ok","provider":"mimo"}',
-                "mimo-v2.5-pro",
-            )
-        return _completion(
-            "SELECT region, SUM(revenue) FROM orders GROUP BY region",
-            "mimo-v2.5-pro",
-        )
+        calls.append((method, headers))
+        assert headers["api-key"] == "sk-secret-value"
+        return _result({"data": [{"id": "mimo-v2.5-pro"}]})
 
     report = validate_all_providers(
         [
             _spec(
                 "mimo",
                 "https://api.xiaomimimo.com/v1",
-                "mimo-v2.5-pro",
+                "mimo-v2.5",
             )
         ],
         requester=requester,
     )
 
-    assert "api-key" in calls[0]
-    assert "Authorization" in calls[1]
-    assert report["providers"][0]["auth_method"] == "Authorization: Bearer"
+    provider = report["providers"][0]
+    assert calls == [("GET", {"Accept": "application/json", "api-key": "sk-secret-value"})]
+    assert provider["selected_model"] is None
+    assert provider["checks"]["models"]["preferred_present"] is False
+    assert provider["final_status"] == "FAIL"
 
 
 def test_all_official_401_results_use_required_blocker(monkeypatch):
@@ -284,7 +284,7 @@ def test_all_official_401_results_use_required_blocker(monkeypatch):
             _spec(
                 "mimo",
                 "https://api.xiaomimimo.com/v1",
-                "mimo-v2.5-pro",
+                "mimo-v2.5",
             ),
         ],
         requester=requester,

@@ -1,0 +1,12 @@
+{
+  "evidence_type": "integration41full_sqlbot_final",
+  "status": "BLOCKED_AT_PROVIDER_HARD_GATE",
+  "tested_code_sha": "5945b51672849ded8cda6bbd36bfcd1d1cf676b6",
+  "primary_provider": null,
+  "formal_sqlbot_traffic_enabled": false,
+  "deterministic_engine_enabled": true,
+  "final_smoke20_executed": false,
+  "shadow50_and_downstream_executed": false,
+  "reason": "Provider selection is a prerequisite for downstream SQLBot gates.",
+  "secret_values_exposed": false
+}

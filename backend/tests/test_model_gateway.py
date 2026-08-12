@@ -1,9 +1,16 @@
+import json
 import os
 
 import httpx
 import pytest
 
-from app.ai.model_gateway.client import MockProvider, OpenAICompatibleProvider
+from app.ai.model_gateway.client import (
+    DeepSeekProvider,
+    KimiProvider,
+    MiMoProvider,
+    MockProvider,
+    OpenAICompatibleProvider,
+)
 from app.ai.model_gateway.contracts import (
     DataClassification,
     GatewayMessage,
@@ -143,3 +150,57 @@ def test_openai_compatible_response_and_authorization_header(monkeypatch) -> Non
     assert result.content == "ok"
     assert result.usage.total_tokens == 3
     monkeypatch.delenv("MODEL_TEST_SECRET")
+
+
+@pytest.mark.parametrize(
+    ("provider_factory", "expected_thinking"),
+    [(KimiProvider, True), (DeepSeekProvider, True)],
+)
+def test_bearer_provider_adapters_disable_thinking(
+    monkeypatch, provider_factory, expected_thinking
+) -> None:
+    monkeypatch.setenv("MODEL_TEST_SECRET", "runtime-secret")
+
+    def handler(http_request: httpx.Request) -> httpx.Response:
+        payload = json.loads(http_request.content)
+        assert http_request.headers["Authorization"] == "Bearer runtime-secret"
+        assert (payload.get("thinking") == {"type": "disabled"}) is expected_thinking
+        assert payload["max_tokens"] == 1024
+        if provider_factory is KimiProvider:
+            assert payload["temperature"] == 0.6
+        return httpx.Response(200, json={
+            "choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}],
+            "usage": {},
+        })
+
+    provider = provider_factory(transport=httpx.MockTransport(handler))
+    model = config("primary", provider="kimi").model_copy(
+        update={"credential_ref": "env://MODEL_TEST_SECRET"}
+    )
+    assert provider.complete(model, request()).content == "ok"
+
+
+def test_mimo_adapter_uses_api_key_and_completion_token_contract(monkeypatch) -> None:
+    monkeypatch.setenv("MODEL_TEST_SECRET", "runtime-secret")
+
+    def handler(http_request: httpx.Request) -> httpx.Response:
+        payload = json.loads(http_request.content)
+        assert http_request.headers["api-key"] == "runtime-secret"
+        assert "Authorization" not in http_request.headers
+        assert payload["max_completion_tokens"] == 1024
+        assert "max_tokens" not in payload
+        assert payload["messages"][0]["role"] == "system"
+        assert "MiMo" in payload["messages"][0]["content"]
+        assert payload["temperature"] == 1.0
+        assert payload["top_p"] == 0.95
+        assert payload["thinking"] == {"type": "disabled"}
+        return httpx.Response(200, json={
+            "choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}],
+            "usage": {},
+        })
+
+    provider = MiMoProvider(transport=httpx.MockTransport(handler))
+    model = config("primary", provider="mimo").model_copy(
+        update={"credential_ref": "env://MODEL_TEST_SECRET"}
+    )
+    assert provider.complete(model, request()).content == "ok"

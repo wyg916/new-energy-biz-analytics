@@ -1,0 +1,22 @@
+﻿{
+    "evidence_type":  "integration_41_full_backend_regression",
+    "status":  "FAIL",
+    "started_at":  "2026-08-12T07:12:57.9983899+00:00",
+    "finished_at":  "2026-08-12T07:34:56.2397975+00:00",
+    "command":  "python -m pytest backend/tests -q",
+    "database":  "isolated tmpfs PostgreSQL 16.14",
+    "real_redis_lifecycle":  true,
+    "application_image":  "renewable-integration41-full-api:4.1.0-integration-full.1",
+    "counts":  {
+                   "tests":  522,
+                   "failures":  1,
+                   "errors":  0,
+                   "skipped":  0
+               },
+    "test_exit_code":  1,
+    "junit":  "backend-full.xml",
+    "temporary_containers_removed":  true,
+    "persistent_test_volume_created":  false,
+    "main_database_modified":  false,
+    "secret_values_exposed":  false
+}

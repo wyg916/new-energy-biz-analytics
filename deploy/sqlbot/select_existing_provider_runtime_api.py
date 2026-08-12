@@ -17,18 +17,32 @@ API = os.getenv(
 ACCEPTED = {
     "deepseek-v4-flash": "https://api.deepseek.com",
     "kimi-k2.6": "https://api.moonshot.cn/v1",
+    "mimo-v2.5": "https://api.xiaomimimo.com/v1",
 }
-TUNED_CONFIG = [
-    {"key": "temperature", "val": 0, "name": "temperature"},
-    {
-        "key": "extra_body",
-        "val": {"thinking": {"type": "disabled"}},
-        "name": "extra_body",
-    },
-    {"key": "max_tokens", "val": 768, "name": "max_tokens"},
-    {"key": "max_retries", "val": 0, "name": "max_retries"},
-    {"key": "timeout", "val": 12, "name": "timeout"},
-]
+TUNED_CONFIG = {
+    "deepseek-v4-flash": [
+        {"key": "temperature", "val": 0, "name": "temperature"},
+        {"key": "extra_body", "val": {"thinking": {"type": "disabled"}}, "name": "extra_body"},
+        {"key": "max_tokens", "val": 768, "name": "max_tokens"},
+        {"key": "max_retries", "val": 0, "name": "max_retries"},
+        {"key": "timeout", "val": 12, "name": "timeout"},
+    ],
+    "kimi-k2.6": [
+        {"key": "temperature", "val": 0.6, "name": "temperature"},
+        {"key": "extra_body", "val": {"thinking": {"type": "disabled"}}, "name": "extra_body"},
+        {"key": "max_tokens", "val": 768, "name": "max_tokens"},
+        {"key": "max_retries", "val": 0, "name": "max_retries"},
+        {"key": "timeout", "val": 12, "name": "timeout"},
+    ],
+    "mimo-v2.5": [
+        {"key": "temperature", "val": 1.0, "name": "temperature"},
+        {"key": "top_p", "val": 0.95, "name": "top_p"},
+        {"key": "extra_body", "val": {"thinking": {"type": "disabled"}}, "name": "extra_body"},
+        {"key": "max_completion_tokens", "val": 768, "name": "max_completion_tokens"},
+        {"key": "max_retries", "val": 0, "name": "max_retries"},
+        {"key": "timeout", "val": 12, "name": "timeout"},
+    ],
+}
 
 
 def _data(response: httpx.Response, operation: str) -> Any:
@@ -123,7 +137,7 @@ def main() -> None:
             "default_model": False,
             "api_domain": selected["api_domain"],
             "api_key": api_key,
-            "config_list": TUNED_CONFIG,
+            "config_list": TUNED_CONFIG[args.target_model],
         }
         _data(
             client.put(f"{API}/system/aimodel", headers=headers, json=editor),
@@ -150,7 +164,7 @@ def main() -> None:
             "model": selected.get("base_model"),
         },
         "before": before,
-        "after": _sanitized_config(TUNED_CONFIG),
+        "after": _sanitized_config(TUNED_CONFIG[args.target_model]),
         "credential_reexposed": False,
         "secret_values_exposed": False,
     }, ensure_ascii=False))

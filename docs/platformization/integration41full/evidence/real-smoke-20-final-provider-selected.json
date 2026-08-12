@@ -1,0 +1,9 @@
+{
+  "evidence_type": "integration41full_final_selected_provider_smoke20",
+  "status": "NOT_EXECUTED_PREREQUISITE_FAILED",
+  "tested_code_sha": "5945b51672849ded8cda6bbd36bfcd1d1cf676b6",
+  "selected_primary": null,
+  "prerequisite": "At least one provider must pass Smoke20 20/20 with P95 <= 15 seconds.",
+  "reason": "No eligible Primary provider was available.",
+  "secret_values_exposed": false
+}
