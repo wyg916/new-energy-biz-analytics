@@ -37,6 +37,11 @@ def _format_value(metric_id: str, value: object) -> str:
 
 
 def _compose_answer(result: QueryResult) -> str:
+    data_label = (
+        "公开数据样本"
+        if str(result.evidence.get("data_classification", "")).upper().startswith("OPEN_SOURCE")
+        else "模拟数据"
+    )
     if result.engine == "sqlbot":
         period = result.evidence.get("time_range")
         period_text = (
@@ -45,7 +50,7 @@ def _compose_answer(result: QueryResult) -> str:
             else "当前已发布数据范围"
         )
         return (
-            f"模拟数据：{period_text}，受控查询返回 {len(result.rows)} 行、"
+            f"{data_label}：{period_text}，受控查询返回 {len(result.rows)} 行、"
             f"{len(result.columns)} 列。所有数字均来自通过 Query Guard、"
             "只读执行与 Answer Guard 的结构化结果。"
         )
@@ -57,7 +62,7 @@ def _compose_answer(result: QueryResult) -> str:
     ]
     period = result.evidence["time_range"]
     return (
-        f"模拟数据：{period[0]} 至 {period[1]}（右开），"
+        f"{data_label}：{period[0]} 至 {period[1]}（右开），"
         + "，".join(parts)
         + "。结果来自当前 ACTIVE sales_ops 数据集和语义版本。"
     )

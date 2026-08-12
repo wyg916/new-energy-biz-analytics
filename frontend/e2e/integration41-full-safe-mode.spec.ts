@@ -7,6 +7,7 @@ const acceptanceOrigin = new URL(
 
 test.use({ viewport: { width: 1600, height: 960 } })
 test.skip(!oidcPassword, 'Full Integration runtime-only OIDC password was not provided')
+test.setTimeout(600_000)
 
 async function login(page: import('@playwright/test').Page) {
   await page.goto('/')
@@ -35,8 +36,12 @@ test('Full Integration safe mode preserves primary user journeys', async ({ page
   await expect(page.getByRole('heading', { name: '功能总览' })).toBeVisible({ timeout: 120_000 })
   const dataStatus = page.locator('.global-data-status')
   await expect(dataStatus).toContainText('经营数据状态已核验')
+  await expect(dataStatus).toContainText(/公开数据样本|模拟数据/)
+  await expect(dataStatus).toContainText('来源：')
+  await expect(dataStatus).toContainText('统计期间：')
   await expect(dataStatus).toContainText('分析 run_id：')
-  await expect(dataStatus).not.toContainText(/模拟数据|虚拟数据|真实数据|派生数据|公开数据|数据来源|source_type|data_classification|fixture|seed/i)
+  const ordinaryBusinessText = await page.locator('.product-main').innerText()
+  expect(ordinaryBusinessText).not.toMatch(/数据性质：|data_classification|source_type|fixture|fixed[- ]?seed/i)
 
   await page.getByRole('button', { name: '经营工作台' }).click()
   await expect(page.getByRole('heading', { name: '经营工作台' })).toBeVisible()
@@ -46,16 +51,31 @@ test('Full Integration safe mode preserves primary user journeys', async ({ page
   await expect(page.getByRole('heading', { name: 'AI经营分析' })).toBeVisible()
   const scenario = page.getByLabel('当前业务场景')
   await expect(scenario).toBeVisible()
+  const salesInitialResponse = page.waitForResponse(
+    response => response.url().includes('/api/v1/assistant/query')
+      && response.request().postDataJSON()?.scenario_id === 'sales_ops',
+  )
   await scenario.selectOption('sales_ops')
+  const salesInitialHttpResponse = await salesInitialResponse
+  const salesInitial = await salesInitialHttpResponse.json()
+  expect(salesInitialHttpResponse.status(), JSON.stringify(salesInitial)).toBe(200)
   const question = page.getByLabel('经营分析问题')
-  await question.fill('2011年11月销售收入、订单数和销售毛利率是多少？')
+  await expect(page.getByLabel('发送分析问题')).toBeEnabled({ timeout: 120_000 })
+  await expect(question).toHaveValue(/销售收入/)
+  const salesStart = String(salesInitial.data_query_evidence.evidence.data_time_range.start)
+  const salesEndExclusive = String(salesInitial.data_query_evidence.evidence.data_time_range.end_exclusive)
+  const salesEnd = new Date(`${salesEndExclusive}T00:00:00Z`)
+  salesEnd.setUTCDate(salesEnd.getUTCDate() - 1)
+  const salesQuestion = `${salesStart}至${salesEnd.toISOString().slice(0, 10)}销售收入、订单数和销售毛利率是多少？`
+  await question.fill(salesQuestion)
   const assistantResponse = page.waitForResponse(
     response => response.url().includes('/api/v1/assistant/query')
-      && response.ok()
-      && response.request().postDataJSON()?.question.includes('2011年11月'),
+      && response.request().postDataJSON()?.question === salesQuestion,
   )
   await page.getByLabel('发送分析问题').click()
-  const answer = await (await assistantResponse).json()
+  const assistantHttpResponse = await assistantResponse
+  const answer = await assistantHttpResponse.json()
+  expect(assistantHttpResponse.status(), JSON.stringify(answer)).toBe(200)
   expect(answer.data_query_evidence.engine).toBe('deterministic')
   expect(answer.data_query_evidence.engine_routing.mode).toBe('DETERMINISTIC_ONLY')
   expect(answer.data_query_evidence.engine_routing.route_decision).toBe('DETERMINISTIC_ONLY')

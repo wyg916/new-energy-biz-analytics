@@ -1,6 +1,6 @@
 import json
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime, timedelta
 from functools import lru_cache
 from typing import Callable, Protocol
 from uuid import uuid4
@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from app.models.auth import User
 from app.models.business import SessionState
 from app.models.integration import ScenarioPackageRelease
+from app.models.platform_data import DatasetVersion, PlatformDataset
 from app.models.query_routing import ChatScenarioSessionBinding
 from app.platform.identity import IdentityContext, IdentityContextFactory
 
@@ -68,6 +69,27 @@ class ScenarioChatServiceRegistry:
                 )
                 .order_by(ScenarioPackageRelease.activated_at.desc())
             )
+            dataset = db.scalar(
+                select(PlatformDataset).where(
+                    PlatformDataset.tenant_id == identity.tenant_id,
+                    PlatformDataset.workspace_id == identity.workspace_id,
+                    PlatformDataset.scenario_id == registration.scenario_id,
+                )
+            )
+            active_version = (
+                db.scalar(
+                    select(DatasetVersion).where(
+                        DatasetVersion.dataset_id == dataset.dataset_id,
+                        DatasetVersion.status == "ACTIVE",
+                    )
+                )
+                if dataset
+                else None
+            )
+            period_start = active_version.period_start if active_version else None
+            period_end_exclusive = (
+                active_version.period_end_exclusive if active_version else None
+            )
             rows.append({
                 "scenario_id": registration.scenario_id,
                 "display_name": (
@@ -77,11 +99,59 @@ class ScenarioChatServiceRegistry:
                 ),
                 "status": "ACTIVE" if release else "NOT_ACTIVE",
                 "scenario_version": release.version if release else None,
-                "data_classification": "simulated",
-                "initial_question": registration.initial_question,
+                "data_classification": (
+                    dataset.data_classification if dataset else "unavailable"
+                ),
+                "data_time_range": (
+                    {
+                        "start": period_start,
+                        "end_exclusive": period_end_exclusive,
+                    }
+                    if period_start and period_end_exclusive
+                    else None
+                ),
+                "initial_question": self._initial_question(
+                    registration,
+                    period_start,
+                    period_end_exclusive,
+                ),
                 "suggested_questions": list(registration.suggested_questions),
             })
         return rows
+
+    @staticmethod
+    def _initial_question(
+        registration: ScenarioChatRegistration,
+        period_start: str | None,
+        period_end_exclusive: str | None,
+    ) -> str:
+        """Build an executable starter question from the ACTIVE dataset window.
+
+        Charging's parser converts the visible end date to an exclusive bound,
+        while the sales engine accepts the second ISO date as already exclusive.
+        Keeping that distinction here prevents the UI's automatic first request
+        from querying outside the active version after a dataset switch.
+        """
+        if not period_start or not period_end_exclusive:
+            return registration.initial_question
+        try:
+            available_start = date.fromisoformat(period_start[:10])
+            available_end = date.fromisoformat(period_end_exclusive[:10])
+        except ValueError:
+            return registration.initial_question
+        if available_end <= available_start:
+            return registration.initial_question
+        query_start = max(available_start, available_end - timedelta(days=7))
+        query_end_inclusive = available_end - timedelta(days=1)
+        if registration.scenario_id == "sales_ops":
+            return (
+                f"{query_start.isoformat()}至{available_end.isoformat()}"
+                "销售收入、订单数和销售毛利率是多少？"
+            )
+        return (
+            f"{query_start.isoformat()}至{query_end_inclusive.isoformat()}"
+            "充电收入是多少？"
+        )
 
     def execute(
         self,

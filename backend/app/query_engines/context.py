@@ -124,7 +124,9 @@ def build_query_context(
             allowed_relations=relation_columns,
             prompt_context=prompt_context,
             data_classification=str(
-                binding_payload.get("data_classification", "simulated")
+                binding_payload.get(
+                    "data_classification", platform_context.data_classification
+                )
             ),
             execution_mode=str(
                 source_binding.get("sqlbot_execution_mode", "upstream_readonly")
@@ -259,6 +261,8 @@ def build_query_context(
         if item.field_ref.split(".", 1)[0] in allowed_table_codes
     )
     prompt_context = {
+        "dataset_period_start": platform_context.dataset_period_start,
+        "dataset_period_end_exclusive": platform_context.dataset_period_end_exclusive,
         "authorized_tables": authorized_tables,
         "metrics": [
             {
@@ -330,7 +334,9 @@ def build_query_context(
         allowed_relations=relation_columns,
         prompt_context=prompt_context,
         data_classification=str(
-            binding_payload.get("data_classification", "simulated")
+            binding_payload.get(
+                "data_classification", platform_context.data_classification
+            )
         ),
         execution_mode=execution_mode,
         run_id=run_id,

@@ -335,6 +335,9 @@ class ActiveSemanticContext:
     dataset_version_id: str
     dataset_version: int
     dataset_checksum: str
+    dataset_period_start: str | None
+    dataset_period_end_exclusive: str | None
+    data_classification: str
     source_binding: dict
 
 
@@ -387,5 +390,8 @@ class ActiveSemanticResolver:
             dataset_version_id=dataset_version.dataset_version_id,
             dataset_version=dataset_version.version,
             dataset_checksum=dataset_version.checksum,
+            dataset_period_start=dataset_version.period_start,
+            dataset_period_end_exclusive=dataset_version.period_end_exclusive,
+            data_classification=dataset.data_classification,
             source_binding=json.loads(dataset_version.source_binding_json),
         )

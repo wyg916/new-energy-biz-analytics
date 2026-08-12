@@ -48,8 +48,16 @@ def test_chatbi_uses_registry_for_two_isolated_scenarios(
         for item in catalog.json()["scenarios"]
     }
     assert scenario_rows["charging_ops"]["initial_question"]
+    assert scenario_rows["charging_ops"]["data_time_range"] == {
+        "start": "2025-01-01",
+        "end_exclusive": "2026-07-01",
+    }
     assert len(scenario_rows["charging_ops"]["suggested_questions"]) == 3
     assert scenario_rows["sales_ops"]["initial_question"]
+    assert scenario_rows["sales_ops"]["data_time_range"] == {
+        "start": "2025-01-01",
+        "end_exclusive": "2026-07-01",
+    }
     assert len(scenario_rows["sales_ops"]["suggested_questions"]) == 3
 
     sales = client.post(

@@ -1,3 +1,4 @@
+from dataclasses import replace
 from datetime import date
 
 import pytest
@@ -147,6 +148,35 @@ def test_sales_seed_metrics_versions_engine_and_scenario_isolation() -> None:
         }
         assert result.evidence["data_classification"] == "simulated"
         assert result.evidence["dataset_version_id"] == sales["dataset_version_id"]
+
+        open_source_context = replace(
+            query_context,
+            data_classification="OPEN_SOURCE_DERIVED",
+            prompt_context={
+                **query_context.prompt_context,
+                "dataset_period_start": "2010-12-01",
+                "dataset_period_end_exclusive": "2011-12-10",
+            },
+        )
+        open_source_result = SalesOpsDeterministicEngine(db).execute(
+            QueryRequest(
+                question="2011年11月销售收入、订单数和销售毛利率是多少？",
+                identity_context=identity,
+                scenario_id="sales_ops",
+            ),
+            open_source_context,
+        )
+        assert open_source_result.evidence["data_classification"] == "OPEN_SOURCE_DERIVED"
+        with pytest.raises(SalesOpsQueryError) as out_of_active_period:
+            SalesOpsDeterministicEngine(db).execute(
+                QueryRequest(
+                    question="2026年6月销售收入是多少？",
+                    identity_context=identity,
+                    scenario_id="sales_ops",
+                ),
+                open_source_context,
+            )
+        assert out_of_active_period.value.code == "OUT_OF_DATA_RANGE"
 
         with pytest.raises(SalesOpsQueryError) as cross_engine:
             SalesOpsDeterministicEngine(db).execute(

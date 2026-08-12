@@ -54,7 +54,7 @@ def _date_range(question: str) -> tuple[date, date]:
     if len(iso_dates) >= 2:
         start, end = date.fromisoformat(iso_dates[0]), date.fromisoformat(iso_dates[1])
         return start, end
-    month = re.search(r"(2025|2026)年(1[0-2]|[1-9])月", question)
+    month = re.search(r"(\d{4})年(1[0-2]|[1-9])月", question)
     if month:
         year, month_number = int(month.group(1)), int(month.group(2))
         start = date(year, month_number, 1)
@@ -62,7 +62,7 @@ def _date_range(question: str) -> tuple[date, date]:
         return start, end
     raise SalesOpsQueryError(
         "TIME_RANGE_AMBIGUOUS",
-        "请明确模拟数据范围内的月份或开始、结束日期。",
+        "请明确当前 ACTIVE 数据集范围内的月份或开始、结束日期。",
     )
 
 
@@ -101,8 +101,18 @@ class SalesOpsDeterministicEngine(QueryEngine):
         started_at = perf_counter()
         metrics = _metrics_from_question(request.question)
         start, end_exclusive = _date_range(request.question)
-        if start < date(2025, 1, 1) or end_exclusive > date(2026, 7, 1):
-            raise SalesOpsQueryError("OUT_OF_DATA_RANGE", "请求超出模拟销售数据范围")
+        period_start = (
+            date.fromisoformat(context.prompt_context["dataset_period_start"])
+            if context.prompt_context.get("dataset_period_start")
+            else date(2025, 1, 1)
+        )
+        period_end_exclusive = (
+            date.fromisoformat(context.prompt_context["dataset_period_end_exclusive"])
+            if context.prompt_context.get("dataset_period_end_exclusive")
+            else date(2026, 7, 1)
+        )
+        if start < period_start or end_exclusive > period_end_exclusive:
+            raise SalesOpsQueryError("OUT_OF_DATA_RANGE", "请求超出当前 ACTIVE 销售数据范围")
         all_values = SalesOpsMetricService(self.db).calculate(
             start,
             end_exclusive,
@@ -130,7 +140,7 @@ class SalesOpsDeterministicEngine(QueryEngine):
                 else None
             ),
             evidence={
-                "data_classification": "simulated",
+                "data_classification": context.data_classification,
                 "source": "platform_database",
                 "query_guard": "passed",
                 "answer_guard": "passed",
