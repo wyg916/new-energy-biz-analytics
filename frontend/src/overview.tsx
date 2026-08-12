@@ -14,6 +14,7 @@ type Metadata = {
   data_classification: string
   data_time_range: { start: string; end_exclusive: string }
   source: string
+  source_name?: string
   batch_id: string | null
   analysis_run_id: string
   generated_at?: string
@@ -130,8 +131,17 @@ function GlobalDataStatus({ metadata }: { metadata: Metadata | null }) {
   if (!metadata) {
     return <footer className="global-data-status" aria-label="数据状态">正在核验数据库数据状态…</footer>
   }
+  const normalized = metadata.data_classification.toLowerCase()
+  const nature = normalized.includes('open_source')
+    ? '公开数据样本'
+    : normalized.includes('simulat')
+      ? '模拟数据'
+      : metadata.data_classification
+  const source = metadata.source_name
+    || (metadata.source === 'platform_database' ? '平台数据库' : metadata.source)
   return <footer className="global-data-status" aria-label="数据状态">
-    <b>经营数据状态已核验</b>
+    <b>{nature} · 经营数据状态已核验</b>
+    <span>来源：{source}</span>
     <span>统计期间：{metadata.data_time_range.start} 至 {endInclusive(metadata.data_time_range.end_exclusive)}</span>
     <span>分析 run_id：{metadata.analysis_run_id}</span>
   </footer>

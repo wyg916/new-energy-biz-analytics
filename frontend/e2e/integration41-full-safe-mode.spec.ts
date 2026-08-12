@@ -101,7 +101,7 @@ test('Full Integration safe mode preserves primary user journeys', async ({ page
   await expect(page.getByText('REGISTERED_NOT_ELIGIBLE', { exact: true })).toBeVisible()
 
   await page.getByRole('button', { name: '记忆与偏好' }).click()
-  await expect(page.getByRole('heading', { name: '记忆与偏好' })).toBeVisible()
+  await expect(page.locator('.product-header h1')).toHaveText('记忆与偏好')
   await expect(page.getByText('记忆状态已核验')).toBeVisible()
 
   await page.getByRole('button', { name: '经营预警' }).click()
