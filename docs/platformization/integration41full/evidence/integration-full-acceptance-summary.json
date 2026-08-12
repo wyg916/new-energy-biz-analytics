@@ -1,22 +1,36 @@
 {
   "evidence_type": "integration41full_acceptance_summary",
-  "status": "PARTIAL",
-  "tested_code_sha": "5945b51672849ded8cda6bbd36bfcd1d1cf676b6",
-  "final_rc_candidate": false,
-  "provider_discovery": "PASS",
-  "provider_health": "PASS",
-  "model_gateway_provider_probe": "PASS",
-  "provider_selection": "FAIL_NO_ELIGIBLE_PROVIDER",
+  "status": "PASS",
+  "tested_runtime_code_sha": "11ae4842187208c58f4e39ddf29fa304f71f37be",
+  "tested_frontend_code_sha": "7e4e8a95babbb111cf2b9088f21fa248384cdf1f",
+  "final_rc_candidate": true,
+  "production_release_authorized": false,
+  "production_traffic_switched": false,
+  "sqlbot_safe_degraded_mode": "PASS",
+  "providers_registered": 3,
+  "eligible_providers": 0,
+  "sqlbot_open_nl2sql_eligible": false,
+  "sqlbot_engine_enabled": false,
+  "sqlbot_traffic_enabled": false,
+  "query_engine_mode": "DETERMINISTIC_ONLY",
+  "deterministic_chatbi": "PASS",
+  "user_visible_functional_impact": "NONE",
+  "security_violation": 0,
   "backend_regression": {
     "status": "PASS",
-    "tests": 522,
+    "tests": 528,
     "failures": 0,
     "errors": 0,
-    "skipped": 0
+    "skipped": 0,
+    "database": "isolated tmpfs PostgreSQL 16.14",
+    "real_redis_lifecycle": true
   },
+  "playwright_safe_mode": "PASS",
   "secret_scan": "PASS",
-  "downstream_gates": "NOT_EXECUTED_PREREQUISITE_FAILED",
-  "git_push": "NOT_PERFORMED_PARTIAL",
+  "frontend_dependency_audit": {
+    "status": "PASS",
+    "vulnerabilities": 0
+  },
   "rc_tag": "NOT_CREATED",
   "secret_values_exposed": false
 }

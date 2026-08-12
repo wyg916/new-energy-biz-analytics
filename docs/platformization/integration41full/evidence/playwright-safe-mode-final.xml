@@ -1,0 +1,6 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="417.201725">
+<testsuite name="integration41-full-safe-mode.spec.ts" timestamp="2026-08-12T13:04:38.586Z" hostname="" tests="1" failures="0" skipped="0" time="387.293" errors="0">
+<testcase name="Full Integration safe mode preserves primary user journeys" classname="integration41-full-safe-mode.spec.ts" time="387.293">
+</testcase>
+</testsuite>
+</testsuites>

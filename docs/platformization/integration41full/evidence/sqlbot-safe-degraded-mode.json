@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "sqlbot_safe_degraded_mode",
+  "status": "PASS",
+  "providers_registered": 3,
+  "eligible_providers": 0,
+  "provider_registration": "PASS",
+  "providers": [
+    {
+      "provider": "kimi",
+      "model": "kimi-k2.6",
+      "model_gateway_runtime_call": "PASS",
+      "sqlbot_status": "REGISTERED_NOT_ELIGIBLE",
+      "frozen_smoke20_success": "8/20",
+      "frozen_smoke20_p95_seconds": 22.358
+    },
+    {
+      "provider": "mimo",
+      "model": "mimo-v2.5",
+      "model_gateway_runtime_call": "PASS",
+      "sqlbot_status": "REGISTERED_NOT_ELIGIBLE",
+      "frozen_smoke20_success": "9/20",
+      "frozen_smoke20_p95_seconds": 23.335
+    },
+    {
+      "provider": "deepseek",
+      "model": "deepseek-v4-flash",
+      "model_gateway_runtime_call": "PASS",
+      "sqlbot_status": "REGISTERED_NOT_ELIGIBLE",
+      "frozen_smoke20_success": "10/20",
+      "frozen_smoke20_p95_seconds": 17.844
+    }
+  ],
+  "selected_primary": null,
+  "selected_standby": null,
+  "sqlbot_engine_enabled": false,
+  "sqlbot_runtime_verified": false,
+  "sqlbot_traffic_enabled": false,
+  "query_engine_mode": "DETERMINISTIC_ONLY",
+  "deterministic_chatbi": "PASS",
+  "user_visible_functional_impact": "NONE",
+  "security_violation": 0,
+  "future_action": "SQLBOT-PROVIDER-QUALIFICATION",
+  "smoke20_results_frozen": true,
+  "gate_thresholds_unchanged": true,
+  "secret_values_exposed": false
+}

@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "integration41full_runtime_model_gateway_probe",
+  "generated_at": "2026-08-12T12:12:12.689445+00:00",
+  "status": "PASS",
+  "registration": {
+    "status": "READY",
+    "providers": [
+      {
+        "provider_alias": "kimi",
+        "configured": true,
+        "enabled": true,
+        "credential_ref": "file:///run/provider-credentials/kimi"
+      },
+      {
+        "provider_alias": "mimo",
+        "configured": true,
+        "enabled": true,
+        "credential_ref": "file:///run/provider-credentials/mimo"
+      },
+      {
+        "provider_alias": "deepseek",
+        "configured": true,
+        "enabled": true,
+        "credential_ref": "file:///run/provider-credentials/deepseek"
+      }
+    ],
+    "secret_values_exposed": false
+  },
+  "providers": [
+    {
+      "provider": "kimi",
+      "config_id": "kimi-rag-primary",
+      "model": "kimi-k2.6",
+      "response_valid": true,
+      "latency_ms": 2270,
+      "status": "PASS"
+    },
+    {
+      "provider": "mimo",
+      "config_id": "mimo-rag-standby",
+      "model": "mimo-v2.5",
+      "response_valid": true,
+      "latency_ms": 7477,
+      "status": "PASS"
+    },
+    {
+      "provider": "deepseek",
+      "config_id": "deepseek-rag-fallback",
+      "model": "deepseek-v4-flash",
+      "response_valid": true,
+      "latency_ms": 1688,
+      "status": "PASS"
+    }
+  ],
+  "task_type": "rag_answer_generation",
+  "response_content_exposed": false,
+  "secret_values_exposed": false
+}

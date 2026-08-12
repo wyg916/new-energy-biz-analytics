@@ -1,0 +1,71 @@
+{
+  "status": "PASS",
+  "revision": "integration_41_full_0001",
+  "expected_revision": "integration_41_full_0001",
+  "rag": {
+    "generated_at": "2026-08-12T12:16:33.986710+00:00",
+    "action": "CHECKED",
+    "embedding_model": "deterministic_multilingual_feature_hash_v1",
+    "embedding_version": "1.0.0",
+    "dimensions": 256,
+    "chunk_count": 276,
+    "indexed_chunk_count": 276,
+    "current_index_row_count": 276,
+    "stale_current_index_count": 0,
+    "index_ready": true
+  },
+  "lifecycle_task_count": 210,
+  "lifecycle_failed_count": 0,
+  "published_document_count": 17,
+  "p6_table_count": 10,
+  "semantic_view_count": 16,
+  "active_binding_count": 2,
+  "query_engine_mode": "DETERMINISTIC_ONLY",
+  "sqlbot_provider_eligibility": "REGISTERED_NOT_ELIGIBLE",
+  "model_gateway": {
+    "status": "READY",
+    "providers": [
+      {
+        "provider_alias": "kimi",
+        "configured": true,
+        "enabled": true,
+        "credential_ref": "file:///run/provider-credentials/kimi"
+      },
+      {
+        "provider_alias": "mimo",
+        "configured": true,
+        "enabled": true,
+        "credential_ref": "file:///run/provider-credentials/mimo"
+      },
+      {
+        "provider_alias": "deepseek",
+        "configured": true,
+        "enabled": true,
+        "credential_ref": "file:///run/provider-credentials/deepseek"
+      }
+    ],
+    "secret_values_exposed": false
+  },
+  "checks": {
+    "migration_head": true,
+    "settings_revision": true,
+    "rag_index_reconciled": true,
+    "knowledge_published": true,
+    "knowledge_chunks_published": true,
+    "memory_scheduler_enabled": true,
+    "memory_scheduler_created_tasks": true,
+    "memory_scheduler_no_failed_tasks": true,
+    "redis_ready": true,
+    "p6_tables_ready": true,
+    "sqlbot_semantic_views_ready": true,
+    "sqlbot_source_bindings_ready": true,
+    "sqlbot_readonly_credentials_ready": true,
+    "deterministic_query_engine": true,
+    "sqlbot_engine_disabled": true,
+    "sqlbot_runtime_unverified": true,
+    "sqlbot_registered_not_eligible": true,
+    "sqlbot_release_included": true,
+    "model_gateway_ready": true,
+    "model_gateway_three_providers_registered": true
+  }
+}

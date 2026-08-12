@@ -1,0 +1,15 @@
+{
+  "evidence_type": "data41_frontend_business_data_truth_scan",
+  "generated_at": "2026-08-12T13:15:43.573493+00:00",
+  "source_root": "frontend/src",
+  "scanned_files": 11,
+  "rules": [
+    "mock_or_fixture_import",
+    "numeric_api_fallback",
+    "runtime_random",
+    "static_json_import"
+  ],
+  "findings": [],
+  "finding_count": 0,
+  "status": "PASS"
+}
