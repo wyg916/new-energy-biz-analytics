@@ -39,15 +39,32 @@ test('P6 三类经营管理业务闭环经真实 API 完成', async ({ page }) =
   if (await page.getByRole('button', { name: '运行受控预警规则' }).isEnabled()) {
     await page.getByRole('button', { name: '运行受控预警规则' }).click()
   }
-  const assign = page.getByRole('button', { name: /^(分派|重新分派)$/ })
-  await expect(assign).toBeVisible({ timeout: 120_000 })
-  await assign.click()
-  for (const action of ['确认', '开始处理', '解决', '验证', '关闭', '重开']) {
-    const button = page.getByRole('button', { name: action, exact: true })
+  const detail = page.locator('.p6-panel.detail')
+  const status = detail.locator('header .p6-status')
+  const transitions: Record<string, { label: string; next: string }> = {
+    OPEN: { label: '分派', next: 'ASSIGNED' },
+    REOPENED: { label: '重新分派', next: 'ASSIGNED' },
+    ASSIGNED: { label: '确认', next: 'ACKNOWLEDGED' },
+    ACKNOWLEDGED: { label: '开始处理', next: 'IN_PROGRESS' },
+    IN_PROGRESS: { label: '解决', next: 'RESOLVED' },
+    RESOLVED: { label: '验证', next: 'VERIFIED' },
+    VERIFIED: { label: '关闭', next: 'CLOSED' },
+    CLOSED: { label: '重开', next: 'REOPENED' },
+  }
+  let exercisedReopen = false
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const current = (await status.innerText()).trim()
+    if (current === 'CLOSED' && exercisedReopen) break
+    const transition = transitions[current]
+    if (!transition) throw new Error(`unsupported alert state: ${current}`)
+    if (current === 'CLOSED') exercisedReopen = true
+    const button = detail.getByRole('button', { name: transition.label, exact: true })
     await expect(button).toBeVisible({ timeout: 120_000 })
     await button.click()
+    await expect(status).toHaveText(transition.next, { timeout: 120_000 })
   }
-  await expect(page.getByText('REOPENED', { exact: true }).first()).toBeVisible()
+  await expect(status).toHaveText('CLOSED')
+  expect(exercisedReopen).toBeTruthy()
 
   await page.getByRole('button', { name: '经营报告' }).click()
   await expect(page.getByTestId('p6-report-center')).toBeVisible()

@@ -239,6 +239,10 @@ def build(
         bug("DAY1-BUG-009", "页面盘点在全局数据状态尚未完成时采样", "acceptance_harness",
             "每个认证页面等待统一数据状态完成后再采集截图与契约字段。",
             ["day1-functional-playwright.second-pass.json:frontend_data_label_scan"], second_clean),
+        bug("DAY1-BUG-010", "重复一键启动的 P6 E2E 假定预警初态固定为 OPEN", "acceptance_harness",
+            "读取持久库当前预警状态，按服务端状态机完成包含重开的幂等闭环并回到 CLOSED。",
+            ["one-click startup:P6 frontend E2E", "second startup:P6 frontend E2E"],
+            passed_step(startup_steps, "P6 frontend E2E")),
     ]
 
     chatbi_audit = decision(chatbi_ok and browser_clean,
