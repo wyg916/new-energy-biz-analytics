@@ -2,19 +2,21 @@ from __future__ import annotations
 
 import hashlib
 import json
+from datetime import UTC, datetime
 from typing import Any
 from uuid import uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field
 from redis import Redis
-from sqlalchemy import func, select
+from sqlalchemy import desc, func, or_, select
 from sqlalchemy.orm import Session
 
 from app.api.dependencies import current_user
 from app.core.database import get_db
-from app.memory.authorization import MemoryAuthorizationError
-from app.memory.contracts import MemoryType
+from app.memory.audit import audit_memory_use
+from app.memory.authorization import MemoryAuthorization, MemoryAuthorizationError
+from app.memory.contracts import MemoryStatus, MemoryType
 from app.memory.deletion import MemoryDeletionService
 from app.memory.metrics import memory_lifecycle_metrics
 from app.memory.models import (
@@ -25,7 +27,6 @@ from app.memory.models import (
     MemoryWriteCandidateRecord,
 )
 from app.memory.policy import MemoryPolicyService
-from app.memory.retrieval import MemoryRetriever
 from app.memory.semantic import SemanticMemoryError, SemanticMemoryService
 from app.memory.working import WorkingMemoryService
 from app.models.auth import User
@@ -120,6 +121,7 @@ def _runtime_redis_client():
 def list_records(
     scenario_id: str = Query(pattern=r"^(charging_ops|sales_ops)$"),
     memory_type: MemoryType | None = None,
+    limit: int = Query(default=200, ge=1, le=500),
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ) -> dict:
@@ -131,14 +133,46 @@ def list_records(
         MemoryType.PROCEDURAL,
         MemoryType.GOVERNANCE,
     )
-    result = MemoryRetriever(db, identity).retrieve(
-        scenario_id=scenario_id,
-        memory_types=types,
-        limit=50,
-        token_budget=20000,
+    current = datetime.now(UTC)
+    filters = (
+        MemoryAuthorization.retrieval_filter(identity, scenario_id=scenario_id),
+        MemoryRecord.memory_type.in_(types),
+        MemoryRecord.status.in_((MemoryStatus.ACTIVE, MemoryStatus.REDUCED_RANK)),
+        MemoryRecord.deleted_at.is_(None),
+        MemoryRecord.valid_from <= current,
+        or_(MemoryRecord.valid_to.is_(None), MemoryRecord.valid_to > current),
+        or_(MemoryRecord.expires_at.is_(None), MemoryRecord.expires_at > current),
+    )
+    total = int(db.scalar(select(func.count()).select_from(MemoryRecord).where(*filters)) or 0)
+    records = db.scalars(
+        select(MemoryRecord).where(*filters).order_by(
+            desc(MemoryRecord.updated_at),
+            desc(MemoryRecord.created_at),
+            desc(MemoryRecord.version),
+            MemoryRecord.memory_id,
+        ).limit(limit)
+    ).all()
+    serialized = [_serialize(record) for record in records]
+    audit_memory_use(
+        db,
+        identity,
+        action="memory.manage.list",
+        outcome="success",
+        detail={
+            "scenario_id": scenario_id,
+            "memory_types": [str(item) for item in types],
+            "result_count": len(serialized),
+            "total": total,
+            "limit": limit,
+            "truncated": total > len(serialized),
+        },
+        commit=True,
     )
     return {
-        "records": [_serialize(record) for record in result.records],
+        "records": serialized,
+        "total": total,
+        "limit": limit,
+        "truncated": total > len(serialized),
         "memory_enabled": MemoryPolicyService(db, identity).is_enabled(
             scenario_id=scenario_id
         ),

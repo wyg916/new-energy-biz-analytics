@@ -243,6 +243,10 @@ def build(
             "读取持久库当前预警状态，按服务端状态机完成包含重开的幂等闭环并回到 CLOSED。",
             ["one-click startup:P6 frontend E2E", "second startup:P6 frontend E2E"],
             passed_step(startup_steps, "P6 frontend E2E")),
+        bug("DAY1-BUG-011", "Memory 管理列表复用了问答召回排序并截断新记录", "product_backend",
+            "管理列表改为权限与有效状态过滤后的最近更新优先查询；与 token budget 和召回候选上限解耦。",
+            ["MEMORY-001", "backend full regression"],
+            passed_step(functional_steps, "MEMORY-001") and backend_ok),
     ]
 
     chatbi_audit = decision(chatbi_ok and browser_clean,

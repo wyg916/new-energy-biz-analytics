@@ -1,8 +1,10 @@
-from datetime import date
+import hashlib
+import json
+from datetime import UTC, date, datetime
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
@@ -15,6 +17,7 @@ from app.main import app
 from app.models.auth import User
 from app.governance.bootstrap import install_governance_baseline
 from app.platform.identity import IdentityContextFactory
+from app.memory.models import MemoryRecord
 from app.skills.definitions import install_initial_skills
 
 
@@ -48,6 +51,7 @@ def api_client(monkeypatch):
     monkeypatch.setattr(identity_module, "SessionLocal", factory)
     app.dependency_overrides[get_db] = override_db
     with TestClient(app) as client:
+        client.test_session_factory = factory
         yield client
     app.dependency_overrides.clear()
     engine.dispose()
@@ -100,6 +104,70 @@ def test_memory_preference_confirm_correct_and_delete_api(api_client, api_login)
         headers=headers,
     )
     assert all(item["memory_id"] != memory_id for item in after.json()["records"])
+
+
+def test_memory_management_list_keeps_new_record_visible_after_recall_candidate_cap(api_client, api_login):
+    headers = api_login()
+    with api_client.test_session_factory() as db:
+        user = db.scalar(select(User).where(User.username == "analyst"))
+        identity = IdentityContextFactory.from_user(user)
+        older = datetime(2025, 1, 1, tzinfo=UTC)
+        db.add_all([
+            MemoryRecord(
+                memory_id=f"MEM-LIST-{index:03d}",
+                memory_type="EPISODIC",
+                scope_type="USER",
+                tenant_id=identity.tenant_id,
+                organization_id=identity.org_id,
+                workspace_id=identity.workspace_id,
+                user_id=identity.subject_id,
+                scenario_id="charging_ops",
+                content=f"historical high-importance record {index}",
+                structured_value_json=json.dumps({"run_id": f"RUN-LIST-{index:03d}"}),
+                source_type="ANALYSIS_RUN",
+                source_id=f"RUN-LIST-{index:03d}",
+                trust_level="SYSTEM_VERIFIED",
+                confidence=1.0,
+                importance=1.0,
+                status="ACTIVE",
+                version=1,
+                duplicate_hash=hashlib.sha256(f"list-{index}".encode()).hexdigest(),
+                retention_policy="STANDARD",
+                approval_required=False,
+                valid_from=older,
+                created_at=older,
+                updated_at=older,
+            )
+            for index in range(120)
+        ])
+        db.commit()
+    proposed = api_client.post(
+        "/api/v1/memory/preferences",
+        headers=headers,
+        json={
+            "key": "corrected_term",
+            "value": "最近创建的可管理记忆",
+            "confirmed": True,
+            "write_reason": "验证管理列表不受召回候选上限影响",
+        },
+    )
+    assert proposed.status_code == 200, proposed.text
+    confirmed = api_client.post(
+        f"/api/v1/memory/candidates/{proposed.json()['candidate_id']}/confirm",
+        headers=headers,
+    )
+    assert confirmed.status_code == 200, confirmed.text
+    memory_id = confirmed.json()["memory_id"]
+    listed = api_client.get(
+        "/api/v1/memory/records?scenario_id=charging_ops",
+        headers=headers,
+    )
+    assert listed.status_code == 200, listed.text
+    payload = listed.json()
+    assert payload["total"] >= 121
+    assert payload["truncated"] is False
+    assert payload["records"][0]["memory_id"] == memory_id
+    assert any(item["memory_id"] == memory_id for item in payload["records"])
 
 
 def test_memory_disable_setting_is_enforced(api_client, api_login):
