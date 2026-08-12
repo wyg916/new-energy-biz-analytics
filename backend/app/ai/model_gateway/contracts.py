@@ -33,7 +33,13 @@ class ModelConfig(BaseModel):
     provider: str = Field(pattern=r"^[a-z][a-z0-9_-]{1,31}$")
     base_url: str
     model_name: str = Field(min_length=1, max_length=128)
-    credential_ref: str | None = Field(default=None, pattern=r"^env://[A-Z][A-Z0-9_]{2,127}$")
+    credential_ref: str | None = Field(
+        default=None,
+        pattern=(
+            r"^(?:env://[A-Z][A-Z0-9_]{2,127}"
+            r"|file:///run/provider-credentials/(?:kimi|mimo|deepseek))$"
+        ),
+    )
     task_type: TaskType
     data_classification: frozenset[DataClassification] = frozenset(
         {DataClassification.PUBLIC, DataClassification.SIMULATED}

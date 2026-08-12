@@ -157,6 +157,8 @@ def runtime(
         "sqlbot_runtime": (
             "NOT_INCLUDED_IN_THIS_RELEASE"
             if not settings.sqlbot_included_in_v4_release
+            else settings.sqlbot_provider_eligibility
+            if settings.sqlbot_provider_eligibility == "REGISTERED_NOT_ELIGIBLE"
             else "READY" if settings.sqlbot_runtime_verified else "RUNTIME_PENDING"
         ),
         "model_gateway": runtime_model_status(),

@@ -25,8 +25,11 @@ def test_merge_revision_and_runtime_flags_are_frozen():
     assert 'down_revision = ("p6_41_0001", "sqlbot_41c2")' in migration
     assert "EXPECTED_DATABASE_REVISION: integration_41_full_0001" in override
     assert "ACCEPTANCE_POSTGRES_DB: renewable_p5b" in override
-    assert "QUERY_ENGINE_MODE: SHADOW" in override
+    assert "QUERY_ENGINE_MODE: DETERMINISTIC_ONLY" in override
     assert "SQLBOT_ENGINE_ENABLED: \"false\"" in override
+    assert "SQLBOT_RUNTIME_VERIFIED: \"false\"" in override
+    assert "SQLBOT_PROVIDER_ELIGIBILITY: REGISTERED_NOT_ELIGIBLE" in override
+    assert "renewable-integration41-full-provider-credentials" in override
     assert Settings().expected_database_revision == "integration_41_full_0001"
 
 
@@ -50,15 +53,19 @@ def test_single_launcher_converges_full_integration_runtime():
 
     assert "Full Integration 4.1" in launcher
     assert "integration_41_full_0001" in launcher
-    assert '"renewable-sqlbot-41c-runtime-v1-10-0"' in launcher
-    assert "-SQLBotHostPort 18082" in launcher
-    assert '"renewable-sqlbot41c"' in launcher
-    assert '"renewable-integration41-full-api-1"' in launcher
+    assert "Open NL2SQL: disabled" in launcher
+    assert "Run-SQLBot41DOneClick.ps1" not in launcher
+    assert "-SQLBotHostPort" not in launcher
     assert '$project = "renewable-integration41-full"' in startup
     assert "$configProperty.Value.PSObject.Properties['Labels']" in startup
     assert '$expectedMigration = "integration_41_full_0001"' in startup
     assert '"renewable-integration41-core"' in startup
-    assert 'query_engine_mode = "SHADOW"' in startup
+    assert 'query_engine_mode = "DETERMINISTIC_ONLY"' in startup
+    assert 'sqlbot_runtime = "REGISTERED_NOT_ELIGIBLE_ENGINE_DISABLED"' in startup
+    assert 'sqlbot_traffic_enabled = $false' in startup
+    assert '"Provider credential references"' in startup
+    assert '"Runtime ModelGateway provider calls"' in startup
+    assert "run_runtime_model_gateway_probe.py" in startup
     assert "verify_integration41_runtime.py" in startup
     assert "prepare_integration41_full.py" in override
     assert "PENDING_GOVERNED_API" in startup
@@ -146,10 +153,31 @@ def test_p6_preproduction_inherits_approved_open_source_data_mode():
 
 
 def test_full_integration_preproduction_inherits_approved_open_source_data_mode():
-    settings = _preproduction_settings(release_version="4.1.0-integration-full.1")
+    settings = _preproduction_settings(
+        release_version="4.1.0-integration-full.1",
+        query_engine_mode="DETERMINISTIC_ONLY",
+        sqlbot_included_in_v4_release=True,
+        sqlbot_provider_eligibility="REGISTERED_NOT_ELIGIBLE",
+    )
 
     assert settings.simulated_data_only is False
     assert settings.data41_open_source_enabled is True
+    assert settings.effective_query_engine_mode == "DETERMINISTIC_ONLY"
+
+
+def test_full_integration_safe_degraded_mode_rejects_shadow_or_enabled_sqlbot():
+    for unsafe in (
+        {"query_engine_mode": "SHADOW"},
+        {"query_engine_mode": "DETERMINISTIC_ONLY", "sqlbot_engine_enabled": True},
+        {"query_engine_mode": "DETERMINISTIC_ONLY", "sqlbot_runtime_verified": True},
+    ):
+        with pytest.raises(ValidationError):
+            _preproduction_settings(
+                release_version="4.1.0-integration-full.1",
+                sqlbot_included_in_v4_release=True,
+                sqlbot_provider_eligibility="REGISTERED_NOT_ELIGIBLE",
+                **unsafe,
+            )
 
 
 @pytest.mark.parametrize(

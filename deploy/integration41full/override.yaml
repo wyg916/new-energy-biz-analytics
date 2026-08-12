@@ -6,6 +6,11 @@ x-full-environment: &full-environment
   ACCEPTANCE_LABEL: INTEGRATION-4.1-FULL
   ACCEPTANCE_POSTGRES_DB: renewable_p5b
   RUNTIME_DATA_CLASSIFICATION: OPEN_SOURCE_DERIVED
+  QUERY_ENGINE_MODE: DETERMINISTIC_ONLY
+  SQLBOT_INCLUDED_IN_V4_RELEASE: "true"
+  SQLBOT_ENGINE_ENABLED: "false"
+  SQLBOT_RUNTIME_VERIFIED: "false"
+  SQLBOT_PROVIDER_ELIGIBILITY: REGISTERED_NOT_ELIGIBLE
 
 services:
   runtime-bootstrap:
@@ -38,10 +43,20 @@ services:
     pull_policy: never
     environment:
       <<: *full-environment
-      QUERY_ENGINE_MODE: SHADOW
-      SQLBOT_INCLUDED_IN_V4_RELEASE: "true"
-      SQLBOT_ENGINE_ENABLED: "false"
-      SQLBOT_RUNTIME_VERIFIED: "false"
+      MODEL_GATEWAY_KIMI_BASE_URL: https://api.moonshot.cn/v1
+      MODEL_GATEWAY_KIMI_MODEL_NAME: kimi-k2.6
+      MODEL_GATEWAY_KIMI_CREDENTIAL_REF: file:///run/provider-credentials/kimi
+      MODEL_GATEWAY_KIMI_ENABLED: "true"
+      MODEL_GATEWAY_MIMO_BASE_URL: https://api.xiaomimimo.com/v1
+      MODEL_GATEWAY_MIMO_MODEL_NAME: mimo-v2.5
+      MODEL_GATEWAY_MIMO_CREDENTIAL_REF: file:///run/provider-credentials/mimo
+      MODEL_GATEWAY_MIMO_ENABLED: "true"
+      MODEL_GATEWAY_DEEPSEEK_BASE_URL: https://api.deepseek.com
+      MODEL_GATEWAY_DEEPSEEK_MODEL_NAME: deepseek-v4-flash
+      MODEL_GATEWAY_DEEPSEEK_CREDENTIAL_REF: file:///run/provider-credentials/deepseek
+      MODEL_GATEWAY_DEEPSEEK_ENABLED: "true"
+    volumes:
+      - provider_credentials:/run/provider-credentials:ro
 
   web:
     image: renewable-integration41-full-web:4.1.0-integration-full.1
@@ -50,3 +65,8 @@ services:
 networks:
   default:
     name: renewable-integration41-full-network
+
+volumes:
+  provider_credentials:
+    external: true
+    name: renewable-integration41-full-provider-credentials

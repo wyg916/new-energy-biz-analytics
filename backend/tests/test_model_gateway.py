@@ -23,6 +23,7 @@ from app.ai.model_gateway.contracts import (
 )
 from app.ai.model_gateway.credentials import CredentialResolver
 from app.ai.model_gateway.errors import (
+    CredentialReferenceError,
     CredentialUnavailableError,
     ModelPolicyDeniedError,
     ModelProviderError,
@@ -106,6 +107,26 @@ def test_retry_once_then_fallback() -> None:
     assert [item.outcome for item in gateway.usage.snapshot()] == ["FAILED", "SUCCESS"]
 
 
+def test_explicit_registered_provider_route_is_independently_callable() -> None:
+    registry = ModelRegistry([
+        config("primary", provider="first"),
+        config("independent", provider="second"),
+    ])
+    gateway = ModelGateway(
+        registry,
+        {
+            "first": MockProvider(lambda _c, _r: ProviderResult(content="first")),
+            "second": MockProvider(lambda _c, _r: ProviderResult(content="second")),
+        },
+    )
+
+    result = gateway.complete_with_config("independent", request())
+
+    assert result.content == "second"
+    assert result.provider == "second"
+    assert result.fallback_used is False
+
+
 def test_data_classification_denied_before_provider_call() -> None:
     gateway = ModelGateway(
         ModelRegistry([config("primary")]),
@@ -125,6 +146,32 @@ def test_credential_reference_does_not_reveal_secret(monkeypatch) -> None:
     with pytest.raises(CredentialUnavailableError) as exc_info:
         CredentialResolver().resolve("env://MODEL_TEST_SECRET")
     assert "MODEL_TEST_SECRET" not in str(exc_info.value)
+
+
+def test_allowlisted_runtime_file_credential_is_resolved_without_exposure(tmp_path) -> None:
+    secret = tmp_path / "kimi"
+    secret.write_text("runtime-file-secret\n", encoding="utf-8")
+    resolver = CredentialResolver(file_root=tmp_path)
+
+    resolved = resolver.resolve("file:///run/provider-credentials/kimi")
+
+    assert resolved.value == "runtime-file-secret"
+    assert "runtime-file-secret" not in repr(resolved)
+
+
+@pytest.mark.parametrize(
+    "reference",
+    [
+        "file:///run/provider-credentials/unknown",
+        "file:///run/provider-credentials/../kimi",
+        "file:///tmp/kimi",
+    ],
+)
+def test_runtime_file_credential_reference_is_strictly_allowlisted(
+    tmp_path, reference
+) -> None:
+    with pytest.raises(CredentialReferenceError):
+        CredentialResolver(file_root=tmp_path).resolve(reference)
 
 
 def test_openai_compatible_response_and_authorization_header(monkeypatch) -> None:

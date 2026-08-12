@@ -173,7 +173,10 @@ function Write-StartupReport {
             compose_project = $project
             release_version = $releaseVersion
             expected_migration_head = $expectedMigration
-            sqlbot_runtime = "CONTROLLED_SHADOW_WITH_SCOPED_STABLE_AVAILABLE"
+            sqlbot_runtime = "REGISTERED_NOT_ELIGIBLE_ENGINE_DISABLED"
+            sqlbot_provider_registration = "PASS"
+            sqlbot_open_nl2sql_eligible = $false
+            sqlbot_traffic_enabled = $false
             p6_business_loops = @("alerts", "reports", "metric_governance")
             rag_capability = "Governed Hybrid RAG V1"
             rag_mode = "hybrid_bm25_vector_rrf_rerank"
@@ -182,7 +185,8 @@ function Write-StartupReport {
             pgvector_claimed = $false
             memory_scheduler = "ENABLED"
             memory_scheduler_scenarios = @("charging_ops", "sales_ops")
-            query_engine_mode = "SHADOW"
+            query_engine_mode = "DETERMINISTIC_ONLY"
+            model_gateway_providers = @("kimi", "mimo", "deepseek")
             production_release_authorized = $false
             production_traffic_switched = $false
         }
@@ -257,6 +261,24 @@ try {
             Invoke-CheckedNative -FilePath "docker" -Arguments @("image", "inspect", $image, "--format", "{{.Id}}") -FailureMessage "Required Full Integration dependency image is missing: $image" | Out-Null
         }
         "Validated $($requiredImages.Count) required image references"
+    }
+    Invoke-Step "Provider credential references" {
+        $credentialCheck = @'
+from pathlib import Path
+root = Path("/run/provider-credentials")
+rows = []
+for alias in ("kimi", "mimo", "deepseek"):
+    path = root / alias
+    if not path.is_file() or not path.read_text(encoding="utf-8").strip():
+        raise SystemExit(f"missing controlled credential reference: {alias}")
+    rows.append(f"{alias}=READY")
+print(", ".join(rows))
+'@
+        Invoke-CheckedNative -FilePath "docker" -Arguments @(
+            "run", "--rm", "-v",
+            "renewable-integration41-full-provider-credentials:/run/provider-credentials:ro",
+            "--entrypoint", "python", $apiImage, "-c", $credentialCheck
+        ) -FailureMessage "Controlled Provider credential references are unavailable"
     }
     Invoke-Step "Superseded runtime handoff" {
         Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("down", "--remove-orphans")) -FailureMessage "Unable to stop the previous Full Integration runtime safely" | Out-Null
@@ -337,6 +359,18 @@ try {
     }
     Invoke-Step "API health" { Wait-Http -Url $apiHealthUrl }
     Invoke-Step "API readiness" { Wait-Http -Url $apiReadyUrl }
+    Invoke-Step "Runtime ModelGateway provider calls" {
+        $providerProbe = Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @(
+            "exec", "-T", "api", "python", "scripts/p4_entrypoint.py", "python",
+            "scripts/run_runtime_model_gateway_probe.py",
+            "--output", "/app/data/preproduction-evidence/runtime-model-gateway-provider-probe.json"
+        )) -FailureMessage "Runtime ModelGateway provider probe failed"
+        $joined = ($providerProbe -join "`n")
+        if ($joined -notmatch '"status": "PASS"') {
+            throw "Runtime ModelGateway did not prove all three registered providers"
+        }
+        $joined
+    }
     Invoke-Step "Business web" { Wait-Http -Url $businessUrl }
     Invoke-Step "OIDC discovery" { Wait-Http -Url $oidcUrl }
     Invoke-Step "Migration head" {

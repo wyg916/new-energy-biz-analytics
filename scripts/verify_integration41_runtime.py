@@ -11,6 +11,7 @@ from sqlalchemy import func, select, text
 from redis import Redis
 
 from app.core.config import get_settings
+from app.ai.model_gateway.runtime import runtime_model_status
 from app.core.database import SessionLocal
 from app.memory.models import MemoryLifecycleTask
 from app.models.knowledge import KnowledgeDocumentVersion
@@ -49,6 +50,7 @@ def snapshot(expected_revision: str = EXPECTED_REVISION) -> dict:
             SELECT COUNT(*) FROM sqlbot_source_binding_release WHERE status = 'ACTIVE'
         """)) or 0)
     rag = inspect_index_state()
+    model_gateway = runtime_model_status()
     redis_ready = bool(Redis.from_url(settings.redis_url).ping())
     readonly_file = Path("/run/p4-runtime/sqlbot41b_readonly_credentials.json")
     checks = {
@@ -65,9 +67,20 @@ def snapshot(expected_revision: str = EXPECTED_REVISION) -> dict:
         "sqlbot_semantic_views_ready": semantic_view_count == 16,
         "sqlbot_source_bindings_ready": active_binding_count == 2,
         "sqlbot_readonly_credentials_ready": readonly_file.is_file(),
-        "sqlbot_shadow": settings.effective_query_engine_mode == "SHADOW",
+        "deterministic_query_engine": (
+            settings.effective_query_engine_mode == "DETERMINISTIC_ONLY"
+        ),
         "sqlbot_engine_disabled": not settings.sqlbot_engine_enabled,
+        "sqlbot_runtime_unverified": not settings.sqlbot_runtime_verified,
+        "sqlbot_registered_not_eligible": (
+            settings.sqlbot_provider_eligibility == "REGISTERED_NOT_ELIGIBLE"
+        ),
         "sqlbot_release_included": settings.sqlbot_included_in_v4_release,
+        "model_gateway_ready": model_gateway["status"] == "READY",
+        "model_gateway_three_providers_registered": sum(
+            item["configured"] and item["enabled"]
+            for item in model_gateway["providers"]
+        ) == 3,
     }
     return {
         "status": "PASS" if all(checks.values()) else "WAITING",
@@ -81,6 +94,8 @@ def snapshot(expected_revision: str = EXPECTED_REVISION) -> dict:
         "semantic_view_count": semantic_view_count,
         "active_binding_count": active_binding_count,
         "query_engine_mode": settings.effective_query_engine_mode,
+        "sqlbot_provider_eligibility": settings.sqlbot_provider_eligibility,
+        "model_gateway": model_gateway,
         "checks": checks,
     }
 

@@ -53,6 +53,20 @@ class ModelGateway:
             raise last_error
         raise ModelNotConfiguredError("no model route is available")
 
+    def complete_with_config(
+        self, config_id: str, request: GatewayRequest
+    ) -> GatewayResponse:
+        """Execute an explicitly approved registered model configuration."""
+
+        config = self.registry.get(config_id)
+        if not config.enabled:
+            raise ModelNotConfiguredError("requested model configuration is disabled")
+        if config.task_type != request.task_type:
+            raise ModelPolicyDeniedError(
+                "requested model configuration does not allow this task type"
+            )
+        return self._attempt_model(config, request, fallback_used=False)
+
     def _route_candidates(self, primary: ModelConfig):
         yield primary, False
         if primary.fallback_model:

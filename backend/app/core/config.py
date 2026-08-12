@@ -56,6 +56,9 @@ class Settings(BaseSettings):
     sqlbot_engine_enabled: bool = False
     sqlbot_runtime_verified: bool = False
     sqlbot_included_in_v4_release: bool = False
+    sqlbot_provider_eligibility: Literal[
+        "NOT_ASSESSED", "ELIGIBLE", "REGISTERED_NOT_ELIGIBLE"
+    ] = "NOT_ASSESSED"
     sqlbot_base_url: str = "http://sqlbot:8000/api/v1"
     sqlbot_username_env_key: str = "SQLBOT_SERVICE_USERNAME"
     sqlbot_password_env_key: str = "SQLBOT_SERVICE_PASSWORD"
@@ -192,6 +195,16 @@ class Settings(BaseSettings):
                     failures.append(
                         "CHATBI_READONLY_EXECUTION_ENABLED must be true before enabling SQLBot in production"
                     )
+            if self.sqlbot_provider_eligibility == "REGISTERED_NOT_ELIGIBLE" and (
+                not self.sqlbot_included_in_v4_release
+                or self.sqlbot_engine_enabled
+                or self.sqlbot_runtime_verified
+                or self.effective_query_engine_mode != "DETERMINISTIC_ONLY"
+            ):
+                failures.append(
+                    "REGISTERED_NOT_ELIGIBLE requires SQLBot included but disabled, "
+                    "unverified, and DETERMINISTIC_ONLY"
+                )
             if not self.sqlbot_included_in_v4_release and (
                 self.sqlbot_engine_enabled
                 or self.sqlbot_runtime_verified
@@ -209,8 +222,15 @@ class Settings(BaseSettings):
             if self.app_env == "preproduction":
                 if self.local_auth_enabled:
                     failures.append("LOCAL_AUTH_ENABLED must be false in preproduction")
-                if self.effective_query_engine_mode != "SHADOW":
-                    failures.append("preproduction QUERY_ENGINE_MODE must remain SHADOW")
+                expected_preproduction_mode = (
+                    "DETERMINISTIC_ONLY"
+                    if self.release_version.startswith("4.1.0-integration-full.")
+                    else "SHADOW"
+                )
+                if self.effective_query_engine_mode != expected_preproduction_mode:
+                    failures.append(
+                        "preproduction QUERY_ENGINE_MODE must match the release safety mode"
+                    )
                 if self.sqlbot_engine_enabled:
                     failures.append("preproduction SQLBOT_ENGINE_ENABLED must remain false")
                 if not self.oidc_enabled or not self.oidc_issuer.startswith("https://"):
