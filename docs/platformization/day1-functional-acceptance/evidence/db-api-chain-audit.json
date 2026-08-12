@@ -1,0 +1,500 @@
+{
+  "active_version_binding": {
+    "active_bindings": [
+      {
+        "data_classification": "OPEN_SOURCE_DERIVED",
+        "dataset_code": "charging_operations",
+        "dataset_version_id": "DSV-0166fa47-430f-4ba5-9b6d-fcd7ac22916b",
+        "declared_row_count": 300026,
+        "mapping_status": "PUBLISHED",
+        "mapping_version_id": "MAP-99a4a96d-891e-4e78-a7c8-0f1fa057ccda",
+        "missing": false,
+        "period_end_exclusive": "2020-06-10",
+        "period_start": "2020-06-02",
+        "quality_result_id": "DQ-91b893d8-ef56-45a9-9782-eb5a96977da4",
+        "quality_run_id": "DQ-UI-3f7406855f9ecfa84ea5ca96e92a27e6",
+        "quality_status": "PASSED",
+        "relation_counts": {
+          "dim_station": 44,
+          "fact_charging_session": 300026,
+          "fact_device_status_event": 65520,
+          "fact_energy_cost": 65544,
+          "fact_operation_expense": 65520
+        },
+        "relations": {
+          "energy_cost_fact": "fact_energy_cost",
+          "operation_expense_fact": "fact_operation_expense",
+          "session_fact": "fact_charging_session",
+          "station_dimension": "dim_station",
+          "status_event_fact": "fact_device_status_event"
+        },
+        "scenario_id": "charging_ops",
+        "semantic_model_version_id": "SMV-902d7005-fdd7-4973-a5df-552acda261d4",
+        "semantic_status": "ACTIVE",
+        "semantic_version": "0.1.0",
+        "source_id": "platform-postgresql",
+        "source_run_id": "DQ-UI-3f7406855f9ecfa84ea5ca96e92a27e6",
+        "source_version": "ornl-acn-discovery-2020-v1",
+        "version": 4
+      },
+      {
+        "data_classification": "OPEN_SOURCE_DERIVED",
+        "dataset_code": "sales_operations",
+        "dataset_version_id": "DSV-23d76559-e5b1-48e8-b2c4-c52da2825ae8",
+        "declared_row_count": 13665,
+        "mapping_status": "PUBLISHED",
+        "mapping_version_id": "MAP-2c569699-304c-4383-b47d-30020c1650c2",
+        "missing": false,
+        "period_end_exclusive": "2011-12-10",
+        "period_start": "2010-12-01",
+        "quality_result_id": "DQ-fe1b3c3d-c49e-4993-b767-d73968d85be1",
+        "quality_run_id": "DATA41-UCI-QUALITY-V1",
+        "quality_status": "PASSED",
+        "relation_counts": {
+          "sales_business_date": 851,
+          "sales_channel": 6,
+          "sales_customer": 12754,
+          "sales_order": 63665,
+          "sales_order_item": 109609,
+          "sales_product": 3177,
+          "sales_product_category": 13,
+          "sales_region": 44,
+          "salesperson": 116
+        },
+        "relations": {
+          "category_dimension": "sales_product_category",
+          "channel_dimension": "sales_channel",
+          "customer_dimension": "sales_customer",
+          "date_dimension": "sales_business_date",
+          "order_fact": "sales_order",
+          "order_item_fact": "sales_order_item",
+          "product_dimension": "sales_product",
+          "region_dimension": "sales_region",
+          "salesperson_dimension": "salesperson"
+        },
+        "scenario_id": "sales_ops",
+        "semantic_model_version_id": "SMV-1fa67186-98ed-48d9-80e5-0cc2880e11f1",
+        "semantic_status": "ACTIVE",
+        "semantic_version": "1.0.1",
+        "source_id": null,
+        "source_run_id": "DATA41-UCI-QUALITY-V1",
+        "source_version": "DATA41-UCI-ONLINE-RETAIL-352-V1",
+        "version": 2
+      }
+    ],
+    "all_dataset_versions": [
+      {
+        "active_dataset_version_id": "DSV-0166fa47-430f-4ba5-9b6d-fcd7ac22916b",
+        "active_semantic_model_version_id": "SMV-902d7005-fdd7-4973-a5df-552acda261d4",
+        "code": "charging_operations",
+        "data_classification": "OPEN_SOURCE_DERIVED",
+        "dataset_id": "DS-71e06aba-8f11-4146-80c2-751a8daddedf",
+        "dataset_status": "ENABLED",
+        "dataset_version_id": "DSV-ef6bfa7b-67c5-43e4-ada1-40a682f56e27",
+        "mapping_status": "PUBLISHED",
+        "mapping_version_id": "MAP-99a4a96d-891e-4e78-a7c8-0f1fa057ccda",
+        "period_end_exclusive": "2026-07-01",
+        "period_start": "2025-01-01",
+        "quality_result_id": "DQ-9479c5a7-bc6f-45e5-af8a-5d0e148f177f",
+        "quality_run_id": "charging_ops:1.0.0:quality",
+        "quality_status": "PASSED",
+        "row_count": 300000,
+        "scenario_id": "charging_ops",
+        "semantic_status": "ACTIVE",
+        "semantic_version": "0.1.0",
+        "source_binding_json": "{\"data_classification\":\"simulated\",\"relations\":{\"energy_cost_fact\":\"fact_energy_cost\",\"operation_expense_fact\":\"fact_operation_expense\",\"session_fact\":\"fact_charging_session\",\"station_dimension\":\"dim_station\",\"status_event_fact\":\"fact_device_status_event\"},\"source\":\"platform_database\"}",
+        "source_id": "platform-postgresql",
+        "source_version": "SIM-20260722-v010-n300000",
+        "version": 1,
+        "version_status": "SUPERSEDED"
+      },
+      {
+        "active_dataset_version_id": "DSV-0166fa47-430f-4ba5-9b6d-fcd7ac22916b",
+        "active_semantic_model_version_id": "SMV-902d7005-fdd7-4973-a5df-552acda261d4",
+        "code": "charging_operations",
+        "data_classification": "OPEN_SOURCE_DERIVED",
+        "dataset_id": "DS-71e06aba-8f11-4146-80c2-751a8daddedf",
+        "dataset_status": "ENABLED",
+        "dataset_version_id": "DSV-48e95033-6903-4b26-8b8d-caef904ef24e",
+        "mapping_status": "PUBLISHED",
+        "mapping_version_id": "MAP-99a4a96d-891e-4e78-a7c8-0f1fa057ccda",
+        "period_end_exclusive": "2020-06-10",
+        "period_start": "2020-05-09",
+        "quality_result_id": "DQ-a5367a8d-c7a5-42b9-b61d-52e40e8b8ee6",
+        "quality_run_id": "DATA41-ACN-QUALITY-V1",
+        "quality_status": "PASSED",
+        "row_count": 26,
+        "scenario_id": "charging_ops",
+        "semantic_status": "ACTIVE",
+        "semantic_version": "0.1.0",
+        "source_binding_json": "{\"data_classification\":\"OPEN_SOURCE_DERIVED\",\"database\":\"PostgreSQL\",\"lineage_endpoint\":\"/api/v1/data/open-source/status\",\"relations\":{\"energy_cost_fact\":\"fact_energy_cost\",\"operation_expense_fact\":\"fact_operation_expense\",\"session_fact\":\"fact_charging_session\",\"station_dimension\":\"dim_station\",\"status_event_fact\":\"fact_device_status_event\"},\"source\":\"platform_database\",\"source_version\":\"DATA41-ACN-ORNL-26-V1\",\"sqlbot_execution_mode\":\"disabled_schema_catalog_only\"}",
+        "source_id": "platform-postgresql",
+        "source_version": "DATA41-ACN-ORNL-26-V1",
+        "version": 2,
+        "version_status": "SUPERSEDED"
+      },
+      {
+        "active_dataset_version_id": "DSV-0166fa47-430f-4ba5-9b6d-fcd7ac22916b",
+        "active_semantic_model_version_id": "SMV-902d7005-fdd7-4973-a5df-552acda261d4",
+        "code": "charging_operations",
+        "data_classification": "OPEN_SOURCE_DERIVED",
+        "dataset_id": "DS-71e06aba-8f11-4146-80c2-751a8daddedf",
+        "dataset_status": "ENABLED",
+        "dataset_version_id": "DSV-2e4ae954-f37a-4e15-8614-18d1161e6259",
+        "mapping_status": "PUBLISHED",
+        "mapping_version_id": "MAP-99a4a96d-891e-4e78-a7c8-0f1fa057ccda",
+        "period_end_exclusive": "2020-06-10",
+        "period_start": "2020-06-02",
+        "quality_result_id": "DQ-79471b8c-a784-4c15-9925-63714dc9c0e2",
+        "quality_run_id": "DQ-UI-3c8cac9a1f8920045195025aae7412c0",
+        "quality_status": "PASSED",
+        "row_count": 300026,
+        "scenario_id": "charging_ops",
+        "semantic_status": "ACTIVE",
+        "semantic_version": "0.1.0",
+        "source_binding_json": "{\"data_classification\":\"OPEN_SOURCE_DERIVED\",\"database\":\"PostgreSQL\",\"lineage_endpoint\":\"/api/v1/data/open-source/status\",\"relations\":{\"energy_cost_fact\":\"fact_energy_cost\",\"operation_expense_fact\":\"fact_operation_expense\",\"session_fact\":\"fact_charging_session\",\"station_dimension\":\"dim_station\",\"status_event_fact\":\"fact_device_status_event\"},\"source\":\"platform_database\",\"source_version\":\"DATA41-ACN-ORNL-26-V1\",\"sqlbot_execution_mode\":\"disabled_schema_catalog_only\"}",
+        "source_id": "platform-postgresql",
+        "source_version": "ornl-acn-discovery-2020-v1",
+        "version": 3,
+        "version_status": "SUPERSEDED"
+      },
+      {
+        "active_dataset_version_id": "DSV-0166fa47-430f-4ba5-9b6d-fcd7ac22916b",
+        "active_semantic_model_version_id": "SMV-902d7005-fdd7-4973-a5df-552acda261d4",
+        "code": "charging_operations",
+        "data_classification": "OPEN_SOURCE_DERIVED",
+        "dataset_id": "DS-71e06aba-8f11-4146-80c2-751a8daddedf",
+        "dataset_status": "ENABLED",
+        "dataset_version_id": "DSV-0166fa47-430f-4ba5-9b6d-fcd7ac22916b",
+        "mapping_status": "PUBLISHED",
+        "mapping_version_id": "MAP-99a4a96d-891e-4e78-a7c8-0f1fa057ccda",
+        "period_end_exclusive": "2020-06-10",
+        "period_start": "2020-06-02",
+        "quality_result_id": "DQ-91b893d8-ef56-45a9-9782-eb5a96977da4",
+        "quality_run_id": "DQ-UI-3f7406855f9ecfa84ea5ca96e92a27e6",
+        "quality_status": "PASSED",
+        "row_count": 300026,
+        "scenario_id": "charging_ops",
+        "semantic_status": "ACTIVE",
+        "semantic_version": "0.1.0",
+        "source_binding_json": "{\"data_classification\":\"OPEN_SOURCE_DERIVED\",\"database\":\"PostgreSQL\",\"lineage_endpoint\":\"/api/v1/data/open-source/status\",\"relations\":{\"energy_cost_fact\":\"fact_energy_cost\",\"operation_expense_fact\":\"fact_operation_expense\",\"session_fact\":\"fact_charging_session\",\"station_dimension\":\"dim_station\",\"status_event_fact\":\"fact_device_status_event\"},\"source\":\"platform_database\",\"source_version\":\"DATA41-ACN-ORNL-26-V1\",\"sqlbot_execution_mode\":\"disabled_schema_catalog_only\"}",
+        "source_id": "platform-postgresql",
+        "source_version": "ornl-acn-discovery-2020-v1",
+        "version": 4,
+        "version_status": "ACTIVE"
+      },
+      {
+        "active_dataset_version_id": "DSV-0166fa47-430f-4ba5-9b6d-fcd7ac22916b",
+        "active_semantic_model_version_id": "SMV-902d7005-fdd7-4973-a5df-552acda261d4",
+        "code": "charging_operations",
+        "data_classification": "OPEN_SOURCE_DERIVED",
+        "dataset_id": "DS-71e06aba-8f11-4146-80c2-751a8daddedf",
+        "dataset_status": "ENABLED",
+        "dataset_version_id": "DSV-b21ecf68-61e8-4675-b655-0015b82d0728",
+        "mapping_status": "PUBLISHED",
+        "mapping_version_id": "MAP-99a4a96d-891e-4e78-a7c8-0f1fa057ccda",
+        "period_end_exclusive": "2020-06-10",
+        "period_start": "2020-06-02",
+        "quality_result_id": "DQ-bc9acd32-f7ae-4fec-ad48-ddef6e658ea3",
+        "quality_run_id": "DQ-UI-59ff309045b6688918757c142262189b",
+        "quality_status": "PASSED",
+        "row_count": 300026,
+        "scenario_id": "charging_ops",
+        "semantic_status": "ACTIVE",
+        "semantic_version": "0.1.0",
+        "source_binding_json": "{\"data_classification\":\"OPEN_SOURCE_DERIVED\",\"database\":\"PostgreSQL\",\"lineage_endpoint\":\"/api/v1/data/open-source/status\",\"relations\":{\"energy_cost_fact\":\"fact_energy_cost\",\"operation_expense_fact\":\"fact_operation_expense\",\"session_fact\":\"fact_charging_session\",\"station_dimension\":\"dim_station\",\"status_event_fact\":\"fact_device_status_event\"},\"source\":\"platform_database\",\"source_version\":\"DATA41-ACN-ORNL-26-V1\",\"sqlbot_execution_mode\":\"disabled_schema_catalog_only\"}",
+        "source_id": "platform-postgresql",
+        "source_version": "ornl-acn-discovery-2020-v1",
+        "version": 5,
+        "version_status": "SUPERSEDED"
+      },
+      {
+        "active_dataset_version_id": "DSV-23d76559-e5b1-48e8-b2c4-c52da2825ae8",
+        "active_semantic_model_version_id": "SMV-1fa67186-98ed-48d9-80e5-0cc2880e11f1",
+        "code": "sales_operations",
+        "data_classification": "OPEN_SOURCE_DERIVED",
+        "dataset_id": "DS-7c72b696-d388-4f77-abef-cff15d44a89a",
+        "dataset_status": "ENABLED",
+        "dataset_version_id": "DSV-26de65a0-f516-4533-bf12-6074ef3ae2c8",
+        "mapping_status": "PUBLISHED",
+        "mapping_version_id": "MAP-2c569699-304c-4383-b47d-30020c1650c2",
+        "period_end_exclusive": "2026-07-01",
+        "period_start": "2025-01-01",
+        "quality_result_id": "DQ-4a72553c-761e-40fc-9a06-71b2ca96910c",
+        "quality_run_id": "sales_ops:1.0.0:quality",
+        "quality_status": "PASSED",
+        "row_count": 50000,
+        "scenario_id": "sales_ops",
+        "semantic_status": "ACTIVE",
+        "semantic_version": "1.0.1",
+        "source_binding_json": "{\"data_classification\":\"simulated\",\"relations\":{\"category_dimension\":\"sales_product_category\",\"channel_dimension\":\"sales_channel\",\"customer_dimension\":\"sales_customer\",\"date_dimension\":\"sales_business_date\",\"order_fact\":\"sales_order\",\"order_item_fact\":\"sales_order_item\",\"product_dimension\":\"sales_product\",\"region_dimension\":\"sales_region\",\"salesperson_dimension\":\"salesperson\"},\"source\":\"platform_database\",\"sqlbot_execution_mode\":\"upstream_readonly\"}",
+        "source_id": null,
+        "source_version": "SALES-SIM-v1-20260730",
+        "version": 1,
+        "version_status": "SUPERSEDED"
+      },
+      {
+        "active_dataset_version_id": "DSV-23d76559-e5b1-48e8-b2c4-c52da2825ae8",
+        "active_semantic_model_version_id": "SMV-1fa67186-98ed-48d9-80e5-0cc2880e11f1",
+        "code": "sales_operations",
+        "data_classification": "OPEN_SOURCE_DERIVED",
+        "dataset_id": "DS-7c72b696-d388-4f77-abef-cff15d44a89a",
+        "dataset_status": "ENABLED",
+        "dataset_version_id": "DSV-23d76559-e5b1-48e8-b2c4-c52da2825ae8",
+        "mapping_status": "PUBLISHED",
+        "mapping_version_id": "MAP-2c569699-304c-4383-b47d-30020c1650c2",
+        "period_end_exclusive": "2011-12-10",
+        "period_start": "2010-12-01",
+        "quality_result_id": "DQ-fe1b3c3d-c49e-4993-b767-d73968d85be1",
+        "quality_run_id": "DATA41-UCI-QUALITY-V1",
+        "quality_status": "PASSED",
+        "row_count": 13665,
+        "scenario_id": "sales_ops",
+        "semantic_status": "ACTIVE",
+        "semantic_version": "1.0.1",
+        "source_binding_json": "{\"data_classification\":\"OPEN_SOURCE_DERIVED\",\"database\":\"PostgreSQL\",\"lineage_endpoint\":\"/api/v1/data/open-source/status\",\"relations\":{\"category_dimension\":\"sales_product_category\",\"channel_dimension\":\"sales_channel\",\"customer_dimension\":\"sales_customer\",\"date_dimension\":\"sales_business_date\",\"order_fact\":\"sales_order\",\"order_item_fact\":\"sales_order_item\",\"product_dimension\":\"sales_product\",\"region_dimension\":\"sales_region\",\"salesperson_dimension\":\"salesperson\"},\"source\":\"platform_database\",\"source_version\":\"DATA41-UCI-ONLINE-RETAIL-352-V1\",\"sqlbot_execution_mode\":\"disabled_schema_catalog_only\"}",
+        "source_id": null,
+        "source_version": "DATA41-UCI-ONLINE-RETAIL-352-V1",
+        "version": 2,
+        "version_status": "ACTIVE"
+      }
+    ],
+    "missing": false
+  },
+  "adjudication": "DATA_CHAIN_READY_FOR_FUNCTIONAL_TESTING",
+  "api_chains": {
+    "charging": [
+      "GET /api/v1/dashboard/context",
+      "GET /api/v1/dashboard/summary",
+      "GET /api/v1/dashboard/stations",
+      "GET /api/v1/dashboard/devices",
+      "GET /api/v1/dashboard/trend",
+      "GET /api/v1/revenue/analysis"
+    ],
+    "data_integration": [
+      "GET|POST /api/v1/data-integration/*"
+    ],
+    "foundation": [
+      "GET|POST /api/v1/platform/foundation/*"
+    ],
+    "knowledge": [
+      "GET /api/v1/knowledge/runtime",
+      "GET /api/v1/knowledge/documents",
+      "POST /api/v1/knowledge/retrieval/test"
+    ],
+    "memory": [
+      "GET|POST|PUT|DELETE /api/v1/memory/*"
+    ],
+    "p6": [
+      "GET|POST /api/v1/alerts",
+      "GET|POST /api/v1/reports",
+      "GET|POST /api/v1/metrics/governance"
+    ],
+    "sales": [
+      "POST /api/v1/assistant/query",
+      "GET /api/v1/chat/scenarios"
+    ],
+    "skills": [
+      "GET|POST /api/v1/skills/*"
+    ]
+  },
+  "api_route_registration": {
+    "actual_route_count": 157,
+    "domains": {
+      "charging": {
+        "expected": [
+          "GET /api/v1/dashboard/context",
+          "GET /api/v1/dashboard/devices",
+          "GET /api/v1/dashboard/stations",
+          "GET /api/v1/dashboard/summary",
+          "GET /api/v1/dashboard/trend",
+          "GET /api/v1/revenue/analysis"
+        ],
+        "missing": false,
+        "missing_routes": []
+      },
+      "data_integration": {
+        "expected": [
+          "GET /api/v1/data-integration/overview",
+          "POST /api/v1/data-integration/datasets/{dataset_id}/run"
+        ],
+        "missing": false,
+        "missing_routes": []
+      },
+      "foundation": {
+        "expected": [
+          "GET /api/v1/platform/foundation",
+          "POST /api/v1/platform/foundation/datasets/{dataset_id}/versions"
+        ],
+        "missing": false,
+        "missing_routes": []
+      },
+      "knowledge": {
+        "expected": [
+          "GET /api/v1/knowledge/documents",
+          "GET /api/v1/knowledge/runtime",
+          "POST /api/v1/knowledge/retrieval/test"
+        ],
+        "missing": false,
+        "missing_routes": []
+      },
+      "memory": {
+        "expected": [
+          "GET /api/v1/memory/candidates",
+          "GET /api/v1/memory/records",
+          "POST /api/v1/memory/preferences"
+        ],
+        "missing": false,
+        "missing_routes": []
+      },
+      "p6": {
+        "expected": [
+          "GET /api/v1/alerts",
+          "GET /api/v1/metrics/governance",
+          "GET /api/v1/reports",
+          "POST /api/v1/alerts/generate",
+          "POST /api/v1/metrics/governance/drafts",
+          "POST /api/v1/reports"
+        ],
+        "missing": false,
+        "missing_routes": []
+      },
+      "sales": {
+        "expected": [
+          "GET /api/v1/chat/scenarios",
+          "POST /api/v1/assistant/query"
+        ],
+        "missing": false,
+        "missing_routes": []
+      },
+      "skills": {
+        "expected": [
+          "GET /api/v1/skills",
+          "POST /api/v1/skills/execute"
+        ],
+        "missing": false,
+        "missing_routes": []
+      }
+    },
+    "missing": false,
+    "note": "Route registration only; this does not assert endpoint behavior or UI PASS."
+  },
+  "artifacts": {
+    "chart_audit_missing": false,
+    "data_seed_result": {
+      "domains": [
+        "charging",
+        "data_integration",
+        "foundation",
+        "knowledge",
+        "memory_and_skills",
+        "p6",
+        "sales"
+      ],
+      "functional_pass_asserted": false
+    },
+    "kpi_audit_missing": false,
+    "missing_data_matrix": {
+      "checks": 13,
+      "missing_check_ids": [],
+      "missing_checks": 0
+    }
+  },
+  "captured_at": "2026-08-12T14:02:26.192302+00:00",
+  "database_sources": [
+    {
+      "display_name": "P4 模拟 PostgreSQL",
+      "last_error_code": null,
+      "last_tested_at": "2026-08-12T09:30:35.453619+00:00",
+      "source_id": "DS-P4-a27d4c73-6fb0-4685-8df4-a7c869e2190f",
+      "source_type": "postgresql",
+      "status": "connected"
+    },
+    {
+      "display_name": "API",
+      "last_error_code": null,
+      "last_tested_at": null,
+      "source_id": "api-import",
+      "source_type": "api",
+      "status": "configured"
+    },
+    {
+      "display_name": "MySQL",
+      "last_error_code": null,
+      "last_tested_at": null,
+      "source_id": "chatbi-mysql",
+      "source_type": "mysql",
+      "status": "configured"
+    },
+    {
+      "display_name": "PostgreSQL（chatBI）",
+      "last_error_code": null,
+      "last_tested_at": null,
+      "source_id": "chatbi-postgresql",
+      "source_type": "postgresql",
+      "status": "configured"
+    },
+    {
+      "display_name": "Excel/CSV",
+      "last_error_code": null,
+      "last_tested_at": null,
+      "source_id": "excel-import",
+      "source_type": "excel",
+      "status": "configured"
+    },
+    {
+      "display_name": "PostgreSQL",
+      "last_error_code": null,
+      "last_tested_at": "2026-08-12T14:00:39.633058+00:00",
+      "source_id": "platform-postgresql",
+      "source_type": "postgresql",
+      "status": "available"
+    }
+  ],
+  "evidence_type": "day1_db_api_chain_audit",
+  "functional_pass_asserted": false,
+  "missing": false,
+  "missing_sections": {
+    "active_version_binding": false,
+    "api_route_registration": false,
+    "chart_data": false,
+    "kpi_data": false,
+    "migration": false,
+    "missing_data_matrix": false
+  },
+  "query_route_evidence": [
+    {
+      "decisions": 22,
+      "scenario_id": "charging_ops",
+      "with_run_id": 22
+    },
+    {
+      "decisions": 32,
+      "scenario_id": "sales_ops",
+      "with_run_id": 32
+    }
+  ],
+  "read_only": true,
+  "runtime": {
+    "migration": {
+      "actual": "integration_41_full_0001",
+      "configured_expected": "integration_41_full_0001",
+      "matches_configuration": true,
+      "missing": false,
+      "task_expected": "integration_41_full_0001"
+    },
+    "runtime": {
+      "active_sales_run_id": "DATA41-UCI-ONLINE-RETAIL-352-V1",
+      "app_env": "preproduction",
+      "database_dialect": "postgresql",
+      "database_name": "renewable_p5b",
+      "platform_version_routing_enabled": true,
+      "query_engine_mode": "DETERMINISTIC_ONLY",
+      "release_version": "4.1.0-integration-full.1",
+      "runtime_data_classification": "OPEN_SOURCE_DERIVED"
+    }
+  },
+  "schema_version": "1.0",
+  "transaction_mode": "database transaction explicitly SET TRANSACTION READ ONLY and rolled back",
+  "warning": "Record counts and data readiness must not be converted into page/control/user-visible-function PASS."
+}

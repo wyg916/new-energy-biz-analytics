@@ -167,6 +167,18 @@ def test_sales_seed_metrics_versions_engine_and_scenario_isolation() -> None:
             open_source_context,
         )
         assert open_source_result.evidence["data_classification"] == "OPEN_SOURCE_DERIVED"
+        chinese_day_range_result = SalesOpsDeterministicEngine(db).execute(
+            QueryRequest(
+                question="2011年12月2日至2011年12月9日销售收入是多少？",
+                identity_context=identity,
+                scenario_id="sales_ops",
+            ),
+            open_source_context,
+        )
+        assert chinese_day_range_result.evidence["time_range"] == [
+            "2011-12-02",
+            "2011-12-10",
+        ]
         with pytest.raises(SalesOpsQueryError) as out_of_active_period:
             SalesOpsDeterministicEngine(db).execute(
                 QueryRequest(

@@ -115,7 +115,11 @@ class ScenarioChatServiceRegistry:
                     period_start,
                     period_end_exclusive,
                 ),
-                "suggested_questions": list(registration.suggested_questions),
+                "suggested_questions": self._suggested_questions(
+                    registration,
+                    period_start,
+                    period_end_exclusive,
+                ),
             })
         return rows
 
@@ -152,6 +156,31 @@ class ScenarioChatServiceRegistry:
             f"{query_start.isoformat()}至{query_end_inclusive.isoformat()}"
             "充电收入是多少？"
         )
+
+    @staticmethod
+    def _suggested_questions(
+        registration: ScenarioChatRegistration,
+        period_start: str | None,
+        period_end_exclusive: str | None,
+    ) -> list[str]:
+        if registration.scenario_id != "sales_ops":
+            return list(registration.suggested_questions)
+        if not period_start or not period_end_exclusive:
+            return list(registration.suggested_questions)
+        try:
+            available_start = date.fromisoformat(period_start[:10])
+            available_end = date.fromisoformat(period_end_exclusive[:10])
+        except ValueError:
+            return list(registration.suggested_questions)
+        if available_end <= available_start:
+            return list(registration.suggested_questions)
+        query_start = max(available_start, available_end - timedelta(days=7))
+        window = f"{query_start.isoformat()}至{available_end.isoformat()}"
+        return [
+            f"{window}退款率是多少？",
+            f"{window}新客户数和复购客户数是多少？",
+            f"{window}客单价是多少？",
+        ]
 
     def execute(
         self,

@@ -59,6 +59,11 @@ def test_chatbi_uses_registry_for_two_isolated_scenarios(
         "end_exclusive": "2026-07-01",
     }
     assert len(scenario_rows["sales_ops"]["suggested_questions"]) == 3
+    assert all(
+        "2025-01-01" <= question.split("至", 1)[0] < "2026-07-01"
+        and "至2026-07-01" in question
+        for question in scenario_rows["sales_ops"]["suggested_questions"]
+    )
 
     sales = client.post(
         "/api/v1/chat/query",

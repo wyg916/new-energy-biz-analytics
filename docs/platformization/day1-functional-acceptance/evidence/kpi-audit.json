@@ -1,0 +1,44 @@
+{
+  "checks": {
+    "charging": {
+      "missing": false,
+      "registered_metric_definitions": 15,
+      "values": {
+        "current_orders": 14,
+        "current_revenue": 25.71,
+        "previous_orders": 12,
+        "previous_revenue": 20.41,
+        "trend_points": 2
+      }
+    },
+    "sales": {
+      "catalog_source": "app.scenarios.sales_ops.metrics.SALES_METRICS",
+      "implemented_metric_catalog_size": 12,
+      "missing": false,
+      "period": {
+        "active_sales_run_id": "DATA41-UCI-ONLINE-RETAIL-352-V1",
+        "current_end_exclusive": "2011-12-10",
+        "current_start": "2011-06-06",
+        "previous_start": "2010-12-01"
+      },
+      "values": {
+        "current_orders": 8064,
+        "current_revenue": 319352.97,
+        "previous_orders": 5601,
+        "previous_revenue": 275998.22,
+        "trend_points": 13
+      }
+    }
+  },
+  "evidence_type": "day1_kpi_data_audit",
+  "functional_pass_asserted": false,
+  "missing": false,
+  "period": {
+    "comparison_basis": "selected source window split into equal consecutive halves",
+    "current_end_exclusive": "2020-06-10",
+    "current_start": "2020-05-25",
+    "previous_start": "2020-05-09"
+  },
+  "read_only": true,
+  "schema_version": "1.0"
+}

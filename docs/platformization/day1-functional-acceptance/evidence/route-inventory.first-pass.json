@@ -1,0 +1,802 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "day1_route_inventory_first_pass",
+  "baseline_head": "9f5b6e763b1b7b6394ee7beaece95397e9884a15",
+  "page_state_denominator": 24,
+  "page_states": [
+    {
+      "id": "LOGIN",
+      "name": "登录",
+      "route": "/",
+      "auth_required": false,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/01-login.jpg",
+      "api_endpoints": [
+        "GET /api/v1/auth/oidc/status"
+      ],
+      "layout": {},
+      "control_count": 1
+    },
+    {
+      "id": "OIDC-CALLBACK",
+      "name": "OIDC 回调",
+      "route": "/oidc/callback",
+      "auth_required": false,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/02-oidc-callback.jpg",
+      "api_endpoints": [],
+      "layout": {},
+      "control_count": 1
+    },
+    {
+      "id": "OVERVIEW",
+      "name": "功能总览",
+      "route": "/",
+      "auth_required": true,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/03-overview.jpg",
+      "api_endpoints": [],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        }
+      },
+      "control_count": 22
+    },
+    {
+      "id": "DASHBOARD",
+      "name": "经营工作台",
+      "route": "/",
+      "auth_required": true,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/04-dashboard.jpg",
+      "api_endpoints": [
+        "GET /api/v1/dashboard/context",
+        "GET /api/v1/dashboard/summary"
+      ],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        }
+      },
+      "control_count": 32
+    },
+    {
+      "id": "REVENUE",
+      "name": "收入与订单",
+      "route": "/",
+      "auth_required": true,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/05-revenue.jpg",
+      "api_endpoints": [
+        "GET /api/v1/dashboard/stations",
+        "GET /api/v1/dashboard/summary",
+        "GET /api/v1/dashboard/trend",
+        "GET /api/v1/diagnostics/decomposition",
+        "GET /api/v1/revenue/analysis"
+      ],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 245,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 245,
+          "y": 0,
+          "width": 1355,
+          "height": 58
+        }
+      },
+      "control_count": 34
+    },
+    {
+      "id": "MARGIN",
+      "name": "毛利与成本",
+      "route": "/",
+      "auth_required": true,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/06-margin.jpg",
+      "api_endpoints": [
+        "GET /api/v1/dashboard/stations",
+        "GET /api/v1/dashboard/summary",
+        "GET /api/v1/dashboard/trend",
+        "GET /api/v1/diagnostics/decomposition"
+      ],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 245,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 245,
+          "y": 0,
+          "width": 1355,
+          "height": 58
+        }
+      },
+      "control_count": 48
+    },
+    {
+      "id": "STATIONS",
+      "name": "场站经营",
+      "route": "/",
+      "auth_required": true,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/07-stations.jpg",
+      "api_endpoints": [
+        "GET /api/v1/dashboard/stations",
+        "GET /api/v1/dashboard/summary",
+        "GET /api/v1/dashboard/trend"
+      ],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 245,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 245,
+          "y": 0,
+          "width": 1355,
+          "height": 58
+        }
+      },
+      "control_count": 67
+    },
+    {
+      "id": "DEVICES",
+      "name": "设备健康",
+      "route": "/",
+      "auth_required": true,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/08-devices.jpg",
+      "api_endpoints": [],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 245,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 245,
+          "y": 0,
+          "width": 1355,
+          "height": 58
+        }
+      },
+      "control_count": 38
+    },
+    {
+      "id": "ALERTS",
+      "name": "经营预警",
+      "route": "/",
+      "auth_required": true,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/09-alerts.jpg",
+      "api_endpoints": [
+        "GET /api/v1/alerts",
+        "GET /api/v1/dashboard/devices"
+      ],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 245,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 245,
+          "y": 0,
+          "width": 1355,
+          "height": 58
+        }
+      },
+      "control_count": 26
+    },
+    {
+      "id": "CHATBI",
+      "name": "AI经营分析",
+      "route": "/",
+      "auth_required": true,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/10-chatbi.jpg",
+      "api_endpoints": [
+        "GET /api/v1/alerts/ALT-df191c1b-0f59-4e5c-9e98-13e51a0817d9/timeline",
+        "GET /api/v1/chat/scenarios",
+        "GET /api/v1/dashboard/stations",
+        "GET /api/v1/dashboard/summary",
+        "GET /api/v1/dashboard/trend",
+        "GET /api/v1/knowledge/runtime"
+      ],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        }
+      },
+      "control_count": 45
+    },
+    {
+      "id": "MEMORY",
+      "name": "记忆与偏好",
+      "route": "/",
+      "auth_required": true,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/11-memory.jpg",
+      "api_endpoints": [
+        "GET /api/v1/dashboard/summary",
+        "GET /api/v1/dashboard/trend"
+      ],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        }
+      },
+      "control_count": 22
+    },
+    {
+      "id": "SKILLS",
+      "name": "Skill 管理",
+      "route": "/",
+      "auth_required": true,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/12-skills.jpg",
+      "api_endpoints": [
+        "GET /api/v1/memory/candidates",
+        "GET /api/v1/memory/records",
+        "GET /api/v1/skills"
+      ],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        }
+      },
+      "control_count": 41
+    },
+    {
+      "id": "REPORTS",
+      "name": "经营报告",
+      "route": "/",
+      "auth_required": true,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/13-reports.jpg",
+      "api_endpoints": [
+        "GET /api/v1/reports"
+      ],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 230,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 230,
+          "y": 0,
+          "width": 1370,
+          "height": 58
+        }
+      },
+      "control_count": 24
+    },
+    {
+      "id": "KNOWLEDGE",
+      "name": "企业知识库",
+      "route": "/",
+      "auth_required": true,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/14-knowledge.jpg",
+      "api_endpoints": [
+        "GET /api/v1/knowledge/documents",
+        "GET /api/v1/knowledge/runtime",
+        "GET /api/v1/knowledge/source-catalog",
+        "GET /api/v1/reports/RPT-b0ec5965-f9b0-43eb-819d-1ecd68570110/evidence",
+        "POST /api/v1/assistant/query"
+      ],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 1370
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        }
+      },
+      "control_count": 37
+    },
+    {
+      "id": "MAPPING",
+      "name": "数据接入与字段映射",
+      "route": "/",
+      "auth_required": true,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/15-mapping.jpg",
+      "api_endpoints": [
+        "GET /api/v1/data-integration/overview",
+        "GET /api/v1/platform/foundation"
+      ],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 270,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 270,
+          "y": 0,
+          "width": 1330,
+          "height": 64
+        }
+      },
+      "control_count": 53
+    },
+    {
+      "id": "METRICS",
+      "name": "指标与场景管理",
+      "route": "/",
+      "auth_required": true,
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/16-metrics.jpg",
+      "api_endpoints": [
+        "GET /api/v1/metrics/governance"
+      ],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        }
+      },
+      "control_count": 26
+    },
+    {
+      "id": "GOVERNANCE-OVERVIEW",
+      "name": "治理总览",
+      "route": "/",
+      "auth_required": true,
+      "parent": "GOVERNANCE",
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/17-governance-overview.jpg",
+      "api_endpoints": [
+        "GET /api/v1/governance/snapshot"
+      ],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 568
+        }
+      },
+      "control_count": 27
+    },
+    {
+      "id": "GOVERNANCE-IDENTITY",
+      "name": "身份与授权",
+      "route": "/",
+      "auth_required": true,
+      "parent": "GOVERNANCE",
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/18-governance-identity.jpg",
+      "api_endpoints": [],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 734
+        }
+      },
+      "control_count": 27
+    },
+    {
+      "id": "GOVERNANCE-CREDENTIALS",
+      "name": "凭据引用",
+      "route": "/",
+      "auth_required": true,
+      "parent": "GOVERNANCE",
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/19-governance-credentials.jpg",
+      "api_endpoints": [],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 708
+        }
+      },
+      "control_count": 34
+    },
+    {
+      "id": "GOVERNANCE-RETENTION",
+      "name": "Legal Hold 与保留",
+      "route": "/",
+      "auth_required": true,
+      "parent": "GOVERNANCE",
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/20-governance-retention.jpg",
+      "api_endpoints": [],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 416
+        }
+      },
+      "control_count": 27
+    },
+    {
+      "id": "GOVERNANCE-AUDIT",
+      "name": "审计与告警",
+      "route": "/",
+      "auth_required": true,
+      "parent": "GOVERNANCE",
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/21-governance-audit.jpg",
+      "api_endpoints": [],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 1143
+        }
+      },
+      "control_count": 28
+    },
+    {
+      "id": "GOVERNANCE-RELEASE",
+      "name": "发布与运行",
+      "route": "/",
+      "auth_required": true,
+      "parent": "GOVERNANCE",
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/22-governance-release.jpg",
+      "api_endpoints": [],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 729
+        }
+      },
+      "control_count": 29
+    },
+    {
+      "id": "GOVERNANCE-PREPRODUCTION",
+      "name": "P4 预生产与 RC",
+      "route": "/",
+      "auth_required": true,
+      "parent": "GOVERNANCE",
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/23-governance-preproduction.jpg",
+      "api_endpoints": [
+        "GET /api/v1/preproduction/snapshot"
+      ],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 2219
+        }
+      },
+      "control_count": 31
+    },
+    {
+      "id": "GOVERNANCE-PRODUCTION",
+      "name": "P5 生产验收",
+      "route": "/",
+      "auth_required": true,
+      "parent": "GOVERNANCE",
+      "status": "PASS",
+      "screenshot": "screenshots/baseline/24-governance-production.jpg",
+      "api_endpoints": [
+        "GET /api/v1/production-acceptance/snapshot"
+      ],
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 2150
+        }
+      },
+      "control_count": 32
+    }
+  ]
+}

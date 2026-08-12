@@ -1,0 +1,458 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "day1_console_network_first_pass",
+  "console_errors": [],
+  "page_errors": [],
+  "request_failures": [],
+  "blocking_responses": [],
+  "requests": [
+    {
+      "page": "LOGIN",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/auth/oidc/status",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "LOGIN",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/auth/oidc/start",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "LOGIN",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/auth/oidc/callback",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "DASHBOARD",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/context",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "DASHBOARD",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-07&end_exclusive=2020-05-09",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=completed_order_count&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_volume_kwh&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_margin&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2019-05-09&end_exclusive=2019-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=station_utilization_rate&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/revenue/analysis?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/revenue/analysis?start=2020-04-07&end_exclusive=2020-05-09",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-04-07&end_exclusive=2020-05-09&limit=10&metrics=charging_revenue,gross_profit,gross_margin,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=charging_revenue&comparison=mom&limit=5&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=5&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-07&end_exclusive=2020-05-09",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=30&metrics=charging_revenue,service_fee_revenue,completed_order_count,charging_volume_kwh,revenue_per_kwh,station_utilization_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-04-07&end_exclusive=2020-05-09&limit=30&metrics=charging_revenue,service_fee_revenue,completed_order_count,charging_volume_kwh,revenue_per_kwh,station_utilization_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MARGIN",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MARGIN",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=10&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MARGIN",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MARGIN",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=cost_per_kwh&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MARGIN",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "STATIONS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "STATIONS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "STATIONS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-07&end_exclusive=2020-05-09",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "STATIONS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "STATIONS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-04-07&end_exclusive=2020-05-09&limit=30&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "ALERTS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/devices?limit=120&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "ALERTS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/alerts",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "CHATBI",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/alerts/ALT-df191c1b-0f59-4e5c-9e98-13e51a0817d9/timeline",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "CHATBI",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "CHATBI",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_online_rate&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "CHATBI",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_fault_rate&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "CHATBI",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "CHATBI",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "CHATBI",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "CHATBI",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_online_rate&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "CHATBI",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/runtime",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "CHATBI",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "CHATBI",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/chat/scenarios",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MEMORY",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2019-05-10&end_exclusive=2019-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MEMORY",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MEMORY",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-10&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MEMORY",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-10&end_exclusive=2020-05-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "SKILLS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/candidates",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "SKILLS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/records?scenario_id=charging_ops",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "SKILLS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/skills?scenario_id=charging_ops",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REPORTS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/reports",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "KNOWLEDGE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/reports/RPT-b0ec5965-f9b0-43eb-819d-1ecd68570110/evidence",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "KNOWLEDGE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/source-catalog",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "KNOWLEDGE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/runtime",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "KNOWLEDGE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/documents?scenario_id=charging_ops",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "KNOWLEDGE",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/assistant/query",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MAPPING",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/platform/foundation",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MAPPING",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/overview?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "METRICS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/metrics/governance",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/governance/snapshot",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-PREPRODUCTION",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/preproduction/snapshot",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-PRODUCTION",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/production-acceptance/snapshot",
+      "status": 200,
+      "content_type": "application/json"
+    }
+  ]
+}

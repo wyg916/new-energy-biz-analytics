@@ -1,0 +1,202 @@
+{
+  "current_period": {
+    "comparison_start": "2020-05-09",
+    "current_period_start": "2020-05-25",
+    "end_exclusive": "2020-06-10",
+    "start": "2020-05-09"
+  },
+  "domains": {
+    "charging": {
+      "lineage": {
+        "classification_sample": "open_source",
+        "classifications": 1,
+        "run_ids": 1
+      },
+      "missing": false,
+      "table_counts": {
+        "dim_device": 134,
+        "dim_station": 44,
+        "fact_charging_session": 300026,
+        "fact_device_status_event": 65520,
+        "fact_energy_cost": 65544,
+        "fact_operation_expense": 65520
+      },
+      "temporal_profile": {
+        "current_period_records": 14,
+        "max_time": "2026-06-30T10:48:00+00:00",
+        "min_time": "2020-05-09T18:51:31+00:00",
+        "previous_period_records": 12,
+        "ranking_entities": 44,
+        "record_count": 288122,
+        "time_points": 21
+      }
+    },
+    "data_integration": {
+      "missing": false,
+      "table_counts": {
+        "data_ingestion_quality_check": 48,
+        "data_ingestion_review": 6,
+        "data_ingestion_run": 6,
+        "data_set_definition": 1,
+        "data_source_connection": 6,
+        "published_station_snapshot": 100
+      }
+    },
+    "foundation": {
+      "missing": false,
+      "table_counts": {
+        "dataset": 2,
+        "dataset_version": 7,
+        "mapping_version": 2,
+        "metric": 27,
+        "quality_result": 7,
+        "release_record": 30,
+        "review_record": 7,
+        "semantic_activation": 2,
+        "semantic_model": 2,
+        "semantic_model_version": 2
+      }
+    },
+    "knowledge": {
+      "missing": false,
+      "table_counts": {
+        "knowledge_chunk": 416,
+        "knowledge_chunk_index": 416,
+        "knowledge_document": 22,
+        "knowledge_document_version": 22,
+        "knowledge_retrieval_event": 96
+      }
+    },
+    "memory_and_skills": {
+      "allowed_initially_empty": [
+        "memory_write_candidate",
+        "session_state",
+        "skill_execution"
+      ],
+      "missing": false,
+      "note": "Allowed-empty tables remain workflow targets for later UI/E2E and are not asserted PASS here.",
+      "table_counts": {
+        "memory_record": 62,
+        "memory_write_candidate": 5,
+        "procedure_definition": 5,
+        "session_state": 35,
+        "skill_definition": 8,
+        "skill_execution": 0
+      }
+    },
+    "p6": {
+      "missing": false,
+      "table_counts": {
+        "p6_alert_event": 1,
+        "p6_alert_timeline_event": 42,
+        "p6_metric_governance_version": 20,
+        "p6_report": 5,
+        "p6_report_evidence_snapshot": 5,
+        "p6_report_version": 10
+      }
+    },
+    "sales": {
+      "current_period": {
+        "active_sales_run_id": "DATA41-UCI-ONLINE-RETAIL-352-V1",
+        "comparison_start": "2010-12-01",
+        "current_period_start": "2011-06-06",
+        "end_exclusive": "2011-12-10",
+        "start": "2010-12-01"
+      },
+      "lineage": [
+        {
+          "data_classification": "simulated",
+          "records": 50000,
+          "run_id": "SALES-SIM-v1-20260730"
+        },
+        {
+          "data_classification": "BUSINESS_ASSUMPTION",
+          "records": 13665,
+          "run_id": "DATA41-UCI-ONLINE-RETAIL-352-V1"
+        }
+      ],
+      "missing": false,
+      "ranking_dimensions": {
+        "channels": 1,
+        "products": 3057,
+        "regions": 36,
+        "run_ids": 1,
+        "salespersons": 36
+      },
+      "table_counts": {
+        "sales_channel": 6,
+        "sales_order": 63665,
+        "sales_order_item": 109609,
+        "sales_product": 3177,
+        "sales_region": 44,
+        "salesperson": 116
+      },
+      "temporal_profile": {
+        "current_period_records": 8064,
+        "max_time": "2026-06-30",
+        "min_time": "2010-12-01",
+        "previous_period_records": 5601,
+        "ranking_entities": 44,
+        "record_count": 63665,
+        "time_points": 31
+      }
+    }
+  },
+  "evidence_type": "day1_data_seed_result",
+  "functional_pass_asserted": false,
+  "lineage_runs": {
+    "data_generation_runs": [
+      {
+        "generator_version": "data41-open-source-v1",
+        "period_end": "2020-06-09",
+        "period_start": "2020-05-09",
+        "quality_status": "passed",
+        "random_seed": 0,
+        "run_id": "DATA41-ACN-ORNL-26-V1",
+        "status": "completed"
+      },
+      {
+        "generator_version": "0.1.0",
+        "period_end": "2026-06-30",
+        "period_start": "2025-01-01",
+        "quality_status": "passed",
+        "random_seed": 20260722,
+        "run_id": "SIM-20260722-v010-n300000",
+        "status": "completed"
+      }
+    ],
+    "open_data_ingestion_runs": [
+      {
+        "core_row_count": 40760,
+        "dataset_version": "uci-352-online-retail-v1-sample-20",
+        "license_name": "CC BY 4.0",
+        "period_end": "2011-12-09T12:50:00+00:00",
+        "period_start": "2010-12-01T08:34:00+00:00",
+        "publisher": "UCI Machine Learning Repository",
+        "raw_row_count": 27095,
+        "run_id": "DATA41-UCI-ONLINE-RETAIL-352-V1",
+        "source_identifier": "sales_ops_uci_online_retail",
+        "staging_row_count": 27095,
+        "status": "COMPLETED",
+        "transformation_version": "data41-uci-transform-v1"
+      },
+      {
+        "core_row_count": 26,
+        "dataset_version": "ornl-acn-discovery-2020-v1",
+        "license_name": "CC BY 4.0",
+        "period_end": null,
+        "period_start": null,
+        "publisher": "California Institute of Technology",
+        "raw_row_count": 26,
+        "run_id": "DATA41-ACN-ORNL-26-V1",
+        "source_identifier": "charging_ops_acn_ornl_discovery",
+        "staging_row_count": 26,
+        "status": "COMPLETED",
+        "transformation_version": "data41-acn-transform-v1"
+      }
+    ]
+  },
+  "missing": false,
+  "read_only": true,
+  "schema_version": "1.0"
+}

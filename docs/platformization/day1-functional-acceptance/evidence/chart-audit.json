@@ -1,0 +1,58 @@
+{
+  "checks": [
+    {
+      "chart_family": "charging_monthly_trend",
+      "evidence": {
+        "data_points": 2,
+        "max_time": "2020-06-09T20:28:01+00:00",
+        "min_time": "2020-05-09T18:51:31+00:00"
+      },
+      "missing": false,
+      "note": "DB readiness only; browser rendering, tooltip, filters and refresh require E2E."
+    },
+    {
+      "chart_family": "charging_station_ranking",
+      "evidence": {
+        "entities": 14,
+        "records": 26
+      },
+      "missing": false,
+      "note": "DB readiness only; browser rendering, tooltip, filters and refresh require E2E."
+    },
+    {
+      "chart_family": "device_status_trend",
+      "evidence": {
+        "data_points": 19,
+        "entities": 120,
+        "records": 65520
+      },
+      "missing": false,
+      "note": "DB readiness only; browser rendering, tooltip, filters and refresh require E2E."
+    },
+    {
+      "chart_family": "sales_monthly_trend",
+      "evidence": {
+        "data_points": 13,
+        "max_time": "2011-12-09",
+        "min_time": "2010-12-01"
+      },
+      "missing": false,
+      "note": "DB readiness only; browser rendering, tooltip, filters and refresh require E2E."
+    },
+    {
+      "chart_family": "sales_rankings",
+      "evidence": {
+        "channels": 1,
+        "products": 3057,
+        "regions": 36
+      },
+      "missing": false,
+      "note": "DB readiness only; browser rendering, tooltip, filters and refresh require E2E."
+    }
+  ],
+  "evidence_type": "day1_chart_data_audit",
+  "functional_pass_asserted": false,
+  "missing": false,
+  "read_only": true,
+  "schema_version": "1.0"
+}

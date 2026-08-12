@@ -71,13 +71,14 @@ def test_platform_foundation_real_release_activation_and_rollback(client, login)
         {
             "period_start": "2025-01-01",
             "period_end_exclusive": "2026-07-01",
-            "idempotency_key": "api-release-version-2",
+            "idempotency_key": "api-release-version-2-with-a-long-but-valid-idempotency-key-12345678901234567890",
         },
     )
     assert created.status_code == 200
     v2_id = created.json()["dataset_version_id"]
     assert v2_id != v1_id
     assert created.json()["state"]["versions"][0]["status"] == "QUALITY_PASSED"
+    assert created.json()["state"]["versions"][0]["source_version"]
 
     submitted = _post(
         client, headers,

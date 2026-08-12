@@ -245,10 +245,10 @@ export function RevenuePage({ token, summary, stations, start, end, setStart, se
       }} /></div></label>
       <label>对比时间<div className="revenue-period muted"><span>{comparison.start}</span><i>～</i><span>{endInclusive(comparison.end)}</span></div></label>
       <label>区域<select value={region} onChange={event => setRegion(event.target.value)}><option>全部区域</option>{[...new Set(stationRows.map(row => row.region_id))].map(item => <option key={item}>{item}</option>)}</select></label>
-      <label>城市<select><option>全部城市</option></select></label>
-      <label>场站<select><option>全部场站</option></select></label>
+      <label>城市<select disabled title="收入分析接口当前仅支持区域维度"><option>全部城市</option></select></label>
+      <label>场站<select disabled title="收入分析接口当前仅支持区域维度"><option>全部场站</option></select></label>
       <label>对比模式<select value={comparisonMode} onChange={event => setComparisonMode(event.target.value as 'period' | 'year')}><option value="period">上期对比</option><option value="year">同比对比</option></select></label>
-      <label>指标粒度<select><option>按日</option></select></label>
+      <label>指标粒度<select disabled title="收入趋势当前固定为按日粒度"><option>按日</option></select></label>
       <button onClick={() => { setRegion('全部区域'); setComparisonMode('period') }}>重置</button>
       <button className="primary" onClick={refresh}>刷新</button>
     </section>
@@ -259,7 +259,7 @@ export function RevenuePage({ token, summary, stations, start, end, setStart, se
 
     <section className="revenue-top-grid">
       <article className="revenue-panel revenue-trend-panel"><header><div><h2>收入趋势</h2><p>按日展示本期与对比期已完成订单收入</p></div><nav><span className="current">本期收入</span><span className="previous">对比期收入</span><span className="average">本期均值</span></nav></header><TrendChart current={analysis?.daily_trend ?? []} previous={previousAnalysis?.daily_trend ?? []} /></article>
-      <article className="revenue-panel revenue-driver-panel"><header><div><h2>收入驱动拆解</h2><p>基于订单量、单均充电量及度电收入的恒等式桥接</p></div><button disabled>环比桥接</button></header>
+      <article className="revenue-panel revenue-driver-panel"><header><div><h2>收入驱动拆解</h2><p>基于订单量、单均充电量及度电收入的恒等式桥接</p></div><button disabled title="桥接结果已在当前卡片完整展示">环比桥接</button></header>
         <div className="driver-cards">
           <div><span>收入变化额</span><b className={revenueDelta >= 0 ? 'up' : 'down'}>{revenueDelta >= 0 ? '+' : ''}{compactNumber(revenueDelta)}</b><small>{changeRate(revenue, previousRevenue) == null ? '--' : `${(changeRate(revenue, previousRevenue)! * 100).toFixed(2)}%`}</small></div>
           <div><span>订单量变化</span><b className={orders >= previousOrders ? 'up' : 'down'}>{orders - previousOrders >= 0 ? '+' : ''}{Math.round(orders - previousOrders).toLocaleString('zh-CN')}单</b><small>{changeRate(orders, previousOrders) == null ? '--' : `${(changeRate(orders, previousOrders)! * 100).toFixed(2)}%`}</small></div>
@@ -280,8 +280,8 @@ export function RevenuePage({ token, summary, stations, start, end, setStart, se
     </section>
 
     <section className="revenue-bottom-grid">
-      <article className="revenue-panel revenue-decline-panel"><header><div><h2>重点下滑场站</h2><p>按收入变化额升序，优先展示可比场站</p></div><button disabled>当前结果全部展示</button></header><div><table><thead><tr><th>场站名称</th><th>本期收入</th><th>对比期收入</th><th>变化额</th><th>变化率</th><th>订单变化</th><th>主要关联项</th></tr></thead><tbody>{downStations.map(item => <tr key={item.row.station_id}><td>{item.row.station_name}</td><td>{compactNumber(item.currentValue)}</td><td>{compactNumber(item.previousValue)}</td><td className={item.delta >= 0 ? 'up' : 'down'}>{item.delta >= 0 ? '+' : ''}{compactNumber(item.delta)}</td><td className={(item.rate ?? 0) >= 0 ? 'up' : 'down'}>{item.rate == null ? '--' : `${item.rate >= 0 ? '+' : ''}${(item.rate * 100).toFixed(1)}%`}</td><td className={item.orderDelta >= 0 ? 'up' : 'down'}>{item.orderDelta >= 0 ? '+' : ''}{Math.round(item.orderDelta)}</td><td>{item.orderDelta < 0 ? '订单量下降' : '度电结构变化'}</td></tr>)}</tbody></table></div></article>
-      <article className="revenue-panel revenue-insight-panel"><header><div><h2>AI经营洞察</h2><p>仅引用本页结构化结果</p></div><span>确定性规则生成</span></header><ol>{insights.map((item, index) => <li key={item}><i>{index + 1}</i><p>{item}</p></li>)}</ol><button disabled>依据为本页结构化结果</button></article>
+      <article className="revenue-panel revenue-decline-panel"><header><div><h2>重点下滑场站</h2><p>按收入变化额升序，优先展示可比场站</p></div><button disabled title="当前结果已完整展示">当前结果全部展示</button></header><div><table><thead><tr><th>场站名称</th><th>本期收入</th><th>对比期收入</th><th>变化额</th><th>变化率</th><th>订单变化</th><th>主要关联项</th></tr></thead><tbody>{downStations.map(item => <tr key={item.row.station_id}><td>{item.row.station_name}</td><td>{compactNumber(item.currentValue)}</td><td>{compactNumber(item.previousValue)}</td><td className={item.delta >= 0 ? 'up' : 'down'}>{item.delta >= 0 ? '+' : ''}{compactNumber(item.delta)}</td><td className={(item.rate ?? 0) >= 0 ? 'up' : 'down'}>{item.rate == null ? '--' : `${item.rate >= 0 ? '+' : ''}${(item.rate * 100).toFixed(1)}%`}</td><td className={item.orderDelta >= 0 ? 'up' : 'down'}>{item.orderDelta >= 0 ? '+' : ''}{Math.round(item.orderDelta)}</td><td>{item.orderDelta < 0 ? '订单量下降' : '度电结构变化'}</td></tr>)}</tbody></table></div></article>
+      <article className="revenue-panel revenue-insight-panel"><header><div><h2>AI经营洞察</h2><p>仅引用本页结构化结果</p></div><span>确定性规则生成</span></header><ol>{insights.map((item, index) => <li key={item}><i>{index + 1}</i><p>{item}</p></li>)}</ol><button disabled title="洞察依据已在当前卡片完整展示">依据为本页结构化结果</button></article>
     </section>
   </div>
 }

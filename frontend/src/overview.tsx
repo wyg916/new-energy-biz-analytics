@@ -388,9 +388,9 @@ function WorkbenchPage({
     <section className="workbench-filters">
       <label>时间范围<div><input type="date" value={start} onChange={event => setStart(event.target.value)} /><span>~</span><input type="date" value={endInclusive(end)} onChange={event => { const next = new Date(`${event.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></label>
       <label>对比方式<select value={comparison} onChange={event => setComparison(event.target.value as 'mom' | 'yoy')}><option value="mom">环比</option><option value="yoy">同比</option></select></label>
-      <label>区域<select><option>全部区域</option></select></label>
-      <label>城市<select><option>全部城市</option></select></label>
-      <label>场站<select><option>全部场站</option></select></label>
+      <label>区域<select disabled title="工作台区域筛选尚未接入当前聚合接口"><option>全部区域</option></select></label>
+      <label>城市<select disabled title="工作台城市筛选尚未接入当前聚合接口"><option>全部城市</option></select></label>
+      <label>场站<select disabled title="工作台场站筛选尚未接入当前聚合接口"><option>全部场站</option></select></label>
       <button onClick={refresh}>⌕　查询</button>
     </section>
 
@@ -407,7 +407,7 @@ function WorkbenchPage({
     </section>
 
     <section className="workbench-analysis">
-      <article className="trend-panel"><header><h3>收入与毛利趋势（万元）</h3><div><button disabled className="active">月</button></div></header><ComboTrend revenue={trends.charging_revenue ?? revenueTrend} profit={trends.gross_profit ?? []} /></article>
+      <article className="trend-panel"><header><h3>收入与毛利趋势（万元）</h3><div><button disabled title="当前接口仅提供月粒度" className="active">月</button></div></header><ComboTrend revenue={trends.charging_revenue ?? revenueTrend} profit={trends.gross_profit ?? []} /></article>
       <Waterfall title="收入变化贡献（万元）" diagnostic={revenueDiagnostic} metric="charging_revenue" />
       <Waterfall title="毛利变化贡献（万元）" diagnostic={profitDiagnostic} metric="gross_profit" />
     </section>
@@ -647,7 +647,7 @@ function MarginPage({ token, summary, stations, start, end, setStart, setEnd, re
         const margin = row.metrics.gross_margin ?? 0
         const risk = margin < .1 ? '高' : margin < .2 ? '中' : '低'
         return <tr key={row.station_id}><td>{index + 1}</td><td>{row.station_name}</td><td>{row.region_id}</td><td>{money(revenue)}</td><td>{money(profit)}</td><td><span className="margin-rate"><i style={{ width: `${Math.max(margin * 100, 3)}%`, background: margin < .1 ? '#ef4444' : margin < .2 ? '#f59e0b' : '#0fa678' }} />{formatMetric('gross_margin', margin)}</span></td><td>{revenuePerKwh.toFixed(2)}</td><td>{costPerKwh.toFixed(2)}</td><td>{(revenuePerKwh - costPerKwh).toFixed(2)}</td><td><em className={`risk-${risk === '高' ? 'high' : risk === '中' ? 'medium' : 'low'}`}>{risk}</em></td><td><button disabled title="场站详情跳转未实现">未开放</button></td></tr>
-      })}</tbody></table></div><footer><span>共 {stations.length} 条</span><select disabled defaultValue="10"><option value="10">10 条/页</option></select><button disabled>‹</button><b>1</b><button disabled>›</button><span>当前页</span></footer></article>
+      })}</tbody></table></div><footer><span>共 {stations.length} 条</span><select disabled title="当前结果已完整展示" defaultValue="10"><option value="10">10 条/页</option></select><button disabled title="当前结果只有一页">‹</button><b>1</b><button disabled title="当前结果只有一页">›</button><span>当前页</span></footer></article>
       <article className="margin-panel margin-suggestion-panel"><header><h2>优化建议</h2><button disabled title="方案库尚未实现">方案库未开放</button></header><div>{suggestions.map(item => <section key={item.title}><i className={item.tone}>{item.icon}</i><div><b>{item.title}</b><p>{item.copy}</p></div><span><small>结果边界</small><strong>未估算收益</strong></span><button disabled title="当前仅生成建议草稿">需人工审核</button></section>)}</div></article>
     </section>
 
@@ -868,7 +868,7 @@ function StationPage({
     <section className="station-filter-bar">
       <label className="filter-period"><span>时间范围</span><div><input aria-label="场站开始日期" type="date" value={start} onChange={event => setStart(event.target.value)} /><b>~</b><input aria-label="场站结束日期" type="date" value={endInclusive(end)} onChange={event => { const next = new Date(`${event.target.value}T00:00:00Z`); next.setUTCDate(next.getUTCDate() + 1); setEnd(next.toISOString().slice(0, 10)) }} /></div></label>
       <label><span>区域</span><select value={region} onChange={event => setRegion(event.target.value)}><option value="all">全部区域</option>{regionOptions.map(option => <option value={option} key={option}>{option}</option>)}</select></label>
-      <label><span>省份</span><select aria-label="省份"><option>全部省份</option></select></label>
+      <label><span>省份</span><select aria-label="省份" disabled title="当前数据集未提供独立省份维度"><option>省份未提供</option></select></label>
       <label><span>城市</span><select value={city} onChange={event => setCity(event.target.value)}><option value="all">全部城市</option>{cityOptions.map(option => <option value={option} key={option}>{option}</option>)}</select></label>
       <label><span>场站类型</span><select value={stationType} onChange={event => setStationType(event.target.value)}><option value="all">全部类型</option>{typeOptions.map(option => <option value={option} key={option}>{option}</option>)}</select></label>
       <label><span>运营状态</span><select value={status} onChange={event => setStatus(event.target.value as 'all' | StationSegment)}><option value="all">全部状态</option>{(Object.keys(stationSegmentMeta) as StationSegment[]).map(segment => <option value={segment} key={segment}>{stationSegmentMeta[segment].label}</option>)}</select></label>
@@ -892,8 +892,8 @@ function StationPage({
     <section className="station-bottom-grid">
       <article className="station-panel rank-panel"><header><h2>场站综合排名</h2><div>{(['all', 'core', 'growth', 'cost', 'priority'] as const).map(segment => <button type="button" className={status === segment ? 'active' : ''} key={segment} onClick={() => setStatus(segment)}>{segment === 'all' ? '全部场站' : stationSegmentMeta[segment].label}</button>)}</div></header><div className="station-table-wrap"><table><thead><tr><th>排名</th><th>场站名称</th><th>区域</th><th>城市</th><th>收入（元）</th><th>利用率</th><th>毛利率</th><th>在线率</th><th>综合得分</th><th>风险等级</th><th>操作</th></tr></thead><tbody>{rankedStations.slice(0, 5).map((row, index) => {
         const segment = stationSegment(row, thresholds)
-        return <tr key={row.station_id} className={selected?.station_id === row.station_id ? 'selected' : ''} onClick={() => setSelectedId(row.station_id)}><td>{index + 1}</td><td title={row.station_name}>{row.station_name}</td><td>{row.region_id}</td><td>{row.city_id}</td><td>{money(row.metrics.charging_revenue)}</td><td className="up">{formatMetric('station_utilization_rate', row.metrics.station_utilization_rate)}</td><td>{formatMetric('gross_margin', row.metrics.gross_margin)}</td><td>{formatMetric('device_online_rate', row.metrics.device_online_rate)}</td><td><b>{stationScore(row).toFixed(1)}</b></td><td><em className={segment}>{stationSegmentMeta[segment].label}</em></td><td><button disabled type="button" aria-label={`${row.station_name}详情在当前页展示`}>当前页</button></td></tr>
-      })}</tbody></table></div><footer><span>显示 {rankedStations.slice(0, 5).length} / {rankedStations.length} 条</span><div><button disabled type="button">‹</button><b>1</b><button disabled type="button">›</button><select disabled aria-label="每页条数"><option>当前结果</option></select></div></footer></article>
+        return <tr key={row.station_id} className={selected?.station_id === row.station_id ? 'selected' : ''} onClick={() => setSelectedId(row.station_id)}><td>{index + 1}</td><td title={row.station_name}>{row.station_name}</td><td>{row.region_id}</td><td>{row.city_id}</td><td>{money(row.metrics.charging_revenue)}</td><td className="up">{formatMetric('station_utilization_rate', row.metrics.station_utilization_rate)}</td><td>{formatMetric('gross_margin', row.metrics.gross_margin)}</td><td>{formatMetric('device_online_rate', row.metrics.device_online_rate)}</td><td><b>{stationScore(row).toFixed(1)}</b></td><td><em className={segment}>{stationSegmentMeta[segment].label}</em></td><td><button disabled title="场站详情已在当前页展示" type="button" aria-label={`${row.station_name}详情在当前页展示`}>当前页</button></td></tr>
+      })}</tbody></table></div><footer><span>显示 {rankedStations.slice(0, 5).length} / {rankedStations.length} 条</span><div><button disabled title="当前结果只有一页" type="button">‹</button><b>1</b><button disabled title="当前结果只有一页" type="button">›</button><select disabled title="当前结果已完整展示" aria-label="每页条数"><option>当前结果</option></select></div></footer></article>
 
       <article className="station-panel station-detail-panel"><header><h2>场站详情（{selected?.station_name ?? '暂无场站'}）</h2><button disabled type="button" title="更多详情页面未实现">详情页未开放　›</button></header>{selected && <><div className="detail-summary"><div><span>利用率</span><b>{formatMetric('station_utilization_rate', selected.metrics.station_utilization_rate)}</b></div><div><span>毛利率</span><b>{formatMetric('gross_margin', selected.metrics.gross_margin)}</b></div><div><span>在线率</span><b>{formatMetric('device_online_rate', selected.metrics.device_online_rate)}</b></div><div><span>经营分层</span><b style={{ color: selectedMeta.color }}>{selectedMeta.label}</b></div></div><div className="station-detail-body"><section><header><h3>趋势（当前数据区间）</h3><div><b>收入</b><span>利用率</span><span>毛利率</span></div></header><StationTrend points={trend} /></section><section><h3>结构化点评</h3><p>• 该站利用率 {formatMetric('station_utilization_rate', selected.metrics.station_utilization_rate)}，毛利率 {formatMetric('gross_margin', selected.metrics.gross_margin)}，当前归入“{selectedMeta.label}”。</p><p>• 设备在线率 {formatMetric('device_online_rate', selected.metrics.device_online_rate)}；设备与经营变化仅作相关线索，不构成因果结论。</p><button type="button" onClick={() => navigate('chat')}>◇　查看策略建议</button></section></div></>}</article>
     </section>
@@ -1031,9 +1031,9 @@ function DevicePage({ token, summary, start, end, setStart, setEnd, refresh }: {
         <header><div><h2>维修优先级清单</h2><nav>{(['all', 'risk', 'fault', 'offline', 'online'] as const).map(status => <button type="button" className={statusFilter === status ? 'active' : ''} onClick={() => setStatusFilter(status)} key={status}>{status === 'all' ? '全部设备' : status === 'risk' ? '风险优先' : deviceStatusNames[status]}</button>)}</nav></div><button disabled type="button" title="导出未实现">导出未开放</button></header>
         <div className="device-table-wrap"><table><thead><tr><th>设备编号</th><th>所属场站</th><th>型号</th><th>当前状态</th><th>最近异常</th><th>离线/故障时长</th><th>故障次数</th><th>关联订单</th><th>关联收入（元）</th><th>优先级</th><th>操作</th></tr></thead><tbody>{displayedRows.map(row => {
           const latestIssue = row.recent_events.find(event => event.status !== 'online')
-          return <tr key={row.device_id} className={selected?.device_id === row.device_id ? 'selected' : ''} onClick={() => setSelectedId(row.device_id)}><td>{row.device_id}</td><td title={row.station_name}>{row.station_name}</td><td>{row.device_model}</td><td><em className={row.current_status}>{deviceStatusNames[row.current_status] || row.current_status}</em></td><td>{latestIssue ? deviceReasonNames[latestIssue.reason_code || latestIssue.status.toUpperCase()] || latestIssue.reason_code : '无'}</td><td>{(row.offline_hours + row.fault_hours).toFixed(1)} 小时</td><td>{row.fault_event_count}</td><td>{row.related_order_count}</td><td>{row.related_revenue.toLocaleString('zh-CN', { maximumFractionDigits: 0 })}</td><td><b className={row.priority}>{row.priority}</b></td><td><button disabled type="button" aria-label={`${row.device_id}详情在当前页展示`}>当前页</button></td></tr>
+          return <tr key={row.device_id} className={selected?.device_id === row.device_id ? 'selected' : ''} onClick={() => setSelectedId(row.device_id)}><td>{row.device_id}</td><td title={row.station_name}>{row.station_name}</td><td>{row.device_model}</td><td><em className={row.current_status}>{deviceStatusNames[row.current_status] || row.current_status}</em></td><td>{latestIssue ? deviceReasonNames[latestIssue.reason_code || latestIssue.status.toUpperCase()] || latestIssue.reason_code : '无'}</td><td>{(row.offline_hours + row.fault_hours).toFixed(1)} 小时</td><td>{row.fault_event_count}</td><td>{row.related_order_count}</td><td>{row.related_revenue.toLocaleString('zh-CN', { maximumFractionDigits: 0 })}</td><td><b className={row.priority}>{row.priority}</b></td><td><button disabled title="设备详情已在当前页展示" type="button" aria-label={`${row.device_id}详情在当前页展示`}>当前页</button></td></tr>
         })}</tbody></table></div>
-        <footer><span>显示 {displayedRows.length} / {filtered.length || rows.length} 条</span><div><select disabled aria-label="设备每页条数"><option>当前结果</option></select><button disabled>‹</button><b>1</b><button disabled>›</button></div></footer>
+        <footer><span>显示 {displayedRows.length} / {filtered.length || rows.length} 条</span><div><select disabled title="当前结果已完整展示" aria-label="设备每页条数"><option>当前结果</option></select><button disabled title="当前结果只有一页">‹</button><b>1</b><button disabled title="当前结果只有一页">›</button></div></footer>
       </article>
 
       <article className="device-panel device-detail-panel">
@@ -1054,6 +1054,7 @@ type ChatScenario = {
   scenario_version: string | null
   initial_question: string
   suggested_questions: string[]
+  data_time_range: { start: string; end_exclusive: string } | null
 }
 const chatDriverNames: Record<string, string> = {
   charging_volume_effect: '充电量变化',
@@ -1224,13 +1225,34 @@ function ChatPage({ token, start, end }: { token: string; start: string; end: st
     event.preventDefault()
     void runQuestion(question)
   }
-  const newSession = () => {
-    setConversationId(null)
-    setResult(null)
-    setHistory([])
-    setQuestion(scenarios.find(item => item.scenario_id === scenarioId)?.initial_question || '')
+  const newSession = async () => {
+    const currentConversation = conversationId
+    const sequence = ++requestSequence.current
+    setLoading(true)
     setError('')
-    setFeedback('')
+    try {
+      if (currentConversation) {
+        const response = await fetch(`/api/v1/chat/sessions/${encodeURIComponent(currentConversation)}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        const body = await response.json().catch(() => null)
+        if (!response.ok) throw new Error(body?.detail?.message || '服务端会话清理失败')
+      }
+      if (sequence !== requestSequence.current) return
+      setConversationId(null)
+      setResult(null)
+      setCompositeResult(null)
+      setHistory([])
+      setQuestion(scenarios.find(item => item.scenario_id === scenarioId)?.initial_question || '')
+      setFeedback('')
+    } catch (reason) {
+      if (sequence === requestSequence.current) {
+        setError(reason instanceof Error ? reason.message : '新会话创建失败')
+      }
+    } finally {
+      if (sequence === requestSequence.current) setLoading(false)
+    }
   }
 
   const recordFeedback = async (rating: 'helpful' | 'not_helpful') => {
@@ -1309,7 +1331,7 @@ function ChatPage({ token, start, end }: { token: string; start: string; end: st
   return <div className="ai-analysis-page">
     <h2 className="chat-trust-title">可信 ChatBI</h2>
     <aside className="chat-history-panel">
-      <header><h2>会话历史</h2><button onClick={newSession}>＋ 新会话</button></header>
+      <header><h2>会话历史</h2><button disabled={loading} onClick={() => void newSession()}>＋ 新会话</button></header>
       <div className="chat-history-list">{history.length ? history.map((item, index) => <button key={`${item.time}-${item.question}`} className={index === 0 ? 'active' : ''} onClick={() => setQuestion(item.question)}><span>{item.question}</span><small>{item.time}</small></button>) : <p>新会话尚未产生分析记录</p>}</div>
       <section><header><h3>本次会话</h3><span>{history.length} 条</span></header><dl><div><dt>当前场景</dt><dd>{scenarioId}</dd></div><div><dt>会话状态</dt><dd>{result?.status ?? '准备中'}</dd></div><div><dt>状态版本</dt><dd>v{result?.state_version ?? 0}</dd></div><div><dt>隔离范围</dt><dd>当前用户 / 当前场景</dd></div></dl></section>
       <section className="chat-example-list"><header><h3>分析示例</h3></header>{(isSales ? ['销售收入与毛利率', '退款与复购分析', '客户与订单分析'] : ['全平台收入与毛利分析', '场站贡献下降定位', '设备指标关联排查']).map(item => <button key={item} onClick={() => setQuestion(item)}><span>▧</span>{item}<b>★</b></button>)}</section>
@@ -1317,7 +1339,7 @@ function ChatPage({ token, start, end }: { token: string; start: string; end: st
     </aside>
 
     <main className="chat-analysis-center">
-      <form className="chat-question-box" onSubmit={ask}><div><textarea aria-label="经营分析问题" maxLength={500} value={question} onChange={event => setQuestion(event.target.value)} /><span>{question.length}/500</span><button aria-label="发送分析问题" disabled={loading}>{loading ? '…' : '➤'}</button></div><footer><span>试试这样问：</span>{suggestions.map(item => <button type="button" key={item} onClick={() => setQuestion(item)}>{item}</button>)}</footer></form>
+      <form className="chat-question-box" onSubmit={ask}><div><textarea aria-label="经营分析问题" maxLength={500} value={question} onChange={event => setQuestion(event.target.value)} /><span>{question.length}/500</span><button aria-label="发送分析问题" title={!question.trim() ? '请输入经营分析问题' : ''} disabled={loading || !question.trim()}>{loading ? '…' : '➤'}</button></div><footer><span>试试这样问：</span>{suggestions.map(item => <button type="button" key={item} onClick={() => setQuestion(item)}>{item}</button>)}</footer></form>
       <section className="chat-recommended"><h3>推荐追问</h3><div>{suggestions.map(item => <button key={item} onClick={() => setQuestion(item)}>{item}</button>)}</div><span title="推荐问题由场景目录提供">场景模板</span></section>
       <section className="chat-conditions"><h3>当前条件</h3><div><label>业务场景　<select aria-label="当前业务场景" value={scenarioId} onChange={event => { activeScenario.current = event.target.value; requestSequence.current += 1; setScenarioId(event.target.value) }}>{scenarios.map(scenario => <option key={scenario.scenario_id} value={scenario.scenario_id} disabled={scenario.status !== 'ACTIVE'}>{scenario.display_name} · {scenario.status}</option>)}</select></label><span>时间范围　{result?.evidence?.data_time_range?.start ?? '等待执行'} ~ {result?.evidence?.data_time_range?.end_exclusive ?? '等待执行'}</span><span>权限范围　全部授权区域</span><button onClick={() => setQuestion(scenarioConfig?.initial_question || '')}>重置条件</button></div></section>
 
@@ -1346,7 +1368,7 @@ function ChatPage({ token, start, end }: { token: string; start: string; end: st
     </main>
 
     <aside className="chat-evidence-panel">
-      <header><h2>查询证据</h2><span>×</span></header>
+      <header><h2>查询证据</h2><span aria-hidden="true">×</span></header>
       <section><h3><i>①</i>版本与引擎</h3><p>场景：{queryResult?.scenario ?? scenarioId}@{queryResult?.scenario_version ?? 'pending'}</p><p>语义 / 数据集：{queryResult?.semantic_version ?? 'pending'} / {queryResult?.dataset_version ?? 'pending'}</p><p>引擎 / 模式：{queryResult?.engine ?? 'pending'} / {routing?.mode ?? 'pending'}</p></section>
       <section><h3><i>②</i>查询条件</h3><ul><li>时间范围：{result?.evidence?.data_time_range?.start ?? '等待执行'} ~ {result?.evidence?.data_time_range?.end_exclusive ?? '等待执行'}（右开）</li><li>区域：全部授权区域</li><li>业务场景：{scenarioId}</li></ul></section>
       <section><h3><i>③</i>Query Plan 摘要</h3><p>{result?.query_plan ? `${result.query_plan.intent}；指标 ${result.query_plan.metrics.join('、')}；${result.query_plan.comparison?.type ?? '无'}比较。` : '等待结构化解析'}</p><details><summary>查看详情　›</summary><pre>{JSON.stringify(result?.query_plan, null, 2)}</pre></details></section>
@@ -1895,7 +1917,6 @@ function MappingPage({ token, start, end }: { token: string; start: string; end:
                 : '继续治理流程'
   const act = (message: string) => {
     setFeedback(message)
-    window.setTimeout(() => setFeedback(''), 2600)
   }
   const postIntegration = async <T,>(path: string, payload: object): Promise<T> => {
     const response = await fetch(path, {
@@ -2073,12 +2094,13 @@ function MappingPage({ token, start, end }: { token: string; start: string; end:
       }
     }
     if (!current.dataset) return act('平台数据集尚未安装。')
+    const nextVersion = Math.max(0, ...current.versions.map(item => item.version)) + 1
     await platformAction<{ dataset_version_id: string; state: PlatformFoundationState }>(
       `/api/v1/platform/foundation/datasets/${current.dataset.dataset_id}/versions`,
       {
         period_start: start,
         period_end_exclusive: end,
-        idempotency_key: `ui-dataset-${Date.now()}`,
+        idempotency_key: `ui-dataset-${current.dataset.dataset_id}-v${nextVersion}-${start}-${end}`,
       },
       result => `不可变 DatasetVersion 已创建：${result.dataset_version_id}；状态为 QUALITY_PASSED，尚未生效。`,
     )
@@ -2146,7 +2168,7 @@ function MappingPage({ token, start, end }: { token: string; start: string; end:
       `/api/v1/platform/foundation/datasets/${platform.dataset.dataset_id}/rollback`,
       {
         target_dataset_version_id: target.dataset_version_id,
-        idempotency_key: `ui-rollback-${Date.now()}`,
+        idempotency_key: `ui-rollback-${currentId}-${target.dataset_version_id}`,
         reason: `前端回滚到 v${target.version}`,
       },
       () => `已回滚到 v${target.version}，审计与 rollback_record 已落库。`,
@@ -2336,12 +2358,18 @@ function Login({ loggedIn }: { loggedIn: (token: string) => void }) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [oidc, setOidc] = useState<{ configured: boolean; status: string; provider?: string; pkce_method?: string } | null>(null)
-  useEffect(() => {
+  const loadOidcStatus = () => {
+    setError('')
+    setOidc(null)
     fetch('/api/v1/auth/oidc/status').then(async response => {
       if (!response.ok) throw new Error('OIDC 状态不可用')
       setOidc(await response.json())
-    }).catch(() => setOidc({ configured: false, status: 'CONDITIONAL' }))
-  }, [])
+    }).catch(reason => {
+      setError(reason instanceof Error ? reason.message : 'OIDC 状态不可用')
+      setOidc({ configured: true, status: 'UNAVAILABLE' })
+    })
+  }
+  useEffect(() => { loadOidcStatus() }, [])
   const enterpriseLogin = async () => {
     setLoading(true); setError('')
     try {
@@ -2370,7 +2398,7 @@ function Login({ loggedIn }: { loggedIn: (token: string) => void }) {
       setLoading(false)
     }
   }
-  return <main className="product-login"><form onSubmit={login}><div className="login-brand"><img src="/figma-assets/brand-mark.svg" alt="" /><span><strong>新能源经营分析智能平台</strong><small>AI 增强 BI · 受控经营分析</small></span></div><h1>欢迎登录</h1><p>统一指标、可信问数与经营洞察</p><div className="login-truth">数据环境状态将在登录后统一展示</div>{oidc?.configured ? <><div className="login-truth">{oidc.provider} · Authorization Code + PKCE {oidc.pkce_method} · {oidc.status}</div><button type="button" data-testid="oidc-login" disabled={loading || oidc.status !== 'READY'} onClick={() => void enterpriseLogin()}>{loading ? '正在转到企业身份服务…' : '企业身份登录'}</button></> : <><label>账号<input name="username" defaultValue="analyst" autoComplete="username" /></label><label>密码<input name="password" type="password" defaultValue="AlphaAnalyst!2026" autoComplete="current-password" /></label><button disabled={loading}>{loading ? '正在安全登录…' : '安全登录'}</button></>}{error && <div className="login-error">{error}</div>}</form></main>
+  return <main className="product-login"><form onSubmit={login}><div className="login-brand"><img src="/figma-assets/brand-mark.svg" alt="" /><span><strong>新能源经营分析智能平台</strong><small>AI 增强 BI · 受控经营分析</small></span></div><h1>欢迎登录</h1><p>统一指标、可信问数与经营洞察</p><div className="login-truth">数据环境状态将在登录后统一展示</div>{oidc === null ? <button type="button" disabled>正在检查企业身份服务…</button> : oidc.configured ? <><div className="login-truth">{oidc.provider || '企业 OIDC'} · Authorization Code + PKCE {oidc.pkce_method || 'S256'} · {oidc.status}</div><button type="button" data-testid="oidc-login" disabled={loading || oidc.status !== 'READY'} title={oidc.status !== 'READY' ? '企业身份服务当前不可用' : ''} onClick={() => void enterpriseLogin()}>{loading ? '正在转到企业身份服务…' : '企业身份登录'}</button>{oidc.status !== 'READY' && <button type="button" onClick={loadOidcStatus}>重试身份服务</button>}</> : <><label>账号<input name="username" autoComplete="username" /></label><label>密码<input name="password" type="password" autoComplete="current-password" /></label><button disabled={loading}>{loading ? '正在安全登录…' : '安全登录'}</button></>}{error && <div className="login-error">{error}</div>}</form></main>
 }
 
 function OIDCCallback({ loggedIn }: { loggedIn: (token: string) => void }) {

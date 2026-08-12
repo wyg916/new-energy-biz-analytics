@@ -54,6 +54,17 @@ def _date_range(question: str) -> tuple[date, date]:
     if len(iso_dates) >= 2:
         start, end = date.fromisoformat(iso_dates[0]), date.fromisoformat(iso_dates[1])
         return start, end
+    chinese_range = re.search(
+        r"(20\d{2})年(1[0-2]|[1-9])月(3[01]|[12]\d|[1-9])日?\s*"
+        r"(?:至|到|~|—)\s*"
+        r"(20\d{2})年(1[0-2]|[1-9])月(3[01]|[12]\d|[1-9])日?",
+        question,
+    )
+    if chinese_range:
+        values = tuple(map(int, chinese_range.groups()))
+        start = date(values[0], values[1], values[2])
+        end_inclusive = date(values[3], values[4], values[5])
+        return start, end_inclusive + date.resolution
     month = re.search(r"(\d{4})年(1[0-2]|[1-9])月", question)
     if month:
         year, month_number = int(month.group(1)), int(month.group(2))

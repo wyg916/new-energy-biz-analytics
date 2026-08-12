@@ -1,4 +1,5 @@
 import json
+import hashlib
 from datetime import date
 from typing import Literal
 
@@ -327,19 +328,33 @@ def create_dataset_version(
         if template is None:
             raise DatasetReleaseError("VERSION_NOT_FOUND", "请先安装场景基础版本")
         mapping = db.get(MappingVersion, template.mapping_version_id)
+        truth = current_data_truth(db)
+        operation_digest = hashlib.sha256(
+            payload.idempotency_key.encode("utf-8")
+        ).hexdigest()[:32]
+        classification = truth["data_classification"]
         version = DatasetVersionService(db).create_version(
             identity,
             dataset_id=dataset.dataset_id,
             mapping=json.loads(mapping.mapping_json),
             schema=json.loads(template.schema_json),
             source_binding=json.loads(template.source_binding_json),
-            source_version=f"managed-simulated:{payload.idempotency_key}",
-            quality_run_id=f"DQ-{payload.idempotency_key}",
+            source_version=(
+                str(truth.get("dataset_version"))
+                if truth.get("dataset_version")
+                else f"managed-{classification.lower()}:{operation_digest}"
+            ),
+            quality_run_id=f"DQ-UI-{operation_digest}",
             quality_status="PASSED",
             quality_rules=[
                 {"code": "managed_source_binding", "status": "PASSED"},
                 {"code": "schema_compatible", "status": "PASSED"},
-                {"code": "simulated_data_label", "status": "PASSED"},
+                {
+                    "code": "data_classification_traceable",
+                    "status": "PASSED",
+                    "classification": classification,
+                    "run_id": truth.get("run_id"),
+                },
             ],
             row_count=int(db.scalar(select(func.count()).select_from(ChargingSession)) or 0),
             period_start=payload.period_start.isoformat(),
