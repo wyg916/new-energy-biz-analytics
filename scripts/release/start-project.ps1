@@ -263,22 +263,17 @@ try {
         "Validated $($requiredImages.Count) required image references"
     }
     Invoke-Step "Provider credential references" {
-        $credentialCheck = @'
-from pathlib import Path
-root = Path("/run/provider-credentials")
-rows = []
-for alias in ("kimi", "mimo", "deepseek"):
-    path = root / alias
-    if not path.is_file() or not path.read_text(encoding="utf-8").strip():
-        raise SystemExit(f"missing controlled credential reference: {alias}")
-    rows.append(f"{alias}=READY")
-print(", ".join(rows))
-'@
-        Invoke-CheckedNative -FilePath "docker" -Arguments @(
-            "run", "--rm", "-v",
-            "renewable-integration41-full-provider-credentials:/run/provider-credentials:ro",
-            "--entrypoint", "python", $apiImage, "-c", $credentialCheck
-        ) -FailureMessage "Controlled Provider credential references are unavailable"
+        $ready = @()
+        foreach ($alias in @("kimi", "mimo", "deepseek")) {
+            Invoke-CheckedNative -FilePath "docker" -Arguments @(
+                "run", "--rm", "-v",
+                "renewable-integration41-full-provider-credentials:/run/provider-credentials:ro",
+                "--entrypoint", "test", $apiImage,
+                "-s", "/run/provider-credentials/$alias"
+            ) -FailureMessage "Controlled Provider credential reference is unavailable: $alias" | Out-Null
+            $ready += "$alias=READY"
+        }
+        $ready -join ", "
     }
     Invoke-Step "Superseded runtime handoff" {
         Invoke-CheckedNative -FilePath "docker" -Arguments ($composeArgs + @("down", "--remove-orphans")) -FailureMessage "Unable to stop the previous Full Integration runtime safely" | Out-Null
