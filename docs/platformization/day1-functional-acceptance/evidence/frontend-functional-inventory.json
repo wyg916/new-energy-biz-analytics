@@ -1,0 +1,1173 @@
+{
+  "denominator_rule": "only explicit frozen feature_inventory stable IDs; result-only IDs never enlarge or shrink the denominator",
+  "evidence_type": "day1_frontend_functional_inventory",
+  "features": [
+    {
+      "category": "authentication",
+      "functional_result": {
+        "id": "AUTH-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "AUTH-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "登录页和缺参 OIDC callback 边界",
+      "page_id": "LOGIN",
+      "source_line": 318
+    },
+    {
+      "category": "authentication",
+      "functional_result": {
+        "id": "AUTH-002",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "AUTH-002",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "真实 OIDC PKCE 登录与 callback",
+      "page_id": "OVERVIEW",
+      "source_line": 329
+    },
+    {
+      "category": "authentication",
+      "functional_result": {
+        "id": "AUTH-003",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "AUTH-003",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "同一浏览器上下文恢复 localStorage 会话",
+      "page_id": "OVERVIEW",
+      "source_line": 360
+    },
+    {
+      "category": "global-control",
+      "functional_result": {
+        "id": "GLOBAL-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "GLOBAL-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "全局开始和结束日期驱动真实 Dashboard API",
+      "page_id": "OVERVIEW",
+      "source_line": 381
+    },
+    {
+      "category": "page-functional-flow",
+      "functional_result": {
+        "id": "DASHBOARD-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "DASHBOARD-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "工作台筛选、查询、图表、表格和钻取",
+      "page_id": "DASHBOARD",
+      "source_line": 400
+    },
+    {
+      "category": "page-functional-flow",
+      "functional_result": {
+        "id": "REVENUE-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "REVENUE-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "收入页筛选、刷新、图表和表格",
+      "page_id": "REVENUE",
+      "source_line": 423
+    },
+    {
+      "category": "page-functional-flow",
+      "functional_result": {
+        "id": "MARGIN-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "MARGIN-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "毛利页对比、重置、刷新、图表和表格",
+      "page_id": "MARGIN",
+      "source_line": 444
+    },
+    {
+      "category": "page-functional-flow",
+      "functional_result": {
+        "id": "STATIONS-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "STATIONS-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "场站筛选、查询、矩阵、表格和详情钻取",
+      "page_id": "STATIONS",
+      "source_line": 458
+    },
+    {
+      "category": "page-functional-flow",
+      "functional_result": {
+        "id": "DEVICES-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "DEVICES-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "设备筛选、刷新、图表、表格和详情",
+      "page_id": "DEVICES",
+      "source_line": 489
+    },
+    {
+      "category": "chatbi",
+      "functional_result": {
+        "id": "CHATBI-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "CHATBI-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "场景、回答风格、问题、多轮与反馈",
+      "page_id": "CHATBI",
+      "source_line": 514
+    },
+    {
+      "category": "memory",
+      "functional_result": {
+        "id": "MEMORY-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "MEMORY-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "记忆保存、Working Memory 读取、JSON 导出与删除",
+      "page_id": "MEMORY",
+      "source_line": 551
+    },
+    {
+      "category": "skills",
+      "functional_result": {
+        "id": "SKILLS-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "SKILLS-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "Skill 场景切换、Registry 刷新和行选择",
+      "page_id": "SKILLS",
+      "source_line": 621
+    },
+    {
+      "category": "chatbi",
+      "functional_result": {
+        "id": "CHATBI-002",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "CHATBI-002",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "服务端清除旧会话并由 UI 创建隔离新会话",
+      "page_id": "CHATBI",
+      "source_line": 639
+    },
+    {
+      "category": "knowledge",
+      "functional_result": {
+        "id": "KNOWLEDGE-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "KNOWLEDGE-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "知识检索和唯一文档版本生命周期",
+      "page_id": "KNOWLEDGE",
+      "source_line": 659
+    },
+    {
+      "category": "data-integration",
+      "functional_result": {
+        "id": "MAPPING-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "MAPPING-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "数据接入试运行、质量、审批和发布闭环",
+      "page_id": "MAPPING",
+      "source_line": 691
+    },
+    {
+      "category": "data-integration",
+      "functional_result": {
+        "id": "MAPPING-002",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "MAPPING-002",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "平台 DatasetVersion 13 步真实闭环并回滚",
+      "page_id": "MAPPING",
+      "source_line": 720
+    },
+    {
+      "category": "governance",
+      "functional_result": {
+        "id": "GOVERNANCE-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "GOVERNANCE-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "治理八页签、运行/P4/P5 刷新与禁用边界",
+      "page_id": "GOVERNANCE-OVERVIEW",
+      "source_line": 748
+    },
+    {
+      "category": "p6-loop",
+      "functional_result": {
+        "id": "P6-ALERT-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "P6-ALERT-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "预警规则和全状态生命周期最终闭环到 CLOSED",
+      "page_id": "ALERTS",
+      "source_line": 778
+    },
+    {
+      "category": "p6-loop",
+      "functional_result": {
+        "id": "P6-REPORT-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "P6-REPORT-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "报告创建、版本、审核、发布、证据与归档",
+      "page_id": "REPORTS",
+      "source_line": 817
+    },
+    {
+      "category": "p6-loop",
+      "functional_result": {
+        "id": "P6-METRIC-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "P6-METRIC-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "指标新版本、保存、影响分析、审核和发布",
+      "page_id": "METRICS",
+      "source_line": 834
+    },
+    {
+      "category": "authentication",
+      "functional_result": {
+        "id": "AUTH-004",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "AUTH-004",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "真实 OIDC logout 清除当前页及恢复页会话",
+      "page_id": "OVERVIEW",
+      "source_line": 859
+    },
+    {
+      "category": "product-boundary",
+      "functional_result": {
+        "id": "BOUNDARY-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      "id": "BOUNDARY-001",
+      "inventory_source": "frontend/e2e/day1-full-functional.spec.ts",
+      "name": "登录后全局禁用边界未被破坏",
+      "page_id": "OVERVIEW",
+      "source_line": 872
+    }
+  ],
+  "generated_at": "2026-08-12T17:45:54.486798+00:00",
+  "generated_by": "scripts/build_day1_acceptance_evidence.py",
+  "interaction_stable_id_count": 329,
+  "inventory_status": "PASS",
+  "page_stable_id_count": 24,
+  "pages": [
+    {
+      "api_endpoints": [
+        "GET /api/v1/auth/oidc/status"
+      ],
+      "auth_required": false,
+      "control_ids": [
+        "PAGE-LOGIN-BUTTON-001"
+      ],
+      "id": "LOGIN",
+      "page_name": "登录",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [],
+      "auth_required": false,
+      "control_ids": [
+        "PAGE-OIDC-CALLBACK-BUTTON-001"
+      ],
+      "id": "OIDC-CALLBACK",
+      "page_name": "OIDC 回调",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/oidc/callback",
+      "visible": true
+    },
+    {
+      "api_endpoints": [],
+      "auth_required": true,
+      "control_ids": [
+        "GLOBAL-SIDEBAR-BUTTON-001",
+        "GLOBAL-SIDEBAR-BUTTON-002",
+        "GLOBAL-SIDEBAR-BUTTON-003",
+        "GLOBAL-SIDEBAR-BUTTON-004",
+        "GLOBAL-SIDEBAR-BUTTON-005",
+        "GLOBAL-SIDEBAR-BUTTON-006",
+        "GLOBAL-SIDEBAR-BUTTON-007",
+        "GLOBAL-SIDEBAR-BUTTON-008",
+        "GLOBAL-SIDEBAR-BUTTON-009",
+        "GLOBAL-SIDEBAR-BUTTON-010",
+        "GLOBAL-SIDEBAR-BUTTON-011",
+        "GLOBAL-SIDEBAR-BUTTON-012",
+        "GLOBAL-SIDEBAR-BUTTON-013",
+        "GLOBAL-SIDEBAR-BUTTON-014",
+        "GLOBAL-SIDEBAR-BUTTON-015",
+        "GLOBAL-SIDEBAR-BUTTON-016",
+        "GLOBAL-HEADER-INPUT-017",
+        "GLOBAL-HEADER-INPUT-018",
+        "GLOBAL-HEADER-INPUT-019",
+        "GLOBAL-HEADER-BUTTON-020",
+        "GLOBAL-HEADER-BUTTON-021",
+        "GLOBAL-HEADER-BUTTON-022"
+      ],
+      "id": "OVERVIEW",
+      "page_name": "功能总览",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [
+        "GET /api/v1/dashboard/context",
+        "GET /api/v1/dashboard/summary"
+      ],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-DASHBOARD-INPUT-020",
+        "PAGE-DASHBOARD-INPUT-021",
+        "PAGE-DASHBOARD-SELECT-022",
+        "PAGE-DASHBOARD-SELECT-023",
+        "PAGE-DASHBOARD-SELECT-024",
+        "PAGE-DASHBOARD-SELECT-025",
+        "PAGE-DASHBOARD-BUTTON-026",
+        "PAGE-DASHBOARD-BUTTON-027",
+        "PAGE-DASHBOARD-BUTTON-028",
+        "PAGE-DASHBOARD-BUTTON-029",
+        "PAGE-DASHBOARD-BUTTON-030",
+        "PAGE-DASHBOARD-BUTTON-031",
+        "PAGE-DASHBOARD-BUTTON-032"
+      ],
+      "id": "DASHBOARD",
+      "page_name": "经营工作台",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [
+        "GET /api/v1/dashboard/stations",
+        "GET /api/v1/dashboard/summary",
+        "GET /api/v1/dashboard/trend",
+        "GET /api/v1/diagnostics/decomposition",
+        "GET /api/v1/revenue/analysis"
+      ],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-REVENUE-INPUT-023",
+        "PAGE-REVENUE-INPUT-024",
+        "PAGE-REVENUE-SELECT-025",
+        "PAGE-REVENUE-SELECT-026",
+        "PAGE-REVENUE-SELECT-027",
+        "PAGE-REVENUE-SELECT-028",
+        "PAGE-REVENUE-SELECT-029",
+        "PAGE-REVENUE-BUTTON-030",
+        "PAGE-REVENUE-BUTTON-031",
+        "PAGE-REVENUE-BUTTON-032",
+        "PAGE-REVENUE-BUTTON-033",
+        "PAGE-REVENUE-BUTTON-034"
+      ],
+      "id": "REVENUE",
+      "page_name": "收入与订单",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [
+        "GET /api/v1/dashboard/stations",
+        "GET /api/v1/dashboard/summary",
+        "GET /api/v1/dashboard/trend",
+        "GET /api/v1/diagnostics/decomposition"
+      ],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-MARGIN-BUTTON-023",
+        "PAGE-MARGIN-BUTTON-024",
+        "PAGE-MARGIN-BUTTON-025",
+        "PAGE-MARGIN-BUTTON-026",
+        "PAGE-MARGIN-BUTTON-027",
+        "PAGE-MARGIN-BUTTON-028",
+        "PAGE-MARGIN-BUTTON-029",
+        "PAGE-MARGIN-SELECT-030",
+        "PAGE-MARGIN-SELECT-031",
+        "PAGE-MARGIN-SELECT-032",
+        "PAGE-MARGIN-BUTTON-033",
+        "PAGE-MARGIN-BUTTON-034",
+        "PAGE-MARGIN-BUTTON-035",
+        "PAGE-MARGIN-BUTTON-036",
+        "PAGE-MARGIN-BUTTON-037",
+        "PAGE-MARGIN-BUTTON-038",
+        "PAGE-MARGIN-BUTTON-039",
+        "PAGE-MARGIN-BUTTON-040",
+        "PAGE-MARGIN-SELECT-041",
+        "PAGE-MARGIN-BUTTON-042",
+        "PAGE-MARGIN-BUTTON-043",
+        "PAGE-MARGIN-BUTTON-044",
+        "PAGE-MARGIN-BUTTON-045",
+        "PAGE-MARGIN-BUTTON-046",
+        "PAGE-MARGIN-BUTTON-047",
+        "PAGE-MARGIN-BUTTON-048"
+      ],
+      "id": "MARGIN",
+      "page_name": "毛利与成本",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [
+        "GET /api/v1/dashboard/stations",
+        "GET /api/v1/dashboard/summary",
+        "GET /api/v1/dashboard/trend"
+      ],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-STATIONS-INPUT-023",
+        "PAGE-STATIONS-INPUT-024",
+        "PAGE-STATIONS-SELECT-025",
+        "PAGE-STATIONS-SELECT-026",
+        "PAGE-STATIONS-SELECT-027",
+        "PAGE-STATIONS-SELECT-028",
+        "PAGE-STATIONS-SELECT-029",
+        "PAGE-STATIONS-BUTTON-030",
+        "PAGE-STATIONS-BUTTON-031",
+        "PAGE-STATIONS-SELECT-032",
+        "PAGE-STATIONS-BUTTON-033",
+        "PAGE-STATIONS-BUTTON-034",
+        "PAGE-STATIONS-BUTTON-035",
+        "PAGE-STATIONS-BUTTON-036",
+        "PAGE-STATIONS-BUTTON-037",
+        "PAGE-STATIONS-BUTTON-038",
+        "PAGE-STATIONS-BUTTON-039",
+        "PAGE-STATIONS-BUTTON-040",
+        "PAGE-STATIONS-BUTTON-041",
+        "PAGE-STATIONS-BUTTON-042",
+        "PAGE-STATIONS-BUTTON-043",
+        "PAGE-STATIONS-BUTTON-044",
+        "PAGE-STATIONS-BUTTON-045",
+        "PAGE-STATIONS-BUTTON-046",
+        "PAGE-STATIONS-BUTTON-047",
+        "PAGE-STATIONS-BUTTON-048",
+        "PAGE-STATIONS-BUTTON-049",
+        "PAGE-STATIONS-BUTTON-050",
+        "PAGE-STATIONS-BUTTON-051",
+        "PAGE-STATIONS-BUTTON-052",
+        "PAGE-STATIONS-TR-053",
+        "PAGE-STATIONS-BUTTON-054",
+        "PAGE-STATIONS-TR-055",
+        "PAGE-STATIONS-BUTTON-056",
+        "PAGE-STATIONS-TR-057",
+        "PAGE-STATIONS-BUTTON-058",
+        "PAGE-STATIONS-TR-059",
+        "PAGE-STATIONS-BUTTON-060",
+        "PAGE-STATIONS-TR-061",
+        "PAGE-STATIONS-BUTTON-062",
+        "PAGE-STATIONS-BUTTON-063",
+        "PAGE-STATIONS-BUTTON-064",
+        "PAGE-STATIONS-SELECT-065",
+        "PAGE-STATIONS-BUTTON-066",
+        "PAGE-STATIONS-BUTTON-067"
+      ],
+      "id": "STATIONS",
+      "page_name": "场站经营",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-DEVICES-SELECT-023",
+        "PAGE-DEVICES-SELECT-024",
+        "PAGE-DEVICES-INPUT-025",
+        "PAGE-DEVICES-INPUT-026",
+        "PAGE-DEVICES-BUTTON-027",
+        "PAGE-DEVICES-BUTTON-028",
+        "PAGE-DEVICES-BUTTON-029",
+        "PAGE-DEVICES-BUTTON-030",
+        "PAGE-DEVICES-BUTTON-031",
+        "PAGE-DEVICES-BUTTON-032",
+        "PAGE-DEVICES-BUTTON-033",
+        "PAGE-DEVICES-BUTTON-034",
+        "PAGE-DEVICES-BUTTON-035",
+        "PAGE-DEVICES-SELECT-036",
+        "PAGE-DEVICES-BUTTON-037",
+        "PAGE-DEVICES-BUTTON-038"
+      ],
+      "id": "DEVICES",
+      "page_name": "设备健康",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [
+        "GET /api/v1/alerts",
+        "GET /api/v1/dashboard/devices"
+      ],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-ALERTS-BUTTON-023",
+        "PAGE-ALERTS-INPUT-024",
+        "PAGE-ALERTS-INPUT-025",
+        "PAGE-ALERTS-BUTTON-026"
+      ],
+      "id": "ALERTS",
+      "page_name": "经营预警",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [
+        "GET /api/v1/alerts/ALT-df191c1b-0f59-4e5c-9e98-13e51a0817d9/timeline",
+        "GET /api/v1/chat/scenarios",
+        "GET /api/v1/dashboard/stations",
+        "GET /api/v1/dashboard/summary",
+        "GET /api/v1/dashboard/trend",
+        "GET /api/v1/knowledge/runtime"
+      ],
+      "auth_required": true,
+      "control_ids": [
+        "GLOBAL-HEADER-BUTTON-017",
+        "PAGE-CHATBI-BUTTON-021",
+        "PAGE-CHATBI-BUTTON-022",
+        "PAGE-CHATBI-BUTTON-023",
+        "PAGE-CHATBI-BUTTON-024",
+        "PAGE-CHATBI-TEXTAREA-025",
+        "PAGE-CHATBI-BUTTON-026",
+        "PAGE-CHATBI-BUTTON-027",
+        "PAGE-CHATBI-BUTTON-028",
+        "PAGE-CHATBI-BUTTON-029",
+        "PAGE-CHATBI-BUTTON-030",
+        "PAGE-CHATBI-BUTTON-031",
+        "PAGE-CHATBI-BUTTON-032",
+        "PAGE-CHATBI-SELECT-033",
+        "PAGE-CHATBI-BUTTON-034",
+        "PAGE-CHATBI-SELECT-035",
+        "PAGE-CHATBI-BUTTON-036",
+        "PAGE-CHATBI-BUTTON-037",
+        "PAGE-CHATBI-BUTTON-038",
+        "PAGE-CHATBI-BUTTON-039",
+        "PAGE-CHATBI-BUTTON-040",
+        "PAGE-CHATBI-BUTTON-041",
+        "PAGE-CHATBI-BUTTON-042",
+        "PAGE-CHATBI-BUTTON-043",
+        "PAGE-CHATBI-SUMMARY-044",
+        "PAGE-CHATBI-SUMMARY-045"
+      ],
+      "id": "CHATBI",
+      "page_name": "AI经营分析",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [
+        "GET /api/v1/dashboard/summary",
+        "GET /api/v1/dashboard/trend"
+      ],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-MEMORY-SELECT-020",
+        "PAGE-MEMORY-BUTTON-021",
+        "PAGE-MEMORY-BUTTON-022"
+      ],
+      "id": "MEMORY",
+      "page_name": "记忆与偏好",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [
+        "GET /api/v1/memory/candidates",
+        "GET /api/v1/memory/records",
+        "GET /api/v1/skills"
+      ],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-SKILLS-SELECT-020",
+        "PAGE-SKILLS-BUTTON-021",
+        "PAGE-SKILLS-TR-022",
+        "PAGE-SKILLS-BUTTON-023",
+        "PAGE-SKILLS-BUTTON-024",
+        "PAGE-SKILLS-BUTTON-025",
+        "PAGE-SKILLS-TR-026",
+        "PAGE-SKILLS-BUTTON-027",
+        "PAGE-SKILLS-BUTTON-028",
+        "PAGE-SKILLS-BUTTON-029",
+        "PAGE-SKILLS-TR-030",
+        "PAGE-SKILLS-BUTTON-031",
+        "PAGE-SKILLS-BUTTON-032",
+        "PAGE-SKILLS-BUTTON-033",
+        "PAGE-SKILLS-TR-034",
+        "PAGE-SKILLS-BUTTON-035",
+        "PAGE-SKILLS-BUTTON-036",
+        "PAGE-SKILLS-BUTTON-037",
+        "PAGE-SKILLS-TR-038",
+        "PAGE-SKILLS-BUTTON-039",
+        "PAGE-SKILLS-BUTTON-040",
+        "PAGE-SKILLS-BUTTON-041"
+      ],
+      "id": "SKILLS",
+      "page_name": "Skill 管理",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [
+        "GET /api/v1/reports"
+      ],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-REPORTS-BUTTON-023",
+        "PAGE-REPORTS-INPUT-024"
+      ],
+      "id": "REPORTS",
+      "page_name": "经营报告",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [
+        "GET /api/v1/knowledge/documents",
+        "GET /api/v1/knowledge/runtime",
+        "GET /api/v1/knowledge/source-catalog",
+        "GET /api/v1/reports/RPT-b0ec5965-f9b0-43eb-819d-1ecd68570110/evidence",
+        "POST /api/v1/assistant/query"
+      ],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-KNOWLEDGE-SELECT-020",
+        "PAGE-KNOWLEDGE-SELECT-021",
+        "PAGE-KNOWLEDGE-SELECT-022",
+        "PAGE-KNOWLEDGE-INPUT-023",
+        "PAGE-KNOWLEDGE-BUTTON-024",
+        "PAGE-KNOWLEDGE-BUTTON-025",
+        "PAGE-KNOWLEDGE-TEXTAREA-026",
+        "PAGE-KNOWLEDGE-BUTTON-027",
+        "PAGE-KNOWLEDGE-BUTTON-028",
+        "PAGE-KNOWLEDGE-BUTTON-029",
+        "PAGE-KNOWLEDGE-BUTTON-030",
+        "PAGE-KNOWLEDGE-BUTTON-031",
+        "PAGE-KNOWLEDGE-BUTTON-032",
+        "PAGE-KNOWLEDGE-BUTTON-033",
+        "PAGE-KNOWLEDGE-BUTTON-034",
+        "PAGE-KNOWLEDGE-BUTTON-035",
+        "PAGE-KNOWLEDGE-BUTTON-036",
+        "PAGE-KNOWLEDGE-BUTTON-037"
+      ],
+      "id": "KNOWLEDGE",
+      "page_name": "企业知识库",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [
+        "GET /api/v1/data-integration/overview",
+        "GET /api/v1/platform/foundation"
+      ],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-MAPPING-BUTTON-023",
+        "PAGE-MAPPING-BUTTON-024",
+        "PAGE-MAPPING-BUTTON-025",
+        "PAGE-MAPPING-BUTTON-026",
+        "PAGE-MAPPING-BUTTON-027",
+        "PAGE-MAPPING-BUTTON-028",
+        "PAGE-MAPPING-BUTTON-029",
+        "PAGE-MAPPING-BUTTON-030",
+        "PAGE-MAPPING-BUTTON-031",
+        "PAGE-MAPPING-BUTTON-032",
+        "PAGE-MAPPING-BUTTON-033",
+        "PAGE-MAPPING-BUTTON-034",
+        "PAGE-MAPPING-BUTTON-035",
+        "PAGE-MAPPING-BUTTON-036",
+        "PAGE-MAPPING-BUTTON-037",
+        "PAGE-MAPPING-BUTTON-038",
+        "PAGE-MAPPING-BUTTON-039",
+        "PAGE-MAPPING-BUTTON-040",
+        "PAGE-MAPPING-BUTTON-041",
+        "PAGE-MAPPING-BUTTON-042",
+        "PAGE-MAPPING-BUTTON-043",
+        "PAGE-MAPPING-BUTTON-044",
+        "PAGE-MAPPING-BUTTON-045",
+        "PAGE-MAPPING-BUTTON-046",
+        "PAGE-MAPPING-BUTTON-047",
+        "PAGE-MAPPING-BUTTON-048",
+        "PAGE-MAPPING-BUTTON-049",
+        "PAGE-MAPPING-BUTTON-050",
+        "PAGE-MAPPING-INPUT-051",
+        "PAGE-MAPPING-BUTTON-052",
+        "PAGE-MAPPING-BUTTON-053"
+      ],
+      "id": "MAPPING",
+      "page_name": "数据接入与字段映射",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [
+        "GET /api/v1/metrics/governance"
+      ],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-METRICS-TEXTAREA-023",
+        "PAGE-METRICS-INPUT-024",
+        "PAGE-METRICS-BUTTON-025",
+        "PAGE-METRICS-BUTTON-026"
+      ],
+      "id": "METRICS",
+      "page_name": "指标与场景管理",
+      "parent": null,
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [
+        "GET /api/v1/governance/snapshot"
+      ],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-GOVERNANCE-OVERVIEW-BUTTON-020",
+        "PAGE-GOVERNANCE-OVERVIEW-BUTTON-021",
+        "PAGE-GOVERNANCE-OVERVIEW-BUTTON-022",
+        "PAGE-GOVERNANCE-OVERVIEW-BUTTON-023",
+        "PAGE-GOVERNANCE-OVERVIEW-BUTTON-024",
+        "PAGE-GOVERNANCE-OVERVIEW-BUTTON-025",
+        "PAGE-GOVERNANCE-OVERVIEW-BUTTON-026",
+        "PAGE-GOVERNANCE-OVERVIEW-BUTTON-027"
+      ],
+      "id": "GOVERNANCE-OVERVIEW",
+      "page_name": "治理总览",
+      "parent": "GOVERNANCE",
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-GOVERNANCE-IDENTITY-BUTTON-020",
+        "PAGE-GOVERNANCE-IDENTITY-BUTTON-021",
+        "PAGE-GOVERNANCE-IDENTITY-BUTTON-022",
+        "PAGE-GOVERNANCE-IDENTITY-BUTTON-023",
+        "PAGE-GOVERNANCE-IDENTITY-BUTTON-024",
+        "PAGE-GOVERNANCE-IDENTITY-BUTTON-025",
+        "PAGE-GOVERNANCE-IDENTITY-BUTTON-026",
+        "PAGE-GOVERNANCE-IDENTITY-BUTTON-027"
+      ],
+      "id": "GOVERNANCE-IDENTITY",
+      "page_name": "身份与授权",
+      "parent": "GOVERNANCE",
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-020",
+        "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-021",
+        "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-022",
+        "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-023",
+        "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-024",
+        "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-025",
+        "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-026",
+        "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-027",
+        "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-028",
+        "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-029",
+        "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-030",
+        "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-031",
+        "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-032",
+        "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-033",
+        "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-034"
+      ],
+      "id": "GOVERNANCE-CREDENTIALS",
+      "page_name": "凭据引用",
+      "parent": "GOVERNANCE",
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-GOVERNANCE-RETENTION-BUTTON-020",
+        "PAGE-GOVERNANCE-RETENTION-BUTTON-021",
+        "PAGE-GOVERNANCE-RETENTION-BUTTON-022",
+        "PAGE-GOVERNANCE-RETENTION-BUTTON-023",
+        "PAGE-GOVERNANCE-RETENTION-BUTTON-024",
+        "PAGE-GOVERNANCE-RETENTION-BUTTON-025",
+        "PAGE-GOVERNANCE-RETENTION-BUTTON-026",
+        "PAGE-GOVERNANCE-RETENTION-BUTTON-027"
+      ],
+      "id": "GOVERNANCE-RETENTION",
+      "page_name": "Legal Hold 与保留",
+      "parent": "GOVERNANCE",
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-GOVERNANCE-AUDIT-BUTTON-020",
+        "PAGE-GOVERNANCE-AUDIT-BUTTON-021",
+        "PAGE-GOVERNANCE-AUDIT-BUTTON-022",
+        "PAGE-GOVERNANCE-AUDIT-BUTTON-023",
+        "PAGE-GOVERNANCE-AUDIT-BUTTON-024",
+        "PAGE-GOVERNANCE-AUDIT-BUTTON-025",
+        "PAGE-GOVERNANCE-AUDIT-BUTTON-026",
+        "PAGE-GOVERNANCE-AUDIT-BUTTON-027",
+        "PAGE-GOVERNANCE-AUDIT-BUTTON-028"
+      ],
+      "id": "GOVERNANCE-AUDIT",
+      "page_name": "审计与告警",
+      "parent": "GOVERNANCE",
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-GOVERNANCE-RELEASE-BUTTON-020",
+        "PAGE-GOVERNANCE-RELEASE-BUTTON-021",
+        "PAGE-GOVERNANCE-RELEASE-BUTTON-022",
+        "PAGE-GOVERNANCE-RELEASE-BUTTON-023",
+        "PAGE-GOVERNANCE-RELEASE-BUTTON-024",
+        "PAGE-GOVERNANCE-RELEASE-BUTTON-025",
+        "PAGE-GOVERNANCE-RELEASE-BUTTON-026",
+        "PAGE-GOVERNANCE-RELEASE-BUTTON-027",
+        "PAGE-GOVERNANCE-RELEASE-BUTTON-028",
+        "PAGE-GOVERNANCE-RELEASE-BUTTON-029"
+      ],
+      "id": "GOVERNANCE-RELEASE",
+      "page_name": "发布与运行",
+      "parent": "GOVERNANCE",
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [
+        "GET /api/v1/preproduction/snapshot"
+      ],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-020",
+        "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-021",
+        "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-022",
+        "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-023",
+        "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-024",
+        "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-025",
+        "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-026",
+        "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-027",
+        "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-028",
+        "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-029",
+        "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-030",
+        "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-031"
+      ],
+      "id": "GOVERNANCE-PREPRODUCTION",
+      "page_name": "P4 预生产与 RC",
+      "parent": "GOVERNANCE",
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    },
+    {
+      "api_endpoints": [
+        "GET /api/v1/production-acceptance/snapshot"
+      ],
+      "auth_required": true,
+      "control_ids": [
+        "PAGE-GOVERNANCE-PRODUCTION-BUTTON-020",
+        "PAGE-GOVERNANCE-PRODUCTION-BUTTON-021",
+        "PAGE-GOVERNANCE-PRODUCTION-BUTTON-022",
+        "PAGE-GOVERNANCE-PRODUCTION-BUTTON-023",
+        "PAGE-GOVERNANCE-PRODUCTION-BUTTON-024",
+        "PAGE-GOVERNANCE-PRODUCTION-BUTTON-025",
+        "PAGE-GOVERNANCE-PRODUCTION-BUTTON-026",
+        "PAGE-GOVERNANCE-PRODUCTION-BUTTON-027",
+        "PAGE-GOVERNANCE-PRODUCTION-SUMMARY-028",
+        "PAGE-GOVERNANCE-PRODUCTION-BUTTON-029",
+        "PAGE-GOVERNANCE-PRODUCTION-BUTTON-030",
+        "PAGE-GOVERNANCE-PRODUCTION-BUTTON-031",
+        "PAGE-GOVERNANCE-PRODUCTION-BUTTON-032"
+      ],
+      "id": "GOVERNANCE-PRODUCTION",
+      "page_name": "P5 生产验收",
+      "parent": "GOVERNANCE",
+      "roles": [],
+      "roles_status": "UNKNOWN",
+      "route": "/",
+      "visible": true
+    }
+  ],
+  "schema_version": "1.0",
+  "stable_feature_ids": [
+    "AUTH-001",
+    "AUTH-002",
+    "AUTH-003",
+    "GLOBAL-001",
+    "DASHBOARD-001",
+    "REVENUE-001",
+    "MARGIN-001",
+    "STATIONS-001",
+    "DEVICES-001",
+    "CHATBI-001",
+    "MEMORY-001",
+    "SKILLS-001",
+    "CHATBI-002",
+    "KNOWLEDGE-001",
+    "MAPPING-001",
+    "MAPPING-002",
+    "GOVERNANCE-001",
+    "P6-ALERT-001",
+    "P6-REPORT-001",
+    "P6-METRIC-001",
+    "AUTH-004",
+    "BOUNDARY-001"
+  ],
+  "static_code_scan": {
+    "declaration_counts": {
+      "a": 0,
+      "button": 189,
+      "input": 25,
+      "select": 34,
+      "summary": 25,
+      "textarea": 4
+    },
+    "files_scanned": 11,
+    "interaction_static_risks": [],
+    "mock_scan": {
+      "finding_count": 0,
+      "findings": [],
+      "rules": [
+        "Math.random",
+        "mock/fixture business data",
+        "static business JSON",
+        "API-failure fake fallback"
+      ],
+      "status": "PASS"
+    }
+  },
+  "status": "PASS",
+  "user_visible_feature_denominator": 22,
+  "user_visible_feature_metrics": {
+    "acceptance_status": "PASS",
+    "applicable_denominator": 22,
+    "coverage_percent": 100.0,
+    "covered": 22,
+    "denominator": 22,
+    "entity": "feature",
+    "failed": 0,
+    "missing_ids": [],
+    "pass_rate_percent": 100.0,
+    "passed": 22,
+    "results": [
+      {
+        "id": "AUTH-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "AUTH-002",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "AUTH-003",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "GLOBAL-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "DASHBOARD-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "REVENUE-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "MARGIN-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "STATIONS-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "DEVICES-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "CHATBI-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "MEMORY-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "SKILLS-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "CHATBI-002",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "KNOWLEDGE-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "MAPPING-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "MAPPING-002",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "GOVERNANCE-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "P6-ALERT-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "P6-REPORT-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "P6-METRIC-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "AUTH-004",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      },
+      {
+        "id": "BOUNDARY-001",
+        "reason": "DAY-1 完整功能工作流执行结果",
+        "status": "PASS"
+      }
+    ],
+    "unexpected_result_ids": [],
+    "unknown_ids": [],
+    "valid_not_applicable": 0
+  }
+}

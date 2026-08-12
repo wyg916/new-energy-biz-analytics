@@ -1,0 +1,352 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "day1_supplemental_capability_audits",
+  "generated_at": "2026-08-12T17:44:15.959234+00:00",
+  "status": "PASS",
+  "chatbi_audit": {
+    "status": "PASS",
+    "reason": "multi-scenario, multi-turn, answer/query guard, feedback and server-side new-session flows passed",
+    "passed_steps": [
+      "CHATBI-001",
+      "CHATBI-002"
+    ],
+    "successful_assistant_queries": 6
+  },
+  "model_provider_audit": {
+    "status": "PASS",
+    "reason": "three governed ModelGateway providers were called; SQLBot frozen eligibility boundary was verified",
+    "gates": {
+      "sqlbot": {
+        "status": "AVAILABLE",
+        "reason": "registered with readonly scenario bindings; open NL2SQL engine is not eligible under the frozen Full Integration contract, traffic remains disabled, and the user-visible deterministic fallback was exercised",
+        "registered": true,
+        "user_visible_engine_offered": false,
+        "traffic_enabled": false
+      },
+      "kimi": {
+        "status": "PASS",
+        "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+        "model": "kimi-k2.6",
+        "latency_ms": 2456,
+        "response_content_exposed": false
+      },
+      "mimo": {
+        "status": "PASS",
+        "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+        "model": "mimo-v2.5",
+        "latency_ms": 1879,
+        "response_content_exposed": false
+      },
+      "deepseek": {
+        "status": "PASS",
+        "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+        "model": "deepseek-v4-flash",
+        "latency_ms": 1449,
+        "response_content_exposed": false
+      }
+    },
+    "providers": {
+      "sqlbot": {
+        "status": "AVAILABLE",
+        "reason": "registered with readonly scenario bindings; open NL2SQL engine is not eligible under the frozen Full Integration contract, traffic remains disabled, and the user-visible deterministic fallback was exercised",
+        "registered": true,
+        "user_visible_engine_offered": false,
+        "traffic_enabled": false
+      },
+      "kimi": {
+        "status": "PASS",
+        "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+        "model": "kimi-k2.6",
+        "latency_ms": 2456,
+        "response_content_exposed": false
+      },
+      "mimo": {
+        "status": "PASS",
+        "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+        "model": "mimo-v2.5",
+        "latency_ms": 1879,
+        "response_content_exposed": false
+      },
+      "deepseek": {
+        "status": "PASS",
+        "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+        "model": "deepseek-v4-flash",
+        "latency_ms": 1449,
+        "response_content_exposed": false
+      }
+    },
+    "secret_values_exposed": false
+  },
+  "rag_audit": {
+    "status": "PASS",
+    "reason": "retrieval citations plus ingest/publish/retire UI lifecycle and runtime index completeness passed"
+  },
+  "memory_audit": {
+    "status": "PASS",
+    "reason": "working-memory read, confirmed write, parsed JSON download, delete verification and scheduler passed"
+  },
+  "p6_audit": {
+    "status": "PASS",
+    "reason": "alert, report and metric-governance user-visible state-machine lifecycles passed",
+    "passed_steps": [
+      "P6-ALERT-001",
+      "P6-REPORT-001",
+      "P6-METRIC-001"
+    ]
+  },
+  "gates": {
+    "CHATBI": {
+      "status": "PASS",
+      "reason": "multi-scenario, multi-turn, answer/query guard, feedback and server-side new-session flows passed",
+      "passed_steps": [
+        "CHATBI-001",
+        "CHATBI-002"
+      ],
+      "successful_assistant_queries": 6
+    },
+    "SQLBOT": {
+      "status": "AVAILABLE",
+      "reason": "registered with readonly scenario bindings; open NL2SQL engine is not eligible under the frozen Full Integration contract, traffic remains disabled, and the user-visible deterministic fallback was exercised",
+      "registered": true,
+      "user_visible_engine_offered": false,
+      "traffic_enabled": false
+    },
+    "KIMI": {
+      "status": "PASS",
+      "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+      "model": "kimi-k2.6",
+      "latency_ms": 2456,
+      "response_content_exposed": false
+    },
+    "MIMO": {
+      "status": "PASS",
+      "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+      "model": "mimo-v2.5",
+      "latency_ms": 1879,
+      "response_content_exposed": false
+    },
+    "DEEPSEEK": {
+      "status": "PASS",
+      "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+      "model": "deepseek-v4-flash",
+      "latency_ms": 1449,
+      "response_content_exposed": false
+    },
+    "RAG": {
+      "status": "PASS",
+      "reason": "retrieval citations plus ingest/publish/retire UI lifecycle and runtime index completeness passed"
+    },
+    "MEMORY": {
+      "status": "PASS",
+      "reason": "working-memory read, confirmed write, parsed JSON download, delete verification and scheduler passed"
+    },
+    "DIAGNOSTICS": {
+      "status": "PASS",
+      "reason": "dashboard and margin diagnostics API workflows passed"
+    },
+    "ALERT": {
+      "status": "PASS",
+      "reason": "alert lifecycle passed"
+    },
+    "REPORT": {
+      "status": "PASS",
+      "reason": "report lifecycle passed"
+    },
+    "METRIC_GOVERNANCE": {
+      "status": "PASS",
+      "reason": "metric governance lifecycle passed"
+    },
+    "BACKEND_REGRESSION": {
+      "status": "PASS",
+      "reason": "isolated PostgreSQL regression: {'tests': 529, 'failures': 0, 'errors': 0, 'skipped': 0}"
+    }
+  },
+  "bugs": [
+    {
+      "id": "DAY1-BUG-001",
+      "priority": "P1",
+      "kind": "acceptance_harness",
+      "title": "验收脚本误点击冻结禁用控件",
+      "status": "BUG_FIXED_PASS",
+      "resolution": "按产品边界改为验证 disabled 与非空原因，不触发不可用动作。",
+      "verification": [
+        "day1-functional-playwright.second-pass.json:interaction_results"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-002",
+      "priority": "P1",
+      "kind": "acceptance_harness",
+      "title": "设备故障帕累托无事件时被误判失败",
+      "status": "BUG_FIXED_PASS",
+      "resolution": "同时校验 API reason_summary 为空与用户可见空状态。",
+      "verification": [
+        "DEVICES-001"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-003",
+      "priority": "P1",
+      "kind": "product_backend",
+      "title": "销售中文日范围解析与推荐问题越过活动数据窗口",
+      "status": "BUG_FIXED_PASS",
+      "resolution": "支持中文日级闭区间并转成右开区间；推荐问题由活动数据范围动态生成。",
+      "verification": [
+        "CHATBI-001",
+        "backend full regression"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-004",
+      "priority": "P1",
+      "kind": "product_backend",
+      "title": "长合法幂等键导致质量 run_id 超长且来源写死为模拟",
+      "status": "BUG_FIXED_PASS",
+      "resolution": "质量 run_id 使用 SHA-256 摘要，并从当前数据事实读取分类、版本和 run_id。",
+      "verification": [
+        "MAPPING-002",
+        "backend full regression"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-005",
+      "priority": "P1",
+      "kind": "product_frontend",
+      "title": "回滚幂等键超过 API 长度上限",
+      "status": "BUG_FIXED_PASS",
+      "resolution": "使用当前版本与目标版本构造受限长度稳定幂等键。",
+      "verification": [
+        "MAPPING-002"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-006",
+      "priority": "P1",
+      "kind": "product_frontend",
+      "title": "同日期再次建版本复用了旧幂等结果",
+      "status": "BUG_FIXED_PASS",
+      "resolution": "幂等键加入下一版本号，重复验收仍创建唯一 DatasetVersion。",
+      "verification": [
+        "MAPPING-002"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-007",
+      "priority": "P1",
+      "kind": "product_frontend",
+      "title": "字段映射成功反馈在用户读完前自动消失",
+      "status": "BUG_FIXED_PASS",
+      "resolution": "成功与失败反馈保留到下一次用户动作。",
+      "verification": [
+        "MAPPING-001",
+        "MAPPING-002"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-008",
+      "priority": "P1",
+      "kind": "acceptance_harness",
+      "title": "治理页标题前缀导致导航验收误判",
+      "status": "BUG_FIXED_PASS",
+      "resolution": "导航校验采用可见标题包含关系，同时保留精确侧栏入口。",
+      "verification": [
+        "GOVERNANCE-001"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-009",
+      "priority": "P1",
+      "kind": "acceptance_harness",
+      "title": "页面盘点在全局数据状态尚未完成时采样",
+      "status": "BUG_FIXED_PASS",
+      "resolution": "每个认证页面等待统一数据状态完成后再采集截图与契约字段。",
+      "verification": [
+        "day1-functional-playwright.second-pass.json:frontend_data_label_scan"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-010",
+      "priority": "P1",
+      "kind": "acceptance_harness",
+      "title": "重复一键启动的 P6 E2E 假定预警初态固定为 OPEN",
+      "status": "BUG_FIXED_PASS",
+      "resolution": "读取持久库当前预警状态，按服务端状态机完成包含重开的幂等闭环并回到 CLOSED。",
+      "verification": [
+        "one-click startup:P6 frontend E2E",
+        "second startup:P6 frontend E2E"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-011",
+      "priority": "P1",
+      "kind": "product_backend",
+      "title": "Memory 管理列表复用了问答召回排序并截断新记录",
+      "status": "BUG_FIXED_PASS",
+      "resolution": "管理列表改为权限与有效状态过滤后的最近更新优先查询；与 token budget 和召回候选上限解耦。",
+      "verification": [
+        "MEMORY-001",
+        "backend full regression"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-012",
+      "priority": "P1",
+      "kind": "product_backend",
+      "title": "Memory export used an obsolete positional management-list signature",
+      "status": "BUG_FIXED_PASS",
+      "resolution": "The export endpoint uses explicit keyword arguments and inherits the runtime data classification.",
+      "verification": [
+        "MEMORY-001",
+        "backend full regression"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-013",
+      "priority": "P1",
+      "kind": "acceptance_builder",
+      "title": "The ALL_BUTTONS aggregate compared a button subset with outcomes from every control type",
+      "status": "BUG_FIXED_PASS",
+      "resolution": "The button gate now joins only frozen button IDs to button outcomes and retains reasoned disabled boundaries.",
+      "verification": [
+        "builder self-test",
+        "ALL_BUTTONS"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-014",
+      "priority": "P1",
+      "kind": "acceptance_builder",
+      "title": "The final console audit incorrectly required a first-pass artifact to become PASS",
+      "status": "BUG_FIXED_PASS",
+      "resolution": "Final functional evidence with observed empty error arrays now passes independently; historical first-pass evidence remains attached.",
+      "verification": [
+        "builder self-test",
+        "CONSOLE_ERRORS",
+        "BLOCKING_NETWORK_ERRORS"
+      ]
+    }
+  ],
+  "source_artifacts": [
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.json",
+      "sha256": "0cfd1c06761e443ff0ab2a3075391c2bbf7c47920461e7e64feed1de7f27ab05",
+      "size": 98801
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+      "sha256": "18a93f5d7e981ee59b9c0270d36b9ead56e58e9d5868c7b8664affa31dafb8f8",
+      "size": 144361
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/second-start.b9e7a5f.pass2.raw.json",
+      "sha256": "cd8149751f5cfa13089777afd023f496288430f33e395d1785047a7e82f4bbac",
+      "size": 38375
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/backend-regression-b9e7a5f-final/backend-full-summary.json",
+      "sha256": "2c50a169a3d56ef9a14d7dfec6f0d8a12b207e3f9e71e4de35ab5abf2c18e68d",
+      "size": 849
+    }
+  ],
+  "secret_values_exposed": false
+}

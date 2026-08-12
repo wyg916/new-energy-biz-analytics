@@ -1,0 +1,97 @@
+{
+  "evidence_type": "day1_frontend_data_label_scan",
+  "generated_at": "2026-08-12T17:45:54.457964+00:00",
+  "generated_by": "scripts/build_day1_acceptance_evidence.py",
+  "runtime_dom_scan": {
+    "dom_scan_performed": true,
+    "finding_count": 0,
+    "findings": [],
+    "sources": [
+      "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json"
+    ],
+    "status": "PASS"
+  },
+  "runtime_global_data_status_contract": {
+    "observations": [
+      {
+        "requirements": {
+          "nature": true,
+          "run_id": true,
+          "source": true,
+          "time_range": true
+        },
+        "source": "E:\\新能源企业经营分析智能平台-integration-41-full\\docs\\platformization\\day1-functional-acceptance\\evidence\\day1-functional-playwright.second-pass.json"
+      }
+    ],
+    "requirements": {
+      "nature": true,
+      "run_id": true,
+      "source": true,
+      "time_range": true
+    },
+    "sources": [
+      "E:\\新能源企业经营分析智能平台-integration-41-full\\docs\\platformization\\day1-functional-acceptance\\evidence\\day1-functional-playwright.second-pass.json"
+    ],
+    "status": "PASS"
+  },
+  "schema_version": "1.0",
+  "static_scan": {
+    "adjudication": "exclude .global-data-status and governance/truth pages; require global nature, time, source, run_id",
+    "excluded_scopes": [
+      {
+        "component": "ReportGovernancePage",
+        "path": "frontend/src/business-loop.tsx",
+        "reason": "governance/truth component"
+      },
+      {
+        "component": "MetricGovernancePage",
+        "path": "frontend/src/business-loop.tsx",
+        "reason": "governance/truth component"
+      },
+      {
+        "path": "frontend/src/governance.tsx",
+        "reason": "governance/truth page"
+      },
+      {
+        "component": "GlobalDataStatus",
+        "path": "frontend/src/overview.tsx",
+        "reason": "governance/truth component"
+      },
+      {
+        "component": "MappingPage",
+        "path": "frontend/src/overview.tsx",
+        "reason": "governance/truth component"
+      },
+      {
+        "component": "BoundaryPage",
+        "path": "frontend/src/overview.tsx",
+        "reason": "governance/truth component"
+      },
+      {
+        "path": "frontend/src/preproduction.tsx",
+        "reason": "governance/truth page"
+      },
+      {
+        "path": "frontend/src/production-acceptance.tsx",
+        "reason": "governance/truth page"
+      }
+    ],
+    "files_scanned": 11,
+    "global_data_status_contract": {
+      "missing": [],
+      "path": "frontend/src/overview.tsx",
+      "requirements": {
+        "nature": true,
+        "run_id": true,
+        "source": true,
+        "time_range": true
+      },
+      "selector": ".global-data-status",
+      "status": "PASS"
+    },
+    "ordinary_business_component_finding_count": 0,
+    "ordinary_business_component_findings": [],
+    "status": "PASS"
+  },
+  "status": "PASS"
+}

@@ -1,0 +1,81 @@
+{
+  "evidence_type": "model_provider_audit",
+  "generated_at": "2026-08-12T17:45:54.476327+00:00",
+  "generated_by": "scripts/build_day1_acceptance_evidence.py",
+  "reason": "three governed ModelGateway providers were called; SQLBot frozen eligibility boundary was verified",
+  "schema_version": "1.0",
+  "source_artifacts": [
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "role": "model-provider-audit",
+      "sha256": "4891fbbf470143eafc23a1b4301d569f07f95103344fc209ad219996e4a408b7",
+      "size": 12893
+    }
+  ],
+  "status": "PASS",
+  "submitted_audit": {
+    "gates": {
+      "deepseek": {
+        "latency_ms": 1449,
+        "model": "deepseek-v4-flash",
+        "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+        "response_content_exposed": false,
+        "status": "PASS"
+      },
+      "kimi": {
+        "latency_ms": 2456,
+        "model": "kimi-k2.6",
+        "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+        "response_content_exposed": false,
+        "status": "PASS"
+      },
+      "mimo": {
+        "latency_ms": 1879,
+        "model": "mimo-v2.5",
+        "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+        "response_content_exposed": false,
+        "status": "PASS"
+      },
+      "sqlbot": {
+        "reason": "registered with readonly scenario bindings; open NL2SQL engine is not eligible under the frozen Full Integration contract, traffic remains disabled, and the user-visible deterministic fallback was exercised",
+        "registered": true,
+        "status": "AVAILABLE",
+        "traffic_enabled": false,
+        "user_visible_engine_offered": false
+      }
+    },
+    "providers": {
+      "deepseek": {
+        "latency_ms": 1449,
+        "model": "deepseek-v4-flash",
+        "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+        "response_content_exposed": false,
+        "status": "PASS"
+      },
+      "kimi": {
+        "latency_ms": 2456,
+        "model": "kimi-k2.6",
+        "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+        "response_content_exposed": false,
+        "status": "PASS"
+      },
+      "mimo": {
+        "latency_ms": 1879,
+        "model": "mimo-v2.5",
+        "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+        "response_content_exposed": false,
+        "status": "PASS"
+      },
+      "sqlbot": {
+        "reason": "registered with readonly scenario bindings; open NL2SQL engine is not eligible under the frozen Full Integration contract, traffic remains disabled, and the user-visible deterministic fallback was exercised",
+        "registered": true,
+        "status": "AVAILABLE",
+        "traffic_enabled": false,
+        "user_visible_engine_offered": false
+      }
+    },
+    "reason": "three governed ModelGateway providers were called; SQLBot frozen eligibility boundary was verified",
+    "secret_values_exposed": false,
+    "status": "PASS"
+  }
+}

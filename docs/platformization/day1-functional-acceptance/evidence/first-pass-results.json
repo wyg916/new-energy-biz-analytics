@@ -1,0 +1,2594 @@
+{
+  "evidence_type": "day1_first_pass_results",
+  "functional_evidence_source_count": 1,
+  "generated_at": "2026-08-12T17:45:54.483045+00:00",
+  "generated_by": "scripts/build_day1_acceptance_evidence.py",
+  "interaction_metrics": {
+    "acceptance_status": "FAIL",
+    "applicable_denominator": 329,
+    "coverage_percent": 0.0,
+    "covered": 0,
+    "denominator": 329,
+    "entity": "interaction",
+    "failed": 0,
+    "missing_ids": [
+      "PAGE-LOGIN-BUTTON-001",
+      "PAGE-OIDC-CALLBACK-BUTTON-001",
+      "GLOBAL-SIDEBAR-BUTTON-001",
+      "GLOBAL-SIDEBAR-BUTTON-002",
+      "GLOBAL-SIDEBAR-BUTTON-003",
+      "GLOBAL-SIDEBAR-BUTTON-004",
+      "GLOBAL-SIDEBAR-BUTTON-005",
+      "GLOBAL-SIDEBAR-BUTTON-006",
+      "GLOBAL-SIDEBAR-BUTTON-007",
+      "GLOBAL-SIDEBAR-BUTTON-008",
+      "GLOBAL-SIDEBAR-BUTTON-009",
+      "GLOBAL-SIDEBAR-BUTTON-010",
+      "GLOBAL-SIDEBAR-BUTTON-011",
+      "GLOBAL-SIDEBAR-BUTTON-012",
+      "GLOBAL-SIDEBAR-BUTTON-013",
+      "GLOBAL-SIDEBAR-BUTTON-014",
+      "GLOBAL-SIDEBAR-BUTTON-015",
+      "GLOBAL-SIDEBAR-BUTTON-016",
+      "GLOBAL-HEADER-INPUT-017",
+      "GLOBAL-HEADER-INPUT-018",
+      "GLOBAL-HEADER-INPUT-019",
+      "GLOBAL-HEADER-BUTTON-020",
+      "GLOBAL-HEADER-BUTTON-021",
+      "GLOBAL-HEADER-BUTTON-022",
+      "PAGE-DASHBOARD-INPUT-020",
+      "PAGE-DASHBOARD-INPUT-021",
+      "PAGE-DASHBOARD-SELECT-022",
+      "PAGE-DASHBOARD-SELECT-023",
+      "PAGE-DASHBOARD-SELECT-024",
+      "PAGE-DASHBOARD-SELECT-025",
+      "PAGE-DASHBOARD-BUTTON-026",
+      "PAGE-DASHBOARD-BUTTON-027",
+      "PAGE-DASHBOARD-BUTTON-028",
+      "PAGE-DASHBOARD-BUTTON-029",
+      "PAGE-DASHBOARD-BUTTON-030",
+      "PAGE-DASHBOARD-BUTTON-031",
+      "PAGE-DASHBOARD-BUTTON-032",
+      "PAGE-REVENUE-INPUT-023",
+      "PAGE-REVENUE-INPUT-024",
+      "PAGE-REVENUE-SELECT-025",
+      "PAGE-REVENUE-SELECT-026",
+      "PAGE-REVENUE-SELECT-027",
+      "PAGE-REVENUE-SELECT-028",
+      "PAGE-REVENUE-SELECT-029",
+      "PAGE-REVENUE-BUTTON-030",
+      "PAGE-REVENUE-BUTTON-031",
+      "PAGE-REVENUE-BUTTON-032",
+      "PAGE-REVENUE-BUTTON-033",
+      "PAGE-REVENUE-BUTTON-034",
+      "PAGE-MARGIN-BUTTON-023",
+      "PAGE-MARGIN-BUTTON-024",
+      "PAGE-MARGIN-BUTTON-025",
+      "PAGE-MARGIN-BUTTON-026",
+      "PAGE-MARGIN-BUTTON-027",
+      "PAGE-MARGIN-BUTTON-028",
+      "PAGE-MARGIN-BUTTON-029",
+      "PAGE-MARGIN-SELECT-030",
+      "PAGE-MARGIN-SELECT-031",
+      "PAGE-MARGIN-SELECT-032",
+      "PAGE-MARGIN-BUTTON-033",
+      "PAGE-MARGIN-BUTTON-034",
+      "PAGE-MARGIN-BUTTON-035",
+      "PAGE-MARGIN-BUTTON-036",
+      "PAGE-MARGIN-BUTTON-037",
+      "PAGE-MARGIN-BUTTON-038",
+      "PAGE-MARGIN-BUTTON-039",
+      "PAGE-MARGIN-BUTTON-040",
+      "PAGE-MARGIN-SELECT-041",
+      "PAGE-MARGIN-BUTTON-042",
+      "PAGE-MARGIN-BUTTON-043",
+      "PAGE-MARGIN-BUTTON-044",
+      "PAGE-MARGIN-BUTTON-045",
+      "PAGE-MARGIN-BUTTON-046",
+      "PAGE-MARGIN-BUTTON-047",
+      "PAGE-MARGIN-BUTTON-048",
+      "PAGE-STATIONS-INPUT-023",
+      "PAGE-STATIONS-INPUT-024",
+      "PAGE-STATIONS-SELECT-025",
+      "PAGE-STATIONS-SELECT-026",
+      "PAGE-STATIONS-SELECT-027",
+      "PAGE-STATIONS-SELECT-028",
+      "PAGE-STATIONS-SELECT-029",
+      "PAGE-STATIONS-BUTTON-030",
+      "PAGE-STATIONS-BUTTON-031",
+      "PAGE-STATIONS-SELECT-032",
+      "PAGE-STATIONS-BUTTON-033",
+      "PAGE-STATIONS-BUTTON-034",
+      "PAGE-STATIONS-BUTTON-035",
+      "PAGE-STATIONS-BUTTON-036",
+      "PAGE-STATIONS-BUTTON-037",
+      "PAGE-STATIONS-BUTTON-038",
+      "PAGE-STATIONS-BUTTON-039",
+      "PAGE-STATIONS-BUTTON-040",
+      "PAGE-STATIONS-BUTTON-041",
+      "PAGE-STATIONS-BUTTON-042",
+      "PAGE-STATIONS-BUTTON-043",
+      "PAGE-STATIONS-BUTTON-044",
+      "PAGE-STATIONS-BUTTON-045",
+      "PAGE-STATIONS-BUTTON-046",
+      "PAGE-STATIONS-BUTTON-047",
+      "PAGE-STATIONS-BUTTON-048",
+      "PAGE-STATIONS-BUTTON-049",
+      "PAGE-STATIONS-BUTTON-050",
+      "PAGE-STATIONS-BUTTON-051",
+      "PAGE-STATIONS-BUTTON-052",
+      "PAGE-STATIONS-TR-053",
+      "PAGE-STATIONS-BUTTON-054",
+      "PAGE-STATIONS-TR-055",
+      "PAGE-STATIONS-BUTTON-056",
+      "PAGE-STATIONS-TR-057",
+      "PAGE-STATIONS-BUTTON-058",
+      "PAGE-STATIONS-TR-059",
+      "PAGE-STATIONS-BUTTON-060",
+      "PAGE-STATIONS-TR-061",
+      "PAGE-STATIONS-BUTTON-062",
+      "PAGE-STATIONS-BUTTON-063",
+      "PAGE-STATIONS-BUTTON-064",
+      "PAGE-STATIONS-SELECT-065",
+      "PAGE-STATIONS-BUTTON-066",
+      "PAGE-STATIONS-BUTTON-067",
+      "PAGE-DEVICES-SELECT-023",
+      "PAGE-DEVICES-SELECT-024",
+      "PAGE-DEVICES-INPUT-025",
+      "PAGE-DEVICES-INPUT-026",
+      "PAGE-DEVICES-BUTTON-027",
+      "PAGE-DEVICES-BUTTON-028",
+      "PAGE-DEVICES-BUTTON-029",
+      "PAGE-DEVICES-BUTTON-030",
+      "PAGE-DEVICES-BUTTON-031",
+      "PAGE-DEVICES-BUTTON-032",
+      "PAGE-DEVICES-BUTTON-033",
+      "PAGE-DEVICES-BUTTON-034",
+      "PAGE-DEVICES-BUTTON-035",
+      "PAGE-DEVICES-SELECT-036",
+      "PAGE-DEVICES-BUTTON-037",
+      "PAGE-DEVICES-BUTTON-038",
+      "PAGE-ALERTS-BUTTON-023",
+      "PAGE-ALERTS-INPUT-024",
+      "PAGE-ALERTS-INPUT-025",
+      "PAGE-ALERTS-BUTTON-026",
+      "GLOBAL-HEADER-BUTTON-017",
+      "PAGE-CHATBI-BUTTON-021",
+      "PAGE-CHATBI-BUTTON-022",
+      "PAGE-CHATBI-BUTTON-023",
+      "PAGE-CHATBI-BUTTON-024",
+      "PAGE-CHATBI-TEXTAREA-025",
+      "PAGE-CHATBI-BUTTON-026",
+      "PAGE-CHATBI-BUTTON-027",
+      "PAGE-CHATBI-BUTTON-028",
+      "PAGE-CHATBI-BUTTON-029",
+      "PAGE-CHATBI-BUTTON-030",
+      "PAGE-CHATBI-BUTTON-031",
+      "PAGE-CHATBI-BUTTON-032",
+      "PAGE-CHATBI-SELECT-033",
+      "PAGE-CHATBI-BUTTON-034",
+      "PAGE-CHATBI-SELECT-035",
+      "PAGE-CHATBI-BUTTON-036",
+      "PAGE-CHATBI-BUTTON-037",
+      "PAGE-CHATBI-BUTTON-038",
+      "PAGE-CHATBI-BUTTON-039",
+      "PAGE-CHATBI-BUTTON-040",
+      "PAGE-CHATBI-BUTTON-041",
+      "PAGE-CHATBI-BUTTON-042",
+      "PAGE-CHATBI-BUTTON-043",
+      "PAGE-CHATBI-SUMMARY-044",
+      "PAGE-CHATBI-SUMMARY-045",
+      "PAGE-MEMORY-SELECT-020",
+      "PAGE-MEMORY-BUTTON-021",
+      "PAGE-MEMORY-BUTTON-022",
+      "PAGE-SKILLS-SELECT-020",
+      "PAGE-SKILLS-BUTTON-021",
+      "PAGE-SKILLS-TR-022",
+      "PAGE-SKILLS-BUTTON-023",
+      "PAGE-SKILLS-BUTTON-024",
+      "PAGE-SKILLS-BUTTON-025",
+      "PAGE-SKILLS-TR-026",
+      "PAGE-SKILLS-BUTTON-027",
+      "PAGE-SKILLS-BUTTON-028",
+      "PAGE-SKILLS-BUTTON-029",
+      "PAGE-SKILLS-TR-030",
+      "PAGE-SKILLS-BUTTON-031",
+      "PAGE-SKILLS-BUTTON-032",
+      "PAGE-SKILLS-BUTTON-033",
+      "PAGE-SKILLS-TR-034",
+      "PAGE-SKILLS-BUTTON-035",
+      "PAGE-SKILLS-BUTTON-036",
+      "PAGE-SKILLS-BUTTON-037",
+      "PAGE-SKILLS-TR-038",
+      "PAGE-SKILLS-BUTTON-039",
+      "PAGE-SKILLS-BUTTON-040",
+      "PAGE-SKILLS-BUTTON-041",
+      "PAGE-REPORTS-BUTTON-023",
+      "PAGE-REPORTS-INPUT-024",
+      "PAGE-KNOWLEDGE-SELECT-020",
+      "PAGE-KNOWLEDGE-SELECT-021",
+      "PAGE-KNOWLEDGE-SELECT-022",
+      "PAGE-KNOWLEDGE-INPUT-023",
+      "PAGE-KNOWLEDGE-BUTTON-024",
+      "PAGE-KNOWLEDGE-BUTTON-025",
+      "PAGE-KNOWLEDGE-TEXTAREA-026",
+      "PAGE-KNOWLEDGE-BUTTON-027",
+      "PAGE-KNOWLEDGE-BUTTON-028",
+      "PAGE-KNOWLEDGE-BUTTON-029",
+      "PAGE-KNOWLEDGE-BUTTON-030",
+      "PAGE-KNOWLEDGE-BUTTON-031",
+      "PAGE-KNOWLEDGE-BUTTON-032",
+      "PAGE-KNOWLEDGE-BUTTON-033",
+      "PAGE-KNOWLEDGE-BUTTON-034",
+      "PAGE-KNOWLEDGE-BUTTON-035",
+      "PAGE-KNOWLEDGE-BUTTON-036",
+      "PAGE-KNOWLEDGE-BUTTON-037",
+      "PAGE-MAPPING-BUTTON-023",
+      "PAGE-MAPPING-BUTTON-024",
+      "PAGE-MAPPING-BUTTON-025",
+      "PAGE-MAPPING-BUTTON-026",
+      "PAGE-MAPPING-BUTTON-027",
+      "PAGE-MAPPING-BUTTON-028",
+      "PAGE-MAPPING-BUTTON-029",
+      "PAGE-MAPPING-BUTTON-030",
+      "PAGE-MAPPING-BUTTON-031",
+      "PAGE-MAPPING-BUTTON-032",
+      "PAGE-MAPPING-BUTTON-033",
+      "PAGE-MAPPING-BUTTON-034",
+      "PAGE-MAPPING-BUTTON-035",
+      "PAGE-MAPPING-BUTTON-036",
+      "PAGE-MAPPING-BUTTON-037",
+      "PAGE-MAPPING-BUTTON-038",
+      "PAGE-MAPPING-BUTTON-039",
+      "PAGE-MAPPING-BUTTON-040",
+      "PAGE-MAPPING-BUTTON-041",
+      "PAGE-MAPPING-BUTTON-042",
+      "PAGE-MAPPING-BUTTON-043",
+      "PAGE-MAPPING-BUTTON-044",
+      "PAGE-MAPPING-BUTTON-045",
+      "PAGE-MAPPING-BUTTON-046",
+      "PAGE-MAPPING-BUTTON-047",
+      "PAGE-MAPPING-BUTTON-048",
+      "PAGE-MAPPING-BUTTON-049",
+      "PAGE-MAPPING-BUTTON-050",
+      "PAGE-MAPPING-INPUT-051",
+      "PAGE-MAPPING-BUTTON-052",
+      "PAGE-MAPPING-BUTTON-053",
+      "PAGE-METRICS-TEXTAREA-023",
+      "PAGE-METRICS-INPUT-024",
+      "PAGE-METRICS-BUTTON-025",
+      "PAGE-METRICS-BUTTON-026",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-020",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-021",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-022",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-023",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-024",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-025",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-026",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-027",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-020",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-021",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-022",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-023",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-024",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-025",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-026",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-027",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-020",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-021",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-022",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-023",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-024",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-025",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-026",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-027",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-028",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-029",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-030",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-031",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-032",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-033",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-034",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-020",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-021",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-022",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-023",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-024",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-025",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-026",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-027",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-020",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-021",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-022",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-023",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-024",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-025",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-026",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-027",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-028",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-020",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-021",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-022",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-023",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-024",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-025",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-026",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-027",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-028",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-029",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-020",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-021",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-022",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-023",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-024",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-025",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-026",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-027",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-028",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-029",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-030",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-031",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-020",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-021",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-022",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-023",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-024",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-025",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-026",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-027",
+      "PAGE-GOVERNANCE-PRODUCTION-SUMMARY-028",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-029",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-030",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-031",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-032"
+    ],
+    "pass_rate_percent": 0.0,
+    "passed": 0,
+    "results": [
+      {
+        "id": "PAGE-LOGIN-BUTTON-001",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-OIDC-CALLBACK-BUTTON-001",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-001",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-002",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-003",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-004",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-005",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-006",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-007",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-008",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-009",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-010",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-011",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-012",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-013",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-014",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-015",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-SIDEBAR-BUTTON-016",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-HEADER-INPUT-017",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-HEADER-INPUT-018",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-HEADER-INPUT-019",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-HEADER-BUTTON-020",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-HEADER-BUTTON-021",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-HEADER-BUTTON-022",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DASHBOARD-INPUT-020",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DASHBOARD-INPUT-021",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DASHBOARD-SELECT-022",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DASHBOARD-SELECT-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DASHBOARD-SELECT-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DASHBOARD-SELECT-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DASHBOARD-BUTTON-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DASHBOARD-BUTTON-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DASHBOARD-BUTTON-028",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DASHBOARD-BUTTON-029",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DASHBOARD-BUTTON-030",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DASHBOARD-BUTTON-031",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DASHBOARD-BUTTON-032",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-REVENUE-INPUT-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-REVENUE-INPUT-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-REVENUE-SELECT-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-REVENUE-SELECT-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-REVENUE-SELECT-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-REVENUE-SELECT-028",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-REVENUE-SELECT-029",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-REVENUE-BUTTON-030",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-REVENUE-BUTTON-031",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-REVENUE-BUTTON-032",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-REVENUE-BUTTON-033",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-REVENUE-BUTTON-034",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-028",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-029",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-SELECT-030",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-SELECT-031",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-SELECT-032",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-033",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-034",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-035",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-036",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-037",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-038",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-039",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-040",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-SELECT-041",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-042",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-043",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-044",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-045",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-046",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-047",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MARGIN-BUTTON-048",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-INPUT-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-INPUT-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-SELECT-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-SELECT-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-SELECT-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-SELECT-028",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-SELECT-029",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-030",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-031",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-SELECT-032",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-033",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-034",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-035",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-036",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-037",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-038",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-039",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-040",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-041",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-042",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-043",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-044",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-045",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-046",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-047",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-048",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-049",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-050",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-051",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-052",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-TR-053",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-054",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-TR-055",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-056",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-TR-057",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-058",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-TR-059",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-060",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-TR-061",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-062",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-063",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-064",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-SELECT-065",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-066",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-STATIONS-BUTTON-067",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-SELECT-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-SELECT-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-INPUT-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-INPUT-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-BUTTON-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-BUTTON-028",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-BUTTON-029",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-BUTTON-030",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-BUTTON-031",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-BUTTON-032",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-BUTTON-033",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-BUTTON-034",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-BUTTON-035",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-SELECT-036",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-BUTTON-037",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-DEVICES-BUTTON-038",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-ALERTS-BUTTON-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-ALERTS-INPUT-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-ALERTS-INPUT-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-ALERTS-BUTTON-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "GLOBAL-HEADER-BUTTON-017",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-021",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-022",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-TEXTAREA-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-028",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-029",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-030",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-031",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-032",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-SELECT-033",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-034",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-SELECT-035",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-036",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-037",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-038",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-039",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-040",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-041",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-042",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-BUTTON-043",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-SUMMARY-044",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-CHATBI-SUMMARY-045",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MEMORY-SELECT-020",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MEMORY-BUTTON-021",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MEMORY-BUTTON-022",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-SELECT-020",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-021",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-TR-022",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-TR-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-028",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-029",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-TR-030",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-031",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-032",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-033",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-TR-034",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-035",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-036",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-037",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-TR-038",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-039",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-040",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-SKILLS-BUTTON-041",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-REPORTS-BUTTON-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-REPORTS-INPUT-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-SELECT-020",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-SELECT-021",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-SELECT-022",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-INPUT-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-BUTTON-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-BUTTON-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-TEXTAREA-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-BUTTON-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-BUTTON-028",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-BUTTON-029",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-BUTTON-030",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-BUTTON-031",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-BUTTON-032",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-BUTTON-033",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-BUTTON-034",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-BUTTON-035",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-BUTTON-036",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-KNOWLEDGE-BUTTON-037",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-028",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-029",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-030",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-031",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-032",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-033",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-034",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-035",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-036",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-037",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-038",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-039",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-040",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-041",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-042",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-043",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-044",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-045",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-046",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-047",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-048",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-049",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-050",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-INPUT-051",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-052",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-MAPPING-BUTTON-053",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-METRICS-TEXTAREA-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-METRICS-INPUT-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-METRICS-BUTTON-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-METRICS-BUTTON-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-020",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-021",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-022",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-020",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-021",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-022",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-020",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-021",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-022",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-028",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-029",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-030",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-031",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-032",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-033",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-034",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-020",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-021",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-022",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-020",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-021",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-022",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-028",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-020",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-021",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-022",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-028",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-029",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-020",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-021",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-022",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-028",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-029",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-030",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-031",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-020",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-021",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-022",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-023",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-024",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-025",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-026",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-027",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-SUMMARY-028",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-029",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-030",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-031",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      },
+      {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-032",
+        "reason": "no functional outcome for frozen stable ID",
+        "status": "UNKNOWN"
+      }
+    ],
+    "unexpected_result_ids": [],
+    "unknown_ids": [
+      "GLOBAL-HEADER-BUTTON-017",
+      "GLOBAL-HEADER-BUTTON-020",
+      "GLOBAL-HEADER-BUTTON-021",
+      "GLOBAL-HEADER-BUTTON-022",
+      "GLOBAL-HEADER-INPUT-017",
+      "GLOBAL-HEADER-INPUT-018",
+      "GLOBAL-HEADER-INPUT-019",
+      "GLOBAL-SIDEBAR-BUTTON-001",
+      "GLOBAL-SIDEBAR-BUTTON-002",
+      "GLOBAL-SIDEBAR-BUTTON-003",
+      "GLOBAL-SIDEBAR-BUTTON-004",
+      "GLOBAL-SIDEBAR-BUTTON-005",
+      "GLOBAL-SIDEBAR-BUTTON-006",
+      "GLOBAL-SIDEBAR-BUTTON-007",
+      "GLOBAL-SIDEBAR-BUTTON-008",
+      "GLOBAL-SIDEBAR-BUTTON-009",
+      "GLOBAL-SIDEBAR-BUTTON-010",
+      "GLOBAL-SIDEBAR-BUTTON-011",
+      "GLOBAL-SIDEBAR-BUTTON-012",
+      "GLOBAL-SIDEBAR-BUTTON-013",
+      "GLOBAL-SIDEBAR-BUTTON-014",
+      "GLOBAL-SIDEBAR-BUTTON-015",
+      "GLOBAL-SIDEBAR-BUTTON-016",
+      "PAGE-ALERTS-BUTTON-023",
+      "PAGE-ALERTS-BUTTON-026",
+      "PAGE-ALERTS-INPUT-024",
+      "PAGE-ALERTS-INPUT-025",
+      "PAGE-CHATBI-BUTTON-021",
+      "PAGE-CHATBI-BUTTON-022",
+      "PAGE-CHATBI-BUTTON-023",
+      "PAGE-CHATBI-BUTTON-024",
+      "PAGE-CHATBI-BUTTON-026",
+      "PAGE-CHATBI-BUTTON-027",
+      "PAGE-CHATBI-BUTTON-028",
+      "PAGE-CHATBI-BUTTON-029",
+      "PAGE-CHATBI-BUTTON-030",
+      "PAGE-CHATBI-BUTTON-031",
+      "PAGE-CHATBI-BUTTON-032",
+      "PAGE-CHATBI-BUTTON-034",
+      "PAGE-CHATBI-BUTTON-036",
+      "PAGE-CHATBI-BUTTON-037",
+      "PAGE-CHATBI-BUTTON-038",
+      "PAGE-CHATBI-BUTTON-039",
+      "PAGE-CHATBI-BUTTON-040",
+      "PAGE-CHATBI-BUTTON-041",
+      "PAGE-CHATBI-BUTTON-042",
+      "PAGE-CHATBI-BUTTON-043",
+      "PAGE-CHATBI-SELECT-033",
+      "PAGE-CHATBI-SELECT-035",
+      "PAGE-CHATBI-SUMMARY-044",
+      "PAGE-CHATBI-SUMMARY-045",
+      "PAGE-CHATBI-TEXTAREA-025",
+      "PAGE-DASHBOARD-BUTTON-026",
+      "PAGE-DASHBOARD-BUTTON-027",
+      "PAGE-DASHBOARD-BUTTON-028",
+      "PAGE-DASHBOARD-BUTTON-029",
+      "PAGE-DASHBOARD-BUTTON-030",
+      "PAGE-DASHBOARD-BUTTON-031",
+      "PAGE-DASHBOARD-BUTTON-032",
+      "PAGE-DASHBOARD-INPUT-020",
+      "PAGE-DASHBOARD-INPUT-021",
+      "PAGE-DASHBOARD-SELECT-022",
+      "PAGE-DASHBOARD-SELECT-023",
+      "PAGE-DASHBOARD-SELECT-024",
+      "PAGE-DASHBOARD-SELECT-025",
+      "PAGE-DEVICES-BUTTON-027",
+      "PAGE-DEVICES-BUTTON-028",
+      "PAGE-DEVICES-BUTTON-029",
+      "PAGE-DEVICES-BUTTON-030",
+      "PAGE-DEVICES-BUTTON-031",
+      "PAGE-DEVICES-BUTTON-032",
+      "PAGE-DEVICES-BUTTON-033",
+      "PAGE-DEVICES-BUTTON-034",
+      "PAGE-DEVICES-BUTTON-035",
+      "PAGE-DEVICES-BUTTON-037",
+      "PAGE-DEVICES-BUTTON-038",
+      "PAGE-DEVICES-INPUT-025",
+      "PAGE-DEVICES-INPUT-026",
+      "PAGE-DEVICES-SELECT-023",
+      "PAGE-DEVICES-SELECT-024",
+      "PAGE-DEVICES-SELECT-036",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-020",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-021",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-022",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-023",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-024",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-025",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-026",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-027",
+      "PAGE-GOVERNANCE-AUDIT-BUTTON-028",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-020",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-021",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-022",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-023",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-024",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-025",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-026",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-027",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-028",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-029",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-030",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-031",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-032",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-033",
+      "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-034",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-020",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-021",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-022",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-023",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-024",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-025",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-026",
+      "PAGE-GOVERNANCE-IDENTITY-BUTTON-027",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-020",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-021",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-022",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-023",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-024",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-025",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-026",
+      "PAGE-GOVERNANCE-OVERVIEW-BUTTON-027",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-020",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-021",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-022",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-023",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-024",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-025",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-026",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-027",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-028",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-029",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-030",
+      "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-031",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-020",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-021",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-022",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-023",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-024",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-025",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-026",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-027",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-029",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-030",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-031",
+      "PAGE-GOVERNANCE-PRODUCTION-BUTTON-032",
+      "PAGE-GOVERNANCE-PRODUCTION-SUMMARY-028",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-020",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-021",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-022",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-023",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-024",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-025",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-026",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-027",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-028",
+      "PAGE-GOVERNANCE-RELEASE-BUTTON-029",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-020",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-021",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-022",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-023",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-024",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-025",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-026",
+      "PAGE-GOVERNANCE-RETENTION-BUTTON-027",
+      "PAGE-KNOWLEDGE-BUTTON-024",
+      "PAGE-KNOWLEDGE-BUTTON-025",
+      "PAGE-KNOWLEDGE-BUTTON-027",
+      "PAGE-KNOWLEDGE-BUTTON-028",
+      "PAGE-KNOWLEDGE-BUTTON-029",
+      "PAGE-KNOWLEDGE-BUTTON-030",
+      "PAGE-KNOWLEDGE-BUTTON-031",
+      "PAGE-KNOWLEDGE-BUTTON-032",
+      "PAGE-KNOWLEDGE-BUTTON-033",
+      "PAGE-KNOWLEDGE-BUTTON-034",
+      "PAGE-KNOWLEDGE-BUTTON-035",
+      "PAGE-KNOWLEDGE-BUTTON-036",
+      "PAGE-KNOWLEDGE-BUTTON-037",
+      "PAGE-KNOWLEDGE-INPUT-023",
+      "PAGE-KNOWLEDGE-SELECT-020",
+      "PAGE-KNOWLEDGE-SELECT-021",
+      "PAGE-KNOWLEDGE-SELECT-022",
+      "PAGE-KNOWLEDGE-TEXTAREA-026",
+      "PAGE-LOGIN-BUTTON-001",
+      "PAGE-MAPPING-BUTTON-023",
+      "PAGE-MAPPING-BUTTON-024",
+      "PAGE-MAPPING-BUTTON-025",
+      "PAGE-MAPPING-BUTTON-026",
+      "PAGE-MAPPING-BUTTON-027",
+      "PAGE-MAPPING-BUTTON-028",
+      "PAGE-MAPPING-BUTTON-029",
+      "PAGE-MAPPING-BUTTON-030",
+      "PAGE-MAPPING-BUTTON-031",
+      "PAGE-MAPPING-BUTTON-032",
+      "PAGE-MAPPING-BUTTON-033",
+      "PAGE-MAPPING-BUTTON-034",
+      "PAGE-MAPPING-BUTTON-035",
+      "PAGE-MAPPING-BUTTON-036",
+      "PAGE-MAPPING-BUTTON-037",
+      "PAGE-MAPPING-BUTTON-038",
+      "PAGE-MAPPING-BUTTON-039",
+      "PAGE-MAPPING-BUTTON-040",
+      "PAGE-MAPPING-BUTTON-041",
+      "PAGE-MAPPING-BUTTON-042",
+      "PAGE-MAPPING-BUTTON-043",
+      "PAGE-MAPPING-BUTTON-044",
+      "PAGE-MAPPING-BUTTON-045",
+      "PAGE-MAPPING-BUTTON-046",
+      "PAGE-MAPPING-BUTTON-047",
+      "PAGE-MAPPING-BUTTON-048",
+      "PAGE-MAPPING-BUTTON-049",
+      "PAGE-MAPPING-BUTTON-050",
+      "PAGE-MAPPING-BUTTON-052",
+      "PAGE-MAPPING-BUTTON-053",
+      "PAGE-MAPPING-INPUT-051",
+      "PAGE-MARGIN-BUTTON-023",
+      "PAGE-MARGIN-BUTTON-024",
+      "PAGE-MARGIN-BUTTON-025",
+      "PAGE-MARGIN-BUTTON-026",
+      "PAGE-MARGIN-BUTTON-027",
+      "PAGE-MARGIN-BUTTON-028",
+      "PAGE-MARGIN-BUTTON-029",
+      "PAGE-MARGIN-BUTTON-033",
+      "PAGE-MARGIN-BUTTON-034",
+      "PAGE-MARGIN-BUTTON-035",
+      "PAGE-MARGIN-BUTTON-036",
+      "PAGE-MARGIN-BUTTON-037",
+      "PAGE-MARGIN-BUTTON-038",
+      "PAGE-MARGIN-BUTTON-039",
+      "PAGE-MARGIN-BUTTON-040",
+      "PAGE-MARGIN-BUTTON-042",
+      "PAGE-MARGIN-BUTTON-043",
+      "PAGE-MARGIN-BUTTON-044",
+      "PAGE-MARGIN-BUTTON-045",
+      "PAGE-MARGIN-BUTTON-046",
+      "PAGE-MARGIN-BUTTON-047",
+      "PAGE-MARGIN-BUTTON-048",
+      "PAGE-MARGIN-SELECT-030",
+      "PAGE-MARGIN-SELECT-031",
+      "PAGE-MARGIN-SELECT-032",
+      "PAGE-MARGIN-SELECT-041",
+      "PAGE-MEMORY-BUTTON-021",
+      "PAGE-MEMORY-BUTTON-022",
+      "PAGE-MEMORY-SELECT-020",
+      "PAGE-METRICS-BUTTON-025",
+      "PAGE-METRICS-BUTTON-026",
+      "PAGE-METRICS-INPUT-024",
+      "PAGE-METRICS-TEXTAREA-023",
+      "PAGE-OIDC-CALLBACK-BUTTON-001",
+      "PAGE-REPORTS-BUTTON-023",
+      "PAGE-REPORTS-INPUT-024",
+      "PAGE-REVENUE-BUTTON-030",
+      "PAGE-REVENUE-BUTTON-031",
+      "PAGE-REVENUE-BUTTON-032",
+      "PAGE-REVENUE-BUTTON-033",
+      "PAGE-REVENUE-BUTTON-034",
+      "PAGE-REVENUE-INPUT-023",
+      "PAGE-REVENUE-INPUT-024",
+      "PAGE-REVENUE-SELECT-025",
+      "PAGE-REVENUE-SELECT-026",
+      "PAGE-REVENUE-SELECT-027",
+      "PAGE-REVENUE-SELECT-028",
+      "PAGE-REVENUE-SELECT-029",
+      "PAGE-SKILLS-BUTTON-021",
+      "PAGE-SKILLS-BUTTON-023",
+      "PAGE-SKILLS-BUTTON-024",
+      "PAGE-SKILLS-BUTTON-025",
+      "PAGE-SKILLS-BUTTON-027",
+      "PAGE-SKILLS-BUTTON-028",
+      "PAGE-SKILLS-BUTTON-029",
+      "PAGE-SKILLS-BUTTON-031",
+      "PAGE-SKILLS-BUTTON-032",
+      "PAGE-SKILLS-BUTTON-033",
+      "PAGE-SKILLS-BUTTON-035",
+      "PAGE-SKILLS-BUTTON-036",
+      "PAGE-SKILLS-BUTTON-037",
+      "PAGE-SKILLS-BUTTON-039",
+      "PAGE-SKILLS-BUTTON-040",
+      "PAGE-SKILLS-BUTTON-041",
+      "PAGE-SKILLS-SELECT-020",
+      "PAGE-SKILLS-TR-022",
+      "PAGE-SKILLS-TR-026",
+      "PAGE-SKILLS-TR-030",
+      "PAGE-SKILLS-TR-034",
+      "PAGE-SKILLS-TR-038",
+      "PAGE-STATIONS-BUTTON-030",
+      "PAGE-STATIONS-BUTTON-031",
+      "PAGE-STATIONS-BUTTON-033",
+      "PAGE-STATIONS-BUTTON-034",
+      "PAGE-STATIONS-BUTTON-035",
+      "PAGE-STATIONS-BUTTON-036",
+      "PAGE-STATIONS-BUTTON-037",
+      "PAGE-STATIONS-BUTTON-038",
+      "PAGE-STATIONS-BUTTON-039",
+      "PAGE-STATIONS-BUTTON-040",
+      "PAGE-STATIONS-BUTTON-041",
+      "PAGE-STATIONS-BUTTON-042",
+      "PAGE-STATIONS-BUTTON-043",
+      "PAGE-STATIONS-BUTTON-044",
+      "PAGE-STATIONS-BUTTON-045",
+      "PAGE-STATIONS-BUTTON-046",
+      "PAGE-STATIONS-BUTTON-047",
+      "PAGE-STATIONS-BUTTON-048",
+      "PAGE-STATIONS-BUTTON-049",
+      "PAGE-STATIONS-BUTTON-050",
+      "PAGE-STATIONS-BUTTON-051",
+      "PAGE-STATIONS-BUTTON-052",
+      "PAGE-STATIONS-BUTTON-054",
+      "PAGE-STATIONS-BUTTON-056",
+      "PAGE-STATIONS-BUTTON-058",
+      "PAGE-STATIONS-BUTTON-060",
+      "PAGE-STATIONS-BUTTON-062",
+      "PAGE-STATIONS-BUTTON-063",
+      "PAGE-STATIONS-BUTTON-064",
+      "PAGE-STATIONS-BUTTON-066",
+      "PAGE-STATIONS-BUTTON-067",
+      "PAGE-STATIONS-INPUT-023",
+      "PAGE-STATIONS-INPUT-024",
+      "PAGE-STATIONS-SELECT-025",
+      "PAGE-STATIONS-SELECT-026",
+      "PAGE-STATIONS-SELECT-027",
+      "PAGE-STATIONS-SELECT-028",
+      "PAGE-STATIONS-SELECT-029",
+      "PAGE-STATIONS-SELECT-032",
+      "PAGE-STATIONS-SELECT-065",
+      "PAGE-STATIONS-TR-053",
+      "PAGE-STATIONS-TR-055",
+      "PAGE-STATIONS-TR-057",
+      "PAGE-STATIONS-TR-059",
+      "PAGE-STATIONS-TR-061"
+    ],
+    "valid_not_applicable": 0
+  },
+  "page_metrics": {
+    "acceptance_status": "PASS",
+    "applicable_denominator": 24,
+    "coverage_percent": 100.0,
+    "covered": 24,
+    "denominator": 24,
+    "entity": "page",
+    "failed": 0,
+    "missing_ids": [],
+    "pass_rate_percent": 100.0,
+    "passed": 24,
+    "results": [
+      {
+        "id": "LOGIN",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "OIDC-CALLBACK",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "OVERVIEW",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "DASHBOARD",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "REVENUE",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "MARGIN",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "STATIONS",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "DEVICES",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "ALERTS",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "CHATBI",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "MEMORY",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "SKILLS",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "REPORTS",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "KNOWLEDGE",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "MAPPING",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "METRICS",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "GOVERNANCE-OVERVIEW",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "GOVERNANCE-IDENTITY",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "GOVERNANCE-CREDENTIALS",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "GOVERNANCE-RETENTION",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "GOVERNANCE-AUDIT",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "GOVERNANCE-RELEASE",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "GOVERNANCE-PREPRODUCTION",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      },
+      {
+        "id": "GOVERNANCE-PRODUCTION",
+        "reason": "mapped from executable acceptanceStep stable ID",
+        "status": "PASS"
+      }
+    ],
+    "unexpected_result_ids": [],
+    "unknown_ids": [],
+    "valid_not_applicable": 0
+  },
+  "schema_version": "1.0",
+  "status": "FAIL",
+  "user_visible_feature_metrics": {
+    "acceptance_status": "PASS",
+    "applicable_denominator": 22,
+    "coverage_percent": 100.0,
+    "covered": 22,
+    "denominator": 22,
+    "entity": "feature",
+    "failed": 0,
+    "missing_ids": [],
+    "pass_rate_percent": 100.0,
+    "passed": 22,
+    "results": [
+      {
+        "id": "AUTH-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "AUTH-002",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "AUTH-003",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "GLOBAL-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "DASHBOARD-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "REVENUE-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "MARGIN-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "STATIONS-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "DEVICES-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "CHATBI-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "MEMORY-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "SKILLS-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "CHATBI-002",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "KNOWLEDGE-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "MAPPING-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "MAPPING-002",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "GOVERNANCE-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "P6-ALERT-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "P6-REPORT-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "P6-METRIC-001",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "AUTH-004",
+        "reason": "",
+        "status": "PASS"
+      },
+      {
+        "id": "BOUNDARY-001",
+        "reason": "",
+        "status": "PASS"
+      }
+    ],
+    "unexpected_result_ids": [],
+    "unknown_ids": [],
+    "valid_not_applicable": 0
+  }
+}

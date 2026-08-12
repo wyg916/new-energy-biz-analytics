@@ -109,7 +109,7 @@
       ],
       "evidence": {
         "p6_alert_event": 1,
-        "p6_alert_timeline_event": 42
+        "p6_alert_timeline_event": 98
       },
       "missing": false,
       "required_data": "persisted alert and timeline evidence",
@@ -124,9 +124,9 @@
         "p6_report_evidence_snapshot"
       ],
       "evidence": {
-        "p6_report": 5,
-        "p6_report_evidence_snapshot": 5,
-        "p6_report_version": 10
+        "p6_report": 13,
+        "p6_report_evidence_snapshot": 13,
+        "p6_report_version": 26
       },
       "missing": false,
       "required_data": "persisted report version and evidence snapshot",
@@ -139,7 +139,7 @@
         "p6_metric_governance_version"
       ],
       "evidence": {
-        "record_count": 20
+        "record_count": 28
       },
       "missing": false,
       "required_data": "persisted metric/version/status",
@@ -156,11 +156,11 @@
         "knowledge_retrieval_event"
       ],
       "evidence": {
-        "knowledge_chunk": 416,
-        "knowledge_chunk_index": 416,
-        "knowledge_document": 22,
-        "knowledge_document_version": 22,
-        "knowledge_retrieval_event": 96
+        "knowledge_chunk": 444,
+        "knowledge_chunk_index": 444,
+        "knowledge_document": 23,
+        "knowledge_document_version": 23,
+        "knowledge_retrieval_event": 254
       },
       "missing": false,
       "required_data": "documents, published versions, chunks and indexes",
@@ -175,9 +175,9 @@
         "session_state"
       ],
       "evidence": {
-        "memory_record": 62,
-        "memory_write_candidate": 5,
-        "session_state": 35
+        "memory_record": 93,
+        "memory_write_candidate": 8,
+        "session_state": 51
       },
       "missing": false,
       "note": "Candidates and session state are runtime workflow outputs and may start empty; counts remain reported but are not necessary seed gaps.",
@@ -214,12 +214,12 @@
         "published_station_snapshot"
       ],
       "evidence": {
-        "data_ingestion_quality_check": 48,
-        "data_ingestion_review": 6,
-        "data_ingestion_run": 6,
+        "data_ingestion_quality_check": 56,
+        "data_ingestion_review": 7,
+        "data_ingestion_run": 7,
         "data_set_definition": 1,
         "data_source_connection": 6,
-        "published_station_snapshot": 100
+        "published_station_snapshot": 114
       },
       "missing": false,
       "required_data": "source/dataset/run/quality/review/published snapshot",
@@ -242,12 +242,12 @@
       ],
       "evidence": {
         "dataset": 2,
-        "dataset_version": 7,
+        "dataset_version": 8,
         "mapping_version": 2,
         "metric": 27,
-        "quality_result": 7,
-        "release_record": 30,
-        "review_record": 7,
+        "quality_result": 8,
+        "release_record": 35,
+        "review_record": 8,
         "semantic_activation": 2,
         "semantic_model": 2,
         "semantic_model_version": 2
@@ -272,15 +272,15 @@
           {
             "data_classification": "OPEN_SOURCE_DERIVED",
             "dataset_code": "charging_operations",
-            "dataset_version_id": "DSV-0166fa47-430f-4ba5-9b6d-fcd7ac22916b",
+            "dataset_version_id": "DSV-b21ecf68-61e8-4675-b655-0015b82d0728",
             "declared_row_count": 300026,
             "mapping_status": "PUBLISHED",
             "mapping_version_id": "MAP-99a4a96d-891e-4e78-a7c8-0f1fa057ccda",
             "missing": false,
             "period_end_exclusive": "2020-06-10",
             "period_start": "2020-06-02",
-            "quality_result_id": "DQ-91b893d8-ef56-45a9-9782-eb5a96977da4",
-            "quality_run_id": "DQ-UI-3f7406855f9ecfa84ea5ca96e92a27e6",
+            "quality_result_id": "DQ-bc9acd32-f7ae-4fec-ad48-ddef6e658ea3",
+            "quality_run_id": "DQ-UI-59ff309045b6688918757c142262189b",
             "quality_status": "PASSED",
             "relation_counts": {
               "dim_station": 44,
@@ -301,9 +301,9 @@
             "semantic_status": "ACTIVE",
             "semantic_version": "0.1.0",
             "source_id": "platform-postgresql",
-            "source_run_id": "DQ-UI-3f7406855f9ecfa84ea5ca96e92a27e6",
+            "source_run_id": "DQ-UI-59ff309045b6688918757c142262189b",
             "source_version": "ornl-acn-discovery-2020-v1",
-            "version": 4
+            "version": 5
           },
           {
             "data_classification": "OPEN_SOURCE_DERIVED",
@@ -352,7 +352,7 @@
         ],
         "all_dataset_versions": [
           {
-            "active_dataset_version_id": "DSV-0166fa47-430f-4ba5-9b6d-fcd7ac22916b",
+            "active_dataset_version_id": "DSV-b21ecf68-61e8-4675-b655-0015b82d0728",
             "active_semantic_model_version_id": "SMV-902d7005-fdd7-4973-a5df-552acda261d4",
             "code": "charging_operations",
             "data_classification": "OPEN_SOURCE_DERIVED",
@@ -377,7 +377,7 @@
             "version_status": "SUPERSEDED"
           },
           {
-            "active_dataset_version_id": "DSV-0166fa47-430f-4ba5-9b6d-fcd7ac22916b",
+            "active_dataset_version_id": "DSV-b21ecf68-61e8-4675-b655-0015b82d0728",
             "active_semantic_model_version_id": "SMV-902d7005-fdd7-4973-a5df-552acda261d4",
             "code": "charging_operations",
             "data_classification": "OPEN_SOURCE_DERIVED",
@@ -402,7 +402,7 @@
             "version_status": "SUPERSEDED"
           },
           {
-            "active_dataset_version_id": "DSV-0166fa47-430f-4ba5-9b6d-fcd7ac22916b",
+            "active_dataset_version_id": "DSV-b21ecf68-61e8-4675-b655-0015b82d0728",
             "active_semantic_model_version_id": "SMV-902d7005-fdd7-4973-a5df-552acda261d4",
             "code": "charging_operations",
             "data_classification": "OPEN_SOURCE_DERIVED",
@@ -427,7 +427,7 @@
             "version_status": "SUPERSEDED"
           },
           {
-            "active_dataset_version_id": "DSV-0166fa47-430f-4ba5-9b6d-fcd7ac22916b",
+            "active_dataset_version_id": "DSV-b21ecf68-61e8-4675-b655-0015b82d0728",
             "active_semantic_model_version_id": "SMV-902d7005-fdd7-4973-a5df-552acda261d4",
             "code": "charging_operations",
             "data_classification": "OPEN_SOURCE_DERIVED",
@@ -449,10 +449,10 @@
             "source_id": "platform-postgresql",
             "source_version": "ornl-acn-discovery-2020-v1",
             "version": 4,
-            "version_status": "ACTIVE"
+            "version_status": "SUPERSEDED"
           },
           {
-            "active_dataset_version_id": "DSV-0166fa47-430f-4ba5-9b6d-fcd7ac22916b",
+            "active_dataset_version_id": "DSV-b21ecf68-61e8-4675-b655-0015b82d0728",
             "active_semantic_model_version_id": "SMV-902d7005-fdd7-4973-a5df-552acda261d4",
             "code": "charging_operations",
             "data_classification": "OPEN_SOURCE_DERIVED",
@@ -474,6 +474,31 @@
             "source_id": "platform-postgresql",
             "source_version": "ornl-acn-discovery-2020-v1",
             "version": 5,
+            "version_status": "ACTIVE"
+          },
+          {
+            "active_dataset_version_id": "DSV-b21ecf68-61e8-4675-b655-0015b82d0728",
+            "active_semantic_model_version_id": "SMV-902d7005-fdd7-4973-a5df-552acda261d4",
+            "code": "charging_operations",
+            "data_classification": "OPEN_SOURCE_DERIVED",
+            "dataset_id": "DS-71e06aba-8f11-4146-80c2-751a8daddedf",
+            "dataset_status": "ENABLED",
+            "dataset_version_id": "DSV-889932b5-54ee-4cd4-a049-e887951fddcc",
+            "mapping_status": "PUBLISHED",
+            "mapping_version_id": "MAP-99a4a96d-891e-4e78-a7c8-0f1fa057ccda",
+            "period_end_exclusive": "2020-06-10",
+            "period_start": "2020-06-02",
+            "quality_result_id": "DQ-842f2e94-72fd-42fd-b0f5-cbf2f78bdd7a",
+            "quality_run_id": "DQ-UI-0e753beecd4cbc5b04de5879df0ca7e0",
+            "quality_status": "PASSED",
+            "row_count": 300026,
+            "scenario_id": "charging_ops",
+            "semantic_status": "ACTIVE",
+            "semantic_version": "0.1.0",
+            "source_binding_json": "{\"data_classification\":\"OPEN_SOURCE_DERIVED\",\"database\":\"PostgreSQL\",\"lineage_endpoint\":\"/api/v1/data/open-source/status\",\"relations\":{\"energy_cost_fact\":\"fact_energy_cost\",\"operation_expense_fact\":\"fact_operation_expense\",\"session_fact\":\"fact_charging_session\",\"station_dimension\":\"dim_station\",\"status_event_fact\":\"fact_device_status_event\"},\"source\":\"platform_database\",\"source_version\":\"DATA41-ACN-ORNL-26-V1\",\"sqlbot_execution_mode\":\"disabled_schema_catalog_only\"}",
+            "source_id": "platform-postgresql",
+            "source_version": "ornl-acn-discovery-2020-v1",
+            "version": 6,
             "version_status": "SUPERSEDED"
           },
           {

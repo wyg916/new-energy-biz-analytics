@@ -1,0 +1,25 @@
+{
+  "evidence_type": "p6_audit",
+  "generated_at": "2026-08-12T17:45:54.477333+00:00",
+  "generated_by": "scripts/build_day1_acceptance_evidence.py",
+  "reason": "alert, report and metric-governance user-visible state-machine lifecycles passed",
+  "schema_version": "1.0",
+  "source_artifacts": [
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "role": "p6-audit",
+      "sha256": "4891fbbf470143eafc23a1b4301d569f07f95103344fc209ad219996e4a408b7",
+      "size": 12893
+    }
+  ],
+  "status": "PASS",
+  "submitted_audit": {
+    "passed_steps": [
+      "P6-ALERT-001",
+      "P6-REPORT-001",
+      "P6-METRIC-001"
+    ],
+    "reason": "alert, report and metric-governance user-visible state-machine lifecycles passed",
+    "status": "PASS"
+  }
+}

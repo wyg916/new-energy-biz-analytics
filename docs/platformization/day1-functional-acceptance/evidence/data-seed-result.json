@@ -34,24 +34,24 @@
     "data_integration": {
       "missing": false,
       "table_counts": {
-        "data_ingestion_quality_check": 48,
-        "data_ingestion_review": 6,
-        "data_ingestion_run": 6,
+        "data_ingestion_quality_check": 56,
+        "data_ingestion_review": 7,
+        "data_ingestion_run": 7,
         "data_set_definition": 1,
         "data_source_connection": 6,
-        "published_station_snapshot": 100
+        "published_station_snapshot": 114
       }
     },
     "foundation": {
       "missing": false,
       "table_counts": {
         "dataset": 2,
-        "dataset_version": 7,
+        "dataset_version": 8,
         "mapping_version": 2,
         "metric": 27,
-        "quality_result": 7,
-        "release_record": 30,
-        "review_record": 7,
+        "quality_result": 8,
+        "release_record": 35,
+        "review_record": 8,
         "semantic_activation": 2,
         "semantic_model": 2,
         "semantic_model_version": 2
@@ -60,11 +60,11 @@
     "knowledge": {
       "missing": false,
       "table_counts": {
-        "knowledge_chunk": 416,
-        "knowledge_chunk_index": 416,
-        "knowledge_document": 22,
-        "knowledge_document_version": 22,
-        "knowledge_retrieval_event": 96
+        "knowledge_chunk": 444,
+        "knowledge_chunk_index": 444,
+        "knowledge_document": 23,
+        "knowledge_document_version": 23,
+        "knowledge_retrieval_event": 254
       }
     },
     "memory_and_skills": {
@@ -76,10 +76,10 @@
       "missing": false,
       "note": "Allowed-empty tables remain workflow targets for later UI/E2E and are not asserted PASS here.",
       "table_counts": {
-        "memory_record": 62,
-        "memory_write_candidate": 5,
+        "memory_record": 93,
+        "memory_write_candidate": 8,
         "procedure_definition": 5,
-        "session_state": 35,
+        "session_state": 51,
         "skill_definition": 8,
         "skill_execution": 0
       }
@@ -88,11 +88,11 @@
       "missing": false,
       "table_counts": {
         "p6_alert_event": 1,
-        "p6_alert_timeline_event": 42,
-        "p6_metric_governance_version": 20,
-        "p6_report": 5,
-        "p6_report_evidence_snapshot": 5,
-        "p6_report_version": 10
+        "p6_alert_timeline_event": 98,
+        "p6_metric_governance_version": 28,
+        "p6_report": 13,
+        "p6_report_evidence_snapshot": 13,
+        "p6_report_version": 26
       }
     },
     "sales": {

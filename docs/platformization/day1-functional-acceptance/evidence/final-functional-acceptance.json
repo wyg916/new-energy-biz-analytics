@@ -1,0 +1,2506 @@
+{
+  "DAY1_FUNCTIONAL_ACCEPTANCE": "PASS",
+  "artifacts": {
+    "chart-audit.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/chart-audit.json",
+      "sha256": "899080c25339440bfe09206c94b458ada2c131e8b107d986f341aa6e98123130",
+      "size": 1619
+    },
+    "chatbi-audit.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/chatbi-audit.json",
+      "sha256": "7b69ac1e1e458b858177675cac6c9cc3c7a8140542d1d9ae8b6e4088e9fb4b80",
+      "size": 896
+    },
+    "console-network-audit.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/console-network-audit.json",
+      "sha256": "2df4906885d479f57de08fe93b7a506cfc082159a08550f0bdc13de83242d480",
+      "size": 17526
+    },
+    "data-seed-result.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/data-seed-result.json",
+      "sha256": "76784743b71ed38e30b8211aeaba39446325a68271417065a277450d81e743d2",
+      "size": 5859
+    },
+    "first-pass-results.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/first-pass-results.json",
+      "sha256": "f85fd65dd5cc0b49d47e71b716c42889844915705cbc3d0b19f7426fd5a7b01f",
+      "size": 83881
+    },
+    "frontend-data-label-scan.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/frontend-data-label-scan.json",
+      "sha256": "68aab85ab444b7729be0ed3a5f06e7ce3004162d58efa37e034d7623abfd57e2",
+      "size": 3064
+    },
+    "frontend-functional-inventory.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/frontend-functional-inventory.json",
+      "sha256": "a8a0e18c53ec6a163f4577d9b6cc3f756ca8ccbbfcbe5ada4927fcfde3a9118e",
+      "size": 36466
+    },
+    "functional-bug-list.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/functional-bug-list.json",
+      "sha256": "929bc44f426cc9daf3b02f1eb8769e81daad3d8f5696412ffc95ee811cd3f076",
+      "size": 45554
+    },
+    "interaction-inventory.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/interaction-inventory.json",
+      "sha256": "cbbfa9bacf56c427fb7b11dc20bb132699d51de3ff564f05af1dd2d6f5c1aa8a",
+      "size": 280458
+    },
+    "kpi-audit.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/kpi-audit.json",
+      "sha256": "a14ee2699f25c56b68913677fa012ee8e043ec31ef7ff643ef3bee9528cf175d",
+      "size": 1237
+    },
+    "memory-audit.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/memory-audit.json",
+      "sha256": "95362762455df57aefd700ec1bbdc58901c829d5ec4b07601d1257eefe92d01c",
+      "size": 790
+    },
+    "missing-data-matrix.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/missing-data-matrix.json",
+      "sha256": "65b6ec5d00badc569cc0d8c0c259d86b10b59e8482ffb83ac423842aecd37f5b",
+      "size": 26062
+    },
+    "model-provider-audit.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/model-provider-audit.json",
+      "sha256": "fd1f8d2136906174c823b2f0eb0dc7d65da317f40501dba23e8fb3ab19b020d3",
+      "size": 3201
+    },
+    "one-click-start.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/one-click-start.json",
+      "sha256": "40e4636e47b229118297dad5e6bdcac60b869a23f4aa28d193a82c7c90fd227c",
+      "size": 34840
+    },
+    "p6-audit.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/p6-audit.json",
+      "sha256": "84ef6edae2bf1422c4bcdeb99bcfcd8737df976b47098958011aa681465093fe",
+      "size": 843
+    },
+    "rag-audit.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/rag-audit.json",
+      "sha256": "7db5f955449b4e9a8652e291c404c5459c10f3aeb971821f5b71442b6e8297d3",
+      "size": 778
+    },
+    "route-inventory.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/route-inventory.json",
+      "sha256": "e016a0195420aa6977fd605f8f27336097e962ec059571886d9aa77a305ff894",
+      "size": 29734
+    },
+    "second-pass-results.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/second-pass-results.json",
+      "sha256": "acf57fbedd88e16f100c87675d4ac75b6601d013c625640a233defe58701f7d3",
+      "size": 75917
+    },
+    "second-start.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/second-start.json",
+      "sha256": "d036fea061be9148557be02f14dc1f490e7894cdc5b22d0d0ac50108f4045bec",
+      "size": 34830
+    },
+    "ui-layout-freeze-report.json": {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/ui-layout-freeze-report.json",
+      "sha256": "a404546caa5b0eea46bc3c8c4ee7d04c46fc37482a3c802547620d1224bcb7e9",
+      "size": 6684
+    }
+  },
+  "blocker_count": 0,
+  "blockers": [],
+  "coverage_calculation": {
+    "interaction": {
+      "acceptance_status": "PASS",
+      "applicable_denominator": 242,
+      "coverage_percent": 100.0,
+      "covered": 329,
+      "denominator": 329,
+      "entity": "interaction",
+      "failed": 0,
+      "missing_ids": [],
+      "pass_rate_percent": 100.0,
+      "passed": 242,
+      "results": [
+        {
+          "id": "PAGE-LOGIN-BUTTON-001",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-OIDC-CALLBACK-BUTTON-001",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-001",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-002",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-003",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-004",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-005",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-006",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-007",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-008",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-009",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-010",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-011",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-012",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-013",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-014",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-015",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-SIDEBAR-BUTTON-016",
+          "reason": "菜单折叠未实现",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "GLOBAL-HEADER-INPUT-017",
+          "reason": "冻结或最终 DOM 明确禁用：全局搜索；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "GLOBAL-HEADER-INPUT-018",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-HEADER-INPUT-019",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-HEADER-BUTTON-020",
+          "reason": "冻结或最终 DOM 明确禁用：单客户工作区；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "GLOBAL-HEADER-BUTTON-021",
+          "reason": "通知未实现",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "GLOBAL-HEADER-BUTTON-022",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DASHBOARD-INPUT-020",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DASHBOARD-INPUT-021",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DASHBOARD-SELECT-022",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DASHBOARD-SELECT-023",
+          "reason": "工作台区域筛选尚未接入当前聚合接口",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-DASHBOARD-SELECT-024",
+          "reason": "工作台城市筛选尚未接入当前聚合接口",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-DASHBOARD-SELECT-025",
+          "reason": "工作台场站筛选尚未接入当前聚合接口",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-DASHBOARD-BUTTON-026",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DASHBOARD-BUTTON-027",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DASHBOARD-BUTTON-028",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DASHBOARD-BUTTON-029",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DASHBOARD-BUTTON-030",
+          "reason": "当前接口仅提供月粒度",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-DASHBOARD-BUTTON-031",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DASHBOARD-BUTTON-032",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-REVENUE-INPUT-023",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 REVENUE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-REVENUE-INPUT-024",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 REVENUE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-REVENUE-SELECT-025",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 REVENUE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-REVENUE-SELECT-026",
+          "reason": "收入分析接口当前仅支持区域维度",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-REVENUE-SELECT-027",
+          "reason": "收入分析接口当前仅支持区域维度",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-REVENUE-SELECT-028",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 REVENUE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-REVENUE-SELECT-029",
+          "reason": "收入趋势当前固定为按日粒度",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-REVENUE-BUTTON-030",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 REVENUE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-REVENUE-BUTTON-031",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 REVENUE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-REVENUE-BUTTON-032",
+          "reason": "桥接结果已在当前卡片完整展示",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-REVENUE-BUTTON-033",
+          "reason": "当前结果已完整展示",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-REVENUE-BUTTON-034",
+          "reason": "洞察依据已在当前卡片完整展示",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-023",
+          "reason": "当前接口仅提供月粒度",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-024",
+          "reason": "当前接口仅提供月粒度",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-025",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 MARGIN-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-026",
+          "reason": "当前接口仅提供月粒度",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-027",
+          "reason": "当前接口仅提供月粒度",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-028",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 MARGIN-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-029",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 MARGIN-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MARGIN-SELECT-030",
+          "reason": "冻结或最终 DOM 明确禁用：场站分组；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-SELECT-031",
+          "reason": "冻结或最终 DOM 明确禁用：场站类型；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-SELECT-032",
+          "reason": "冻结或最终 DOM 明确禁用：运营区域；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-033",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 MARGIN-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-034",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 MARGIN-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-035",
+          "reason": "场站详情跳转未实现",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-036",
+          "reason": "当前结果只有一页",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-037",
+          "reason": "当前结果只有一页",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-038",
+          "reason": "方案库尚未实现",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-039",
+          "reason": "当前仅生成建议草稿",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-040",
+          "reason": "当前仅生成建议草稿",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-SELECT-041",
+          "reason": "冻结或最终 DOM 明确禁用：10 条/页；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-042",
+          "reason": "当前仅生成建议草稿",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-043",
+          "reason": "冻结或最终 DOM 明确禁用：›；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-044",
+          "reason": "方案库尚未实现",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-045",
+          "reason": "当前仅生成建议草稿",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-046",
+          "reason": "当前仅生成建议草稿",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-047",
+          "reason": "当前仅生成建议草稿",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MARGIN-BUTTON-048",
+          "reason": "当前仅生成建议草稿",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-STATIONS-INPUT-023",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-INPUT-024",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-SELECT-025",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-SELECT-026",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-SELECT-027",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-SELECT-028",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-SELECT-029",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-030",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-031",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-SELECT-032",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-033",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-034",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-035",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-036",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-037",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-038",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-039",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-040",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-041",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-042",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-043",
+          "reason": "地图视图未实现",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-044",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-045",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-046",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-047",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-048",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-049",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-050",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-051",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-052",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-TR-053",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-054",
+          "reason": "冻结或最终 DOM 明确禁用：ACN open-data EVSE 2-39-131-30详情在当前页展示；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-STATIONS-TR-055",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-056",
+          "reason": "冻结或最终 DOM 明确禁用：ACN open-data EVSE 2-39-138-29详情在当前页展示；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-STATIONS-TR-057",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-058",
+          "reason": "冻结或最终 DOM 明确禁用：ACN open-data EVSE 2-39-139-28详情在当前页展示；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-STATIONS-TR-059",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-060",
+          "reason": "冻结或最终 DOM 明确禁用：ACN open-data EVSE 2-39-79-377详情在当前页展示；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-STATIONS-TR-061",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-062",
+          "reason": "冻结或最终 DOM 明确禁用：ACN open-data EVSE 2-39-79-378详情在当前页展示；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-063",
+          "reason": "冻结或最终 DOM 明确禁用：‹；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-064",
+          "reason": "冻结或最终 DOM 明确禁用：›；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-STATIONS-SELECT-065",
+          "reason": "冻结或最终 DOM 明确禁用：每页条数；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-066",
+          "reason": "更多详情页面未实现",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-STATIONS-BUTTON-067",
+          "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DEVICES-SELECT-023",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DEVICES-SELECT-024",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DEVICES-INPUT-025",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DEVICES-INPUT-026",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DEVICES-BUTTON-027",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DEVICES-BUTTON-028",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DEVICES-BUTTON-029",
+          "reason": "详情页未实现",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-DEVICES-BUTTON-030",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DEVICES-BUTTON-031",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DEVICES-BUTTON-032",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DEVICES-BUTTON-033",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DEVICES-BUTTON-034",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-DEVICES-BUTTON-035",
+          "reason": "导出未实现",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-DEVICES-SELECT-036",
+          "reason": "当前结果已完整展示",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-DEVICES-BUTTON-037",
+          "reason": "当前结果只有一页",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-DEVICES-BUTTON-038",
+          "reason": "当前结果只有一页",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-ALERTS-BUTTON-023",
+          "reason": "冻结控件所属页面工作流 P6-ALERT-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-ALERTS-INPUT-024",
+          "reason": "冻结控件所属页面工作流 P6-ALERT-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-ALERTS-INPUT-025",
+          "reason": "冻结控件所属页面工作流 P6-ALERT-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-ALERTS-BUTTON-026",
+          "reason": "冻结控件所属页面工作流 P6-ALERT-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-HEADER-BUTTON-017",
+          "reason": "冻结或最终 DOM 明确禁用：分析模式 确定性链路；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-021",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 CHATBI-001, CHATBI-002 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-022",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 CHATBI-001, CHATBI-002 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-023",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 CHATBI-001, CHATBI-002 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-024",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 CHATBI-001, CHATBI-002 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-CHATBI-TEXTAREA-025",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 CHATBI-001, CHATBI-002 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-026",
+          "reason": "请输入经营分析问题",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-027",
+          "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-028",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 CHATBI-001, CHATBI-002 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-029",
+          "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-030",
+          "reason": "冻结或最终 DOM 明确禁用：☆ 收藏未开放；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-031",
+          "reason": "冻结或最终 DOM 明确禁用：⇧ 导出未开放；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-032",
+          "reason": "冻结或最终 DOM 明确禁用：↗ 分享未开放；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-CHATBI-SELECT-033",
+          "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-034",
+          "reason": "冻结或最终 DOM 明确禁用：需改进；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-CHATBI-SELECT-035",
+          "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-036",
+          "reason": "冻结或最终 DOM 明确禁用：☆ 收藏未开放；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-037",
+          "reason": "冻结或最终 DOM 明确禁用：⇧ 导出未开放；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-038",
+          "reason": "冻结或最终 DOM 明确禁用：↗ 分享未开放；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-039",
+          "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-040",
+          "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-041",
+          "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-042",
+          "reason": "冻结或最终 DOM 明确禁用：有帮助；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-CHATBI-BUTTON-043",
+          "reason": "冻结或最终 DOM 明确禁用：需改进；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-CHATBI-SUMMARY-044",
+          "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-CHATBI-SUMMARY-045",
+          "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MEMORY-SELECT-020",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 MEMORY-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MEMORY-BUTTON-021",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 MEMORY-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MEMORY-BUTTON-022",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 MEMORY-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-SKILLS-SELECT-020",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 SKILLS-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-021",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 SKILLS-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-SKILLS-TR-022",
+          "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-023",
+          "reason": "仅 APPROVED / SHADOW / CANARY 可启用",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-024",
+          "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-025",
+          "reason": "未配置已批准回滚目标",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-SKILLS-TR-026",
+          "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-027",
+          "reason": "仅 APPROVED / SHADOW / CANARY 可启用",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-028",
+          "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-029",
+          "reason": "未配置已批准回滚目标",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-SKILLS-TR-030",
+          "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-031",
+          "reason": "仅 APPROVED / SHADOW / CANARY 可启用",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-032",
+          "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-033",
+          "reason": "未配置已批准回滚目标",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-SKILLS-TR-034",
+          "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-035",
+          "reason": "仅 APPROVED / SHADOW / CANARY 可启用",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-036",
+          "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-037",
+          "reason": "未配置已批准回滚目标",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-SKILLS-TR-038",
+          "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-039",
+          "reason": "仅 APPROVED / SHADOW / CANARY 可启用",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-040",
+          "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-SKILLS-BUTTON-041",
+          "reason": "未配置已批准回滚目标",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-REPORTS-BUTTON-023",
+          "reason": "冻结控件所属页面工作流 P6-REPORT-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-REPORTS-INPUT-024",
+          "reason": "冻结控件所属页面工作流 P6-REPORT-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-SELECT-020",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-SELECT-021",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-SELECT-022",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-INPUT-023",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-BUTTON-024",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-BUTTON-025",
+          "reason": "P2A 仅允许审核清单中的已跟踪文档；浏览器任意文件上传未开放",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-TEXTAREA-026",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-BUTTON-027",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-BUTTON-028",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-BUTTON-029",
+          "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-BUTTON-030",
+          "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-BUTTON-031",
+          "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-BUTTON-032",
+          "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-BUTTON-033",
+          "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-BUTTON-034",
+          "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-BUTTON-035",
+          "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-BUTTON-036",
+          "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-KNOWLEDGE-BUTTON-037",
+          "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-023",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-024",
+          "reason": "自动推荐尚未实现",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-025",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-026",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-027",
+          "reason": "冻结或最终 DOM 明确禁用：驳回待审版本；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-028",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-029",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-030",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-031",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-032",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-033",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-034",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-035",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-036",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-037",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-038",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-039",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-040",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-041",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-042",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-043",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-044",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-045",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-046",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-047",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-048",
+          "reason": "冻结或最终 DOM 明确禁用：更多连接器未开放；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-049",
+          "reason": "数据集切换尚未实现",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-050",
+          "reason": "自定义映射尚未实现",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-MAPPING-INPUT-051",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-052",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-MAPPING-BUTTON-053",
+          "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-METRICS-TEXTAREA-023",
+          "reason": "冻结或最终 DOM 明确禁用：公式COUNT(DISTINCT user_id)；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-METRICS-INPUT-024",
+          "reason": "冻结控件所属页面工作流 P6-METRIC-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-METRICS-BUTTON-025",
+          "reason": "冻结控件所属页面工作流 P6-METRIC-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-METRICS-BUTTON-026",
+          "reason": "冻结控件所属页面工作流 P6-METRIC-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-020",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-021",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-022",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-023",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-024",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-025",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-026",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-027",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-020",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-021",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-022",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-023",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-024",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-025",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-026",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-027",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-020",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-021",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-022",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-023",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-024",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-025",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-026",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-027",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-028",
+          "reason": "请通过受控管理 API 创建凭据引用",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-029",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-030",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-031",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-032",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-033",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-034",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-020",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-021",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-022",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-023",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-024",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-025",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-026",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-027",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-020",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-021",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-022",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-023",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-024",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-025",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-026",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-027",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-028",
+          "reason": "P3 不自动发送外部消息",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-020",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-021",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-022",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-023",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-024",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-025",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-026",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-027",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-028",
+          "reason": "P5 未关闭全部阻断门禁，真实生产发布明确禁用",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-029",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-020",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-021",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-022",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-023",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-024",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-025",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-026",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-027",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-028",
+          "reason": "冻结或最终 DOM 明确禁用：SQLBot Canary 禁用；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-029",
+          "reason": "冻结或最终 DOM 明确禁用：正式生产发布已禁用；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-030",
+          "reason": "冻结或最终 DOM 明确禁用：生产切流已禁用；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-031",
+          "reason": "冻结控件所属页面工作流 GOVERNANCE-001 已执行；控件实例因该工作流的终态切换不再显示",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-020",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-021",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-022",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-023",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-024",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-025",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-026",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-027",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PRODUCTION-SUMMARY-028",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-029",
+          "reason": "冻结或最终 DOM 明确禁用：SQLBot Canary 禁用；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-030",
+          "reason": "冻结或最终 DOM 明确禁用：正式生产发布已禁用；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-031",
+          "reason": "冻结或最终 DOM 明确禁用：生产切流已禁用；属于当前状态或冻结产品边界",
+          "status": "NOT_APPLICABLE"
+        },
+        {
+          "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-032",
+          "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行",
+          "status": "PASS"
+        }
+      ],
+      "unexpected_result_ids": [],
+      "unknown_ids": [],
+      "valid_not_applicable": 87
+    },
+    "page": {
+      "acceptance_status": "PASS",
+      "applicable_denominator": 24,
+      "coverage_percent": 100.0,
+      "covered": 24,
+      "denominator": 24,
+      "entity": "page",
+      "failed": 0,
+      "missing_ids": [],
+      "pass_rate_percent": 100.0,
+      "passed": 24,
+      "results": [
+        {
+          "id": "LOGIN",
+          "reason": "最终页面重新进入且完整工作流 AUTH-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "OIDC-CALLBACK",
+          "reason": "最终页面重新进入且完整工作流 AUTH-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "OVERVIEW",
+          "reason": "最终页面重新进入且完整工作流 AUTH-002, AUTH-003, GLOBAL-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "DASHBOARD",
+          "reason": "最终页面重新进入且完整工作流 DASHBOARD-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "REVENUE",
+          "reason": "最终页面重新进入且完整工作流 REVENUE-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "MARGIN",
+          "reason": "最终页面重新进入且完整工作流 MARGIN-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "STATIONS",
+          "reason": "最终页面重新进入且完整工作流 STATIONS-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "DEVICES",
+          "reason": "最终页面重新进入且完整工作流 DEVICES-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "ALERTS",
+          "reason": "最终页面重新进入且完整工作流 P6-ALERT-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "CHATBI",
+          "reason": "最终页面重新进入且完整工作流 CHATBI-001, CHATBI-002 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "MEMORY",
+          "reason": "最终页面重新进入且完整工作流 MEMORY-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "SKILLS",
+          "reason": "最终页面重新进入且完整工作流 SKILLS-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "REPORTS",
+          "reason": "最终页面重新进入且完整工作流 P6-REPORT-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "KNOWLEDGE",
+          "reason": "最终页面重新进入且完整工作流 KNOWLEDGE-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "MAPPING",
+          "reason": "最终页面重新进入且完整工作流 MAPPING-001, MAPPING-002 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "METRICS",
+          "reason": "最终页面重新进入且完整工作流 P6-METRIC-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "GOVERNANCE-OVERVIEW",
+          "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "GOVERNANCE-IDENTITY",
+          "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "GOVERNANCE-CREDENTIALS",
+          "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "GOVERNANCE-RETENTION",
+          "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "GOVERNANCE-AUDIT",
+          "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "GOVERNANCE-RELEASE",
+          "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "GOVERNANCE-PREPRODUCTION",
+          "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过",
+          "status": "PASS"
+        },
+        {
+          "id": "GOVERNANCE-PRODUCTION",
+          "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过",
+          "status": "PASS"
+        }
+      ],
+      "unexpected_result_ids": [],
+      "unknown_ids": [],
+      "valid_not_applicable": 0
+    },
+    "rule": "coverage and pass rates come only from frozen stable-ID lists; summary counts are never trusted as denominators",
+    "user_visible_feature": {
+      "acceptance_status": "PASS",
+      "applicable_denominator": 22,
+      "coverage_percent": 100.0,
+      "covered": 22,
+      "denominator": 22,
+      "entity": "feature",
+      "failed": 0,
+      "missing_ids": [],
+      "pass_rate_percent": 100.0,
+      "passed": 22,
+      "results": [
+        {
+          "id": "AUTH-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "AUTH-002",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "AUTH-003",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "GLOBAL-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "DASHBOARD-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "REVENUE-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "MARGIN-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "STATIONS-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "DEVICES-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "CHATBI-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "MEMORY-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "SKILLS-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "CHATBI-002",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "KNOWLEDGE-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "MAPPING-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "MAPPING-002",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "GOVERNANCE-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "P6-ALERT-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "P6-REPORT-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "P6-METRIC-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "AUTH-004",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        },
+        {
+          "id": "BOUNDARY-001",
+          "reason": "DAY-1 完整功能工作流执行结果",
+          "status": "PASS"
+        }
+      ],
+      "unexpected_result_ids": [],
+      "unknown_ids": [],
+      "valid_not_applicable": 0
+    }
+  },
+  "evidence_type": "day1_final_functional_acceptance",
+  "gate_history": {
+    "ALERT": [
+      {
+        "phase": "supplemental",
+        "reason": "alert lifecycle passed",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+        "status": "PASS"
+      }
+    ],
+    "ALL_DIALOGS": [
+      {
+        "phase": "second_pass",
+        "reason": "冻结 DOM 清单无可见 dialog/drawer；所有可见展开详情均已覆盖",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+        "status": "PASS"
+      }
+    ],
+    "ALL_EXPORTS": [
+      {
+        "phase": "second_pass",
+        "reason": "Memory JSON 下载已捕获并解析，未开放导出均为明确 disabled 产品边界",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+        "status": "PASS"
+      }
+    ],
+    "ALL_FILTERS": [
+      {
+        "phase": "second_pass",
+        "reason": "Dashboard、收入、毛利、场站和设备筛选已驱动真实 API",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+        "status": "PASS"
+      }
+    ],
+    "ALL_FORMS": [
+      {
+        "phase": "second_pass",
+        "reason": "完整功能工作流已提交登录、ChatBI、记忆、知识、预警和指标治理表单",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+        "status": "PASS"
+      }
+    ],
+    "ALL_TABLES": [
+      {
+        "phase": "second_pass",
+        "reason": "所有表格页面均重新渲染且其选择/工作流由完整功能测试覆盖",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+        "status": "PASS"
+      }
+    ],
+    "ALL_UPLOADS": [
+      {
+        "phase": "second_pass",
+        "reason": "冻结产品范围只有明确 disabled 的本地文件上传边界，无可用上传控件",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+        "status": "NOT_APPLICABLE"
+      }
+    ],
+    "BACKEND_REGRESSION": [
+      {
+        "phase": "supplemental",
+        "reason": "isolated PostgreSQL regression: {'tests': 529, 'failures': 0, 'errors': 0, 'skipped': 0}",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+        "status": "PASS"
+      }
+    ],
+    "CHATBI": [
+      {
+        "phase": "supplemental",
+        "reason": "multi-scenario, multi-turn, answer/query guard, feedback and server-side new-session flows passed",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+        "status": "PASS"
+      }
+    ],
+    "DEEPSEEK": [
+      {
+        "phase": "supplemental",
+        "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+        "status": "PASS"
+      }
+    ],
+    "DIAGNOSTICS": [
+      {
+        "phase": "supplemental",
+        "reason": "dashboard and margin diagnostics API workflows passed",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+        "status": "PASS"
+      }
+    ],
+    "KIMI": [
+      {
+        "phase": "supplemental",
+        "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+        "status": "PASS"
+      }
+    ],
+    "MEMORY": [
+      {
+        "phase": "supplemental",
+        "reason": "working-memory read, confirmed write, parsed JSON download, delete verification and scheduler passed",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+        "status": "PASS"
+      }
+    ],
+    "METRIC_GOVERNANCE": [
+      {
+        "phase": "supplemental",
+        "reason": "metric governance lifecycle passed",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+        "status": "PASS"
+      }
+    ],
+    "MIMO": [
+      {
+        "phase": "supplemental",
+        "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+        "status": "PASS"
+      }
+    ],
+    "RAG": [
+      {
+        "phase": "supplemental",
+        "reason": "retrieval citations plus ingest/publish/retire UI lifecycle and runtime index completeness passed",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+        "status": "PASS"
+      }
+    ],
+    "REPORT": [
+      {
+        "phase": "supplemental",
+        "reason": "report lifecycle passed",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+        "status": "PASS"
+      }
+    ],
+    "SQLBOT": [
+      {
+        "phase": "supplemental",
+        "reason": "registered with readonly scenario bindings; open NL2SQL engine is not eligible under the frozen Full Integration contract, traffic remains disabled, and the user-visible deterministic fallback was exercised",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+        "status": "AVAILABLE"
+      }
+    ],
+    "UI_LAYOUT_UNCHANGED": [
+      {
+        "phase": "second_pass",
+        "reason": "24 个冻结页面关键几何逐页比较",
+        "source": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+        "status": "PASS"
+      }
+    ]
+  },
+  "generated_at": "2026-08-12T17:45:54.491318+00:00",
+  "generated_by": "scripts/build_day1_acceptance_evidence.py",
+  "hard_gates": {
+    "ALERT": {
+      "phase": "supplemental",
+      "reason": "alert lifecycle passed",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "PASS"
+    },
+    "ALL_BUTTONS": {
+      "reason": "193/193 applicable button IDs PASS",
+      "source": "stable interaction inventory join",
+      "status": "PASS"
+    },
+    "ALL_CHARTS": {
+      "reason": "derived from chart-audit.json",
+      "source": "chart-audit.json",
+      "status": "PASS"
+    },
+    "ALL_DIALOGS": {
+      "phase": "second_pass",
+      "reason": "冻结 DOM 清单无可见 dialog/drawer；所有可见展开详情均已覆盖",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+      "status": "PASS"
+    },
+    "ALL_EXPORTS": {
+      "phase": "second_pass",
+      "reason": "Memory JSON 下载已捕获并解析，未开放导出均为明确 disabled 产品边界",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+      "status": "PASS"
+    },
+    "ALL_FILTERS": {
+      "phase": "second_pass",
+      "reason": "Dashboard、收入、毛利、场站和设备筛选已驱动真实 API",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+      "status": "PASS"
+    },
+    "ALL_FORMS": {
+      "phase": "second_pass",
+      "reason": "完整功能工作流已提交登录、ChatBI、记忆、知识、预警和指标治理表单",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+      "status": "PASS"
+    },
+    "ALL_KPI_CARDS": {
+      "reason": "derived from kpi-audit.json",
+      "source": "kpi-audit.json",
+      "status": "PASS"
+    },
+    "ALL_ROUTES_TESTED": {
+      "reason": "24/24 covered; 24 applicable PASS",
+      "source": "stable page inventory join",
+      "status": "PASS"
+    },
+    "ALL_TABLES": {
+      "phase": "second_pass",
+      "reason": "所有表格页面均重新渲染且其选择/工作流由完整功能测试覆盖",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+      "status": "PASS"
+    },
+    "ALL_UPLOADS": {
+      "phase": "second_pass",
+      "reason": "冻结产品范围只有明确 disabled 的本地文件上传边界，无可用上传控件",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+      "status": "NOT_APPLICABLE"
+    },
+    "ALL_VISIBLE_FUNCTIONS_TESTED": {
+      "reason": "22/22 applicable feature IDs PASS",
+      "source": "stable feature inventory join",
+      "status": "PASS"
+    },
+    "BACKEND_REGRESSION": {
+      "phase": "supplemental",
+      "reason": "isolated PostgreSQL regression: {'tests': 529, 'failures': 0, 'errors': 0, 'skipped': 0}",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "PASS"
+    },
+    "BLOCKING_NETWORK_ERRORS": {
+      "reason": "blocking network errors=0",
+      "source": "console-network-audit.json",
+      "status": "PASS"
+    },
+    "CHATBI": {
+      "phase": "supplemental",
+      "reason": "multi-scenario, multi-turn, answer/query guard, feedback and server-side new-session flows passed",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "PASS"
+    },
+    "CONSOLE_ERRORS": {
+      "reason": "console/page errors=0",
+      "source": "console-network-audit.json",
+      "status": "PASS"
+    },
+    "DB_API_FRONTEND_CHAIN": {
+      "reason": "readiness missing=False",
+      "source": "data-chain audit",
+      "status": "PASS"
+    },
+    "DEEPSEEK": {
+      "phase": "supplemental",
+      "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "PASS"
+    },
+    "DIAGNOSTICS": {
+      "phase": "supplemental",
+      "reason": "dashboard and margin diagnostics API workflows passed",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "PASS"
+    },
+    "KIMI": {
+      "phase": "supplemental",
+      "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "PASS"
+    },
+    "MEMORY": {
+      "phase": "supplemental",
+      "reason": "working-memory read, confirmed write, parsed JSON download, delete verification and scheduler passed",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "PASS"
+    },
+    "METRIC_GOVERNANCE": {
+      "phase": "supplemental",
+      "reason": "metric governance lifecycle passed",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "PASS"
+    },
+    "MIMO": {
+      "phase": "supplemental",
+      "reason": "one-click runtime ModelGateway call returned a schema-valid response",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "PASS"
+    },
+    "NO_FRONTEND_DATA_SOURCE_LABEL": {
+      "reason": "ordinary business static scan plus runtime DOM scan and global status contract",
+      "source": "frontend-data-label-scan.json",
+      "status": "PASS"
+    },
+    "NO_FRONTEND_MOCK": {
+      "reason": "static findings=0",
+      "source": "frontend/src static scan",
+      "status": "PASS"
+    },
+    "ONE_CLICK_START": {
+      "reason": "explicit evidence status",
+      "source": "one-click-start.json",
+      "status": "PASS"
+    },
+    "PLAYWRIGHT": {
+      "reason": "complete stable-ID second pass",
+      "source": "second-pass-results.json",
+      "status": "PASS"
+    },
+    "RAG": {
+      "phase": "supplemental",
+      "reason": "retrieval citations plus ingest/publish/retire UI lifecycle and runtime index completeness passed",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "PASS"
+    },
+    "REPORT": {
+      "phase": "supplemental",
+      "reason": "report lifecycle passed",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "PASS"
+    },
+    "SECOND_START": {
+      "reason": "explicit evidence status",
+      "source": "second-start.json",
+      "status": "PASS"
+    },
+    "SQLBOT": {
+      "phase": "supplemental",
+      "reason": "registered with readonly scenario bindings; open NL2SQL engine is not eligible under the frozen Full Integration contract, traffic remains disabled, and the user-visible deterministic fallback was exercised",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "AVAILABLE"
+    },
+    "TREND_DATA": {
+      "reason": "derived from chart-audit.json",
+      "source": "chart-audit.json",
+      "status": "PASS"
+    },
+    "UI_LAYOUT_UNCHANGED": {
+      "claims": [
+        {
+          "phase": "second_pass",
+          "reason": "24 个冻结页面关键几何逐页比较",
+          "source": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+          "status": "PASS"
+        },
+        {
+          "reason": "layout freeze comparison",
+          "source": "ui-layout-freeze-report.json",
+          "status": "PASS"
+        }
+      ],
+      "reason": "24 个冻结页面关键几何逐页比较 | layout freeze comparison",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json + ui-layout-freeze-report.json",
+      "status": "PASS"
+    }
+  },
+  "headline_metrics": {
+    "interactive_control_coverage": {
+      "denominator": 329,
+      "numerator": 329,
+      "percent": 100.0
+    },
+    "page_coverage": {
+      "denominator": 24,
+      "numerator": 24,
+      "percent": 100.0
+    },
+    "user_visible_function_pass_rate": {
+      "denominator": 22,
+      "numerator": 22,
+      "percent": 100.0,
+      "valid_not_applicable": 0
+    }
+  },
+  "inputs": [
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/route-inventory.first-pass.json",
+      "role": "route_first_pass",
+      "sha256": "b66eafdcd44912db2ff5c50535bd4f557f44ffd90158dbcccc5fd975fd6eae05",
+      "size": 18477
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/interaction-inventory.first-pass.json",
+      "role": "interaction_first_pass",
+      "sha256": "94c0071c69589b1441563104e99d4d37bb735c8608eb64a4528b2cdabc4eab56",
+      "size": 121781
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/console-network-audit.first-pass.json",
+      "role": "console_first_pass",
+      "sha256": "a93572723e8685d5c3f989a6373987d68f8b7f223d3ca869e8794da578aa6f5c",
+      "size": 16438
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.json",
+      "role": "first_pass",
+      "sha256": "0cfd1c06761e443ff0ab2a3075391c2bbf7c47920461e7e64feed1de7f27ab05",
+      "size": 98801
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/day1-functional-playwright.second-pass.json",
+      "role": "second_pass",
+      "sha256": "18a93f5d7e981ee59b9c0270d36b9ead56e58e9d5868c7b8664affa31dafb8f8",
+      "size": 144361
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "role": "supplemental",
+      "sha256": "4891fbbf470143eafc23a1b4301d569f07f95103344fc209ad219996e4a408b7",
+      "size": 12893
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/chart-audit.json",
+      "role": "supplemental",
+      "sha256": "899080c25339440bfe09206c94b458ada2c131e8b107d986f341aa6e98123130",
+      "size": 1619
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/data-seed-result.json",
+      "role": "supplemental",
+      "sha256": "76784743b71ed38e30b8211aeaba39446325a68271417065a277450d81e743d2",
+      "size": 5859
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/kpi-audit.json",
+      "role": "supplemental",
+      "sha256": "a14ee2699f25c56b68913677fa012ee8e043ec31ef7ff643ef3bee9528cf175d",
+      "size": 1237
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/missing-data-matrix.json",
+      "role": "supplemental",
+      "sha256": "65b6ec5d00badc569cc0d8c0c259d86b10b59e8482ffb83ac423842aecd37f5b",
+      "size": 26062
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/db-api-chain-audit.json",
+      "role": "data_chain_audit",
+      "sha256": "c7a4a256e37a742f39ab637b38370c43f886ae122f8d92995cfc7ec2785f5c77",
+      "size": 23326
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/one-click-start.b9e7a5f.pass1.raw.json",
+      "role": "runtime_cold_start",
+      "sha256": "dce0ea65bf211198716c1f3b97fa23577d5e7437958e2432eb12e99e5b1da2cc",
+      "size": 38376
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/one-click-start.b9e7a5f.pass1.raw.json",
+      "role": "one_click_start",
+      "sha256": "dce0ea65bf211198716c1f3b97fa23577d5e7437958e2432eb12e99e5b1da2cc",
+      "size": 38376
+    },
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/second-start.b9e7a5f.pass2.raw.json",
+      "role": "second_start",
+      "sha256": "cd8149751f5cfa13089777afd023f496288430f33e395d1785047a7e82f4bbac",
+      "size": 38375
+    }
+  ],
+  "interactive_control_coverage_percent": 100.0,
+  "page_coverage_percent": 100.0,
+  "schema_version": "1.0",
+  "status": "PASS",
+  "truth_boundary": {
+    "first_pass_visibility_is_functional_pass": false,
+    "missing_evidence_can_pass": false,
+    "not_applicable_requires_reason": true,
+    "unknown_or_fail_can_pass": false
+  },
+  "user_visible_function_pass_rate_percent": 100.0
+}

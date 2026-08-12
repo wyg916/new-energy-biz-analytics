@@ -1,0 +1,25 @@
+{
+  "evidence_type": "chatbi_audit",
+  "generated_at": "2026-08-12T17:45:54.475328+00:00",
+  "generated_by": "scripts/build_day1_acceptance_evidence.py",
+  "reason": "multi-scenario, multi-turn, answer/query guard, feedback and server-side new-session flows passed",
+  "schema_version": "1.0",
+  "source_artifacts": [
+    {
+      "path": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "role": "chatbi-audit",
+      "sha256": "4891fbbf470143eafc23a1b4301d569f07f95103344fc209ad219996e4a408b7",
+      "size": 12893
+    }
+  ],
+  "status": "PASS",
+  "submitted_audit": {
+    "passed_steps": [
+      "CHATBI-001",
+      "CHATBI-002"
+    ],
+    "reason": "multi-scenario, multi-turn, answer/query guard, feedback and server-side new-session flows passed",
+    "status": "PASS",
+    "successful_assistant_queries": 6
+  }
+}

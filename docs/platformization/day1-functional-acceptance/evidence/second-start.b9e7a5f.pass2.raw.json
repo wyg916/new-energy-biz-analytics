@@ -1,0 +1,254 @@
+﻿{
+    "schema_version":  "1.0",
+    "evidence_type":  "integration_41_full_startup",
+    "status":  "PASS",
+    "started_at":  "2026-08-12T16:14:51.0526456+00:00",
+    "finished_at":  "2026-08-12T16:27:55.9060982+00:00",
+    "git":  {
+                "branch":  "codex/integration-4.1-full",
+                "head":  "b9e7a5f9f80e8fce761464b74c0c0c894967d1c7"
+            },
+    "runtime":  {
+                    "compose_project":  "renewable-integration41-full",
+                    "release_version":  "4.1.0-integration-full.1",
+                    "expected_migration_head":  "integration_41_full_0001",
+                    "sqlbot_runtime":  "REGISTERED_NOT_ELIGIBLE_ENGINE_DISABLED",
+                    "sqlbot_provider_registration":  "PASS",
+                    "sqlbot_open_nl2sql_eligible":  false,
+                    "sqlbot_traffic_enabled":  false,
+                    "p6_business_loops":  [
+                                              "alerts",
+                                              "reports",
+                                              "metric_governance"
+                                          ],
+                    "rag_capability":  "Governed Hybrid RAG V1",
+                    "rag_mode":  "hybrid_bm25_vector_rrf_rerank",
+                    "rag_vector":  "deterministic_multilingual_feature_hash_v1",
+                    "rag_dimensions":  256,
+                    "pgvector_claimed":  false,
+                    "memory_scheduler":  "ENABLED",
+                    "memory_scheduler_scenarios":  [
+                                                       "charging_ops",
+                                                       "sales_ops"
+                                                   ],
+                    "query_engine_mode":  "DETERMINISTIC_ONLY",
+                    "model_gateway_providers":  [
+                                                    "kimi",
+                                                    "mimo",
+                                                    "deepseek"
+                                                ],
+                    "production_release_authorized":  false,
+                    "production_traffic_switched":  false
+                },
+    "data":  {
+                 "classification":  "OPEN_SOURCE_DERIVED",
+                 "classification_taxonomy":  [
+                                                 "OPEN_SOURCE_REAL_DATA",
+                                                 "OPEN_SOURCE_DERIVED",
+                                                 "BUSINESS_ASSUMPTION",
+                                                 "TEST_FIXTURE"
+                                             ],
+                 "period_start":  "2020-05-09",
+                 "period_end":  "2020-06-09",
+                 "source":  "ACN-Data via ORNL OpenEnergyDataPortal; transformed into PostgreSQL core and semantic tables",
+                 "source_dataset_version":  "ornl-acn-discovery-2020-v1",
+                 "transformation_version":  "data41-acn-transform-v1",
+                 "ingestion_run_id":  "DATA41-ACN-ORNL-26-V1",
+                 "run_id_location":  "API responses and audit/evidence records"
+             },
+    "urls":  {
+                 "business":  "https://p5b.localhost:8446",
+                 "api_health":  "https://p5b.localhost:8446/api/v1/health",
+                 "oidc":  "https://p5b.localhost:8446/oidc/realms/chatbi/.well-known/openid-configuration"
+             },
+    "required_images":  [
+                            "renewable-integration41-full-api:4.1.0-integration-full.1",
+                            "renewable-integration41-full-web:4.1.0-integration-full.1",
+                            "renewable-p5b-postgres:16.14-hardened",
+                            "renewable-p5b-keycloak:26.7.0-hardened",
+                            "renewable-p5b-backup:16.14-hardened",
+                            "hashicorp/vault:2.0.3@sha256:a296a888b118615dc01d5f1a6846e6d4a7277946caaed5b447008fff5fe06b54",
+                            "redis:7.4.10-alpine@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2",
+                            "nginx:1.31.3-alpine@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752"
+                        ],
+    "steps":  [
+                  {
+                      "name":  "Docker engine",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:14:51.0609672+00:00",
+                      "finished_at":  "2026-08-12T16:14:51.6979325+00:00",
+                      "elapsed_seconds":  0.646,
+                      "detail":  "29.6.2"
+                  },
+                  {
+                      "name":  "Compose contract",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:14:51.7319215+00:00",
+                      "finished_at":  "2026-08-12T16:14:52.1408256+00:00",
+                      "elapsed_seconds":  0.409,
+                      "detail":  ""
+                  },
+                  {
+                      "name":  "Committed source snapshot hashes",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:14:52.1432879+00:00",
+                      "finished_at":  "2026-08-12T16:14:52.4713029+00:00",
+                      "elapsed_seconds":  0.328,
+                      "detail":  "Validated 2 committed snapshots; no startup download"
+                  },
+                  {
+                      "name":  "Full Integration application images",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:14:52.4719759+00:00",
+                      "finished_at":  "2026-08-12T16:15:02.5848816+00:00",
+                      "elapsed_seconds":  10.113,
+                      "detail":  "Application image actions: api=REUSED, web=REUSED"
+                  },
+                  {
+                      "name":  "Required image inventory",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:15:02.5865516+00:00",
+                      "finished_at":  "2026-08-12T16:15:03.3414510+00:00",
+                      "elapsed_seconds":  0.755,
+                      "detail":  "Validated 8 required image references"
+                  },
+                  {
+                      "name":  "Provider credential references",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:15:03.3430869+00:00",
+                      "finished_at":  "2026-08-12T16:15:49.0426611+00:00",
+                      "elapsed_seconds":  45.7,
+                      "detail":  "kimi=READY, mimo=READY, deepseek=READY"
+                  },
+                  {
+                      "name":  "Superseded runtime handoff",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:15:49.0453594+00:00",
+                      "finished_at":  "2026-08-12T16:16:33.7277071+00:00",
+                      "elapsed_seconds":  44.682,
+                      "detail":  "Stopped Full Integration, P6, Integration-Core, DATA-4.1 and P5B containers without deleting rollback volumes"
+                  },
+                  {
+                      "name":  "DATA-4.1 standalone runtime handoff",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:16:33.7296774+00:00",
+                      "finished_at":  "2026-08-12T16:16:33.9461792+00:00",
+                      "elapsed_seconds":  0.217,
+                      "detail":  "No standalone DATA-4.1 service handoff was required"
+                  },
+                  {
+                      "name":  "Full Integration services",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:16:33.9473450+00:00",
+                      "finished_at":  "2026-08-12T16:22:07.0367533+00:00",
+                      "elapsed_seconds":  333.089,
+                      "detail":  "Network renewable-integration41-full-network Creating \r\n Network renewable-integration41-full-network Created \r\n Container renewable-integration41-full-vault-permissions-1 Creating \r\n Container renewable-integration41-full-runtime-bootstrap-1 Creating \r\n Container renewable-integration41-full-runtime-bootstrap-1 Created \r\n Container renewable-integration41-full-redis-1 Creating \r\n Container renewable-integration41-full-db-1 Creating \r\n Container renewable-integration41-full-vault-permissions-1 Created \r\n Container renewable-integration41-full-vault-1 Creating \r\n Container renewable-integration41-full-redis-1 Created \r\n Container renewable-integration41-full-db-1 Created \r\n Container renewable-integration41-full-db-prepare-1 Creating \r\n Container renewable-integration41-full-vault-1 Created \r\n Container renewable-integration41-full-vault-bootstrap-1 Creating \r\n Container renewable-integration41-full-db-prepare-1 Created \r\n Container renewable-integration41-full-oidc-1 Creating \r\n Container renewable-integration41-full-vault-bootstrap-1 Created \r\n Container renewable-integration41-full-alert-receiver-1 Creating \r\n Container renewable-integration41-full-migrate-1 Creating \r\n Container renewable-integration41-full-oidc-1 Created \r\n Container renewable-integration41-full-alert-receiver-1 Created \r\n Container renewable-integration41-full-migrate-1 Created \r\n Container renewable-integration41-full-init-1 Creating \r\n Container renewable-integration41-full-init-1 Created \r\n Container renewable-integration41-full-backup-1 Creating \r\n Container renewable-integration41-full-api-1 Creating \r\n Container renewable-integration41-full-backup-1 Created \r\n Container renewable-integration41-full-api-1 Created \r\n Container renewable-integration41-full-web-1 Creating \r\n Container renewable-integration41-full-web-1 Created \r\n Container renewable-integration41-full-proxy-1 Creating \r\n Container renewable-integration41-full-proxy-1 Created \r\n Container renewable-integration41-full-vault-permissions-1 Starting \r\n Container renewable-integration41-full-runtime-bootstrap-1 Starting \r\n Container renewable-integration41-full-vault-permissions-1 Started \r\n Container renewable-integration41-full-vault-permissions-1 Waiting \r\n Container renewable-integration41-full-runtime-bootstrap-1 Started \r\n Container renewable-integration41-full-runtime-bootstrap-1 Waiting \r\n Container renewable-integration41-full-runtime-bootstrap-1 Waiting \r\n Container renewable-integration41-full-vault-permissions-1 Exited \r\n Container renewable-integration41-full-vault-1 Starting \r\n Container renewable-integration41-full-runtime-bootstrap-1 Exited \r\n Container renewable-integration41-full-db-1 Starting \r\n Container renewable-integration41-full-runtime-bootstrap-1 Exited \r\n Container renewable-integration41-full-redis-1 Starting \r\n Container renewable-integration41-full-vault-1 Started \r\n Container renewable-integration41-full-runtime-bootstrap-1 Waiting \r\n Container renewable-integration41-full-runtime-bootstrap-1 Exited \r\n Container renewable-integration41-full-vault-bootstrap-1 Starting \r\n Container renewable-integration41-full-db-1 Started \r\n Container renewable-integration41-full-db-1 Waiting \r\n Container renewable-integration41-full-redis-1 Started \r\n Container renewable-integration41-full-vault-bootstrap-1 Started \r\n Container renewable-integration41-full-db-1 Waiting \r\n Container renewable-integration41-full-vault-bootstrap-1 Waiting \r\n Container renewable-integration41-full-redis-1 Waiting \r\n Container renewable-integration41-full-vault-bootstrap-1 Waiting \r\n Container renewable-integration41-full-redis-1 Healthy \r\n Container renewable-integration41-full-vault-bootstrap-1 Exited \r\n Container renewable-integration41-full-alert-receiver-1 Starting \r\n Container renewable-integration41-full-vault-bootstrap-1 Exited \r\n Container renewable-integration41-full-alert-receiver-1 Started \r\n Container renewable-integration41-full-db-1 Healthy \r\n Container renewable-integration41-full-db-prepare-1 Starting \r\n Container renewable-integration41-full-db-1 Healthy \r\n Container renewable-integration41-full-migrate-1 Starting \r\n Container renewable-integration41-full-db-prepare-1 Started \r\n Container renewable-integration41-full-db-prepare-1 Waiting \r\n Container renewable-integration41-full-migrate-1 Started \r\n Container renewable-integration41-full-migrate-1 Waiting \r\n Container renewable-integration41-full-db-prepare-1 Exited \r\n Container renewable-integration41-full-oidc-1 Starting \r\n Container renewable-integration41-full-oidc-1 Started \r\n Container renewable-integration41-full-migrate-1 Exited \r\n Container renewable-integration41-full-init-1 Starting \r\n Container renewable-integration41-full-init-1 Started \r\n Container renewable-integration41-full-oidc-1 Waiting \r\n Container renewable-integration41-full-alert-receiver-1 Waiting \r\n Container renewable-integration41-full-init-1 Waiting \r\n Container renewable-integration41-full-init-1 Waiting \r\n Container renewable-integration41-full-alert-receiver-1 Healthy \r\n Container renewable-integration41-full-init-1 Exited \r\n Container renewable-integration41-full-backup-1 Starting \r\n Container renewable-integration41-full-init-1 Exited \r\n Container renewable-integration41-full-backup-1 Started \r\n Container renewable-integration41-full-oidc-1 Healthy \r\n Container renewable-integration41-full-api-1 Starting \r\n Container renewable-integration41-full-api-1 Started \r\n Container renewable-integration41-full-api-1 Waiting \r\n Container renewable-integration41-full-api-1 Healthy \r\n Container renewable-integration41-full-web-1 Starting \r\n Container renewable-integration41-full-web-1 Started \r\n Container renewable-integration41-full-api-1 Waiting \r\n Container renewable-integration41-full-web-1 Waiting \r\n Container renewable-integration41-full-api-1 Healthy \r\n Container renewable-integration41-full-web-1 Healthy \r\n Container renewable-integration41-full-proxy-1 Starting \r\n Container renewable-integration41-full-proxy-1 Started \r\n Container renewable-integration41-full-web-1 Waiting \r\n Container renewable-integration41-full-proxy-1 Waiting \r\n Container renewable-integration41-full-init-1 Waiting \r\n Container renewable-integration41-full-api-1 Waiting \r\n Container renewable-integration41-full-alert-receiver-1 Waiting \r\n Container renewable-integration41-full-redis-1 Waiting \r\n Container renewable-integration41-full-vault-1 Waiting \r\n Container renewable-integration41-full-vault-permissions-1 Waiting \r\n Container renewable-integration41-full-oidc-1 Waiting \r\n Container renewable-integration41-full-vault-bootstrap-1 Waiting \r\n Container renewable-integration41-full-runtime-bootstrap-1 Waiting \r\n Container renewable-integration41-full-db-prepare-1 Waiting \r\n Container renewable-integration41-full-migrate-1 Waiting \r\n Container renewable-integration41-full-backup-1 Waiting \r\n Container renewable-integration41-full-db-1 Waiting \r\n Container renewable-integration41-full-backup-1 Healthy \r\n Container renewable-integration41-full-alert-receiver-1 Healthy \r\n Container renewable-integration41-full-api-1 Healthy \r\n Container renewable-integration41-full-runtime-bootstrap-1 Exited \r\n Container renewable-integration41-full-db-1 Healthy \r\n Container renewable-integration41-full-init-1 Exited \r\n Container renewable-integration41-full-vault-1 Healthy \r\n Container renewable-integration41-full-web-1 Healthy \r\n Container renewable-integration41-full-db-prepare-1 Exited \r\n Container renewable-integration41-full-vault-bootstrap-1 Exited \r\n Container renewable-integration41-full-migrate-1 Exited \r\n Container renewable-integration41-full-redis-1 Healthy \r\n Container renewable-integration41-full-vault-permissions-1 Exited \r\n Container renewable-integration41-full-oidc-1 Healthy \r\n Container renewable-integration41-full-proxy-1 Healthy"
+                  },
+                  {
+                      "name":  "API health",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:22:07.0387518+00:00",
+                      "finished_at":  "2026-08-12T16:22:07.2175645+00:00",
+                      "elapsed_seconds":  0.179,
+                      "detail":  "HTTP reachable: https://p5b.localhost:8446/api/v1/health"
+                  },
+                  {
+                      "name":  "API readiness",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:22:07.2193726+00:00",
+                      "finished_at":  "2026-08-12T16:22:07.3380123+00:00",
+                      "elapsed_seconds":  0.119,
+                      "detail":  "HTTP reachable: https://p5b.localhost:8446/api/v1/health/ready"
+                  },
+                  {
+                      "name":  "Runtime ModelGateway provider calls",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:22:07.3394422+00:00",
+                      "finished_at":  "2026-08-12T16:22:15.3149220+00:00",
+                      "elapsed_seconds":  7.975,
+                      "detail":  "{\"schema_version\": \"1.0\", \"evidence_type\": \"integration41full_runtime_model_gateway_probe\", \"generated_at\": \"2026-08-12T16:22:15.208951+00:00\", \"status\": \"PASS\", \"registration\": {\"status\": \"READY\", \"providers\": [{\"provider_alias\": \"kimi\", \"configured\": true, \"enabled\": true, \"credential_ref\": \"file:///run/provider-credentials/kimi\"}, {\"provider_alias\": \"mimo\", \"configured\": true, \"enabled\": true, \"credential_ref\": \"file:///run/provider-credentials/mimo\"}, {\"provider_alias\": \"deepseek\", \"configured\": true, \"enabled\": true, \"credential_ref\": \"file:///run/provider-credentials/deepseek\"}], \"secret_values_exposed\": false}, \"providers\": [{\"provider\": \"kimi\", \"config_id\": \"kimi-rag-primary\", \"model\": \"kimi-k2.6\", \"response_valid\": true, \"latency_ms\": 2456, \"status\": \"PASS\"}, {\"provider\": \"mimo\", \"config_id\": \"mimo-rag-standby\", \"model\": \"mimo-v2.5\", \"response_valid\": true, \"latency_ms\": 1879, \"status\": \"PASS\"}, {\"provider\": \"deepseek\", \"config_id\": \"deepseek-rag-fallback\", \"model\": \"deepseek-v4-flash\", \"response_valid\": true, \"latency_ms\": 1449, \"status\": \"PASS\"}], \"task_type\": \"rag_answer_generation\", \"response_content_exposed\": false, \"secret_values_exposed\": false}"
+                  },
+                  {
+                      "name":  "Business web",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:22:15.3159231+00:00",
+                      "finished_at":  "2026-08-12T16:22:15.3691961+00:00",
+                      "elapsed_seconds":  0.053,
+                      "detail":  "HTTP reachable: https://p5b.localhost:8446"
+                  },
+                  {
+                      "name":  "OIDC discovery",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:22:15.3705301+00:00",
+                      "finished_at":  "2026-08-12T16:22:15.4374763+00:00",
+                      "elapsed_seconds":  0.067,
+                      "detail":  "HTTP reachable: https://p5b.localhost:8446/oidc/realms/chatbi/.well-known/openid-configuration"
+                  },
+                  {
+                      "name":  "Migration head",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:22:15.4385350+00:00",
+                      "finished_at":  "2026-08-12T16:22:19.6527224+00:00",
+                      "elapsed_seconds":  4.214,
+                      "detail":  "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nintegration_41_full_0001 (head) (mergepoint)"
+                  },
+                  {
+                      "name":  "Full Integration isolated PostgreSQL migration cycle",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:22:19.6527224+00:00",
+                      "finished_at":  "2026-08-12T16:25:51.8892316+00:00",
+                      "elapsed_seconds":  212.237,
+                      "detail":  "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade  -\u003e 0001, Authentication and audit baseline.\nINFO  [alembic.runtime.migration] Running upgrade 0001 -\u003e 0002, Core business dimensions, facts, generation and metric catalog.\nINFO  [alembic.runtime.migration] Running upgrade 0002 -\u003e 0003, Structured session state and auditable analysis runs.\nINFO  [alembic.runtime.migration] Running upgrade 0003 -\u003e 0004, Data source registry, dataset mappings and auditable staging preview.\nINFO  [alembic.runtime.migration] Running upgrade 0004 -\u003e 0005, Auditable ingestion quality, approval and dataset release workflow.\nINFO  [alembic.runtime.migration] Running upgrade 0005 -\u003e 0006, Versioned charging_ops package and immutable published station snapshots.\nINFO  [alembic.runtime.migration] Running upgrade 0006 -\u003e 0007, Generic immutable dataset release, activation, and rollback records.\nINFO  [alembic.runtime.migration] Running upgrade 0007 -\u003e 0008, Generic versioned semantic model registry.\nINFO  [alembic.runtime.migration] Running upgrade 0008 -\u003e 0009, Add tenant-scoped scenario package lifecycle metadata.\nINFO  [alembic.runtime.migration] Running upgrade 0009 -\u003e 0010, Add dual-engine routing, SQLBot session, and shadow evidence tables.\nINFO  [alembic.runtime.migration] Running upgrade 0010 -\u003e 0011, Add isolated simulated sales_ops dimensions and facts.\nINFO  [alembic.runtime.migration] Running upgrade 0011 -\u003e 0012, Bind every ChatBI conversation to one identity scope and scenario.\nINFO  [alembic.runtime.migration] Running upgrade 0012 -\u003e 0013, Add governed enterprise knowledge lifecycle and retrieval evidence.\nINFO  [alembic.runtime.migration] Running upgrade 0013 -\u003e 0014, Add scenario-isolated SQLBot semantic schemas and approved views.\nINFO  [alembic.runtime.migration] Running upgrade 0014 -\u003e p2b_0001, Add governed memory, procedure, skill and SQLBot binding records.\nINFO  [alembic.runtime.migration] Running upgrade 0014 -\u003e 0015, Persist metric presentation metadata used by the frontend.\nINFO  [alembic.runtime.migration] Running upgrade 0015, p2b_0001 -\u003e p3_merge_0001, Merge frontend data lineage and P2B memory heads.\nINFO  [alembic.runtime.migration] Running upgrade p3_merge_0001 -\u003e p3_0001, Add enterprise identity, authorization, credential and governance records.\nINFO  [alembic.runtime.migration] Running upgrade p3_0001 -\u003e p4_0001, Add preproduction acceptance, alert delivery and datasource governance state.\nINFO  [alembic.runtime.migration] Running upgrade p4_0001 -\u003e p5_0001, Add auditable P5 production acceptance gates.\nINFO  [alembic.runtime.migration] Running upgrade p5_0001 -\u003e data_0001, Add DATA-4.1 open-source lineage and raw/staging schemas.\nINFO  [alembic.runtime.migration] Running upgrade data_0001 -\u003e rag_0001, Add enterprise hybrid RAG indexes, locators and governance audit.\nINFO  [alembic.runtime.migration] Running upgrade data_0001 -\u003e sqlbot_41c2, Complete governed SQLBot semantic views and semantic release for 4.1C2.\nINFO  [alembic.runtime.migration] Running upgrade data_0001 -\u003e memory_41_0001, Add continuously runnable and auditable memory lifecycle jobs.\nINFO  [alembic.runtime.migration] Running upgrade memory_41_0001, rag_0001 -\u003e integration_41_merge_0001, Merge Memory 4.1 and Governed Hybrid RAG V1 migration heads.\nINFO  [alembic.runtime.migration] Running upgrade integration_41_merge_0001 -\u003e p6_41_0001, P6 4.1 alert, report and metric governance closed loops.\nINFO  [alembic.runtime.migration] Running upgrade p6_41_0001, sqlbot_41c2 -\u003e integration_41_full_0001, Merge P6 business-loop and SQLBot 4.1C2 heads for Full Integration 4.1.\nINFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running downgrade integration_41_full_0001 -\u003e p6_41_0001, sqlbot_41c2, Merge P6 business-loop and SQLBot 4.1C2 heads for Full Integration 4.1.\nINFO  [alembic.runtime.migration] Running downgrade p6_41_0001 -\u003e integration_41_merge_0001, P6 4.1 alert, report and metric governance closed loops.\nINFO  [alembic.runtime.migration] Running downgrade integration_41_merge_0001 -\u003e memory_41_0001, rag_0001, Merge Memory 4.1 and Governed Hybrid RAG V1 migration heads.\nINFO  [alembic.runtime.migration] Running downgrade memory_41_0001 -\u003e data_0001, Add continuously runnable and auditable memory lifecycle jobs.\nINFO  [alembic.runtime.migration] Running downgrade sqlbot_41c2 -\u003e data_0001, Complete governed SQLBot semantic views and semantic release for 4.1C2.\nINFO  [alembic.runtime.migration] Running downgrade rag_0001 -\u003e data_0001, Add enterprise hybrid RAG indexes, locators and governance audit.\nINFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade data_0001 -\u003e rag_0001, Add enterprise hybrid RAG indexes, locators and governance audit.\nINFO  [alembic.runtime.migration] Running upgrade data_0001 -\u003e memory_41_0001, Add continuously runnable and auditable memory lifecycle jobs.\nINFO  [alembic.runtime.migration] Running upgrade memory_41_0001, rag_0001 -\u003e integration_41_merge_0001, Merge Memory 4.1 and Governed Hybrid RAG V1 migration heads.\nINFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\nINFO  [alembic.runtime.migration] Running upgrade data_0001 -\u003e sqlbot_41c2, Complete governed SQLBot semantic views and semantic release for 4.1C2.\nINFO  [alembic.runtime.migration] Running upgrade integration_41_merge_0001 -\u003e p6_41_0001, P6 4.1 alert, report and metric governance closed loops.\nINFO  [alembic.runtime.migration] Running upgrade p6_41_0001, sqlbot_41c2 -\u003e integration_41_full_0001, Merge P6 business-loop and SQLBot 4.1C2 heads for Full Integration 4.1.\nINFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\n{\"base_to_head\": true, \"database\": \"integration_41_full_migration_verify\", \"database_removed\": true, \"evidence_type\": \"p3_migration_acceptance\", \"existing_volume_deleted\": false, \"head_revision\": \"integration_41_full_0001\", \"head_to_rollback\": true, \"isolation\": \"dedicated_database\", \"observed_head_revisions\": [\"integration_41_full_0001\"], \"observed_reupgrade_revisions\": [\"integration_41_full_0001\"], \"observed_rollback_revisions\": [\"integration_41_merge_0001\"], \"observed_via_heads\": [\"data_0001\"], \"passed\": true, \"rollback_revision\": \"integration_41_merge_0001\", \"rollback_to_head\": true, \"rollback_via_revision\": \"data_0001\"}"
+                  },
+                  {
+                      "name":  "Open-source import and P6 bootstrap gate",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:25:51.8902306+00:00",
+                      "finished_at":  "2026-08-12T16:25:52.3632207+00:00",
+                      "elapsed_seconds":  0.473,
+                      "detail":  "init-1  | {\"charging_ops\": {\"reused\": true, \"rows\": 26, \"run_id\": \"DATA41-ACN-ORNL-26-V1\", \"status\": \"PASS\"}, \"data_classification\": \"OPEN_SOURCE_DERIVED\", \"idempotent_initial_import\": true, \"manifest_version\": \"data41-source-manifest-v1\", \"platform_versions\": {\"charging_ops\": {\"dataset_id\": \"DS-71e06aba-8f11-4146-80c2-751a8daddedf\", \"dataset_version\": 2, \"dataset_version_id\": \"DSV-48e95033-6903-4b26-8b8d-caef904ef24e\", \"source_version\": \"DATA41-ACN-ORNL-26-V1\", \"status\": \"SUPERSEDED\"}, \"sales_ops\": {\"dataset_id\": \"DS-7c72b696-d388-4f77-abef-cff15d44a89a\", \"dataset_version\": 2, \"dataset_version_id\": \"DSV-23d76559-e5b1-48e8-b2c4-c52da2825ae8\", \"source_version\": \"DATA41-UCI-ONLINE-RETAIL-352-V1\", \"status\": \"ACTIVE\"}}, \"quality_check_fail_count\": 0, \"quality_check_pass_count\": 28, \"revision\": \"integration_41_full_0001\", \"sales_ops\": {\"reused\": true, \"rows\": 27095, \"run_id\": \"DATA41-UCI-ONLINE-RETAIL-352-V1\", \"status\": \"PASS\"}, \"source_download_on_startup\": false, \"status\": \"PASS\"}\ninit-1  | {\"capability\": \"P6 enterprise operating-management closed loops\", \"knowledge_bootstrap\": \"PENDING_GOVERNED_API\", \"metric_governance_versions_created\": 0, \"rag_index\": \"PENDING_KNOWLEDGE_BOOTSTRAP\", \"sqlbot_dependency\": false, \"status\": \"PASS\"}"
+                  },
+                  {
+                      "name":  "Governed Knowledge Baseline bootstrap",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:25:52.3668341+00:00",
+                      "finished_at":  "2026-08-12T16:26:05.6199769+00:00",
+                      "elapsed_seconds":  13.253,
+                      "detail":  "[PASS] result written to /app/integration/publish_result.json\n{\n  \"knowledge_service\": \"READY\",\n  \"retrieval_mode\": \"hybrid_bm25_vector_rrf_rerank\",\n  \"keyword_index\": \"equivalent_bm25_v1\",\n  \"vector_status\": \"EQUIVALENT_VECTOR_READY\",\n  \"embedding_model\": \"deterministic_multilingual_feature_hash_v1\",\n  \"pgvector_claimed\": false,\n  \"published_chunk_count\": 276,\n  \"indexed_chunk_count\": 276,\n  \"sqlbot_runtime\": \"REGISTERED_NOT_ELIGIBLE\",\n  \"model_gateway\": {\n    \"status\": \"READY\",\n    \"providers\": [\n      {\n        \"provider_alias\": \"kimi\",\n        \"configured\": true,\n        \"enabled\": true,\n        \"credential_ref\": \"file:///run/provider-credentials/kimi\"\n      },\n      {\n        \"provider_alias\": \"mimo\",\n        \"configured\": true,\n        \"enabled\": true,\n        \"credential_ref\": \"file:///run/provider-credentials/mimo\"\n      },\n      {\n        \"provider_alias\": \"deepseek\",\n        \"configured\": true,\n        \"enabled\": true,\n        \"credential_ref\": \"file:///run/provider-credentials/deepseek\"\n      }\n    ],\n    \"secret_values_exposed\": false\n  },\n  \"data_classification\": \"OPEN_SOURCE_DERIVED\"\n}\n[PASS] 17 knowledge entries and 20 live RAG questions are published, indexed, located, and cited: /app/data/preproduction-evidence/knowledge-bootstrap.json\n[PASS] governed knowledge baseline applied with real analyst_admin OIDC identity\n{\"credential_provider\": \"VAULT_KV_V2\", \"documents\": 17, \"indexed_chunks\": 276, \"principal\": \"integration.knowledge-bootstrap\", \"published_chunks\": 276, \"secret_recorded\": false, \"status\": \"PASS\"}"
+                  },
+                  {
+                      "name":  "RAG rebuild and index completeness",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:26:05.6199769+00:00",
+                      "finished_at":  "2026-08-12T16:26:10.4996600+00:00",
+                      "elapsed_seconds":  4.88,
+                      "detail":  "{\n  \"generated_at\": \"2026-08-12T16:26:10.163884+00:00\",\n  \"action\": \"REBUILT\",\n  \"embedding_model\": \"deterministic_multilingual_feature_hash_v1\",\n  \"embedding_version\": \"1.0.0\",\n  \"dimensions\": 256,\n  \"chunk_count\": 416,\n  \"indexed_chunk_count\": 416,\n  \"current_index_row_count\": 416,\n  \"stale_current_index_count\": 0,\n  \"index_ready\": true,\n  \"vector_count\": 416,\n  \"reviewed_version_count\": 22,\n  \"system_actor_type\": \"SYSTEM\",\n  \"governance_role\": \"rag_quality_agent\",\n  \"index_rebuild_passed\": true,\n  \"quality_reviews_all_passed\": false,\n  \"review_required_count\": 2\n}"
+                  },
+                  {
+                      "name":  "SQLBot readonly roles and Source Bindings",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:26:10.5016635+00:00",
+                      "finished_at":  "2026-08-12T16:26:22.3201878+00:00",
+                      "elapsed_seconds":  11.819,
+                      "detail":  "Container renewable-integration41-full-runtime-bootstrap-run-a07ede399367 Creating \n Container renewable-integration41-full-runtime-bootstrap-run-a07ede399367 Created \n{\"action\": \"REUSED\", \"credential_file_tracked\": false, \"roles_created\": 0, \"scenario_isolated\": true, \"secret_values_exposed\": false, \"status\": \"PASS\"}\n{\"status\": \"PASS\", \"activation_scope\": \"local_full_integration_acceptance\", \"approval_mechanism\": \"automated_existing_admin_registry_workflow\", \"human_approval_claimed\": false, \"production_activation_claimed\": false, \"bindings\": [{\"scenario_id\": \"charging_ops\", \"binding_release_id\": \"SQLBOT-BIND-e3418829-a38b-4940-a92e-39cc7ef781ab\", \"version\": 2, \"status\": \"ACTIVE\", \"datasource_id\": \"1\", \"relation_count\": 6, \"data_classification\": \"OPEN_SOURCE_DERIVED\"}, {\"scenario_id\": \"sales_ops\", \"binding_release_id\": \"SQLBOT-BIND-20797259-770c-4a11-90d7-1cc77b0e9d52\", \"version\": 2, \"status\": \"ACTIVE\", \"datasource_id\": \"2\", \"relation_count\": 10, \"data_classification\": \"OPEN_SOURCE_DERIVED\"}]}"
+                  },
+                  {
+                      "name":  "Memory scheduler and Integration runtime",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:26:22.3201878+00:00",
+                      "finished_at":  "2026-08-12T16:26:26.4390340+00:00",
+                      "elapsed_seconds":  4.119,
+                      "detail":  "{\n  \"status\": \"PASS\",\n  \"revision\": \"integration_41_full_0001\",\n  \"expected_revision\": \"integration_41_full_0001\",\n  \"rag\": {\n    \"generated_at\": \"2026-08-12T16:26:25.792958+00:00\",\n    \"action\": \"CHECKED\",\n    \"embedding_model\": \"deterministic_multilingual_feature_hash_v1\",\n    \"embedding_version\": \"1.0.0\",\n    \"dimensions\": 256,\n    \"chunk_count\": 416,\n    \"indexed_chunk_count\": 416,\n    \"current_index_row_count\": 416,\n    \"stale_current_index_count\": 0,\n    \"index_ready\": true\n  },\n  \"lifecycle_task_count\": 685,\n  \"lifecycle_failed_count\": 0,\n  \"published_document_count\": 17,\n  \"p6_table_count\": 10,\n  \"semantic_view_count\": 16,\n  \"active_binding_count\": 2,\n  \"query_engine_mode\": \"DETERMINISTIC_ONLY\",\n  \"sqlbot_provider_eligibility\": \"REGISTERED_NOT_ELIGIBLE\",\n  \"model_gateway\": {\n    \"status\": \"READY\",\n    \"providers\": [\n      {\n        \"provider_alias\": \"kimi\",\n        \"configured\": true,\n        \"enabled\": true,\n        \"credential_ref\": \"file:///run/provider-credentials/kimi\"\n      },\n      {\n        \"provider_alias\": \"mimo\",\n        \"configured\": true,\n        \"enabled\": true,\n        \"credential_ref\": \"file:///run/provider-credentials/mimo\"\n      },\n      {\n        \"provider_alias\": \"deepseek\",\n        \"configured\": true,\n        \"enabled\": true,\n        \"credential_ref\": \"file:///run/provider-credentials/deepseek\"\n      }\n    ],\n    \"secret_values_exposed\": false\n  },\n  \"checks\": {\n    \"migration_head\": true,\n    \"settings_revision\": true,\n    \"rag_index_reconciled\": true,\n    \"knowledge_published\": true,\n    \"knowledge_chunks_published\": true,\n    \"memory_scheduler_enabled\": true,\n    \"memory_scheduler_created_tasks\": true,\n    \"memory_scheduler_no_failed_tasks\": true,\n    \"redis_ready\": true,\n    \"p6_tables_ready\": true,\n    \"sqlbot_semantic_views_ready\": true,\n    \"sqlbot_source_bindings_ready\": true,\n    \"sqlbot_readonly_credentials_ready\": true,\n    \"deterministic_query_engine\": true,\n    \"sqlbot_engine_disabled\": true,\n    \"sqlbot_runtime_unverified\": true,\n    \"sqlbot_registered_not_eligible\": true,\n    \"sqlbot_release_included\": true,\n    \"model_gateway_ready\": true,\n    \"model_gateway_three_providers_registered\": true\n  }\n}"
+                  },
+                  {
+                      "name":  "P6 frontend E2E",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-12T16:26:26.4406873+00:00",
+                      "finished_at":  "2026-08-12T16:27:55.6901666+00:00",
+                      "elapsed_seconds":  89.249,
+                      "detail":  "Running 1 test using 1 worker\r\n\r\n(node:19348) Warning: The \u0027NO_COLOR\u0027 env is ignored due to the \u0027FORCE_COLOR\u0027 env being set.\r\n(Use `node --trace-warnings ...` to show where the warning was created)\r\n(node:19348) Warning: The \u0027NO_COLOR\u0027 env is ignored due to the \u0027FORCE_COLOR\u0027 env being set.\r\n(Use `node --trace-warnings ...` to show where the warning was created)\r\n  ok 1 e2e\\p6-business-loop.spec.ts:23:1 › P6 三类经营管理业务闭环经真实 API 完成 (20.6s)\r\n\r\n  1 passed (29.8s)\r\n\r\nTo open last HTML report run:\r\n\u001b[36m\u001b[39m\r\n\u001b[36m  npx playwright show-report\u001b[39m\r\n\u001b[36m\u001b[39m"
+                  }
+              ],
+    "failure":  null,
+    "secret_values_recorded":  false
+}

@@ -1,0 +1,1272 @@
+{
+  "bugs": [
+    {
+      "id": "DAY1-BUG-001",
+      "kind": "acceptance_harness",
+      "priority": "P1",
+      "resolution": "按产品边界改为验证 disabled 与非空原因，不触发不可用动作。",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "BUG_FIXED_PASS",
+      "title": "验收脚本误点击冻结禁用控件",
+      "verification": [
+        "day1-functional-playwright.second-pass.json:interaction_results"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-002",
+      "kind": "acceptance_harness",
+      "priority": "P1",
+      "resolution": "同时校验 API reason_summary 为空与用户可见空状态。",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "BUG_FIXED_PASS",
+      "title": "设备故障帕累托无事件时被误判失败",
+      "verification": [
+        "DEVICES-001"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-003",
+      "kind": "product_backend",
+      "priority": "P1",
+      "resolution": "支持中文日级闭区间并转成右开区间；推荐问题由活动数据范围动态生成。",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "BUG_FIXED_PASS",
+      "title": "销售中文日范围解析与推荐问题越过活动数据窗口",
+      "verification": [
+        "CHATBI-001",
+        "backend full regression"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-004",
+      "kind": "product_backend",
+      "priority": "P1",
+      "resolution": "质量 run_id 使用 SHA-256 摘要，并从当前数据事实读取分类、版本和 run_id。",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "BUG_FIXED_PASS",
+      "title": "长合法幂等键导致质量 run_id 超长且来源写死为模拟",
+      "verification": [
+        "MAPPING-002",
+        "backend full regression"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-005",
+      "kind": "product_frontend",
+      "priority": "P1",
+      "resolution": "使用当前版本与目标版本构造受限长度稳定幂等键。",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "BUG_FIXED_PASS",
+      "title": "回滚幂等键超过 API 长度上限",
+      "verification": [
+        "MAPPING-002"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-006",
+      "kind": "product_frontend",
+      "priority": "P1",
+      "resolution": "幂等键加入下一版本号，重复验收仍创建唯一 DatasetVersion。",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "BUG_FIXED_PASS",
+      "title": "同日期再次建版本复用了旧幂等结果",
+      "verification": [
+        "MAPPING-002"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-007",
+      "kind": "product_frontend",
+      "priority": "P1",
+      "resolution": "成功与失败反馈保留到下一次用户动作。",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "BUG_FIXED_PASS",
+      "title": "字段映射成功反馈在用户读完前自动消失",
+      "verification": [
+        "MAPPING-001",
+        "MAPPING-002"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-008",
+      "kind": "acceptance_harness",
+      "priority": "P1",
+      "resolution": "导航校验采用可见标题包含关系，同时保留精确侧栏入口。",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "BUG_FIXED_PASS",
+      "title": "治理页标题前缀导致导航验收误判",
+      "verification": [
+        "GOVERNANCE-001"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-009",
+      "kind": "acceptance_harness",
+      "priority": "P1",
+      "resolution": "每个认证页面等待统一数据状态完成后再采集截图与契约字段。",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "BUG_FIXED_PASS",
+      "title": "页面盘点在全局数据状态尚未完成时采样",
+      "verification": [
+        "day1-functional-playwright.second-pass.json:frontend_data_label_scan"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-010",
+      "kind": "acceptance_harness",
+      "priority": "P1",
+      "resolution": "读取持久库当前预警状态，按服务端状态机完成包含重开的幂等闭环并回到 CLOSED。",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "BUG_FIXED_PASS",
+      "title": "重复一键启动的 P6 E2E 假定预警初态固定为 OPEN",
+      "verification": [
+        "one-click startup:P6 frontend E2E",
+        "second startup:P6 frontend E2E"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-011",
+      "kind": "product_backend",
+      "priority": "P1",
+      "resolution": "管理列表改为权限与有效状态过滤后的最近更新优先查询；与 token budget 和召回候选上限解耦。",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "BUG_FIXED_PASS",
+      "title": "Memory 管理列表复用了问答召回排序并截断新记录",
+      "verification": [
+        "MEMORY-001",
+        "backend full regression"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-012",
+      "kind": "product_backend",
+      "priority": "P1",
+      "resolution": "The export endpoint uses explicit keyword arguments and inherits the runtime data classification.",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "BUG_FIXED_PASS",
+      "title": "Memory export used an obsolete positional management-list signature",
+      "verification": [
+        "MEMORY-001",
+        "backend full regression"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-013",
+      "kind": "acceptance_builder",
+      "priority": "P1",
+      "resolution": "The button gate now joins only frozen button IDs to button outcomes and retains reasoned disabled boundaries.",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "BUG_FIXED_PASS",
+      "title": "The ALL_BUTTONS aggregate compared a button subset with outcomes from every control type",
+      "verification": [
+        "builder self-test",
+        "ALL_BUTTONS"
+      ]
+    },
+    {
+      "id": "DAY1-BUG-014",
+      "kind": "acceptance_builder",
+      "priority": "P1",
+      "resolution": "Final functional evidence with observed empty error arrays now passes independently; historical first-pass evidence remains attached.",
+      "source": "docs/platformization/day1-functional-acceptance/evidence/day1-supplemental-audits.final.json",
+      "status": "BUG_FIXED_PASS",
+      "title": "The final console audit incorrectly required a first-pass artifact to become PASS",
+      "verification": [
+        "builder self-test",
+        "CONSOLE_ERRORS",
+        "BLOCKING_NETWORK_ERRORS"
+      ]
+    },
+    {
+      "control_id": "PAGE-CHATBI-BUTTON-037",
+      "id": "VISIBLE-DISABLED-0243853B0CAA",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "⇧ 导出未开放",
+      "page_id": "CHATBI",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-CHATBI-BUTTON-037",
+        "reason": "冻结或最终 DOM 明确禁用：⇧ 导出未开放；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-030",
+      "id": "VISIBLE-DISABLED-043643AD23D9",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "正式生产发布已禁用",
+      "page_id": "GOVERNANCE-PRODUCTION",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-030",
+        "reason": "冻结或最终 DOM 明确禁用：正式生产发布已禁用；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-CHATBI-BUTTON-042",
+      "id": "VISIBLE-DISABLED-066AEED2CF33",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "有帮助",
+      "page_id": "CHATBI",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-CHATBI-BUTTON-042",
+        "reason": "冻结或最终 DOM 明确禁用：有帮助；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-SKILLS-BUTTON-031",
+      "id": "VISIBLE-DISABLED-068A39F5F0A6",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "启用",
+      "page_id": "SKILLS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-SKILLS-BUTTON-031",
+        "reason": "仅 APPROVED / SHADOW / CANARY 可启用",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-REVENUE-BUTTON-033",
+      "id": "VISIBLE-DISABLED-09996C83B52B",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "当前结果全部展示",
+      "page_id": "REVENUE",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-REVENUE-BUTTON-033",
+        "reason": "当前结果已完整展示",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "GLOBAL-HEADER-BUTTON-021",
+      "id": "VISIBLE-DISABLED-0AB2D39B9DBC",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "通知未开放",
+      "page_id": "OVERVIEW",
+      "priority": "P1",
+      "resolution": {
+        "id": "GLOBAL-HEADER-BUTTON-021",
+        "reason": "通知未实现",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-CHATBI-BUTTON-043",
+      "id": "VISIBLE-DISABLED-13E33BD4BFBA",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "需改进",
+      "page_id": "CHATBI",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-CHATBI-BUTTON-043",
+        "reason": "冻结或最终 DOM 明确禁用：需改进；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "GLOBAL-HEADER-BUTTON-017",
+      "id": "VISIBLE-DISABLED-161AEE4B4523",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "分析模式 确定性链路",
+      "page_id": "CHATBI",
+      "priority": "P1",
+      "resolution": {
+        "id": "GLOBAL-HEADER-BUTTON-017",
+        "reason": "冻结或最终 DOM 明确禁用：分析模式 确定性链路；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MAPPING-BUTTON-050",
+      "id": "VISIBLE-DISABLED-17E6D3572228",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "＋ 自定义映射未开放",
+      "page_id": "MAPPING",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MAPPING-BUTTON-050",
+        "reason": "自定义映射尚未实现",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-STATIONS-BUTTON-058",
+      "id": "VISIBLE-DISABLED-1974800553B7",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "ACN open-data EVSE 2-39-139-28详情在当前页展示",
+      "page_id": "STATIONS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-STATIONS-BUTTON-058",
+        "reason": "冻结或最终 DOM 明确禁用：ACN open-data EVSE 2-39-139-28详情在当前页展示；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-DEVICES-BUTTON-029",
+      "id": "VISIBLE-DISABLED-1B5493976407",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "详情未开放",
+      "page_id": "DEVICES",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-DEVICES-BUTTON-029",
+        "reason": "详情页未实现",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-REVENUE-BUTTON-032",
+      "id": "VISIBLE-DISABLED-1D45BEDC8E1C",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "环比桥接",
+      "page_id": "REVENUE",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-REVENUE-BUTTON-032",
+        "reason": "桥接结果已在当前卡片完整展示",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-024",
+      "id": "VISIBLE-DISABLED-1FF6107D8EAB",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "周",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-024",
+        "reason": "当前接口仅提供月粒度",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-028",
+      "id": "VISIBLE-DISABLED-2673BCD5AE9C",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "创建由管理 API 控制",
+      "page_id": "GOVERNANCE-CREDENTIALS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-028",
+        "reason": "请通过受控管理 API 创建凭据引用",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-043",
+      "id": "VISIBLE-DISABLED-28E729F05FF0",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "›",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-043",
+        "reason": "冻结或最终 DOM 明确禁用：›；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-028",
+      "id": "VISIBLE-DISABLED-2E35A11B2857",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "SQLBot Canary 禁用",
+      "page_id": "GOVERNANCE-PREPRODUCTION",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-028",
+        "reason": "冻结或最终 DOM 明确禁用：SQLBot Canary 禁用；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MAPPING-BUTTON-049",
+      "id": "VISIBLE-DISABLED-316343CC08D7",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "切换未开放",
+      "page_id": "MAPPING",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MAPPING-BUTTON-049",
+        "reason": "数据集切换尚未实现",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-035",
+      "id": "VISIBLE-DISABLED-33D92F277572",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "未开放",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-035",
+        "reason": "场站详情跳转未实现",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-047",
+      "id": "VISIBLE-DISABLED-3B008B3F9E89",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "需人工审核",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-047",
+        "reason": "当前仅生成建议草稿",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-039",
+      "id": "VISIBLE-DISABLED-3B71369B15E7",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "未开放",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-039",
+        "reason": "当前仅生成建议草稿",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-CHATBI-BUTTON-026",
+      "id": "VISIBLE-DISABLED-407B5DC896C2",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "发送分析问题",
+      "page_id": "CHATBI",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-CHATBI-BUTTON-026",
+        "reason": "请输入经营分析问题",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-SKILLS-BUTTON-023",
+      "id": "VISIBLE-DISABLED-435167F6DA12",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "启用",
+      "page_id": "SKILLS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-SKILLS-BUTTON-023",
+        "reason": "仅 APPROVED / SHADOW / CANARY 可启用",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-STATIONS-BUTTON-043",
+      "id": "VISIBLE-DISABLED-4789E5F08182",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "地图未开放 ›",
+      "page_id": "STATIONS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-STATIONS-BUTTON-043",
+        "reason": "地图视图未实现",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-042",
+      "id": "VISIBLE-DISABLED-4FA13ADA5A6B",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "‹",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-042",
+        "reason": "当前仅生成建议草稿",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-REVENUE-BUTTON-034",
+      "id": "VISIBLE-DISABLED-51FB767E34EE",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "依据为本页结构化结果",
+      "page_id": "REVENUE",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-REVENUE-BUTTON-034",
+        "reason": "洞察依据已在当前卡片完整展示",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-026",
+      "id": "VISIBLE-DISABLED-53F383739188",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "季",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-026",
+        "reason": "当前接口仅提供月粒度",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-036",
+      "id": "VISIBLE-DISABLED-56A9024A59E3",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "未开放",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-036",
+        "reason": "当前结果只有一页",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-SKILLS-BUTTON-033",
+      "id": "VISIBLE-DISABLED-5C9E47FAD7C0",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "回滚",
+      "page_id": "SKILLS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-SKILLS-BUTTON-033",
+        "reason": "未配置已批准回滚目标",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-046",
+      "id": "VISIBLE-DISABLED-5CD6497DDF4C",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "需人工审核",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-046",
+        "reason": "当前仅生成建议草稿",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-037",
+      "id": "VISIBLE-DISABLED-5F7CFCE94520",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "未开放",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-037",
+        "reason": "当前结果只有一页",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-038",
+      "id": "VISIBLE-DISABLED-6350A64F939F",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "未开放",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-038",
+        "reason": "方案库尚未实现",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MAPPING-BUTTON-048",
+      "id": "VISIBLE-DISABLED-68519434764A",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "更多连接器未开放",
+      "page_id": "MAPPING",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MAPPING-BUTTON-048",
+        "reason": "冻结或最终 DOM 明确禁用：更多连接器未开放；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-SKILLS-BUTTON-039",
+      "id": "VISIBLE-DISABLED-68D91B6540A7",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "启用",
+      "page_id": "SKILLS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-SKILLS-BUTTON-039",
+        "reason": "仅 APPROVED / SHADOW / CANARY 可启用",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-030",
+      "id": "VISIBLE-DISABLED-6E390D2A5331",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "生产切流已禁用",
+      "page_id": "GOVERNANCE-PREPRODUCTION",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-030",
+        "reason": "冻结或最终 DOM 明确禁用：生产切流已禁用；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-SKILLS-BUTTON-041",
+      "id": "VISIBLE-DISABLED-6F4CEBFFB075",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "回滚",
+      "page_id": "SKILLS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-SKILLS-BUTTON-041",
+        "reason": "未配置已批准回滚目标",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-DEVICES-SELECT-036",
+      "id": "VISIBLE-DISABLED-7214BC2717F0",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "设备每页条数",
+      "page_id": "DEVICES",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-DEVICES-SELECT-036",
+        "reason": "当前结果已完整展示",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-SELECT-041",
+      "id": "VISIBLE-DISABLED-799D27BCF602",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "10 条/页",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-SELECT-041",
+        "reason": "冻结或最终 DOM 明确禁用：10 条/页；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-DEVICES-BUTTON-035",
+      "id": "VISIBLE-DISABLED-7ECB218FAA01",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "导出未开放",
+      "page_id": "DEVICES",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-DEVICES-BUTTON-035",
+        "reason": "导出未实现",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-029",
+      "id": "VISIBLE-DISABLED-7F679FE2C461",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "SQLBot Canary 禁用",
+      "page_id": "GOVERNANCE-PRODUCTION",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-029",
+        "reason": "冻结或最终 DOM 明确禁用：SQLBot Canary 禁用；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-SELECT-032",
+      "id": "VISIBLE-DISABLED-817F1DDB1236",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "运营区域",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-SELECT-032",
+        "reason": "冻结或最终 DOM 明确禁用：运营区域；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-027",
+      "id": "VISIBLE-DISABLED-84C6F4C61A7E",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "年",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-027",
+        "reason": "当前接口仅提供月粒度",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-SKILLS-BUTTON-029",
+      "id": "VISIBLE-DISABLED-852DE18A9621",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "回滚",
+      "page_id": "SKILLS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-SKILLS-BUTTON-029",
+        "reason": "未配置已批准回滚目标",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-STATIONS-BUTTON-054",
+      "id": "VISIBLE-DISABLED-8C6A67F52195",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "ACN open-data EVSE 2-39-131-30详情在当前页展示",
+      "page_id": "STATIONS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-STATIONS-BUTTON-054",
+        "reason": "冻结或最终 DOM 明确禁用：ACN open-data EVSE 2-39-131-30详情在当前页展示；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-SKILLS-BUTTON-025",
+      "id": "VISIBLE-DISABLED-8D9B7A0BEFD5",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "回滚",
+      "page_id": "SKILLS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-SKILLS-BUTTON-025",
+        "reason": "未配置已批准回滚目标",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-044",
+      "id": "VISIBLE-DISABLED-8ED95A9F7851",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "方案库未开放",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-044",
+        "reason": "方案库尚未实现",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-STATIONS-BUTTON-060",
+      "id": "VISIBLE-DISABLED-8FB9555BB80F",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "ACN open-data EVSE 2-39-79-377详情在当前页展示",
+      "page_id": "STATIONS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-STATIONS-BUTTON-060",
+        "reason": "冻结或最终 DOM 明确禁用：ACN open-data EVSE 2-39-79-377详情在当前页展示；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-040",
+      "id": "VISIBLE-DISABLED-94311485ADC3",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "未开放",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-040",
+        "reason": "当前仅生成建议草稿",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-045",
+      "id": "VISIBLE-DISABLED-95B8A071B319",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "需人工审核",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-045",
+        "reason": "当前仅生成建议草稿",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MAPPING-BUTTON-024",
+      "id": "VISIBLE-DISABLED-96920268DDFE",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "▣ 自动推荐未开放",
+      "page_id": "MAPPING",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MAPPING-BUTTON-024",
+        "reason": "自动推荐尚未实现",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "GLOBAL-SIDEBAR-BUTTON-016",
+      "id": "VISIBLE-DISABLED-9D25CF11CB82",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "≡折叠未开放«",
+      "page_id": "OVERVIEW",
+      "priority": "P1",
+      "resolution": {
+        "id": "GLOBAL-SIDEBAR-BUTTON-016",
+        "reason": "菜单折叠未实现",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MAPPING-BUTTON-027",
+      "id": "VISIBLE-DISABLED-9F48052C109E",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "驳回待审版本",
+      "page_id": "MAPPING",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MAPPING-BUTTON-027",
+        "reason": "冻结或最终 DOM 明确禁用：驳回待审版本；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-STATIONS-BUTTON-062",
+      "id": "VISIBLE-DISABLED-9FB3821BE980",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "ACN open-data EVSE 2-39-79-378详情在当前页展示",
+      "page_id": "STATIONS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-STATIONS-BUTTON-062",
+        "reason": "冻结或最终 DOM 明确禁用：ACN open-data EVSE 2-39-79-378详情在当前页展示；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-STATIONS-BUTTON-063",
+      "id": "VISIBLE-DISABLED-A2F896AAF7B3",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "‹",
+      "page_id": "STATIONS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-STATIONS-BUTTON-063",
+        "reason": "冻结或最终 DOM 明确禁用：‹；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-DASHBOARD-BUTTON-030",
+      "id": "VISIBLE-DISABLED-A466839B8C56",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "月",
+      "page_id": "DASHBOARD",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-DASHBOARD-BUTTON-030",
+        "reason": "当前接口仅提供月粒度",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "GLOBAL-HEADER-INPUT-017",
+      "id": "VISIBLE-DISABLED-AB5D41B32531",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "全局搜索",
+      "page_id": "OVERVIEW",
+      "priority": "P1",
+      "resolution": {
+        "id": "GLOBAL-HEADER-INPUT-017",
+        "reason": "冻结或最终 DOM 明确禁用：全局搜索；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-SELECT-031",
+      "id": "VISIBLE-DISABLED-AD48AB130CDE",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "场站类型",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-SELECT-031",
+        "reason": "冻结或最终 DOM 明确禁用：场站类型；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-STATIONS-BUTTON-066",
+      "id": "VISIBLE-DISABLED-B15D38CA6691",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "详情页未开放 ›",
+      "page_id": "STATIONS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-STATIONS-BUTTON-066",
+        "reason": "更多详情页面未实现",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-029",
+      "id": "VISIBLE-DISABLED-B7F7B84EA95F",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "正式生产发布已禁用",
+      "page_id": "GOVERNANCE-PREPRODUCTION",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-029",
+        "reason": "冻结或最终 DOM 明确禁用：正式生产发布已禁用；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-KNOWLEDGE-BUTTON-025",
+      "id": "VISIBLE-DISABLED-B84FB9225379",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "本地文件上传未开放",
+      "page_id": "KNOWLEDGE",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-KNOWLEDGE-BUTTON-025",
+        "reason": "P2A 仅允许审核清单中的已跟踪文档；浏览器任意文件上传未开放",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-SKILLS-BUTTON-037",
+      "id": "VISIBLE-DISABLED-BAD44FFFA591",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "回滚",
+      "page_id": "SKILLS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-SKILLS-BUTTON-037",
+        "reason": "未配置已批准回滚目标",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-GOVERNANCE-RELEASE-BUTTON-028",
+      "id": "VISIBLE-DISABLED-BD2C913B83ED",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "生产发布已禁用",
+      "page_id": "GOVERNANCE-RELEASE",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-028",
+        "reason": "P5 未关闭全部阻断门禁，真实生产发布明确禁用",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-SKILLS-BUTTON-035",
+      "id": "VISIBLE-DISABLED-BF0717F19296",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "启用",
+      "page_id": "SKILLS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-SKILLS-BUTTON-035",
+        "reason": "仅 APPROVED / SHADOW / CANARY 可启用",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-CHATBI-BUTTON-036",
+      "id": "VISIBLE-DISABLED-C28FCE60607C",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "☆ 收藏未开放",
+      "page_id": "CHATBI",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-CHATBI-BUTTON-036",
+        "reason": "冻结或最终 DOM 明确禁用：☆ 收藏未开放；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-STATIONS-SELECT-065",
+      "id": "VISIBLE-DISABLED-C338A43B7E87",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "每页条数",
+      "page_id": "STATIONS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-STATIONS-SELECT-065",
+        "reason": "冻结或最终 DOM 明确禁用：每页条数；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-048",
+      "id": "VISIBLE-DISABLED-C3555B4FEB34",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "需人工审核",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-048",
+        "reason": "当前仅生成建议草稿",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-CHATBI-BUTTON-038",
+      "id": "VISIBLE-DISABLED-C96FA315F39C",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "↗ 分享未开放",
+      "page_id": "CHATBI",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-CHATBI-BUTTON-038",
+        "reason": "冻结或最终 DOM 明确禁用：↗ 分享未开放；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-DEVICES-BUTTON-037",
+      "id": "VISIBLE-DISABLED-D23B0C65C019",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "‹",
+      "page_id": "DEVICES",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-DEVICES-BUTTON-037",
+        "reason": "当前结果只有一页",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "GLOBAL-HEADER-BUTTON-020",
+      "id": "VISIBLE-DISABLED-D8AD004E783B",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "单客户工作区",
+      "page_id": "OVERVIEW",
+      "priority": "P1",
+      "resolution": {
+        "id": "GLOBAL-HEADER-BUTTON-020",
+        "reason": "冻结或最终 DOM 明确禁用：单客户工作区；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-GOVERNANCE-AUDIT-BUTTON-028",
+      "id": "VISIBLE-DISABLED-DB9B4FE17C04",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "外部通知未开放",
+      "page_id": "GOVERNANCE-AUDIT",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-028",
+        "reason": "P3 不自动发送外部消息",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-STATIONS-BUTTON-064",
+      "id": "VISIBLE-DISABLED-DC180CA012E2",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "›",
+      "page_id": "STATIONS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-STATIONS-BUTTON-064",
+        "reason": "冻结或最终 DOM 明确禁用：›；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-031",
+      "id": "VISIBLE-DISABLED-E3B2E62F4A1F",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "生产切流已禁用",
+      "page_id": "GOVERNANCE-PRODUCTION",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-031",
+        "reason": "冻结或最终 DOM 明确禁用：生产切流已禁用；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-METRICS-TEXTAREA-023",
+      "id": "VISIBLE-DISABLED-E623B9CE725F",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "公式COUNT(DISTINCT user_id)",
+      "page_id": "METRICS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-METRICS-TEXTAREA-023",
+        "reason": "冻结或最终 DOM 明确禁用：公式COUNT(DISTINCT user_id)；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-SKILLS-BUTTON-027",
+      "id": "VISIBLE-DISABLED-EA5555095492",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "启用",
+      "page_id": "SKILLS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-SKILLS-BUTTON-027",
+        "reason": "仅 APPROVED / SHADOW / CANARY 可启用",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-SELECT-030",
+      "id": "VISIBLE-DISABLED-F46EB2344D99",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "场站分组",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-SELECT-030",
+        "reason": "冻结或最终 DOM 明确禁用：场站分组；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-MARGIN-BUTTON-023",
+      "id": "VISIBLE-DISABLED-F79C78DE46C8",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "日",
+      "page_id": "MARGIN",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-MARGIN-BUTTON-023",
+        "reason": "当前接口仅提供月粒度",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-DEVICES-BUTTON-038",
+      "id": "VISIBLE-DISABLED-FEF4FF8C0EC4",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "›",
+      "page_id": "DEVICES",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-DEVICES-BUTTON-038",
+        "reason": "当前结果只有一页",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    },
+    {
+      "control_id": "PAGE-STATIONS-BUTTON-056",
+      "id": "VISIBLE-DISABLED-FF66CE65F471",
+      "kind": "visible_disabled_control_requires_classification",
+      "name": "ACN open-data EVSE 2-39-138-29详情在当前页展示",
+      "page_id": "STATIONS",
+      "priority": "P1",
+      "resolution": {
+        "id": "PAGE-STATIONS-BUTTON-056",
+        "reason": "冻结或最终 DOM 明确禁用：ACN open-data EVSE 2-39-138-29详情在当前页展示；属于当前状态或冻结产品边界",
+        "status": "NOT_APPLICABLE"
+      },
+      "status": "RESOLVED"
+    }
+  ],
+  "by_priority": {
+    "P0": 0,
+    "P1": 91,
+    "P2": 0
+  },
+  "evidence_type": "day1_functional_bug_list",
+  "explicit_bug_audit_present": true,
+  "generated_at": "2026-08-12T17:45:54.466400+00:00",
+  "generated_by": "scripts/build_day1_acceptance_evidence.py",
+  "schema_version": "1.0",
+  "status": "PASS",
+  "total": 91,
+  "unresolved": 0
+}

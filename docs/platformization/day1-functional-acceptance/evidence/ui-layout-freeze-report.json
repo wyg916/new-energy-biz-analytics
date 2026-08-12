@@ -1,0 +1,156 @@
+{
+  "evidence_type": "day1_ui_layout_freeze",
+  "generated_at": "2026-08-12T17:45:54.466400+00:00",
+  "generated_by": "scripts/build_day1_acceptance_evidence.py",
+  "page_denominator": 24,
+  "page_results": [
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "LOGIN",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "OIDC-CALLBACK",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "OVERVIEW",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "DASHBOARD",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "REVENUE",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "MARGIN",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "STATIONS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "DEVICES",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "ALERTS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "CHATBI",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "MEMORY",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "SKILLS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "REPORTS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "KNOWLEDGE",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "MAPPING",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "METRICS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "GOVERNANCE-OVERVIEW",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "GOVERNANCE-IDENTITY",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "GOVERNANCE-CREDENTIALS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "GOVERNANCE-RETENTION",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "GOVERNANCE-AUDIT",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "GOVERNANCE-RELEASE",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "GOVERNANCE-PREPRODUCTION",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    },
+    {
+      "method": "explicit stable-ID layout result",
+      "page_id": "GOVERNANCE-PRODUCTION",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "status": "PASS"
+    }
+  ],
+  "relative_dimension_tolerance": 0.02,
+  "schema_version": "1.0",
+  "status": "PASS",
+  "tolerance_px": 4.0
+}

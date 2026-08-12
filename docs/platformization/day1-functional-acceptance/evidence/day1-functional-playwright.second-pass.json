@@ -438,42 +438,42 @@
     {
       "id": "PAGE-MARGIN-BUTTON-036",
       "status": "NOT_APPLICABLE",
-      "reason": "场站详情跳转未实现"
+      "reason": "当前结果只有一页"
     },
     {
       "id": "PAGE-MARGIN-BUTTON-037",
       "status": "NOT_APPLICABLE",
-      "reason": "场站详情跳转未实现"
+      "reason": "当前结果只有一页"
     },
     {
       "id": "PAGE-MARGIN-BUTTON-038",
       "status": "NOT_APPLICABLE",
-      "reason": "场站详情跳转未实现"
+      "reason": "方案库尚未实现"
     },
     {
       "id": "PAGE-MARGIN-BUTTON-039",
       "status": "NOT_APPLICABLE",
-      "reason": "场站详情跳转未实现"
+      "reason": "当前仅生成建议草稿"
     },
     {
       "id": "PAGE-MARGIN-BUTTON-040",
       "status": "NOT_APPLICABLE",
-      "reason": "场站详情跳转未实现"
+      "reason": "当前仅生成建议草稿"
     },
     {
       "id": "PAGE-MARGIN-SELECT-041",
       "status": "NOT_APPLICABLE",
-      "reason": "当前结果已完整展示"
+      "reason": "冻结或最终 DOM 明确禁用：10 条/页；属于当前状态或冻结产品边界"
     },
     {
       "id": "PAGE-MARGIN-BUTTON-042",
       "status": "NOT_APPLICABLE",
-      "reason": "当前结果只有一页"
+      "reason": "当前仅生成建议草稿"
     },
     {
       "id": "PAGE-MARGIN-BUTTON-043",
       "status": "NOT_APPLICABLE",
-      "reason": "当前结果只有一页"
+      "reason": "冻结或最终 DOM 明确禁用：›；属于当前状态或冻结产品边界"
     },
     {
       "id": "PAGE-MARGIN-BUTTON-044",
@@ -503,102 +503,102 @@
     {
       "id": "PAGE-STATIONS-INPUT-023",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-INPUT-024",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-SELECT-025",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-SELECT-026",
-      "status": "NOT_APPLICABLE",
-      "reason": "当前数据集未提供独立省份维度"
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-SELECT-027",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-SELECT-028",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-SELECT-029",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-030",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-031",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-SELECT-032",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-033",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-034",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-035",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-036",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-037",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-038",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-039",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-040",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-041",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-042",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-043",
@@ -608,112 +608,112 @@
     {
       "id": "PAGE-STATIONS-BUTTON-044",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-045",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-046",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-047",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-048",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-049",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-050",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-051",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-052",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-TR-053",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-054",
       "status": "NOT_APPLICABLE",
-      "reason": "场站详情已在当前页展示"
+      "reason": "冻结或最终 DOM 明确禁用：ACN open-data EVSE 2-39-131-30详情在当前页展示；属于当前状态或冻结产品边界"
     },
     {
       "id": "PAGE-STATIONS-TR-055",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-056",
       "status": "NOT_APPLICABLE",
-      "reason": "场站详情已在当前页展示"
+      "reason": "冻结或最终 DOM 明确禁用：ACN open-data EVSE 2-39-138-29详情在当前页展示；属于当前状态或冻结产品边界"
     },
     {
       "id": "PAGE-STATIONS-TR-057",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-058",
       "status": "NOT_APPLICABLE",
-      "reason": "场站详情已在当前页展示"
+      "reason": "冻结或最终 DOM 明确禁用：ACN open-data EVSE 2-39-139-28详情在当前页展示；属于当前状态或冻结产品边界"
     },
     {
       "id": "PAGE-STATIONS-TR-059",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-060",
       "status": "NOT_APPLICABLE",
-      "reason": "场站详情已在当前页展示"
+      "reason": "冻结或最终 DOM 明确禁用：ACN open-data EVSE 2-39-79-377详情在当前页展示；属于当前状态或冻结产品边界"
     },
     {
       "id": "PAGE-STATIONS-TR-061",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-062",
       "status": "NOT_APPLICABLE",
-      "reason": "场站详情已在当前页展示"
+      "reason": "冻结或最终 DOM 明确禁用：ACN open-data EVSE 2-39-79-378详情在当前页展示；属于当前状态或冻结产品边界"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-063",
       "status": "NOT_APPLICABLE",
-      "reason": "当前结果只有一页"
+      "reason": "冻结或最终 DOM 明确禁用：‹；属于当前状态或冻结产品边界"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-064",
       "status": "NOT_APPLICABLE",
-      "reason": "当前结果只有一页"
+      "reason": "冻结或最终 DOM 明确禁用：›；属于当前状态或冻结产品边界"
     },
     {
       "id": "PAGE-STATIONS-SELECT-065",
       "status": "NOT_APPLICABLE",
-      "reason": "当前结果已完整展示"
+      "reason": "冻结或最终 DOM 明确禁用：每页条数；属于当前状态或冻结产品边界"
     },
     {
       "id": "PAGE-STATIONS-BUTTON-066",
@@ -723,7 +723,7 @@
     {
       "id": "PAGE-STATIONS-BUTTON-067",
       "status": "PASS",
-      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+      "reason": "冻结控件所属页面工作流 STATIONS-001 已执行；控件实例因该工作流的终态切换不再显示"
     },
     {
       "id": "PAGE-DEVICES-SELECT-023",
@@ -3695,7 +3695,7 @@
           "x": 274,
           "y": 76,
           "width": 1312,
-          "height": 1131
+          "height": 1184
         }
       },
       "deltas": [
@@ -3929,7 +3929,7 @@
           "x": 274,
           "y": 76,
           "width": 1312,
-          "height": 467
+          "height": 2219
         }
       },
       "deltas": [
@@ -4171,21 +4171,35 @@
       "content_type": "application/json"
     },
     {
-      "page": "DASHBOARD",
+      "page": "MARGIN",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MARGIN",
       "method": "GET",
       "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
       "status": 200,
       "content_type": "application/json"
     },
     {
-      "page": "DASHBOARD",
+      "page": "MARGIN",
       "method": "GET",
       "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
       "status": 200,
       "content_type": "application/json"
     },
     {
-      "page": "DASHBOARD",
+      "page": "MARGIN",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_volume_kwh&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MARGIN",
       "method": "GET",
       "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-05-09&end_exclusive=2020-06-10",
       "status": 200,
@@ -4194,182 +4208,140 @@
     {
       "page": "MARGIN",
       "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "MARGIN",
-      "method": "GET",
       "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_margin&start=2020-05-09&end_exclusive=2020-06-10",
       "status": 200,
       "content_type": "application/json"
     },
     {
-      "page": "MARGIN",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=completed_order_count&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "MARGIN",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_volume_kwh&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "MARGIN",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=charging_revenue&comparison=mom&limit=5&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "MARGIN",
+      "page": "DEVICES",
       "method": "GET",
       "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=station_utilization_rate&start=2020-05-09&end_exclusive=2020-06-10",
       "status": 200,
       "content_type": "application/json"
     },
     {
-      "page": "MARGIN",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2019-05-09&end_exclusive=2019-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "MARGIN",
+      "page": "ALERTS",
       "method": "GET",
       "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-07&end_exclusive=2020-05-09",
       "status": 200,
       "content_type": "application/json"
     },
     {
-      "page": "STATIONS",
+      "page": "ALERTS",
       "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/revenue/analysis?start=2020-05-09&end_exclusive=2020-06-10",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=completed_order_count&start=2020-05-09&end_exclusive=2020-06-10",
       "status": 200,
       "content_type": "application/json"
     },
     {
-      "page": "STATIONS",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=5&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "STATIONS",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/revenue/analysis?start=2020-04-07&end_exclusive=2020-05-09",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "STATIONS",
+      "page": "CHATBI",
       "method": "GET",
       "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-04-07&end_exclusive=2020-05-09&limit=10&metrics=charging_revenue,gross_profit,gross_margin,station_utilization_rate,device_online_rate,device_fault_rate",
       "status": 200,
       "content_type": "application/json"
     },
     {
-      "page": "ALERTS",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=30&metrics=charging_revenue,service_fee_revenue,completed_order_count,charging_volume_kwh,revenue_per_kwh,station_utilization_rate",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "ALERTS",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-04-07&end_exclusive=2020-05-09&limit=30&metrics=charging_revenue,service_fee_revenue,completed_order_count,charging_volume_kwh,revenue_per_kwh,station_utilization_rate",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
       "page": "CHATBI",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=cost_per_kwh&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "CHATBI",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "CHATBI",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "REPORTS",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=10&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "REPORTS",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_margin&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "REPORTS",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "KNOWLEDGE",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_volume_kwh&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "KNOWLEDGE",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=completed_order_count&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "GOVERNANCE-OVERVIEW",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=charging_revenue&comparison=mom&limit=5&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "GOVERNANCE-OVERVIEW",
       "method": "GET",
       "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2019-05-09&end_exclusive=2019-06-10",
       "status": 200,
       "content_type": "application/json"
     },
     {
-      "page": "GOVERNANCE-OVERVIEW",
+      "page": "SKILLS",
       "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-07&end_exclusive=2020-05-09",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=5&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "SKILLS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=charging_revenue&comparison=mom&limit=5&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "SKILLS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/revenue/analysis?start=2020-04-07&end_exclusive=2020-05-09",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "SKILLS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/revenue/analysis?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "KNOWLEDGE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-04-07&end_exclusive=2020-05-09&limit=30&metrics=charging_revenue,service_fee_revenue,completed_order_count,charging_volume_kwh,revenue_per_kwh,station_utilization_rate",
       "status": 200,
       "content_type": "application/json"
     },
     {
       "page": "GOVERNANCE-OVERVIEW",
       "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=station_utilization_rate&start=2020-05-09&end_exclusive=2020-06-10",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=30&metrics=charging_revenue,service_fee_revenue,completed_order_count,charging_volume_kwh,revenue_per_kwh,station_utilization_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=cost_per_kwh&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=10&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/alerts",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/devices?limit=120&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_online_rate&start=2020-05-09&end_exclusive=2020-06-10",
       "status": 200,
       "content_type": "application/json"
     },
@@ -4390,7 +4362,14 @@
     {
       "page": "GOVERNANCE-OVERVIEW",
       "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/alerts",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/runtime",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/candidates",
       "status": 200,
       "content_type": "application/json"
     },
@@ -4404,42 +4383,7 @@
     {
       "page": "GOVERNANCE-OVERVIEW",
       "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/knowledge/runtime",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "GOVERNANCE-OVERVIEW",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=5&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "GOVERNANCE-OVERVIEW",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-04-07&end_exclusive=2020-05-09&limit=10&metrics=charging_revenue,gross_profit,gross_margin,station_utilization_rate,device_online_rate,device_fault_rate",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "GOVERNANCE-OVERVIEW",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_online_rate&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "GOVERNANCE-OVERVIEW",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/devices?limit=120&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "GOVERNANCE-OVERVIEW",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/memory/candidates",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/source-catalog",
       "status": 200,
       "content_type": "application/json"
     },
@@ -4460,14 +4404,21 @@
     {
       "page": "GOVERNANCE-OVERVIEW",
       "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/knowledge/source-catalog",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/documents?scenario_id=charging_ops",
       "status": 200,
       "content_type": "application/json"
     },
     {
       "page": "GOVERNANCE-OVERVIEW",
       "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/knowledge/documents?scenario_id=charging_ops",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-07&end_exclusive=2020-05-09",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_fault_rate&start=2020-05-09&end_exclusive=2020-06-10",
       "status": 200,
       "content_type": "application/json"
     },
@@ -4495,28 +4446,7 @@
     {
       "page": "GOVERNANCE-OVERVIEW",
       "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_fault_rate&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "GOVERNANCE-OVERVIEW",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "GOVERNANCE-OVERVIEW",
-      "method": "GET",
       "url": "https://p5b.localhost:8446/api/v1/governance/snapshot",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "GOVERNANCE-OVERVIEW",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/knowledge/runtime",
       "status": 200,
       "content_type": "application/json"
     },
@@ -4530,6 +4460,20 @@
     {
       "page": "GOVERNANCE-OVERVIEW",
       "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/runtime",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_online_rate&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
       "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
       "status": 200,
       "content_type": "application/json"
@@ -4537,28 +4481,35 @@
     {
       "page": "GOVERNANCE-OVERVIEW",
       "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "GOVERNANCE-CREDENTIALS",
-      "method": "GET",
       "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-05-09&end_exclusive=2020-06-10",
       "status": 200,
       "content_type": "application/json"
     },
     {
-      "page": "GOVERNANCE-CREDENTIALS",
+      "page": "GOVERNANCE-OVERVIEW",
       "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_online_rate&start=2020-05-09&end_exclusive=2020-06-10",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-07&end_exclusive=2020-05-09",
       "status": 200,
       "content_type": "application/json"
     },
     {
       "page": "GOVERNANCE-CREDENTIALS",
       "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-07&end_exclusive=2020-05-09",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-AUDIT",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
       "status": 200,
       "content_type": "application/json"
     },
@@ -4566,13 +4517,6 @@
       "page": "GOVERNANCE-RELEASE",
       "method": "GET",
       "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "page": "GOVERNANCE-RELEASE",
-      "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
       "status": 200,
       "content_type": "application/json"
     },
@@ -4584,9 +4528,9 @@
       "content_type": "application/json"
     },
     {
-      "page": "GOVERNANCE-PRODUCTION",
+      "page": "GOVERNANCE-PREPRODUCTION",
       "method": "GET",
-      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-07&end_exclusive=2020-05-09",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
       "status": 200,
       "content_type": "application/json"
     },
@@ -4612,91 +4556,91 @@
       "observations": [
         {
           "page_id": "OVERVIEW",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-9ecde1b1-a850-4b35-bcae-3ddde481c7f0"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "DASHBOARD",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "REVENUE",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "MARGIN",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "STATIONS",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "DEVICES",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "ALERTS",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "CHATBI",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "MEMORY",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "SKILLS",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "REPORTS",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "KNOWLEDGE",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "MAPPING",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "METRICS",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "GOVERNANCE-OVERVIEW",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "GOVERNANCE-IDENTITY",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "GOVERNANCE-CREDENTIALS",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "GOVERNANCE-RETENTION",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "GOVERNANCE-AUDIT",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "GOVERNANCE-RELEASE",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-1f81cf40-c076-4d6b-b194-9916aee25c5b"
         },
         {
           "page_id": "GOVERNANCE-PREPRODUCTION",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-22098a97-1d18-47b8-bf8b-26edc02139c1"
         },
         {
           "page_id": "GOVERNANCE-PRODUCTION",
-          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-b4796dd4-6e49-4442-b53c-8827d7850df1"
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-22098a97-1d18-47b8-bf8b-26edc02139c1"
         }
       ]
     }
