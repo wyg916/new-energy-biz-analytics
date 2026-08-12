@@ -141,10 +141,11 @@ function Test-ImageRevision {
 function Test-FullApiImageCompatible {
     param([string]$Image)
     if (-not (Test-ImageRevision -Image $Image)) { return $false }
-    & docker run --rm --entrypoint sh $Image -lc @"
-test -f /app/alembic/versions/integration_41_full_0001_merge.py &&
-grep -q 'revision = "integration_41_full_0001"' /app/alembic/versions/integration_41_full_0001_merge.py
-"@ 1>$null 2>$null
+    # Keep this shell program on one line. A Windows PowerShell here-string uses
+    # CRLF, and the embedded carriage return can make Alpine sh reject a valid
+    # cached image during repeat one-click startup.
+    $compatibilityCheck = "test -f /app/alembic/versions/integration_41_full_0001_merge.py && grep -q integration_41_full_0001 /app/alembic/versions/integration_41_full_0001_merge.py"
+    & docker run --rm --entrypoint sh $Image -lc $compatibilityCheck 1>$null 2>$null
     return $LASTEXITCODE -eq 0
 }
 

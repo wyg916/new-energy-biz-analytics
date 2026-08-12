@@ -58,6 +58,9 @@ def test_single_launcher_converges_full_integration_runtime():
     assert "-SQLBotHostPort" not in launcher
     assert '$project = "renewable-integration41-full"' in startup
     assert "$configProperty.Value.PSObject.Properties['Labels']" in startup
+    assert '$compatibilityCheck = "test -f /app/alembic/versions/integration_41_full_0001_merge.py && grep -q integration_41_full_0001' in startup
+    assert "-lc $compatibilityCheck" in startup
+    assert "--entrypoint sh $Image -lc @\"" not in startup
     assert '$expectedMigration = "integration_41_full_0001"' in startup
     assert '"renewable-integration41-core"' in startup
     assert 'query_engine_mode = "DETERMINISTIC_ONLY"' in startup
