@@ -405,10 +405,15 @@ def export_memory(
     db: Session = Depends(get_db),
     user: User = Depends(current_user),
 ) -> dict:
-    response = list_records(scenario_id, None, db, user)
+    response = list_records(
+        scenario_id=scenario_id,
+        memory_type=None,
+        limit=500,
+        db=db,
+        user=user,
+    )
     return {
         "export_version": "p2b-1.0",
-        "data_classification": "simulated",
         "source": "governed PostgreSQL memory_record",
         "run_id_location": "records[].structured_value.run_id when applicable",
         **response,

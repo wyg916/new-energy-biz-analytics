@@ -168,6 +168,16 @@ def test_memory_management_list_keeps_new_record_visible_after_recall_candidate_
     assert payload["truncated"] is False
     assert payload["records"][0]["memory_id"] == memory_id
     assert any(item["memory_id"] == memory_id for item in payload["records"])
+    exported = api_client.get(
+        "/api/v1/memory/export?scenario_id=charging_ops",
+        headers=headers,
+    )
+    assert exported.status_code == 200, exported.text
+    export_payload = exported.json()
+    assert export_payload["export_version"] == "p2b-1.0"
+    assert export_payload["data_classification"] == payload["data_classification"]
+    assert export_payload["limit"] == 500
+    assert any(item["memory_id"] == memory_id for item in export_payload["records"])
 
 
 def test_memory_disable_setting_is_enforced(api_client, api_login):

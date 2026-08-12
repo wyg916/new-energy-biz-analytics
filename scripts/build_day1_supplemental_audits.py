@@ -247,6 +247,10 @@ def build(
             "管理列表改为权限与有效状态过滤后的最近更新优先查询；与 token budget 和召回候选上限解耦。",
             ["MEMORY-001", "backend full regression"],
             passed_step(functional_steps, "MEMORY-001") and backend_ok),
+        bug("DAY1-BUG-012", "Memory export used an obsolete positional management-list signature", "product_backend",
+            "The export endpoint uses explicit keyword arguments and inherits the runtime data classification.",
+            ["MEMORY-001", "backend full regression"],
+            passed_step(functional_steps, "MEMORY-001") and backend_ok),
     ]
 
     chatbi_audit = decision(chatbi_ok and browser_clean,
