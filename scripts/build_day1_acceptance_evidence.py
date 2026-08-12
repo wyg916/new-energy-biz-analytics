@@ -1231,7 +1231,7 @@ def _console_audit(
     error_count = sum(len(combined[field]) for field in ("console_errors", "page_errors", "request_failures"))
     if error_count or blocking:
         status = "FAIL"
-    elif first is None or not functional_observed:
+    elif not functional_observed:
         status = "UNKNOWN"
     else:
         status = "PASS"
@@ -1852,7 +1852,12 @@ def _build(args: argparse.Namespace) -> tuple[dict[str, dict[str, Any]], dict[st
         "stable feature inventory join",
     ))
     button_ids = [str(control["id"]) for control in control_records if str(control.get("tag") or "").lower() == "button"]
-    button_metrics = _coverage(button_ids, final_outcomes["interaction"], entity="button")
+    button_outcomes = {
+        stable_id: final_outcomes["interaction"][stable_id]
+        for stable_id in button_ids
+        if stable_id in final_outcomes["interaction"]
+    }
+    button_metrics = _coverage(button_ids, button_outcomes, entity="button")
     derive_gate("ALL_BUTTONS", _gate_record(
         "PASS" if button_metrics["acceptance_status"] == "PASS" else "FAIL",
         f"{button_metrics['passed']}/{button_metrics['applicable_denominator']} applicable button IDs PASS",
@@ -2061,6 +2066,31 @@ def _self_test() -> dict[str, Any]:
     check(combined["status"] == "FAIL", "derived PASS must not override explicit FAIL")
     combined_unknown = _combine_gate(_gate_record("UNKNOWN", "runtime missing", "playwright"), _gate_record("PASS", "static pass", "scan"))
     check(combined_unknown["status"] == "UNKNOWN", "derived PASS must not override explicit UNKNOWN")
+    button_outcomes = {
+        "BUTTON-A": {"status": "PASS", "reason": "clicked"},
+        "INPUT-B": {"status": "PASS", "reason": "filled"},
+    }
+    button_metric = _coverage(
+        ["BUTTON-A"],
+        {stable_id: button_outcomes[stable_id] for stable_id in ("BUTTON-A",)},
+        entity="button",
+    )
+    check(button_metric["acceptance_status"] == "PASS", "button subset must not treat other control types as unexpected IDs")
+    console = _console_audit(
+        None,
+        [(
+            Path(__file__).resolve(),
+            {
+                "console_errors": [],
+                "page_errors": [],
+                "request_failures": [],
+                "blocking_responses": [],
+                "requests": [],
+            },
+        )],
+        Path(__file__).resolve().parent,
+    )
+    check(console["status"] == "PASS", "final functional console/network evidence must not require a first-pass artifact")
     check(_status("bug-fixed-pass") == "BUG_FIXED_PASS", "status normalization failed")
     check(set(FINAL_FILENAMES) == {
         "frontend-functional-inventory.json", "route-inventory.json", "interaction-inventory.json",
@@ -2113,6 +2143,8 @@ def _parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
     parser = _parser()
     args = parser.parse_args(argv)
     if args.self_test:

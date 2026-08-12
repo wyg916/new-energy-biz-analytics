@@ -251,6 +251,12 @@ def build(
             "The export endpoint uses explicit keyword arguments and inherits the runtime data classification.",
             ["MEMORY-001", "backend full regression"],
             passed_step(functional_steps, "MEMORY-001") and backend_ok),
+        bug("DAY1-BUG-013", "The ALL_BUTTONS aggregate compared a button subset with outcomes from every control type", "acceptance_builder",
+            "The button gate now joins only frozen button IDs to button outcomes and retains reasoned disabled boundaries.",
+            ["builder self-test", "ALL_BUTTONS"], common_ok),
+        bug("DAY1-BUG-014", "The final console audit incorrectly required a first-pass artifact to become PASS", "acceptance_builder",
+            "Final functional evidence with observed empty error arrays now passes independently; historical first-pass evidence remains attached.",
+            ["builder self-test", "CONSOLE_ERRORS", "BLOCKING_NETWORK_ERRORS"], common_ok),
     ]
 
     chatbi_audit = decision(chatbi_ok and browser_clean,
