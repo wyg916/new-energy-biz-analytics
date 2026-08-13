@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_runtime_health",
+  "generated_at": "2026-08-13T08:23:04.832260+00:00",
+  "status": "PASS",
+  "readiness_http": 200,
+  "services": [
+    {
+      "service": "alert-receiver",
+      "state": "running",
+      "health": "healthy"
+    },
+    {
+      "service": "api",
+      "state": "running",
+      "health": "healthy"
+    },
+    {
+      "service": "backup",
+      "state": "running",
+      "health": "running"
+    },
+    {
+      "service": "db",
+      "state": "running",
+      "health": "healthy"
+    },
+    {
+      "service": "oidc",
+      "state": "running",
+      "health": "healthy"
+    },
+    {
+      "service": "proxy",
+      "state": "running",
+      "health": "healthy"
+    },
+    {
+      "service": "redis",
+      "state": "running",
+      "health": "healthy"
+    },
+    {
+      "service": "vault",
+      "state": "running",
+      "health": "healthy"
+    },
+    {
+      "service": "web",
+      "state": "running",
+      "health": "healthy"
+    }
+  ],
+  "query_engine_mode": "DETERMINISTIC_ONLY",
+  "sqlbot_engine_enabled": false
+}

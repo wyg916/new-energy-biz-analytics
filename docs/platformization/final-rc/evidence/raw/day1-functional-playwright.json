@@ -1,0 +1,3030 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "day1_full_functional_playwright_raw",
+  "run_key": "DAY1-1786602239799",
+  "base_url": "https://p5b.localhost:8446",
+  "started_at": "2026-08-13T06:23:59.799Z",
+  "status": "PASS",
+  "pages": [
+    "LOGIN",
+    "OIDC-CALLBACK-MISSING-PARAMS",
+    "OIDC-LOGIN",
+    "功能总览",
+    "SESSION-RESTORE",
+    "经营工作台",
+    "收入与订单",
+    "毛利与成本",
+    "场站经营",
+    "设备健康",
+    "AI经营分析",
+    "记忆与偏好",
+    "Skill 管理",
+    "企业知识库",
+    "数据接入与字段映射",
+    "治理与生产就绪",
+    "经营预警",
+    "经营报告",
+    "指标与场景管理",
+    "LOGOUT",
+    "LOGOUT-RESTORE-CHECK"
+  ],
+  "steps": [
+    {
+      "id": "AUTH-001",
+      "title": "登录页和缺参 OIDC callback 边界",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:23:59.806Z",
+      "finished_at": "2026-08-13T06:24:00.533Z",
+      "duration_ms": 727
+    },
+    {
+      "id": "AUTH-002",
+      "title": "真实 OIDC PKCE 登录与 callback",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:00.534Z",
+      "finished_at": "2026-08-13T06:24:02.074Z",
+      "duration_ms": 1540,
+      "details": {
+        "scenario_id": "charging_ops",
+        "metric_count": 15,
+        "default_time_range": {
+          "start": "2020-05-09",
+          "end_exclusive": "2020-06-10"
+        },
+        "available_time_range": {
+          "start": "2020-05-09",
+          "end_exclusive": "2020-06-10"
+        }
+      }
+    },
+    {
+      "id": "AUTH-003",
+      "title": "同一浏览器上下文恢复 localStorage 会话",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:02.075Z",
+      "finished_at": "2026-08-13T06:24:02.509Z",
+      "duration_ms": 434,
+      "details": {
+        "storage": "localStorage.alpha_token",
+        "restored": true
+      }
+    },
+    {
+      "id": "GLOBAL-001",
+      "title": "全局开始和结束日期驱动真实 Dashboard API",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:02.514Z",
+      "finished_at": "2026-08-13T06:24:04.415Z",
+      "duration_ms": 1901,
+      "details": {
+        "start": "2020-06-02",
+        "end_inclusive": "2020-06-09",
+        "end_exclusive": "2020-06-10"
+      }
+    },
+    {
+      "id": "DASHBOARD-001",
+      "title": "工作台筛选、查询、图表、表格和钻取",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:04.416Z",
+      "finished_at": "2026-08-13T06:24:08.473Z",
+      "duration_ms": 4057,
+      "details": {
+        "filters": [
+          "date",
+          "comparison",
+          "region",
+          "city",
+          "station"
+        ],
+        "drilldown": "场站经营"
+      }
+    },
+    {
+      "id": "REVENUE-001",
+      "title": "收入页筛选、刷新、图表和表格",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:08.474Z",
+      "finished_at": "2026-08-13T06:24:12.179Z",
+      "duration_ms": 3705,
+      "details": {
+        "charts": 2,
+        "heatmap": true,
+        "table": "重点下滑场站"
+      }
+    },
+    {
+      "id": "MARGIN-001",
+      "title": "毛利页对比、重置、刷新、图表和表格",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:12.180Z",
+      "finished_at": "2026-08-13T06:24:16.034Z",
+      "duration_ms": 3854,
+      "details": {
+        "comparison": [
+          "mom",
+          "yoy"
+        ],
+        "charts": 2,
+        "disabled_boundary": "non-month grain"
+      }
+    },
+    {
+      "id": "STATIONS-001",
+      "title": "场站筛选、查询、矩阵、表格和详情钻取",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:16.036Z",
+      "finished_at": "2026-08-13T06:24:20.125Z",
+      "duration_ms": 4089,
+      "details": {
+        "filters": [
+          "region",
+          "type"
+        ],
+        "matrix_selection": true,
+        "table_selection": true,
+        "drilldown": "AI经营分析"
+      }
+    },
+    {
+      "id": "DEVICES-001",
+      "title": "设备筛选、刷新、图表、表格和详情",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:20.126Z",
+      "finished_at": "2026-08-13T06:24:21.904Z",
+      "duration_ms": 1778,
+      "details": {
+        "filters": [
+          "station",
+          "model",
+          "status"
+        ],
+        "charts": 2,
+        "table_selection": true
+      }
+    },
+    {
+      "id": "CHATBI-001",
+      "title": "场景、回答风格、问题、多轮与反馈",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:21.906Z",
+      "finished_at": "2026-08-13T06:24:29.569Z",
+      "duration_ms": 7663,
+      "details": {
+        "conversation_id": "CONV-52cdb565-6c95-42ba-920d-fa10578c8095",
+        "run_ids": [
+          "COMPOSITE-e495633f-b285-4354-bd9d-7112cee5ecde",
+          "COMPOSITE-f8992458-0aa9-4eec-885d-aba4d94d6883"
+        ],
+        "scenario": "sales_ops"
+      }
+    },
+    {
+      "id": "MEMORY-001",
+      "title": "记忆保存、Working Memory 读取、JSON 导出与删除",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:29.570Z",
+      "finished_at": "2026-08-13T06:24:35.487Z",
+      "duration_ms": 5917,
+      "details": {
+        "memory_id": "MEM-6b69326b-9b69-4b25-8082-00cd8062ab9a",
+        "final_state": "DELETED",
+        "working_status": "MISS",
+        "export_file": "chatbi-memory-charging_ops.json"
+      }
+    },
+    {
+      "id": "SKILLS-001",
+      "title": "Skill 场景切换、Registry 刷新和行选择",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:35.488Z",
+      "finished_at": "2026-08-13T06:24:36.320Z",
+      "duration_ms": 832,
+      "details": {
+        "registry_rows": 5,
+        "scenarios": [
+          "sales_ops",
+          "charging_ops"
+        ]
+      }
+    },
+    {
+      "id": "CHATBI-002",
+      "title": "服务端清除旧会话并由 UI 创建隔离新会话",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:36.321Z",
+      "finished_at": "2026-08-13T06:24:37.563Z",
+      "duration_ms": 1242,
+      "details": {
+        "new_conversation_id": "CONV-4744b907-53ac-4d1f-96d0-11af60c6b96a",
+        "old_session_status": "cleared"
+      }
+    },
+    {
+      "id": "KNOWLEDGE-001",
+      "title": "知识检索和唯一文档版本生命周期",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:37.565Z",
+      "finished_at": "2026-08-13T06:24:41.005Z",
+      "duration_ms": 3440,
+      "details": {
+        "document_version_id": "kdv-02701b640a214c88a234e92560546f0f",
+        "title": "DAY-1 验收知识 DAY1-1786602239799",
+        "final_state": "RETIRED",
+        "citations": 5
+      }
+    },
+    {
+      "id": "MAPPING-001",
+      "title": "数据接入试运行、质量、审批和发布闭环",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:41.006Z",
+      "finished_at": "2026-08-13T06:24:44.777Z",
+      "duration_ms": 3771,
+      "details": {
+        "run_id": "ING-2adbba90-a55d-42fd-953d-60103345a8d2",
+        "release_version": "v8.0",
+        "final_state": "published"
+      }
+    },
+    {
+      "id": "MAPPING-002",
+      "title": "平台 DatasetVersion 13 步真实闭环并回滚",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:44.778Z",
+      "finished_at": "2026-08-13T06:24:47.290Z",
+      "duration_ms": 2512,
+      "details": {
+        "created_dataset_version_id": "DSV-d58a6301-ddef-44d4-a86f-858512bdd325",
+        "rollback_record_id": "RB-4befaa8b-d8bd-45ab-8a80-4a5376eaf09c",
+        "final_state": "rolled_back"
+      }
+    },
+    {
+      "id": "GOVERNANCE-001",
+      "title": "治理八页签、运行/P4/P5 刷新与禁用边界",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:47.292Z",
+      "finished_at": "2026-08-13T06:24:50.058Z",
+      "duration_ms": 2766,
+      "details": {
+        "tab_count": 8,
+        "refreshes": [
+          "runtime",
+          "P4",
+          "P5"
+        ]
+      }
+    },
+    {
+      "id": "P6-ALERT-001",
+      "title": "预警规则和全状态生命周期最终闭环到 CLOSED",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:50.059Z",
+      "finished_at": "2026-08-13T06:24:52.307Z",
+      "duration_ms": 2248,
+      "details": {
+        "alert_id": "ALT-df191c1b-0f59-4e5c-9e98-13e51a0817d9",
+        "final_state": "CLOSED",
+        "reopen_exercised": true
+      }
+    },
+    {
+      "id": "P6-REPORT-001",
+      "title": "报告创建、版本、审核、发布、证据与归档",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:52.308Z",
+      "finished_at": "2026-08-13T06:24:55.338Z",
+      "duration_ms": 3030,
+      "details": {
+        "report_id": "RPT-2e09cc04-42fa-4625-a7b6-a4b7a7422ce3",
+        "final_state": "ARCHIVED",
+        "evidence_snapshot": true
+      }
+    },
+    {
+      "id": "P6-METRIC-001",
+      "title": "指标新版本、保存、影响分析、审核和发布",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:55.340Z",
+      "finished_at": "2026-08-13T06:24:57.494Z",
+      "duration_ms": 2154,
+      "details": {
+        "metric_version_id": "MGV-f466303f-3c6f-4dec-ae88-c4b9a0cc23d7",
+        "final_state": "PUBLISHED",
+        "unique_reason": "DAY1-1786602239799"
+      }
+    },
+    {
+      "id": "AUTH-004",
+      "title": "真实 OIDC logout 清除当前页及恢复页会话",
+      "status": "PASS",
+      "started_at": "2026-08-13T06:24:57.495Z",
+      "finished_at": "2026-08-13T06:24:58.088Z",
+      "duration_ms": 593
+    },
+    {
+      "id": "BOUNDARY-001",
+      "title": "登录后全局禁用边界未被破坏",
+      "status": "BOUNDARY_PASS",
+      "started_at": "2026-08-13T06:24:58.089Z",
+      "finished_at": "2026-08-13T06:24:58.100Z",
+      "duration_ms": 11
+    }
+  ],
+  "screenshots": [
+    "screenshots/final/01-dashboard.jpg",
+    "screenshots/final/02-revenue.jpg",
+    "screenshots/final/03-margin.jpg",
+    "screenshots/final/04-stations.jpg",
+    "screenshots/final/05-devices.jpg",
+    "screenshots/final/06-chatbi.jpg",
+    "screenshots/final/07-memory.jpg",
+    "screenshots/final/08-skills.jpg",
+    "screenshots/final/09-chatbi-new-session.jpg",
+    "screenshots/final/10-knowledge.jpg",
+    "screenshots/final/11-mapping.jpg",
+    "screenshots/final/12-governance.jpg",
+    "screenshots/final/13-alerts.jpg",
+    "screenshots/final/14-reports.jpg",
+    "screenshots/final/15-metrics.jpg",
+    "screenshots/final/16-logout.jpg",
+    "screenshots/final/99-final-pass.jpg"
+  ],
+  "api_responses": [
+    {
+      "page": "LOGIN",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/auth/oidc/status",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 75,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "OIDC-LOGIN",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/auth/oidc/start",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 72,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "OIDC-LOGIN",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/auth/oidc/callback",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 179,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "功能总览",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/context",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 82,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "功能总览",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 184,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "功能总览",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 219,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "功能总览",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 405,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "SESSION-RESTORE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/context",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 194,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "SESSION-RESTORE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 261,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "SESSION-RESTORE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 337,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "SESSION-RESTORE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 338,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "功能总览",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 170,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "功能总览",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 234,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "功能总览",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-06-02&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 293,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "功能总览",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-06-02&end_exclusive=2020-06-09",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 172,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "功能总览",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-06-02&end_exclusive=2020-06-09",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 262,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "功能总览",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-06-02&end_exclusive=2020-06-09&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 347,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "功能总览",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 164,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "功能总览",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 217,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "功能总览",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-06-02&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 408,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-25&end_exclusive=2020-06-02",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 23,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_margin&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 22,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 24,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2019-06-02&end_exclusive=2019-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 26,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_volume_kwh&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 25,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=station_utilization_rate&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 25,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=completed_order_count&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 29,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-25&end_exclusive=2020-06-02&limit=10&metrics=charging_revenue,gross_profit,gross_margin,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 493,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=5&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 591,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=charging_revenue&comparison=mom&limit=5&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 623,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 232,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=completed_order_count&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 293,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2019-06-02&end_exclusive=2019-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 299,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=station_utilization_rate&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 385,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_volume_kwh&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 386,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_margin&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 388,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2019-06-02&end_exclusive=2019-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 702,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2019-06-02&end_exclusive=2019-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1001,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=charging_revenue&comparison=yoy&limit=5&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1041,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=yoy&limit=5&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1188,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2019-06-02&end_exclusive=2019-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 226,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_margin&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 352,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_volume_kwh&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 351,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 353,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=completed_order_count&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 350,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=station_utilization_rate&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 371,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 904,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营工作台",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 905,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2019-06-02&end_exclusive=2019-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1351,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-25&end_exclusive=2020-06-02",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 483,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-06-02&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1468,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2019-06-02&end_exclusive=2019-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1545,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=charging_revenue&comparison=yoy&limit=5&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1651,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 684,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_margin&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 760,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_volume_kwh&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 833,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=completed_order_count&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 938,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=station_utilization_rate&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1028,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=yoy&limit=5&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 2127,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-25&end_exclusive=2020-06-02&limit=30&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1335,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2019-06-02&end_exclusive=2019-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1391,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/revenue/analysis?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1161,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/revenue/analysis?start=2020-05-25&end_exclusive=2020-06-02",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1170,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-25&end_exclusive=2020-06-02&limit=10&metrics=charging_revenue,gross_profit,gross_margin,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 2051,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=5&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 2112,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=charging_revenue&comparison=mom&limit=5&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 2148,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-25&end_exclusive=2020-06-02",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 2177,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/revenue/analysis?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 672,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-25&end_exclusive=2020-06-02&limit=30&metrics=charging_revenue,service_fee_revenue,completed_order_count,charging_volume_kwh,revenue_per_kwh,station_utilization_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1930,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-06-02&end_exclusive=2020-06-10&limit=30&metrics=charging_revenue,service_fee_revenue,completed_order_count,charging_volume_kwh,revenue_per_kwh,station_utilization_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1930,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/revenue/analysis?start=2019-06-02&end_exclusive=2019-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 829,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2019-06-02&end_exclusive=2019-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 921,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-25&end_exclusive=2020-06-02",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 2226,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2019-06-02&end_exclusive=2019-06-10&limit=30&metrics=charging_revenue,service_fee_revenue,completed_order_count,charging_volume_kwh,revenue_per_kwh,station_utilization_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1103,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-06-02&end_exclusive=2020-06-10&limit=30&metrics=charging_revenue,service_fee_revenue,completed_order_count,charging_volume_kwh,revenue_per_kwh,station_utilization_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1141,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "收入与订单",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-25&end_exclusive=2020-06-02",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 525,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/revenue/analysis?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1215,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/revenue/analysis?start=2020-05-25&end_exclusive=2020-06-02",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1216,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-25&end_exclusive=2020-06-02&limit=30&metrics=charging_revenue,service_fee_revenue,completed_order_count,charging_volume_kwh,revenue_per_kwh,station_utilization_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1216,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1132,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-06-02&end_exclusive=2020-06-10&limit=30&metrics=charging_revenue,service_fee_revenue,completed_order_count,charging_volume_kwh,revenue_per_kwh,station_utilization_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1217,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-06-02&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1223,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=10&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 701,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 739,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1868,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=cost_per_kwh&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 740,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 740,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-06-02&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1054,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=cost_per_kwh&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 150,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=yoy&limit=10&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 355,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=cost_per_kwh&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 222,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=cost_per_kwh&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 312,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 351,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 367,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-06-02&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 887,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "毛利与成本",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=10&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1417,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-25&end_exclusive=2020-06-02",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 516,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=10&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 2038,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 532,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 539,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-06-02&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 701,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-25&end_exclusive=2020-06-02&limit=30&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 743,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 229,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 276,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-06-02&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 503,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/runtime",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 36,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/chat/scenarios",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 95,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 397,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2019-05-10&end_exclusive=2019-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 403,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-10&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 409,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-10&end_exclusive=2020-05-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 416,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "场站经营",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/assistant/query",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1608,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "设备健康",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-25&end_exclusive=2020-06-02",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 175,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "设备健康",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-25&end_exclusive=2020-06-02&limit=30&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 379,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "设备健康",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 332,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "设备健康",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_fault_rate&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 345,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "设备健康",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/devices?limit=120&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 354,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "设备健康",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_online_rate&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 359,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "设备健康",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_online_rate&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 592,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "设备健康",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-06-02&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 651,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "设备健康",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/devices?limit=120&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 480,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "设备健康",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 552,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "设备健康",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_fault_rate&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 561,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "设备健康",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_online_rate&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 561,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "设备健康",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-06-02&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 561,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "设备健康",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_online_rate&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 669,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/runtime",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 99,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/chat/scenarios",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 169,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 250,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 303,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-10&end_exclusive=2020-05-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 298,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-10&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 322,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2019-05-10&end_exclusive=2019-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 323,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 390,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-06-02&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 573,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/assistant/query",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 1353,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/assistant/query",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 2048,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/assistant/query",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 2024,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/assistant/query",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 826,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/assistant/feedback",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 70,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/records?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 133,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/candidates",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 237,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/working/CONV-52cdb565-6c95-42ba-920d-fa10578c8095?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 85,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/candidates",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 74,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/records?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 136,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/memory/preferences",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 163,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/memory/candidates/MEMC-5e8184b9-1bdb-407b-a6ed-d01058221a9d/confirm",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 322,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/candidates",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 76,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/records?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 129,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/export?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 220,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/records?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 46,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/candidates",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 61,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "DELETE",
+      "url": "https://p5b.localhost:8446/api/v1/memory/records/MEM-6b69326b-9b69-4b25-8082-00cd8062ab9a?reason=%E7%94%A8%E6%88%B7%E5%9C%A8%E7%AE%A1%E7%90%86%E9%A1%B5%E9%9D%A2%E5%88%A0%E9%99%A4",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 594,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/candidates",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 63,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/records?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 144,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "记忆与偏好",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/records?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 176,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "Skill 管理",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/skills?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 102,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "Skill 管理",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/skills?scenario_id=sales_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 51,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "Skill 管理",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/skills?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 61,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "Skill 管理",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/skills?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 68,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "DELETE",
+      "url": "https://p5b.localhost:8446/api/v1/chat/sessions/CONV-52cdb565-6c95-42ba-920d-fa10578c8095",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 108,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "AI经营分析",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/assistant/query",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 737,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/source-catalog",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 52,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/runtime",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 65,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/documents?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 116,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/retrieval/test",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 194,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/documents/ingest",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 342,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/source-catalog",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 44,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/runtime",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 54,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/documents?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 94,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/versions/kdv-02701b640a214c88a234e92560546f0f/publish",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 142,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/source-catalog",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 63,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/runtime",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 73,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/documents?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 112,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/versions/kdv-02701b640a214c88a234e92560546f0f/retire",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 84,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/source-catalog",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 58,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/runtime",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 66,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/documents?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 101,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/source-catalog",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 48,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/runtime",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 60,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "企业知识库",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/documents?scenario_id=charging_ops",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 88,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/platform/foundation",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 173,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/overview?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 364,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/overview?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 110,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/sources/platform-postgresql/test",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 122,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/overview?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 118,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/datasets/station-operations/run",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 407,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/overview?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 100,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/datasets/station-operations/runs/ING-2adbba90-a55d-42fd-953d-60103345a8d2/quality",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 151,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/overview?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 182,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/datasets/station-operations/runs/ING-2adbba90-a55d-42fd-953d-60103345a8d2/submit",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 513,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/overview?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 74,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/datasets/station-operations/runs/ING-2adbba90-a55d-42fd-953d-60103345a8d2/review",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 114,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/overview?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 90,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/datasets/station-operations/runs/ING-2adbba90-a55d-42fd-953d-60103345a8d2/publish",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 312,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/overview?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 82,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/platform/foundation/sources",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 19,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/platform/foundation",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 34,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/overview?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 100,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/sources/platform-postgresql/test",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 162,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/overview?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 147,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/platform/foundation/sources/platform-postgresql/discover",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 180,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/overview?start=2020-06-02&end_exclusive=2020-06-10",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 89,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/platform/foundation/datasets/DS-71e06aba-8f11-4146-80c2-751a8daddedf/versions",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 347,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/platform/foundation/versions/DSV-d58a6301-ddef-44d4-a86f-858512bdd325/submit",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 117,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/platform/foundation/versions/DSV-d58a6301-ddef-44d4-a86f-858512bdd325/approve",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 120,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/platform/foundation/versions/DSV-d58a6301-ddef-44d4-a86f-858512bdd325/publish",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 146,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/platform/foundation/versions/DSV-d58a6301-ddef-44d4-a86f-858512bdd325/activate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 94,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/platform/foundation",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 31,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/platform/foundation/datasets/DS-71e06aba-8f11-4146-80c2-751a8daddedf/rollback",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 83,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "数据接入与字段映射",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/platform/foundation",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 28,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "治理与生产就绪",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/governance/snapshot",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 205,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "治理与生产就绪",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/governance/snapshot",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 154,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "治理与生产就绪",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/preproduction/snapshot",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 247,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "治理与生产就绪",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/preproduction/snapshot",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 132,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "治理与生产就绪",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/production-acceptance/snapshot",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 193,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "治理与生产就绪",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/production-acceptance/snapshot",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 39,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/alerts",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 24,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/alerts/ALT-df191c1b-0f59-4e5c-9e98-13e51a0817d9/timeline",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 39,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/alerts/generate",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 137,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/alerts",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 32,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/alerts/ALT-df191c1b-0f59-4e5c-9e98-13e51a0817d9/reopen",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 79,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/alerts",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 31,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/alerts/ALT-df191c1b-0f59-4e5c-9e98-13e51a0817d9/assign",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 69,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/alerts",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 24,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/alerts/ALT-df191c1b-0f59-4e5c-9e98-13e51a0817d9/acknowledge",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 122,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/alerts",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 24,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/alerts/ALT-df191c1b-0f59-4e5c-9e98-13e51a0817d9/in-progress",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 142,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/alerts",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 24,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/alerts/ALT-df191c1b-0f59-4e5c-9e98-13e51a0817d9/resolve",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 62,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/alerts",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 23,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/alerts/ALT-df191c1b-0f59-4e5c-9e98-13e51a0817d9/verify",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 62,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/alerts",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 19,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/alerts/ALT-df191c1b-0f59-4e5c-9e98-13e51a0817d9/close",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 54,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营预警",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/alerts",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 19,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/reports",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 91,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/reports/RPT-1f667ae6-7204-4f0e-9e9f-a71d3b2e3bf8/evidence",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 26,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/reports",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 535,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/reports",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 132,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/reports/RPT-2e09cc04-42fa-4625-a7b6-a4b7a7422ce3/versions",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 82,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/reports",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 104,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/reports/RPT-2e09cc04-42fa-4625-a7b6-a4b7a7422ce3/submit-review",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 118,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/reports",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 166,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/reports/RPT-2e09cc04-42fa-4625-a7b6-a4b7a7422ce3/approve",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 379,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/reports",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 82,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/reports/RPT-2e09cc04-42fa-4625-a7b6-a4b7a7422ce3/publish",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 88,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/reports",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 82,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/reports/RPT-2e09cc04-42fa-4625-a7b6-a4b7a7422ce3/evidence",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 26,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/reports/RPT-2e09cc04-42fa-4625-a7b6-a4b7a7422ce3/archive",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 364,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/reports",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 90,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "经营报告",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/reports/RPT-2e09cc04-42fa-4625-a7b6-a4b7a7422ce3/evidence",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 34,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "指标与场景管理",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/metrics/governance",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 69,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "指标与场景管理",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/metrics/governance/drafts",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 96,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "指标与场景管理",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/metrics/governance",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 75,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "指标与场景管理",
+      "method": "PATCH",
+      "url": "https://p5b.localhost:8446/api/v1/metrics/governance/versions/MGV-f466303f-3c6f-4dec-ae88-c4b9a0cc23d7",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 101,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "指标与场景管理",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/metrics/governance",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 82,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "指标与场景管理",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/metrics/governance/versions/MGV-f466303f-3c6f-4dec-ae88-c4b9a0cc23d7/impact-analysis",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 127,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "指标与场景管理",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/metrics/governance",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 83,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "指标与场景管理",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/metrics/governance/versions/MGV-f466303f-3c6f-4dec-ae88-c4b9a0cc23d7/submit-review",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 141,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "指标与场景管理",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/metrics/governance",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 61,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "指标与场景管理",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/metrics/governance/versions/MGV-f466303f-3c6f-4dec-ae88-c4b9a0cc23d7/approve",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 64,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "指标与场景管理",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/metrics/governance",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 56,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "指标与场景管理",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/metrics/governance/versions/MGV-f466303f-3c6f-4dec-ae88-c4b9a0cc23d7/publish",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 68,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "指标与场景管理",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/metrics/governance",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 60,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "LOGOUT",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/auth/oidc/logout",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 220,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "LOGOUT",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/auth/oidc/status",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 41,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    },
+    {
+      "page": "LOGOUT-RESTORE-CHECK",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/auth/oidc/status",
+      "status": 200,
+      "ok": true,
+      "duration_ms": 43,
+      "resource_type": "fetch",
+      "content_type": "application/json"
+    }
+  ],
+  "console_errors": [],
+  "page_errors": [],
+  "request_failures": [],
+  "finished_at": "2026-08-13T06:24:58.104Z"
+}

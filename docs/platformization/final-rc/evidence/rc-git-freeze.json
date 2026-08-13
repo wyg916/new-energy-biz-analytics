@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_git_freeze",
+  "generated_at": "2026-08-13T08:23:04.832260+00:00",
+  "status": "PASS",
+  "branch": "codex/integration-4.1-full",
+  "frozen_product_head": "b6be894a7153f7ce8d31dfc65da7222bd7af1b5f",
+  "remote_head": "b6be894a7153f7ce8d31dfc65da7222bd7af1b5f",
+  "ahead": 0,
+  "behind": 0,
+  "worktree_before_audit": "clean",
+  "tags_pointing_at_frozen_head": [],
+  "tag_created_by_audit": false
+}

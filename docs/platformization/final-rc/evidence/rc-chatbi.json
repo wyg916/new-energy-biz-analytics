@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_chatbi",
+  "generated_at": "2026-08-13T08:23:04.832260+00:00",
+  "status": "PASS",
+  "query_engine_mode": "DETERMINISTIC_ONLY",
+  "sqlbot_engine_enabled": false,
+  "sqlbot_status": "REGISTERED_NOT_ELIGIBLE",
+  "paths": [
+    "metric",
+    "trend",
+    "comparison",
+    "ranking",
+    "multi-dimension",
+    "scenario switch",
+    "clarification",
+    "follow-up"
+  ],
+  "functional_steps": [
+    "CHATBI-001",
+    "CHATBI-002"
+  ]
+}

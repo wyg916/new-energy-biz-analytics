@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_memory",
+  "generated_at": "2026-08-13T08:23:04.832260+00:00",
+  "status": "PASS",
+  "version": "4.1-memory-lifecycle-v1",
+  "fixed_evaluations": {
+    "memory": {
+      "passed": 40,
+      "total": 40,
+      "source": "test_memory_evaluation_report.py"
+    },
+    "skill": {
+      "passed": 40,
+      "total": 40,
+      "source": "test_memory_evaluation_report.py"
+    },
+    "lifecycle": {
+      "passed": 12,
+      "total": 12,
+      "version": "4.1-memory-lifecycle-v1"
+    }
+  },
+  "covered": [
+    "TTL",
+    "decay",
+    "legal hold",
+    "outbox",
+    "delete verification",
+    "delete-no-recall",
+    "user clear",
+    "Redis"
+  ],
+  "fresh_backend_regression_contains_fixed_eval": true,
+  "scheduler": {
+    "status": "PASS",
+    "task_count": 2306,
+    "failed_count": 0,
+    "duplicate_idempotency_key_count": 0
+  },
+  "single_api_container": true
+}

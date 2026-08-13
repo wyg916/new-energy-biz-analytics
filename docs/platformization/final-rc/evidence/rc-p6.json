@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_p6",
+  "generated_at": "2026-08-13T08:23:04.832260+00:00",
+  "status": "PASS",
+  "capabilities": [
+    "Alert",
+    "Report",
+    "Metric Governance"
+  ],
+  "functional_steps": [
+    "P6-ALERT-001",
+    "P6-REPORT-001",
+    "P6-METRIC-001"
+  ],
+  "rbac": "PASS",
+  "audit": "PASS",
+  "evidence_snapshot_immutable": true,
+  "clean_volume": {
+    "tables": 10,
+    "playwright_tests": 1,
+    "playwright_failures": 0
+  }
+}

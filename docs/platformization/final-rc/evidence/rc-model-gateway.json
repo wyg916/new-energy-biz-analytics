@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_model_gateway",
+  "generated_at": "2026-08-13T08:23:04.832260+00:00",
+  "status": "PASS",
+  "providers": [
+    {
+      "provider": "kimi",
+      "config_id": "kimi-rag-primary",
+      "model": "kimi-k2.6",
+      "response_valid": true,
+      "latency_ms": 2306,
+      "status": "PASS"
+    },
+    {
+      "provider": "mimo",
+      "config_id": "mimo-rag-standby",
+      "model": "mimo-v2.5",
+      "response_valid": true,
+      "latency_ms": 1567,
+      "status": "PASS"
+    },
+    {
+      "provider": "deepseek",
+      "config_id": "deepseek-rag-fallback",
+      "model": "deepseek-v4-flash",
+      "response_valid": true,
+      "latency_ms": 1444,
+      "status": "PASS"
+    }
+  ],
+  "real_calls": true,
+  "sqlbot_provider_qualification_rerun": false,
+  "secret_values_exposed": false
+}

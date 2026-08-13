@@ -1,0 +1,51 @@
+﻿{
+    "schema_version":  "1.0",
+    "evidence_type":  "final_rc_clean_volume_post_bootstrap",
+    "project":  "renewable-final-rc-clean",
+    "status":  "PASS",
+    "failure":  null,
+    "gates":  [
+                  {
+                      "name":  "model_gateway",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-13T06:57:14.7959699+00:00",
+                      "finished_at":  "2026-08-13T06:57:22.2487695+00:00",
+                      "output":  "{\"schema_version\": \"1.0\", \"evidence_type\": \"integration41full_runtime_model_gateway_probe\", \"generated_at\": \"2026-08-13T06:57:22.071040+00:00\", \"status\": \"PASS\", \"registration\": {\"status\": \"READY\", \"providers\": [{\"provider_alias\": \"kimi\", \"configured\": true, \"enabled\": true, \"credential_ref\": \"file:///run/provider-credentials/kimi\"}, {\"provider_alias\": \"mimo\", \"configured\": true, \"enabled\": true, \"credential_ref\": \"file:///run/provider-credentials/mimo\"}, {\"provider_alias\": \"deepseek\", \"configured\": true, \"enabled\": true, \"credential_ref\": \"file:///run/provider-credentials/deepseek\"}], \"secret_values_exposed\": false}, \"providers\": [{\"provider\": \"kimi\", \"config_id\": \"kimi-rag-primary\", \"model\": \"kimi-k2.6\", \"response_valid\": true, \"latency_ms\": 2306, \"status\": \"PASS\"}, {\"provider\": \"mimo\", \"config_id\": \"mimo-rag-standby\", \"model\": \"mimo-v2.5\", \"response_valid\": true, \"latency_ms\": 1567, \"status\": \"PASS\"}, {\"provider\": \"deepseek\", \"config_id\": \"deepseek-rag-fallback\", \"model\": \"deepseek-v4-flash\", \"response_valid\": true, \"latency_ms\": 1444, \"status\": \"PASS\"}], \"task_type\": \"rag_answer_generation\", \"response_content_exposed\": false, \"secret_values_exposed\": false}"
+                  },
+                  {
+                      "name":  "knowledge_bootstrap",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-13T06:57:22.2544687+00:00",
+                      "finished_at":  "2026-08-13T06:57:34.8831410+00:00",
+                      "output":  "[PASS] result written to /app/integration/publish_result.json\n{\n  \"knowledge_service\": \"READY\",\n  \"retrieval_mode\": \"hybrid_bm25_vector_rrf_rerank\",\n  \"keyword_index\": \"equivalent_bm25_v1\",\n  \"vector_status\": \"EQUIVALENT_VECTOR_READY\",\n  \"embedding_model\": \"deterministic_multilingual_feature_hash_v1\",\n  \"pgvector_claimed\": false,\n  \"published_chunk_count\": 276,\n  \"indexed_chunk_count\": 276,\n  \"sqlbot_runtime\": \"REGISTERED_NOT_ELIGIBLE\",\n  \"model_gateway\": {\n    \"status\": \"READY\",\n    \"providers\": [\n      {\n        \"provider_alias\": \"kimi\",\n        \"configured\": true,\n        \"enabled\": true,\n        \"credential_ref\": \"file:///run/provider-credentials/kimi\"\n      },\n      {\n        \"provider_alias\": \"mimo\",\n        \"configured\": true,\n        \"enabled\": true,\n        \"credential_ref\": \"file:///run/provider-credentials/mimo\"\n      },\n      {\n        \"provider_alias\": \"deepseek\",\n        \"configured\": true,\n        \"enabled\": true,\n        \"credential_ref\": \"file:///run/provider-credentials/deepseek\"\n      }\n    ],\n    \"secret_values_exposed\": false\n  },\n  \"data_classification\": \"OPEN_SOURCE_DERIVED\"\n}\n[PASS] 17 knowledge entries and 20 live RAG questions are published, indexed, located, and cited: /app/data/preproduction-evidence/final-rc-clean-knowledge-bootstrap.json\n[PASS] governed knowledge baseline applied with real analyst_admin OIDC identity\n{\"credential_provider\": \"VAULT_KV_V2\", \"documents\": 17, \"indexed_chunks\": 276, \"principal\": \"integration.knowledge-bootstrap\", \"published_chunks\": 276, \"secret_recorded\": false, \"status\": \"PASS\"}"
+                  },
+                  {
+                      "name":  "rag_rebuild",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-13T06:57:34.8841429+00:00",
+                      "finished_at":  "2026-08-13T06:57:40.5940908+00:00",
+                      "output":  "{\n  \"generated_at\": \"2026-08-13T06:57:40.067677+00:00\",\n  \"action\": \"REBUILT\",\n  \"embedding_model\": \"deterministic_multilingual_feature_hash_v1\",\n  \"embedding_version\": \"1.0.0\",\n  \"dimensions\": 256,\n  \"chunk_count\": 276,\n  \"indexed_chunk_count\": 276,\n  \"current_index_row_count\": 276,\n  \"stale_current_index_count\": 0,\n  \"index_ready\": true,\n  \"vector_count\": 276,\n  \"reviewed_version_count\": 17,\n  \"system_actor_type\": \"SYSTEM\",\n  \"governance_role\": \"rag_quality_agent\",\n  \"index_rebuild_passed\": true,\n  \"quality_reviews_all_passed\": false,\n  \"review_required_count\": 2\n}"
+                  },
+                  {
+                      "name":  "readonly_roles",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-13T06:57:40.5940908+00:00",
+                      "finished_at":  "2026-08-13T06:57:53.4297894+00:00",
+                      "output":  " Container renewable-final-rc-clean-runtime-bootstrap-run-3b2fed8e19aa Creating \n Container renewable-final-rc-clean-runtime-bootstrap-run-3b2fed8e19aa Created \n{\"action\": \"REUSED\", \"credential_file_tracked\": false, \"roles_created\": 0, \"scenario_isolated\": true, \"secret_values_exposed\": false, \"status\": \"PASS\"}"
+                  },
+                  {
+                      "name":  "source_bindings",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-13T06:57:53.4303058+00:00",
+                      "finished_at":  "2026-08-13T06:57:58.3764129+00:00",
+                      "output":  "{\"status\": \"PASS\", \"activation_scope\": \"local_full_integration_acceptance\", \"approval_mechanism\": \"automated_existing_admin_registry_workflow\", \"human_approval_claimed\": false, \"production_activation_claimed\": false, \"bindings\": [{\"scenario_id\": \"charging_ops\", \"binding_release_id\": \"SQLBOT-BIND-b4800aab-e32b-432b-947c-13bce160ca56\", \"version\": 2, \"status\": \"ACTIVE\", \"datasource_id\": \"1\", \"relation_count\": 6, \"data_classification\": \"OPEN_SOURCE_DERIVED\"}, {\"scenario_id\": \"sales_ops\", \"binding_release_id\": \"SQLBOT-BIND-5b0aecfa-6e8b-46ba-94c1-1cdf6d9ae3f8\", \"version\": 2, \"status\": \"ACTIVE\", \"datasource_id\": \"2\", \"relation_count\": 10, \"data_classification\": \"OPEN_SOURCE_DERIVED\"}]}"
+                  },
+                  {
+                      "name":  "runtime_verification",
+                      "status":  "PASS",
+                      "started_at":  "2026-08-13T06:57:58.3764129+00:00",
+                      "finished_at":  "2026-08-13T06:58:03.0066333+00:00",
+                      "output":  "{\n  \"status\": \"PASS\",\n  \"revision\": \"integration_41_full_0001\",\n  \"expected_revision\": \"integration_41_full_0001\",\n  \"rag\": {\n    \"generated_at\": \"2026-08-13T06:58:02.669413+00:00\",\n    \"action\": \"CHECKED\",\n    \"embedding_model\": \"deterministic_multilingual_feature_hash_v1\",\n    \"embedding_version\": \"1.0.0\",\n    \"dimensions\": 256,\n    \"chunk_count\": 276,\n    \"indexed_chunk_count\": 276,\n    \"current_index_row_count\": 276,\n    \"stale_current_index_count\": 0,\n    \"index_ready\": true\n  },\n  \"lifecycle_task_count\": 8,\n  \"lifecycle_failed_count\": 0,\n  \"published_document_count\": 17,\n  \"p6_table_count\": 10,\n  \"semantic_view_count\": 16,\n  \"active_binding_count\": 2,\n  \"query_engine_mode\": \"DETERMINISTIC_ONLY\",\n  \"sqlbot_provider_eligibility\": \"REGISTERED_NOT_ELIGIBLE\",\n  \"model_gateway\": {\n    \"status\": \"READY\",\n    \"providers\": [\n      {\n        \"provider_alias\": \"kimi\",\n        \"configured\": true,\n        \"enabled\": true,\n        \"credential_ref\": \"file:///run/provider-credentials/kimi\"\n      },\n      {\n        \"provider_alias\": \"mimo\",\n        \"configured\": true,\n        \"enabled\": true,\n        \"credential_ref\": \"file:///run/provider-credentials/mimo\"\n      },\n      {\n        \"provider_alias\": \"deepseek\",\n        \"configured\": true,\n        \"enabled\": true,\n        \"credential_ref\": \"file:///run/provider-credentials/deepseek\"\n      }\n    ],\n    \"secret_values_exposed\": false\n  },\n  \"checks\": {\n    \"migration_head\": true,\n    \"settings_revision\": true,\n    \"rag_index_reconciled\": true,\n    \"knowledge_published\": true,\n    \"knowledge_chunks_published\": true,\n    \"memory_scheduler_enabled\": true,\n    \"memory_scheduler_created_tasks\": true,\n    \"memory_scheduler_no_failed_tasks\": true,\n    \"redis_ready\": true,\n    \"p6_tables_ready\": true,\n    \"sqlbot_semantic_views_ready\": true,\n    \"sqlbot_source_bindings_ready\": true,\n    \"sqlbot_readonly_credentials_ready\": true,\n    \"deterministic_query_engine\": true,\n    \"sqlbot_engine_disabled\": true,\n    \"sqlbot_runtime_unverified\": true,\n    \"sqlbot_registered_not_eligible\": true,\n    \"sqlbot_release_included\": true,\n    \"model_gateway_ready\": true,\n    \"model_gateway_three_providers_registered\": true\n  }\n}"
+                  }
+              ]
+}

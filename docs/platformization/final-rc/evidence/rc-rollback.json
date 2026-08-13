@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_rollback_manifest",
+  "generated_at": "2026-08-13T08:23:04.832260+00:00",
+  "status": "PASS",
+  "code": {
+    "method": "deploy a previously approved immutable product commit/image; do not rewrite frozen history",
+    "frozen_product_head": "b6be894a7153f7ce8d31dfc65da7222bd7af1b5f"
+  },
+  "migration": {
+    "method": "use the verified Alembic downgrade boundary for the affected revision, then re-upgrade after remediation",
+    "normal_data_volume_delete": false
+  },
+  "runtime_configuration": {
+    "method": "restore the previously approved compose/environment manifest; keep SQLBOT_ENGINE_ENABLED=false"
+  },
+  "sqlbot": {
+    "enabled": false,
+    "status": "REGISTERED_NOT_ELIGIBLE",
+    "rollback_action": "remain disabled"
+  },
+  "vault": {
+    "method": "recover sealed Vault with existing persisted bootstrap material; never reinitialize as normal rollback",
+    "credential_rotation_required": false
+  },
+  "knowledge": {
+    "method": "activate a prior published immutable document version and rebuild its current index"
+  },
+  "data": {
+    "method": "retain PostgreSQL/DATA volumes and reactivate a previously approved dataset version",
+    "delete_all_volumes": false
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_security",
+  "generated_at": "2026-08-13T08:23:04.832260+00:00",
+  "status": "PASS",
+  "secret_scan": {
+    "scanner": "aquasec/trivy:0.70.0",
+    "tracked_commit": "b6be894a7153f7ce8d31dfc65da7222bd7af1b5f",
+    "scanned_files": 1579,
+    "secret_findings": 0,
+    "status": "PASS",
+    "archive_sha256": "33805576cc257f7c05ff62c8d65da79d45a287aea1bcdf033ff4428f64728465",
+    "report_sha256": "6921366e723f80f1cfb5c9cc58de6bebdc824f8cdbcc4f4b4c8bf056f7c367dc",
+    "env_file_contents_printed": false,
+    "secret_values_recorded": false
+  },
+  "backend_security_regression": "PASS",
+  "rbac": "PASS",
+  "cross_tenant": 0,
+  "cross_workspace": 0,
+  "cross_scenario": 0,
+  "pii_violation": 0,
+  "sql_write_allowed": 0,
+  "system_catalog_restriction": "PASS",
+  "rag_injection": 0,
+  "unauthorized_knowledge_recall": 0,
+  "readonly_role": "PASS",
+  "audit": "PASS",
+  "vault_sealed_recovery": "PASS",
+  "secret_values_recorded": false
+}

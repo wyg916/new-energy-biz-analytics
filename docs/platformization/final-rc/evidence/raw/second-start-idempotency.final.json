@@ -1,0 +1,108 @@
+﻿{
+    "schema_version":  "1.0",
+    "evidence_type":  "final_rc_second_start_idempotency_adjudicated",
+    "generated_at":  "2026-08-13T08:12:18.8432742+00:00",
+    "status":  "PASS",
+    "before":  {
+                   "memory_tasks":  2292,
+                   "memory_failed":  0,
+                   "open_data_runs":  2,
+                   "alembic_revision":  "integration_41_full_0001",
+                   "open_data_run_ids":  [
+                                             "DATA41-ACN-ORNL-26-V1",
+                                             "DATA41-UCI-ONLINE-RETAIL-352-V1"
+                                         ],
+                   "provider_ref_keys":  [
+                                             "preprod-acceptance-proof:1:VAULT_KV_V2",
+                                             "preprod-datasource-password:1:VAULT_KV_V2",
+                                             "preprod-knowledge-bootstrap-password:1:VAULT_KV_V2",
+                                             "preprod-sqlbot-password:1:VAULT_KV_V2",
+                                             "preprod-sqlbot-username:1:VAULT_KV_V2",
+                                             "preprod-webhook-signing:1:VAULT_KV_V2"
+                                         ],
+                   "p6_metric_versions":  29,
+                   "active_dataset_keys":  [
+                                               "DS-71e06aba-8f11-4146-80c2-751a8daddedf:5:ornl-acn-discovery-2020-v1",
+                                               "DS-7c72b696-d388-4f77-abef-cff15d44a89a:2:DATA41-UCI-ONLINE-RETAIL-352-V1"
+                                           ],
+                   "knowledge_documents":  23,
+                   "sqlbot_binding_keys":  [
+                                               "charging_ops:2:SQLBOT-BIND-e3418829-a38b-4940-a92e-39cc7ef781ab",
+                                               "sales_ops:2:SQLBOT-BIND-20797259-770c-4a11-90d7-1cc77b0e9d52"
+                                           ],
+                   "active_provider_refs":  6,
+                   "current_chunk_indexes":  276,
+                   "active_sqlbot_bindings":  2,
+                   "active_dataset_versions":  2,
+                   "published_current_chunks":  276,
+                   "published_knowledge_versions":  17,
+                   "memory_duplicate_idempotency_keys":  0
+               },
+    "after":  {
+                  "memory_tasks":  2306,
+                  "memory_failed":  0,
+                  "open_data_runs":  2,
+                  "alembic_revision":  "integration_41_full_0001",
+                  "open_data_run_ids":  [
+                                            "DATA41-ACN-ORNL-26-V1",
+                                            "DATA41-UCI-ONLINE-RETAIL-352-V1"
+                                        ],
+                  "provider_ref_keys":  [
+                                            "preprod-acceptance-proof:1:VAULT_KV_V2",
+                                            "preprod-datasource-password:1:VAULT_KV_V2",
+                                            "preprod-knowledge-bootstrap-password:1:VAULT_KV_V2",
+                                            "preprod-sqlbot-password:1:VAULT_KV_V2",
+                                            "preprod-sqlbot-username:1:VAULT_KV_V2",
+                                            "preprod-webhook-signing:1:VAULT_KV_V2"
+                                        ],
+                  "p6_metric_versions":  30,
+                  "active_dataset_keys":  [
+                                              "DS-71e06aba-8f11-4146-80c2-751a8daddedf:5:ornl-acn-discovery-2020-v1",
+                                              "DS-7c72b696-d388-4f77-abef-cff15d44a89a:2:DATA41-UCI-ONLINE-RETAIL-352-V1"
+                                          ],
+                  "knowledge_documents":  23,
+                  "sqlbot_binding_keys":  [
+                                              "charging_ops:2:SQLBOT-BIND-e3418829-a38b-4940-a92e-39cc7ef781ab",
+                                              "sales_ops:2:SQLBOT-BIND-20797259-770c-4a11-90d7-1cc77b0e9d52"
+                                          ],
+                  "active_provider_refs":  6,
+                  "current_chunk_indexes":  276,
+                  "active_sqlbot_bindings":  2,
+                  "active_dataset_versions":  2,
+                  "published_current_chunks":  276,
+                  "published_knowledge_versions":  17,
+                  "memory_duplicate_idempotency_keys":  0
+              },
+    "checks":  {
+                   "alembic_revision":  true,
+                   "open_data_runs":  true,
+                   "open_data_run_ids":  true,
+                   "active_dataset_versions":  true,
+                   "active_dataset_keys":  true,
+                   "published_knowledge_versions":  true,
+                   "published_current_chunks":  true,
+                   "current_chunk_indexes":  true,
+                   "active_provider_refs":  true,
+                   "provider_ref_keys":  true,
+                   "active_sqlbot_bindings":  true,
+                   "sqlbot_binding_keys":  true,
+                   "memory_scheduler_single_api_container":  true,
+                   "memory_failed_zero":  true,
+                   "memory_duplicate_idempotency_keys_zero":  true,
+                   "p6_bootstrap_created_zero_first":  true,
+                   "p6_bootstrap_created_zero_second":  true,
+                   "p6_business_e2e_version_delta_expected":  true,
+                   "p6_metric_version_duplicate_keys_zero":  true
+               },
+    "adjudication":  {
+                         "p6_metric_version_total_delta":  1,
+                         "classification":  "EXPECTED_BUSINESS_E2E_MUTATION",
+                         "reason":  "The one-click launcher runs the P6 real user workflow, which intentionally publishes one unique metric version. Both startup bootstrap logs independently report metric_governance_versions_created=0; no duplicate version key exists.",
+                         "raw_first_attempt_path":  "runtime/final-rc/second-start-idempotency.json",
+                         "raw_first_attempt_status":  "FAIL",
+                         "raw_attempt_preserved":  true
+                     },
+    "memory_task_delta":  14,
+    "memory_task_delta_reason":  "expected scheduler minute buckets; uniqueness and failure-free execution are the acceptance criteria",
+    "secret_values_recorded":  false
+}

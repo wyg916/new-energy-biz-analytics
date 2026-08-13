@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_rag",
+  "generated_at": "2026-08-13T08:23:04.832260+00:00",
+  "status": "PASS",
+  "mode": "hybrid_bm25_vector_rrf_rerank",
+  "golden": {
+    "base_cases": 60,
+    "extension_cases": 60,
+    "total_cases": 120,
+    "recall_at_10": 1.0,
+    "mean_reciprocal_rank": 0.8298,
+    "deterministic_repeat_runs": 2,
+    "citation_accuracy": 1.0,
+    "citation_contract_checks": 299,
+    "unauthorized_retrievals": 0,
+    "cross_scenario_retrievals": 0,
+    "prompt_injection_effects": 0,
+    "document_injection_effects": 0,
+    "no_evidence_refusal": "NO_PUBLISHED_EVIDENCE"
+  },
+  "fresh_index": {
+    "index_ready": true,
+    "chunk_count": 276
+  },
+  "fresh_backend_regression_contains_fixed_eval": true
+}

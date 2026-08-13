@@ -1,0 +1,6 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="22.283536">
+<testsuite name="day1-inventory.spec.ts" timestamp="2026-08-13T06:25:23.304Z" hostname="" tests="1" failures="0" skipped="0" time="14.031" errors="0">
+<testcase name="DAY-1 second pass covers all reachable page states and runtime controls" classname="day1-inventory.spec.ts" time="14.031">
+</testcase>
+</testsuite>
+</testsuites>

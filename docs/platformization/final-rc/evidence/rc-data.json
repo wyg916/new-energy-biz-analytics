@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_data",
+  "generated_at": "2026-08-13T08:23:04.832260+00:00",
+  "status": "PASS",
+  "classification": "OPEN_SOURCE_DERIVED",
+  "dq_passed": 28,
+  "dq_failed": 0,
+  "active_runs": [
+    "DATA41-ACN-ORNL-26-V1",
+    "DATA41-UCI-ONLINE-RETAIL-352-V1"
+  ],
+  "test_fixture_active_binding_count": 0,
+  "startup_download": false,
+  "fresh_clean_volume_chain": {
+    "status": "DATA_CHAIN_READY_FOR_FUNCTIONAL_TESTING",
+    "missing": false,
+    "dq28_pass": true,
+    "acn_active": true,
+    "uci_active": true,
+    "test_fixture_active": false
+  },
+  "version": "1.0"
+}

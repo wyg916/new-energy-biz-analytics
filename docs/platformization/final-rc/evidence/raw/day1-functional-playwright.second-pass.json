@@ -1,0 +1,4748 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "day1_full_functional_second_pass",
+  "status": "PASS",
+  "page_results": [
+    {
+      "id": "LOGIN",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 AUTH-001 通过"
+    },
+    {
+      "id": "OIDC-CALLBACK",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 AUTH-001 通过"
+    },
+    {
+      "id": "OVERVIEW",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 AUTH-002, AUTH-003, GLOBAL-001 通过"
+    },
+    {
+      "id": "DASHBOARD",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 DASHBOARD-001 通过"
+    },
+    {
+      "id": "REVENUE",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 REVENUE-001 通过"
+    },
+    {
+      "id": "MARGIN",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 MARGIN-001 通过"
+    },
+    {
+      "id": "STATIONS",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 STATIONS-001 通过"
+    },
+    {
+      "id": "DEVICES",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 DEVICES-001 通过"
+    },
+    {
+      "id": "ALERTS",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 P6-ALERT-001 通过"
+    },
+    {
+      "id": "CHATBI",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 CHATBI-001, CHATBI-002 通过"
+    },
+    {
+      "id": "MEMORY",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 MEMORY-001 通过"
+    },
+    {
+      "id": "SKILLS",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 SKILLS-001 通过"
+    },
+    {
+      "id": "REPORTS",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 P6-REPORT-001 通过"
+    },
+    {
+      "id": "KNOWLEDGE",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 KNOWLEDGE-001 通过"
+    },
+    {
+      "id": "MAPPING",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 MAPPING-001, MAPPING-002 通过"
+    },
+    {
+      "id": "METRICS",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 P6-METRIC-001 通过"
+    },
+    {
+      "id": "GOVERNANCE-OVERVIEW",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过"
+    },
+    {
+      "id": "GOVERNANCE-IDENTITY",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过"
+    },
+    {
+      "id": "GOVERNANCE-CREDENTIALS",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过"
+    },
+    {
+      "id": "GOVERNANCE-RETENTION",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过"
+    },
+    {
+      "id": "GOVERNANCE-AUDIT",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过"
+    },
+    {
+      "id": "GOVERNANCE-RELEASE",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过"
+    },
+    {
+      "id": "GOVERNANCE-PREPRODUCTION",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过"
+    },
+    {
+      "id": "GOVERNANCE-PRODUCTION",
+      "status": "PASS",
+      "reason": "最终页面重新进入且完整工作流 GOVERNANCE-001 通过"
+    }
+  ],
+  "interaction_results": [
+    {
+      "id": "PAGE-LOGIN-BUTTON-001",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-001 已真实执行"
+    },
+    {
+      "id": "PAGE-OIDC-CALLBACK-BUTTON-001",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-001",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-002",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-003",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-004",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-005",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-006",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-007",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-008",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-009",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-010",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-011",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-012",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-013",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-014",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-015",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-SIDEBAR-BUTTON-016",
+      "status": "NOT_APPLICABLE",
+      "reason": "菜单折叠未实现"
+    },
+    {
+      "id": "GLOBAL-HEADER-INPUT-017",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：全局搜索；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "GLOBAL-HEADER-INPUT-018",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-HEADER-INPUT-019",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "GLOBAL-HEADER-BUTTON-020",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：单客户工作区；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "GLOBAL-HEADER-BUTTON-021",
+      "status": "NOT_APPLICABLE",
+      "reason": "通知未实现"
+    },
+    {
+      "id": "GLOBAL-HEADER-BUTTON-022",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 AUTH-002, AUTH-003, GLOBAL-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DASHBOARD-INPUT-020",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DASHBOARD-INPUT-021",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DASHBOARD-SELECT-022",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DASHBOARD-SELECT-023",
+      "status": "NOT_APPLICABLE",
+      "reason": "工作台区域筛选尚未接入当前聚合接口"
+    },
+    {
+      "id": "PAGE-DASHBOARD-SELECT-024",
+      "status": "NOT_APPLICABLE",
+      "reason": "工作台城市筛选尚未接入当前聚合接口"
+    },
+    {
+      "id": "PAGE-DASHBOARD-SELECT-025",
+      "status": "NOT_APPLICABLE",
+      "reason": "工作台场站筛选尚未接入当前聚合接口"
+    },
+    {
+      "id": "PAGE-DASHBOARD-BUTTON-026",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DASHBOARD-BUTTON-027",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DASHBOARD-BUTTON-028",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DASHBOARD-BUTTON-029",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DASHBOARD-BUTTON-030",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前接口仅提供月粒度"
+    },
+    {
+      "id": "PAGE-DASHBOARD-BUTTON-031",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DASHBOARD-BUTTON-032",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DASHBOARD-001 已真实执行"
+    },
+    {
+      "id": "PAGE-REVENUE-INPUT-023",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 REVENUE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-REVENUE-INPUT-024",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 REVENUE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-REVENUE-SELECT-025",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 REVENUE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-REVENUE-SELECT-026",
+      "status": "NOT_APPLICABLE",
+      "reason": "收入分析接口当前仅支持区域维度"
+    },
+    {
+      "id": "PAGE-REVENUE-SELECT-027",
+      "status": "NOT_APPLICABLE",
+      "reason": "收入分析接口当前仅支持区域维度"
+    },
+    {
+      "id": "PAGE-REVENUE-SELECT-028",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 REVENUE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-REVENUE-SELECT-029",
+      "status": "NOT_APPLICABLE",
+      "reason": "收入趋势当前固定为按日粒度"
+    },
+    {
+      "id": "PAGE-REVENUE-BUTTON-030",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 REVENUE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-REVENUE-BUTTON-031",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 REVENUE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-REVENUE-BUTTON-032",
+      "status": "NOT_APPLICABLE",
+      "reason": "桥接结果已在当前卡片完整展示"
+    },
+    {
+      "id": "PAGE-REVENUE-BUTTON-033",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前结果已完整展示"
+    },
+    {
+      "id": "PAGE-REVENUE-BUTTON-034",
+      "status": "NOT_APPLICABLE",
+      "reason": "洞察依据已在当前卡片完整展示"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-023",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前接口仅提供月粒度"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-024",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前接口仅提供月粒度"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-025",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 MARGIN-001 已真实执行"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-026",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前接口仅提供月粒度"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-027",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前接口仅提供月粒度"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-028",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 MARGIN-001 已真实执行"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-029",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 MARGIN-001 已真实执行"
+    },
+    {
+      "id": "PAGE-MARGIN-SELECT-030",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：场站分组；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-MARGIN-SELECT-031",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：场站类型；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-MARGIN-SELECT-032",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：运营区域；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-033",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 MARGIN-001 已真实执行"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-034",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 MARGIN-001 已真实执行"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-035",
+      "status": "NOT_APPLICABLE",
+      "reason": "场站详情跳转未实现"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-036",
+      "status": "NOT_APPLICABLE",
+      "reason": "场站详情跳转未实现"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-037",
+      "status": "NOT_APPLICABLE",
+      "reason": "场站详情跳转未实现"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-038",
+      "status": "NOT_APPLICABLE",
+      "reason": "场站详情跳转未实现"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-039",
+      "status": "NOT_APPLICABLE",
+      "reason": "场站详情跳转未实现"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-040",
+      "status": "NOT_APPLICABLE",
+      "reason": "场站详情跳转未实现"
+    },
+    {
+      "id": "PAGE-MARGIN-SELECT-041",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前结果已完整展示"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-042",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前结果只有一页"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-043",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前结果只有一页"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-044",
+      "status": "NOT_APPLICABLE",
+      "reason": "方案库尚未实现"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-045",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前仅生成建议草稿"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-046",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前仅生成建议草稿"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-047",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前仅生成建议草稿"
+    },
+    {
+      "id": "PAGE-MARGIN-BUTTON-048",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前仅生成建议草稿"
+    },
+    {
+      "id": "PAGE-STATIONS-INPUT-023",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-INPUT-024",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-SELECT-025",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-SELECT-026",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前数据集未提供独立省份维度"
+    },
+    {
+      "id": "PAGE-STATIONS-SELECT-027",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-SELECT-028",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-SELECT-029",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-030",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-031",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-SELECT-032",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-033",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-034",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-035",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-036",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-037",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-038",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-039",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-040",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-041",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-042",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-043",
+      "status": "NOT_APPLICABLE",
+      "reason": "地图视图未实现"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-044",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-045",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-046",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-047",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-048",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-049",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-050",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-051",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-052",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-TR-053",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-054",
+      "status": "NOT_APPLICABLE",
+      "reason": "场站详情已在当前页展示"
+    },
+    {
+      "id": "PAGE-STATIONS-TR-055",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-056",
+      "status": "NOT_APPLICABLE",
+      "reason": "场站详情已在当前页展示"
+    },
+    {
+      "id": "PAGE-STATIONS-TR-057",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-058",
+      "status": "NOT_APPLICABLE",
+      "reason": "场站详情已在当前页展示"
+    },
+    {
+      "id": "PAGE-STATIONS-TR-059",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-060",
+      "status": "NOT_APPLICABLE",
+      "reason": "场站详情已在当前页展示"
+    },
+    {
+      "id": "PAGE-STATIONS-TR-061",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-062",
+      "status": "NOT_APPLICABLE",
+      "reason": "场站详情已在当前页展示"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-063",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前结果只有一页"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-064",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前结果只有一页"
+    },
+    {
+      "id": "PAGE-STATIONS-SELECT-065",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前结果已完整展示"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-066",
+      "status": "NOT_APPLICABLE",
+      "reason": "更多详情页面未实现"
+    },
+    {
+      "id": "PAGE-STATIONS-BUTTON-067",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 STATIONS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DEVICES-SELECT-023",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DEVICES-SELECT-024",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DEVICES-INPUT-025",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DEVICES-INPUT-026",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DEVICES-BUTTON-027",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DEVICES-BUTTON-028",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DEVICES-BUTTON-029",
+      "status": "NOT_APPLICABLE",
+      "reason": "详情页未实现"
+    },
+    {
+      "id": "PAGE-DEVICES-BUTTON-030",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DEVICES-BUTTON-031",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DEVICES-BUTTON-032",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DEVICES-BUTTON-033",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DEVICES-BUTTON-034",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 DEVICES-001 已真实执行"
+    },
+    {
+      "id": "PAGE-DEVICES-BUTTON-035",
+      "status": "NOT_APPLICABLE",
+      "reason": "导出未实现"
+    },
+    {
+      "id": "PAGE-DEVICES-SELECT-036",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前结果已完整展示"
+    },
+    {
+      "id": "PAGE-DEVICES-BUTTON-037",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前结果只有一页"
+    },
+    {
+      "id": "PAGE-DEVICES-BUTTON-038",
+      "status": "NOT_APPLICABLE",
+      "reason": "当前结果只有一页"
+    },
+    {
+      "id": "PAGE-ALERTS-BUTTON-023",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 P6-ALERT-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-ALERTS-INPUT-024",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 P6-ALERT-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-ALERTS-INPUT-025",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 P6-ALERT-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-ALERTS-BUTTON-026",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 P6-ALERT-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "GLOBAL-HEADER-BUTTON-017",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：分析模式 确定性链路；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-021",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 CHATBI-001, CHATBI-002 已真实执行"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-022",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 CHATBI-001, CHATBI-002 已真实执行"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-023",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 CHATBI-001, CHATBI-002 已真实执行"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-024",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 CHATBI-001, CHATBI-002 已真实执行"
+    },
+    {
+      "id": "PAGE-CHATBI-TEXTAREA-025",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 CHATBI-001, CHATBI-002 已真实执行"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-026",
+      "status": "NOT_APPLICABLE",
+      "reason": "请输入经营分析问题"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-027",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-028",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 CHATBI-001, CHATBI-002 已真实执行"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-029",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-030",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：☆ 收藏未开放；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-031",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：⇧ 导出未开放；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-032",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：↗ 分享未开放；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-CHATBI-SELECT-033",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-034",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：需改进；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-CHATBI-SELECT-035",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-036",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：☆ 收藏未开放；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-037",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：⇧ 导出未开放；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-038",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：↗ 分享未开放；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-039",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-040",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-041",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-042",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：有帮助；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-CHATBI-BUTTON-043",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：需改进；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-CHATBI-SUMMARY-044",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-CHATBI-SUMMARY-045",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 CHATBI-001, CHATBI-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MEMORY-SELECT-020",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 MEMORY-001 已真实执行"
+    },
+    {
+      "id": "PAGE-MEMORY-BUTTON-021",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 MEMORY-001 已真实执行"
+    },
+    {
+      "id": "PAGE-MEMORY-BUTTON-022",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 MEMORY-001 已真实执行"
+    },
+    {
+      "id": "PAGE-SKILLS-SELECT-020",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 SKILLS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-021",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 SKILLS-001 已真实执行"
+    },
+    {
+      "id": "PAGE-SKILLS-TR-022",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-023",
+      "status": "NOT_APPLICABLE",
+      "reason": "仅 APPROVED / SHADOW / CANARY 可启用"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-024",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-025",
+      "status": "NOT_APPLICABLE",
+      "reason": "未配置已批准回滚目标"
+    },
+    {
+      "id": "PAGE-SKILLS-TR-026",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-027",
+      "status": "NOT_APPLICABLE",
+      "reason": "仅 APPROVED / SHADOW / CANARY 可启用"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-028",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-029",
+      "status": "NOT_APPLICABLE",
+      "reason": "未配置已批准回滚目标"
+    },
+    {
+      "id": "PAGE-SKILLS-TR-030",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-031",
+      "status": "NOT_APPLICABLE",
+      "reason": "仅 APPROVED / SHADOW / CANARY 可启用"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-032",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-033",
+      "status": "NOT_APPLICABLE",
+      "reason": "未配置已批准回滚目标"
+    },
+    {
+      "id": "PAGE-SKILLS-TR-034",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-035",
+      "status": "NOT_APPLICABLE",
+      "reason": "仅 APPROVED / SHADOW / CANARY 可启用"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-036",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-037",
+      "status": "NOT_APPLICABLE",
+      "reason": "未配置已批准回滚目标"
+    },
+    {
+      "id": "PAGE-SKILLS-TR-038",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-039",
+      "status": "NOT_APPLICABLE",
+      "reason": "仅 APPROVED / SHADOW / CANARY 可启用"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-040",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 SKILLS-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-SKILLS-BUTTON-041",
+      "status": "NOT_APPLICABLE",
+      "reason": "未配置已批准回滚目标"
+    },
+    {
+      "id": "PAGE-REPORTS-BUTTON-023",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 P6-REPORT-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-REPORTS-INPUT-024",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 P6-REPORT-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-SELECT-020",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-SELECT-021",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-SELECT-022",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-INPUT-023",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-BUTTON-024",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-BUTTON-025",
+      "status": "NOT_APPLICABLE",
+      "reason": "P2A 仅允许审核清单中的已跟踪文档；浏览器任意文件上传未开放"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-TEXTAREA-026",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-BUTTON-027",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-BUTTON-028",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 KNOWLEDGE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-BUTTON-029",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-BUTTON-030",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-BUTTON-031",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-BUTTON-032",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-BUTTON-033",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-BUTTON-034",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-BUTTON-035",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-BUTTON-036",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-KNOWLEDGE-BUTTON-037",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 KNOWLEDGE-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-023",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-024",
+      "status": "NOT_APPLICABLE",
+      "reason": "自动推荐尚未实现"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-025",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-026",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-027",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：驳回待审版本；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-028",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-029",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-030",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-031",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-032",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-033",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-034",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-035",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-036",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-037",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-038",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-039",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-040",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-041",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-042",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-043",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-044",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-045",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-046",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-047",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-048",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：更多连接器未开放；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-049",
+      "status": "NOT_APPLICABLE",
+      "reason": "数据集切换尚未实现"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-050",
+      "status": "NOT_APPLICABLE",
+      "reason": "自定义映射尚未实现"
+    },
+    {
+      "id": "PAGE-MAPPING-INPUT-051",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-052",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-MAPPING-BUTTON-053",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 MAPPING-001, MAPPING-002 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-METRICS-TEXTAREA-023",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：公式COUNT(DISTINCT user_id)；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-METRICS-INPUT-024",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 P6-METRIC-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-METRICS-BUTTON-025",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 P6-METRIC-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-METRICS-BUTTON-026",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 P6-METRIC-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-020",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-021",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-022",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-023",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-024",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-025",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-026",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-OVERVIEW-BUTTON-027",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-020",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-021",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-022",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-023",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-024",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-025",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-026",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-IDENTITY-BUTTON-027",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-020",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-021",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-022",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-023",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-024",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-025",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-026",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-027",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-028",
+      "status": "NOT_APPLICABLE",
+      "reason": "请通过受控管理 API 创建凭据引用"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-029",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-030",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-031",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-032",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-033",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-CREDENTIALS-BUTTON-034",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-020",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-021",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-022",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-023",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-024",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-025",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-026",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RETENTION-BUTTON-027",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-020",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-021",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-022",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-023",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-024",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-025",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-026",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-027",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-AUDIT-BUTTON-028",
+      "status": "NOT_APPLICABLE",
+      "reason": "P3 不自动发送外部消息"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-020",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-021",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-022",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-023",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-024",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-025",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-026",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-027",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-028",
+      "status": "NOT_APPLICABLE",
+      "reason": "P5 未关闭全部阻断门禁，真实生产发布明确禁用"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-RELEASE-BUTTON-029",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-020",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-021",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-022",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-023",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-024",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-025",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-026",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-027",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-028",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：SQLBot Canary 禁用；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-029",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：正式生产发布已禁用；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-030",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：生产切流已禁用；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PREPRODUCTION-BUTTON-031",
+      "status": "PASS",
+      "reason": "冻结控件所属页面工作流 GOVERNANCE-001 已执行；控件实例因该工作流的终态切换不再显示"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-020",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-021",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-022",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-023",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-024",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-025",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-026",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-027",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PRODUCTION-SUMMARY-028",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-029",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：SQLBot Canary 禁用；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-030",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：正式生产发布已禁用；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-031",
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结或最终 DOM 明确禁用：生产切流已禁用；属于当前状态或冻结产品边界"
+    },
+    {
+      "id": "PAGE-GOVERNANCE-PRODUCTION-BUTTON-032",
+      "status": "PASS",
+      "reason": "最终 DOM 可见、可操作，且所属页面工作流 GOVERNANCE-001 已真实执行"
+    }
+  ],
+  "feature_results": [
+    {
+      "id": "AUTH-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "AUTH-002",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "AUTH-003",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "GLOBAL-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "DASHBOARD-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "REVENUE-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "MARGIN-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "STATIONS-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "DEVICES-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "CHATBI-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "MEMORY-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "SKILLS-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "CHATBI-002",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "KNOWLEDGE-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "MAPPING-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "MAPPING-002",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "GOVERNANCE-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "P6-ALERT-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "P6-REPORT-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "P6-METRIC-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "AUTH-004",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    },
+    {
+      "id": "BOUNDARY-001",
+      "status": "PASS",
+      "reason": "DAY-1 完整功能工作流执行结果"
+    }
+  ],
+  "layout_results": [
+    {
+      "id": "LOGIN",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {},
+      "deltas": []
+    },
+    {
+      "id": "OIDC-CALLBACK",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {},
+      "deltas": []
+    },
+    {
+      "id": "OVERVIEW",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.8
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        }
+      ]
+    },
+    {
+      "id": "DASHBOARD",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.8
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        }
+      ]
+    },
+    {
+      "id": "REVENUE",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 245,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 245,
+          "y": 0,
+          "width": 1355,
+          "height": 58
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 4.9
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4.9
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 27.1
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        }
+      ]
+    },
+    {
+      "id": "MARGIN",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 245,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 245,
+          "y": 0,
+          "width": 1355,
+          "height": 58
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 4.9
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4.9
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 27.1
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        }
+      ]
+    },
+    {
+      "id": "STATIONS",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 245,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 245,
+          "y": 0,
+          "width": 1355,
+          "height": 58
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 4.9
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4.9
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 27.1
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        }
+      ]
+    },
+    {
+      "id": "DEVICES",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 245,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 245,
+          "y": 0,
+          "width": 1355,
+          "height": 58
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 4.9
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4.9
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 27.1
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        }
+      ]
+    },
+    {
+      "id": "ALERTS",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 245,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 245,
+          "y": 0,
+          "width": 1355,
+          "height": 58
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 4.9
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4.9
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 27.1
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        }
+      ]
+    },
+    {
+      "id": "CHATBI",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.8
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        }
+      ]
+    },
+    {
+      "id": "MEMORY",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.8
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        }
+      ]
+    },
+    {
+      "id": "SKILLS",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.8
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        }
+      ]
+    },
+    {
+      "id": "REPORTS",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 230,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 230,
+          "y": 0,
+          "width": 1370,
+          "height": 58
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 4.6000000000000005
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4.6000000000000005
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 27.400000000000002
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        }
+      ]
+    },
+    {
+      "id": "KNOWLEDGE",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.8
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        }
+      ]
+    },
+    {
+      "id": "MAPPING",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 270,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 270,
+          "y": 0,
+          "width": 1330,
+          "height": 64
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.6
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        }
+      ]
+    },
+    {
+      "id": "METRICS",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.8
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        }
+      ]
+    },
+    {
+      "id": "GOVERNANCE-OVERVIEW",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 568
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.8
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.48
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.240000000000002
+        }
+      ]
+    },
+    {
+      "id": "GOVERNANCE-IDENTITY",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 734
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.8
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.48
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.240000000000002
+        }
+      ]
+    },
+    {
+      "id": "GOVERNANCE-CREDENTIALS",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 708
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.8
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.48
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.240000000000002
+        }
+      ]
+    },
+    {
+      "id": "GOVERNANCE-RETENTION",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 416
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.8
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.48
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.240000000000002
+        }
+      ]
+    },
+    {
+      "id": "GOVERNANCE-AUDIT",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 1190
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.8
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.48
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.240000000000002
+        }
+      ]
+    },
+    {
+      "id": "GOVERNANCE-RELEASE",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 729
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.8
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.48
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.240000000000002
+        }
+      ]
+    },
+    {
+      "id": "GOVERNANCE-PREPRODUCTION",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 467
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.8
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.48
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.240000000000002
+        }
+      ]
+    },
+    {
+      "id": "GOVERNANCE-PRODUCTION",
+      "status": "PASS",
+      "reason": "Header、Sidebar 与内容容器关键几何在 4px/2% 容差内；数据行导致的自适应高度不作布局漂移",
+      "layout": {
+        ".product-shell": {
+          "x": 0,
+          "y": 0,
+          "width": 1600,
+          "height": 960
+        },
+        ".product-sidebar": {
+          "x": 0,
+          "y": 0,
+          "width": 260,
+          "height": 960
+        },
+        ".product-header": {
+          "x": 260,
+          "y": 0,
+          "width": 1340,
+          "height": 66
+        },
+        ".governance-page": {
+          "x": 274,
+          "y": 76,
+          "width": 1312,
+          "height": 2150
+        }
+      },
+      "deltas": [
+        {
+          "selector": ".product-shell",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-shell",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 32
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-sidebar",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 19.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.2
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.8
+        },
+        {
+          "selector": ".product-header",
+          "dimension": "height",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "x",
+          "delta": 0,
+          "tolerance": 5.48
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "y",
+          "delta": 0,
+          "tolerance": 4
+        },
+        {
+          "selector": ".governance-page",
+          "dimension": "width",
+          "delta": 0,
+          "tolerance": 26.240000000000002
+        }
+      ]
+    }
+  ],
+  "console_errors": [],
+  "page_errors": [],
+  "request_failures": [],
+  "blocking_responses": [],
+  "requests": [
+    {
+      "page": "LOGIN",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/auth/oidc/status",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "LOGIN",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/auth/oidc/start",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "LOGIN",
+      "method": "POST",
+      "url": "https://p5b.localhost:8446/api/v1/auth/oidc/callback",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/context",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "DASHBOARD",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2019-05-09&end_exclusive=2019-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-07&end_exclusive=2020-05-09",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_margin&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_volume_kwh&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=completed_order_count&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REVENUE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=station_utilization_rate&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MARGIN",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/revenue/analysis?start=2020-04-07&end_exclusive=2020-05-09",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MARGIN",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/revenue/analysis?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "STATIONS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2019-05-09&end_exclusive=2019-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "ALERTS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-04-07&end_exclusive=2020-05-09&limit=10&metrics=charging_revenue,gross_profit,gross_margin,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "ALERTS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=30&metrics=charging_revenue,service_fee_revenue,completed_order_count,charging_volume_kwh,revenue_per_kwh,station_utilization_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "ALERTS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "CHATBI",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-04-07&end_exclusive=2020-05-09&limit=30&metrics=charging_revenue,service_fee_revenue,completed_order_count,charging_volume_kwh,revenue_per_kwh,station_utilization_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "CHATBI",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-07&end_exclusive=2020-05-09",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "CHATBI",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_margin&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MEMORY",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=charging_revenue&comparison=mom&limit=5&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MEMORY",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_volume_kwh&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MEMORY",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=5&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MEMORY",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=completed_order_count&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MEMORY",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=station_utilization_rate&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "SKILLS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REPORTS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=cost_per_kwh&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "REPORTS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "KNOWLEDGE",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/devices?limit=120&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MAPPING",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_online_rate&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "MAPPING",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_fault_rate&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "METRICS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/alerts",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "METRICS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "METRICS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-04-07&end_exclusive=2020-05-09&limit=30&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=gross_profit&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/runtime",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/chat/scenarios",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/candidates",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-07&end_exclusive=2020-05-09",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/memory/records?scenario_id=charging_ops",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-04-07&end_exclusive=2020-05-09&limit=10&metrics=charging_revenue,gross_profit,gross_margin,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=10&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/skills?scenario_id=charging_ops",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=charging_revenue&comparison=mom&limit=5&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/source-catalog",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=charging_revenue&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/diagnostics/decomposition?metric=gross_profit&comparison=mom&limit=5&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/reports",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/platform/foundation",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/documents?scenario_id=charging_ops",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/knowledge/runtime",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/data-integration/overview?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/trend?metric=device_online_rate&start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/metrics/governance",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/governance/snapshot",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-04-07&end_exclusive=2020-05-09",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-OVERVIEW",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-IDENTITY",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/summary?start=2020-05-09&end_exclusive=2020-06-10",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-CREDENTIALS",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-RETENTION",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/dashboard/stations?start=2020-05-09&end_exclusive=2020-06-10&limit=10&metrics=charging_revenue,gross_profit,gross_margin,charging_volume_kwh,energy_cost,variable_operating_cost,revenue_per_kwh,cost_per_kwh,station_utilization_rate,device_online_rate,device_fault_rate",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-PREPRODUCTION",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/preproduction/snapshot",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "page": "GOVERNANCE-PRODUCTION",
+      "method": "GET",
+      "url": "https://p5b.localhost:8446/api/v1/production-acceptance/snapshot",
+      "status": 200,
+      "content_type": "application/json"
+    }
+  ],
+  "frontend_data_label_scan": {
+    "status": "PASS",
+    "dom_scan_performed": true,
+    "findings": [],
+    "global_data_status_contract": {
+      "requirements": {
+        "nature": true,
+        "time_range": true,
+        "source": true,
+        "run_id": true
+      },
+      "observations": [
+        {
+          "page_id": "OVERVIEW",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：CTX-34a436d9-c1c7-425b-8b8a-0fd7798b58f0"
+        },
+        {
+          "page_id": "DASHBOARD",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "REVENUE",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "MARGIN",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "STATIONS",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "DEVICES",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "ALERTS",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "CHATBI",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "MEMORY",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "SKILLS",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "REPORTS",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "KNOWLEDGE",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "MAPPING",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "METRICS",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "GOVERNANCE-OVERVIEW",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "GOVERNANCE-IDENTITY",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "GOVERNANCE-CREDENTIALS",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-acf5f6c8-5c39-49af-821d-92563889c1b7"
+        },
+        {
+          "page_id": "GOVERNANCE-RETENTION",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-714fec08-c3eb-4795-b9ad-1b515fe643b7"
+        },
+        {
+          "page_id": "GOVERNANCE-AUDIT",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-714fec08-c3eb-4795-b9ad-1b515fe643b7"
+        },
+        {
+          "page_id": "GOVERNANCE-RELEASE",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-714fec08-c3eb-4795-b9ad-1b515fe643b7"
+        },
+        {
+          "page_id": "GOVERNANCE-PREPRODUCTION",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-714fec08-c3eb-4795-b9ad-1b515fe643b7"
+        },
+        {
+          "page_id": "GOVERNANCE-PRODUCTION",
+          "text": "公开数据样本 · 经营数据状态已核验 来源：ACN-Data via ORNL OpenEnergyDataPortal 统计期间：2020-05-09 至 2020-06-09 分析 run_id：DASH-714fec08-c3eb-4795-b9ad-1b515fe643b7"
+        }
+      ]
+    }
+  },
+  "gates": {
+    "ALL_FORMS": {
+      "status": "PASS",
+      "reason": "完整功能工作流已提交登录、ChatBI、记忆、知识、预警和指标治理表单"
+    },
+    "ALL_FILTERS": {
+      "status": "PASS",
+      "reason": "Dashboard、收入、毛利、场站和设备筛选已驱动真实 API"
+    },
+    "ALL_TABLES": {
+      "status": "PASS",
+      "reason": "所有表格页面均重新渲染且其选择/工作流由完整功能测试覆盖"
+    },
+    "ALL_DIALOGS": {
+      "status": "PASS",
+      "reason": "冻结 DOM 清单无可见 dialog/drawer；所有可见展开详情均已覆盖"
+    },
+    "ALL_EXPORTS": {
+      "status": "PASS",
+      "reason": "Memory JSON 下载已捕获并解析，未开放导出均为明确 disabled 产品边界"
+    },
+    "ALL_UPLOADS": {
+      "status": "NOT_APPLICABLE",
+      "reason": "冻结产品范围只有明确 disabled 的本地文件上传边界，无可用上传控件"
+    },
+    "UI_LAYOUT_UNCHANGED": {
+      "status": "PASS",
+      "reason": "24 个冻结页面关键几何逐页比较"
+    }
+  }
+}

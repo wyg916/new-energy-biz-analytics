@@ -1,0 +1,21 @@
+﻿{
+    "schema_version":  "1.0",
+    "evidence_type":  "final_rc_clean_volume_retention",
+    "status":  "PASS",
+    "compose_down_exit":  0,
+    "volume_delete_requested":  false,
+    "retained_volumes":  [
+                             "renewable-final-rc-clean_p4_backups",
+                             "renewable-final-rc-clean_p4_evidence",
+                             "renewable-final-rc-clean_p4_imports",
+                             "renewable-final-rc-clean_p4_keycloak_runtime",
+                             "renewable-final-rc-clean_p4_postgres",
+                             "renewable-final-rc-clean_p4_redis",
+                             "renewable-final-rc-clean_p4_runtime",
+                             "renewable-final-rc-clean_p4_vault_audit",
+                             "renewable-final-rc-clean_p4_vault_rc1"
+                         ],
+    "remaining_containers":  [
+
+                             ]
+}

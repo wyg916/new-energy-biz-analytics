@@ -1,0 +1,203 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_clean_volume_gate",
+  "generated_at": "2026-08-13T08:23:04.832260+00:00",
+  "status": "PASS",
+  "runtime": {
+    "schema_version": "1.0",
+    "evidence_type": "final_rc_clean_volume",
+    "generated_at": "2026-08-13T07:08:13.2150663+00:00",
+    "status": "PASS",
+    "project": "renewable-final-rc-clean",
+    "isolated_new_volumes": [
+      "renewable-final-rc-clean_p4_backups",
+      "renewable-final-rc-clean_p4_evidence",
+      "renewable-final-rc-clean_p4_imports",
+      "renewable-final-rc-clean_p4_keycloak_runtime",
+      "renewable-final-rc-clean_p4_postgres",
+      "renewable-final-rc-clean_p4_redis",
+      "renewable-final-rc-clean_p4_runtime",
+      "renewable-final-rc-clean_p4_vault_audit",
+      "renewable-final-rc-clean_p4_vault_rc1"
+    ],
+    "existing_volume_deleted": false,
+    "data_volume_retention_required": true,
+    "services": [
+      {
+        "service": "alert-receiver",
+        "state": "running",
+        "health": "healthy",
+        "image": "renewable-integration41-full-api:4.1.0-integration-full.1"
+      },
+      {
+        "service": "api",
+        "state": "running",
+        "health": "healthy",
+        "image": "renewable-integration41-full-api:4.1.0-integration-full.1"
+      },
+      {
+        "service": "backup",
+        "state": "running",
+        "health": "running",
+        "image": "renewable-p5b-backup:16.14-hardened"
+      },
+      {
+        "service": "db",
+        "state": "running",
+        "health": "healthy",
+        "image": "renewable-p5b-postgres:16.14-hardened"
+      },
+      {
+        "service": "oidc",
+        "state": "running",
+        "health": "healthy",
+        "image": "renewable-p5b-keycloak:26.7.0-hardened"
+      },
+      {
+        "service": "proxy",
+        "state": "running",
+        "health": "healthy",
+        "image": "nginx:1.31.3-alpine@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752"
+      },
+      {
+        "service": "redis",
+        "state": "running",
+        "health": "healthy",
+        "image": "redis:7.4.10-alpine@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2"
+      },
+      {
+        "service": "vault",
+        "state": "running",
+        "health": "healthy",
+        "image": "hashicorp/vault:2.0.3@sha256:a296a888b118615dc01d5f1a6846e6d4a7277946caaed5b447008fff5fe06b54"
+      },
+      {
+        "service": "web",
+        "state": "running",
+        "health": "healthy",
+        "image": "renewable-integration41-full-web:4.1.0-integration-full.1"
+      }
+    ],
+    "http": {
+      "readiness": 200,
+      "oidc_discovery": 200
+    },
+    "migration": "docker.exe : INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.\r\nAt line:2 char:1599\r\n+ ... ,'alembic','current'); $migration=(& docker @alembicArgs 2>&1|Out-Str ...\r\n+                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (INFO  [alembic....PostgresqlImpl.:String) [], RemoteException\r\n    + FullyQualifiedErrorId : NativeCommandError\r\n \r\nINFO  [alembic.runtime.migration] Will assume transactional DDL.\r\nintegration_41_full_0001 (head) (mergepoint)",
+    "data": {
+      "status": "DATA_CHAIN_READY_FOR_FUNCTIONAL_TESTING",
+      "missing": false,
+      "dq28_pass": true,
+      "acn_active": true,
+      "uci_active": true,
+      "test_fixture_active": false
+    },
+    "knowledge": {
+      "credential_provider": "VAULT_KV_V2",
+      "documents": 17,
+      "indexed_chunks": 276,
+      "principal": "integration.knowledge-bootstrap",
+      "published_chunks": 276,
+      "secret_recorded": false,
+      "status": "PASS"
+    },
+    "rag": {
+      "index_ready": true,
+      "chunk_count": 276
+    },
+    "memory_scheduler": {
+      "status": null,
+      "task_count": null,
+      "failed_count": null
+    },
+    "chatbi": {
+      "query_engine_mode": "DETERMINISTIC_ONLY",
+      "sqlbot_engine_enabled": false,
+      "bindings": 2
+    },
+    "p6": {
+      "tables": null,
+      "playwright_tests": 1,
+      "playwright_failures": 0
+    },
+    "model_gateway": [
+      {
+        "provider": "kimi",
+        "config_id": "kimi-rag-primary",
+        "model": "kimi-k2.6",
+        "response_valid": true,
+        "latency_ms": 2306,
+        "status": "PASS"
+      },
+      {
+        "provider": "mimo",
+        "config_id": "mimo-rag-standby",
+        "model": "mimo-v2.5",
+        "response_valid": true,
+        "latency_ms": 1567,
+        "status": "PASS"
+      },
+      {
+        "provider": "deepseek",
+        "config_id": "deepseek-rag-fallback",
+        "model": "deepseek-v4-flash",
+        "response_valid": true,
+        "latency_ms": 1444,
+        "status": "PASS"
+      }
+    ],
+    "readonly_role": {
+      "action": "REUSED",
+      "credential_file_tracked": false,
+      "roles_created": 0,
+      "scenario_isolated": true,
+      "secret_values_exposed": false,
+      "status": "PASS"
+    },
+    "vault": {
+      "schema_version": "1.0",
+      "evidence_type": "final_rc_vault_sealed_recovery",
+      "status": "PASS",
+      "before": {
+        "readiness_http": 200,
+        "initialized": true,
+        "sealed": false
+      },
+      "sealed_case": {
+        "readiness_http": 503,
+        "initialized": true,
+        "sealed": true
+      },
+      "recovery": {
+        "bootstrap_exit": 0,
+        "method": "existing persisted bootstrap material; no re-initialization and no credential rotation",
+        "readiness_http": 200,
+        "initialized": true,
+        "sealed": false
+      },
+      "secret_values_exposed": false
+    },
+    "backend_ready": true,
+    "frontend_ready": true,
+    "proxy_ready": true,
+    "secret_values_exposed": false
+  },
+  "retention": {
+    "schema_version": "1.0",
+    "evidence_type": "final_rc_clean_volume_retention",
+    "status": "PASS",
+    "compose_down_exit": 0,
+    "volume_delete_requested": false,
+    "retained_volumes": [
+      "renewable-final-rc-clean_p4_backups",
+      "renewable-final-rc-clean_p4_evidence",
+      "renewable-final-rc-clean_p4_imports",
+      "renewable-final-rc-clean_p4_keycloak_runtime",
+      "renewable-final-rc-clean_p4_postgres",
+      "renewable-final-rc-clean_p4_redis",
+      "renewable-final-rc-clean_p4_runtime",
+      "renewable-final-rc-clean_p4_vault_audit",
+      "renewable-final-rc-clean_p4_vault_rc1"
+    ],
+    "remaining_containers": []
+  }
+}

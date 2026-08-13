@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_migration",
+  "generated_at": "2026-08-13T08:23:04.832260+00:00",
+  "status": "PASS",
+  "unique_head_count": 1,
+  "head_revision": "integration_41_full_0001",
+  "current_revision": "integration_41_full_0001",
+  "cycle": [
+    "baseline",
+    "final head",
+    "rollback",
+    "final head"
+  ],
+  "cycle_status": "PASS",
+  "isolated_database": "integration_41_full_migration_verify",
+  "isolated_database_removed": true,
+  "frozen_history_modified": false,
+  "source": "fresh one-click first and second startup migration-cycle steps"
+}

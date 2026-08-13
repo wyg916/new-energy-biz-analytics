@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_playwright",
+  "generated_at": "2026-08-13T08:23:04.832260+00:00",
+  "status": "PASS",
+  "rc_authoritative_specs": [
+    "day1-full-functional.spec.ts",
+    "day1-inventory.spec.ts",
+    "integration41-full-safe-mode.spec.ts"
+  ],
+  "rc_tests": 3,
+  "rc_failures_or_errors": 0,
+  "pages": {
+    "covered": 24,
+    "total": 24,
+    "coverage_percent": 100.0
+  },
+  "controls": {
+    "covered": 329,
+    "total": 329,
+    "coverage_percent": 100.0,
+    "applicable_pass": 241,
+    "reasoned_not_applicable": 88
+  },
+  "user_visible_functions": {
+    "passed": 22,
+    "total": 22,
+    "pass_percent": 100.0
+  },
+  "layout": {
+    "passed": 24,
+    "total": 24
+  },
+  "business_api_responses": 267,
+  "business_api_non_2xx": 0,
+  "console_errors": 0,
+  "page_errors": 0,
+  "request_failures": 0,
+  "blocking_responses": 0,
+  "historical_phase_collection_attempt": {
+    "status": "NOT_APPLICABLE_TO_FINAL_RC_GATE",
+    "tests": 32,
+    "failures": 3,
+    "errors": 0,
+    "skipped": 29,
+    "reason": "The repository-wide collection includes superseded phase-specific local-login and historical-state contracts. The raw interrupted attempt is preserved; no test was skipped, deleted, or weakened to manufacture the RC result."
+  }
+}

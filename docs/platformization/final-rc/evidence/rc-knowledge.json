@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_knowledge",
+  "generated_at": "2026-08-13T08:23:04.832260+00:00",
+  "status": "PASS",
+  "documents": 17,
+  "published_chunks": 276,
+  "indexed_chunks": 276,
+  "live_questions": 20,
+  "lifecycle_ui": [
+    "ingest",
+    "retrieve",
+    "publish",
+    "retire",
+    "rollback"
+  ]
+}

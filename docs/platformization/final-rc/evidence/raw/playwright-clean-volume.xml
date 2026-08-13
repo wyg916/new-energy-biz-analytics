@@ -1,0 +1,6 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="175.707527">
+<testsuite name="day1-full-functional.spec.ts" timestamp="2026-08-13T07:00:13.148Z" hostname="" tests="1" failures="0" skipped="0" time="149.692" errors="0">
+<testcase name="DAY-1 real OIDC and API full functional acceptance" classname="day1-full-functional.spec.ts" time="149.692">
+</testcase>
+</testsuite>
+</testsuites>

@@ -1,0 +1,23 @@
+﻿{
+    "schema_version":  "1.0",
+    "evidence_type":  "final_rc_vault_sealed_recovery",
+    "status":  "PASS",
+    "before":  {
+                   "readiness_http":  200,
+                   "initialized":  true,
+                   "sealed":  false
+               },
+    "sealed_case":  {
+                        "readiness_http":  503,
+                        "initialized":  true,
+                        "sealed":  true
+                    },
+    "recovery":  {
+                     "bootstrap_exit":  0,
+                     "method":  "existing persisted bootstrap material; no re-initialization and no credential rotation",
+                     "readiness_http":  200,
+                     "initialized":  true,
+                     "sealed":  false
+                 },
+    "secret_values_exposed":  false
+}

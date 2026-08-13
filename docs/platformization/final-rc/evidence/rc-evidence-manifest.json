@@ -1,0 +1,258 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_evidence_manifest",
+  "generated_at": "2026-08-13T08:23:05.269671+00:00",
+  "status": "PASS",
+  "manifest_scope": "all gate payloads, fresh raw artifacts and fixed-evaluation sources; excludes self, release manifest and final summary to avoid recursive hashes",
+  "artifact_count": 41,
+  "missing_count": 0,
+  "hash_mismatch_count": 0,
+  "artifacts": [
+    {
+      "path": "docs/platformization/data41/evidence/data41-acceptance-summary.json",
+      "sha256": "3fdc3b6d798e67278cbddb665f3c107bf06a165d320fe60de3036cded01b8fb3",
+      "size": 5714,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/backend-regression/backend-full-summary.json",
+      "sha256": "1a66df730a1c0d8f80d766d4d5dc1294646ad5069666d9bb0fed95e6d01f2090",
+      "size": 849,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/backend-regression/backend-full.xml",
+      "sha256": "ac9541ec2f0af9bf0ab9edabe6453da2b666dc9127baa33251af159008bfeb12",
+      "size": 78886,
+      "status": "RAW"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/canonical-runtime-restore.json",
+      "sha256": "25fdca0ad29695aff729b9865dd904ae1d7feb64840190dc9520ccdeec3d227f",
+      "size": 1930,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/clean-volume-data-chain-post-e2e.raw.json",
+      "sha256": "aabcc3ccc0cd99396b6da3a99214318bacfe59cf31e7a8d146b1af96608ee3df",
+      "size": 19036,
+      "status": "RAW"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/clean-volume-post-bootstrap.json",
+      "sha256": "40271d4bdb2aac38e9175d1322293d1ea86900c5cc6dc37406c4559267374231",
+      "size": 9306,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/clean-volume-retention.json",
+      "sha256": "7ebe2dda6f673e94daed287a080d64440f8d811df145f528f6030b0b66cde0f7",
+      "size": 950,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/clean-volume-summary.json",
+      "sha256": "b34de6800ae8286e9b276bdfa7ed412ed9790ef2f551a835f1880f2e5e925cfa",
+      "size": 8647,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/day1-functional-playwright.json",
+      "sha256": "cd96ec0fd9bcbc0c8f7bba464ecff85058a3e74fc8165c79d4227f66125ead16",
+      "size": 98750,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/day1-functional-playwright.second-pass.json",
+      "sha256": "855a17adbc8aaddd147453c603dac8651616a477999cabbd471eea6ceef88843",
+      "size": 145193,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/frontend-vitest.json",
+      "sha256": "ee052e40fe59ba3972ea7024f0174cbd2a10109011442b0a48d0d11b720fe59a",
+      "size": 1329,
+      "status": "RAW"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/one-click-start.json",
+      "sha256": "805c9fe82e5e5c1e3dbfe23170c48bc2acd22fc3f32270f742fc17339e6be3ec",
+      "size": 38374,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/playwright-all.raw.xml",
+      "sha256": "67fe06a533df9b2a89f83a96bd65a2af415da60b6295baa095db27138b2fa55d",
+      "size": 17118,
+      "status": "RAW"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/playwright-clean-volume.xml",
+      "sha256": "61bef5b982a196a9ed32fddbb76a3be872a9eb783fbb23c9a7bf4e7834d7b557",
+      "size": 412,
+      "status": "RAW"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/playwright-full-functional.xml",
+      "sha256": "bff608daa4ba3b089a0c13c7d3eb85302505e6ef21e24f11563a3d82084a1f2b",
+      "size": 417,
+      "status": "RAW"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/playwright-inventory.xml",
+      "sha256": "333254d978408cfda79787afffd29e4c71ee04d476614ebda29f451b4779c47e",
+      "size": 418,
+      "status": "RAW"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/playwright-safe-mode.xml",
+      "sha256": "198883e4a769c2e3073005cf7d6789eefec079f3073e4a747cb24d1d7d139938",
+      "size": 431,
+      "status": "RAW"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/second-start-idempotency.final.json",
+      "sha256": "72b90acfe37f6adce2395c0ad88fae1247b0a5a06e5d1297166cd4ca5481add4",
+      "size": 6593,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/second-start-idempotency.json",
+      "sha256": "52df9a168f8fe2795ba39592096dcab6cd6c18bcffaddad513c9b5d7c28d5221",
+      "size": 5683,
+      "status": "FAIL"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/second-start.json",
+      "sha256": "c067a1f6a5304758b565439beb8663570e9b557c8222e85ef0abbb38b5fa1dcf",
+      "size": 38376,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/secret-scan-summary.json",
+      "sha256": "4fac83ca3593bf27d99a5de9ccb5c00f866132b5ca2e840723f5d1ed70bffd32",
+      "size": 462,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/raw/vault-sealed-recovery.final.json",
+      "sha256": "883e3a92d175f5818bf493a581b865a30dc616ed0fb4eef7d3893ffc2fbf497f",
+      "size": 839,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-chatbi.json",
+      "sha256": "18375d4aefcdb5f6dd9431e2cd39903556819f0d293d616397051388ba93be21",
+      "size": 492,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-clean-volume.json",
+      "sha256": "1893022e4b2b3ada44deb6313c521bfb92e5856f7f22f2d281ae61b04e79d986",
+      "size": 6411,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-data.json",
+      "sha256": "c5ff84500c094cdca1990576715adbd8842e2ea8eec0687da0ae6ba98fe536ec",
+      "size": 622,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-frontend.json",
+      "sha256": "f311beefc985668dfa81814b51a17baccba719172e6a3a2a9d711aa729e5aa48",
+      "size": 389,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-git-freeze.json",
+      "sha256": "6a622ceea63c8569d75316377d16dfee7df5d3cdbf5718034bd93b3312dd6a7c",
+      "size": 454,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-knowledge.json",
+      "sha256": "272a212388e02f7172ab7220d2094b5ff3848020ef22c0bc0cf7dcfe906cc564",
+      "size": 339,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-memory.json",
+      "sha256": "6e18a10dea5bbcd8351a8c427a74a39d6d0b727b4c856518e577c4090f75d324",
+      "size": 921,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-migration.json",
+      "sha256": "d6a4fd1aaf04a698e7ab9125302d6e1ca1fafcc9c5d842bad2b4adc59d7ac1f6",
+      "size": 593,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-model-gateway.json",
+      "sha256": "b70b84e753f298aa5f38561c05e3bd23774c265aefe7a9cc062456cdb047aa04",
+      "size": 846,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-one-click-start.json",
+      "sha256": "4df292aa03f047870f64751e11b52a09fd332e4b33d48d1afea33259fbc28d00",
+      "size": 315,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-p6.json",
+      "sha256": "23f5ffa1d2cf21b526ef7f32f2f6e99a74e902ed0441bf0f17ad0aa3221bf7f7",
+      "size": 479,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-playwright.json",
+      "sha256": "673848e89adf44aa8719814e471104bebae67b061963f045cc1c941fba44869c",
+      "size": 1288,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-rag.json",
+      "sha256": "865bd01123d8bcf7dd793c962ad614415f332bc0a7acec7aa9ba23a29d46bc17",
+      "size": 759,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-rollback.json",
+      "sha256": "c361092d28c8f8300fe24912d7972a1b60b05228b48acfd68c446803731daf97",
+      "size": 1251,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-runtime-health.json",
+      "sha256": "282a45fc9a40563ad20241214f6b95c0e89ff7fd544ad1388791c9fd6430afd1",
+      "size": 1095,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-second-start.json",
+      "sha256": "e707764cb32b4f34c7d6f4bc197fc769fb816879a691c31cb69b1d80891c7173",
+      "size": 4652,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/final-rc/evidence/rc-security.json",
+      "sha256": "ea9359914787ccc313c297a075412edd30434e087c439b376ee8527ab042a748",
+      "size": 994,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/memory41/evidence/memory41-acceptance-summary.json",
+      "sha256": "789982e9565de009df3fee80a6ff5e257ca3b7c95752b4015d65a9ad6c8f9da5",
+      "size": 4276,
+      "status": "PASS"
+    },
+    {
+      "path": "docs/platformization/rag41/evidence/rag41-acceptance.json",
+      "sha256": "47ae28682b4aa2101768e4f9c85852eecc427342d34f113f2472bfdc0f56e466",
+      "size": 2780,
+      "status": "PASS"
+    }
+  ]
+}

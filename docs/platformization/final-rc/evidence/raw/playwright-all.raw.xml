@@ -1,0 +1,287 @@
+<testsuites id="" name="" tests="32" failures="3" skipped="29" errors="0" time="496.59356199999996">
+<testsuite name="ai-operations-analysis.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="1" skipped="0" time="127.233" errors="0">
+<testcase name="AI经营分析在100%缩放下完整一屏并展示可信ChatBI证据" classname="ai-operations-analysis.spec.ts" time="127.233">
+<failure message="ai-operations-analysis.spec.ts:8:1 AI经营分析在100%缩放下完整一屏并展示可信ChatBI证据" type="FAILURE">
+<![CDATA[  ai-operations-analysis.spec.ts:8:1 › AI经营分析在100%缩放下完整一屏并展示可信ChatBI证据 ─────────────────────────────
+
+    Test timeout of 120000ms exceeded.
+
+    Error: locator.click: Test timeout of 120000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '安全登录' })
+
+
+      10 |
+      11 |   await page.goto('/')
+    > 12 |   await page.getByRole('button', { name: '安全登录' }).click()
+         |                                                    ^
+      13 |   await page.getByRole('button', { name: 'AI经营分析' }).click()
+      14 |
+      15 |   await expect(page.getByRole('heading', { name: 'AI经营分析', exact: true })).toBeVisible()
+        at E:\新能源企业经营分析智能平台-integration-41-full-rc-verify\frontend\e2e\ai-operations-analysis.spec.ts:12:52
+
+    Error Context: ..\test-results\ai-operations-analysis-AI经营分析在100-缩放下完整一屏并展示可信ChatBI证据\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\ai-operations-analysis-AI经营分析在100-缩放下完整一屏并展示可信ChatBI证据\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\ai-operations-analysis-AI经营分析在100-缩放下完整一屏并展示可信ChatBI证据\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\..\新能源企业经营分析智能平台-integration-41-full-rc-verify\frontend\test-results\ai-operations-analysis-AI经营分析在100-缩放下完整一屏并展示可信ChatBI证据\error-context.md]]
+
+[[ATTACHMENT|..\..\..\新能源企业经营分析智能平台-integration-41-full-rc-verify\frontend\test-results\ai-operations-analysis-AI经营分析在100-缩放下完整一屏并展示可信ChatBI证据\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="alpha.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="1" skipped="0" time="120.493" errors="0">
+<testcase name="product alpha core journey uses live backend data" classname="alpha.spec.ts" time="120.493">
+<failure message="alpha.spec.ts:2:1 product alpha core journey uses live backend data" type="FAILURE">
+<![CDATA[  alpha.spec.ts:2:1 › product alpha core journey uses live backend data ────────────────────────────
+
+    Test timeout of 120000ms exceeded.
+
+    Error: locator.click: Test timeout of 120000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '安全登录' })
+
+
+       7 |   await expect(page.getByText('新能源经营分析智能平台', { exact: true })).toBeVisible()
+       8 |   await page.screenshot({ fullPage: true })
+    >  9 |   await page.getByRole('button', { name: '安全登录' }).click()
+         |                                                    ^
+      10 |   await expect(page.getByRole('heading', { name: '功能总览', exact: true })).toBeVisible()
+      11 |   await expect(page.getByText('模拟数据', { exact: true })).toBeVisible({ timeout: 90_000 })
+      12 |   await expect(page.getByText('来源：平台数据库')).toBeVisible()
+        at E:\新能源企业经营分析智能平台-integration-41-full-rc-verify\frontend\e2e\alpha.spec.ts:9:52
+
+    Error Context: ..\test-results\alpha-product-alpha-core-journey-uses-live-backend-data\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\alpha-product-alpha-core-journey-uses-live-backend-data\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\alpha-product-alpha-core-journey-uses-live-backend-data\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\..\新能源企业经营分析智能平台-integration-41-full-rc-verify\frontend\test-results\alpha-product-alpha-core-journey-uses-live-backend-data\error-context.md]]
+
+[[ATTACHMENT|..\..\..\新能源企业经营分析智能平台-integration-41-full-rc-verify\frontend\test-results\alpha-product-alpha-core-journey-uses-live-backend-data\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="business-alerts.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="1" skipped="0" time="120.235" errors="0">
+<testcase name="经营预警中心展示后端持久化事件与 SLA" classname="business-alerts.spec.ts" time="120.235">
+<failure message="business-alerts.spec.ts:8:1 经营预警中心展示后端持久化事件与 SLA" type="FAILURE">
+<![CDATA[  business-alerts.spec.ts:8:1 › 经营预警中心展示后端持久化事件与 SLA ───────────────────────────────────────────────
+
+    Test timeout of 120000ms exceeded.
+
+    Error: locator.click: Test timeout of 120000ms exceeded.
+    Call log:
+      - waiting for getByRole('button', { name: '安全登录' })
+
+
+       8 |   await page.goto('/')
+       9 |   await expect(page.getByRole('heading', { name: '欢迎登录' })).toBeVisible()
+    > 10 |   await page.getByRole('button', { name: '安全登录' }).click()
+         |                                                    ^
+      11 |   await page.getByRole('button', { name: '经营预警' }).click()
+      12 |   await expect(page.getByTestId('p6-alert-center')).toBeVisible({ timeout: 120_000 })
+      13 |   const response = page.waitForResponse(item => item.url().includes('/api/v1/alerts/generate') && item.ok())
+        at E:\新能源企业经营分析智能平台-integration-41-full-rc-verify\frontend\e2e\business-alerts.spec.ts:10:52
+
+    Error Context: ..\test-results\business-alerts-经营预警中心展示后端持久化事件与-SLA\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\test-results\business-alerts-经营预警中心展示后端持久化事件与-SLA\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\test-results\business-alerts-经营预警中心展示后端持久化事件与-SLA\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+]]>
+</failure>
+<system-out>
+<![CDATA[
+[[ATTACHMENT|..\..\..\新能源企业经营分析智能平台-integration-41-full-rc-verify\frontend\test-results\business-alerts-经营预警中心展示后端持久化事件与-SLA\error-context.md]]
+
+[[ATTACHMENT|..\..\..\新能源企业经营分析智能平台-integration-41-full-rc-verify\frontend\test-results\business-alerts-经营预警中心展示后端持久化事件与-SLA\trace.zip]]
+]]>
+</system-out>
+</testcase>
+</testsuite>
+<testsuite name="data-integration-fail-closed.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="100.166" errors="0">
+<testcase name="数据接入接口失败时显示 Blocked 且不展示跨域 fallback" classname="data-integration-fail-closed.spec.ts" time="100.166">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="data-integration-governance.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="数据接入治理页展示已发布不可变快照和 13 步平台闭环" classname="data-integration-governance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="data-lineage-ui.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="所有业务页面仅使用统一数据状态区并保持正式 API 链路" classname="data-lineage-ui.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="data41-open-source-live.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="DATA-4.1 public source flows through authenticated API, UI and guarded ChatBI" classname="data41-open-source-live.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="day1-full-functional.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="DAY-1 real OIDC and API full functional acceptance" classname="day1-full-functional.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="day1-inventory.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="DAY-1 second pass covers all reachable page states and runtime controls" classname="day1-inventory.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="device-health.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="设备健康复刻页在100%缩放下一屏完整展示" classname="device-health.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="feature-overview.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="功能总览复刻页使用后端指标并支持核心入口" classname="feature-overview.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="global-typography.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="all primary product views use the unified readable typography scale" classname="global-typography.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="gross-profit-cost.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="毛利与成本复刻页在100%缩放下一屏完整展示" classname="gross-profit-cost.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="integration41-full-safe-mode.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="Full Integration safe mode preserves primary user journeys" classname="integration41-full-safe-mode.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="knowledge-response.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="企业知识库展示受控生命周期与真实运行状态" classname="knowledge-response.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="统一回答界面展示 Profile 与运行边界" classname="knowledge-response.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="metric-management.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="指标治理中心展示语义层的正式版本历史" classname="metric-management.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="multi-scenario-chat.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="自有 ChatBI UI 切换双场景并展示版本引擎证据" classname="multi-scenario-chat.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="operations-workbench.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="经营工作台在100%缩放下完整一屏并使用后端经营数据" classname="operations-workbench.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="p3-enterprise-governance.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="2" failures="0" skipped="2" time="0" errors="0">
+<testcase name="企业治理控制台读取正式 API 并展示安全边界" classname="p3-enterprise-governance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="普通业务用户访问治理中心时明确显示 Forbidden 且无虚构 fallback" classname="p3-enterprise-governance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="p4-preproduction-oidc.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="真实 OIDC Code + PKCE 登录并读取 P4 正式 API" classname="p4-preproduction-oidc.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="真实 OIDC 未映射用户在服务端 callback 阶段被拒绝" classname="p4-preproduction-oidc.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="真实 OIDC 禁用用户无法取得授权码" classname="p4-preproduction-oidc.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="p5-production-acceptance.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="P5 Production Gate Registry 来自正式 API 且保持 No-Go" classname="p5-production-acceptance.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="p6-business-loop.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="P6 三类经营管理业务闭环经真实 API 完成" classname="p6-business-loop.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="platform-foundation-fail-closed.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="3" failures="0" skipped="3" time="0" errors="0">
+<testcase name="平台状态 Unauthorized 时清除会话，Forbidden 时显示 Blocked 且无 fallback" classname="platform-foundation-fail-closed.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="空 Schema、字段发现失败、连接失败和 DQ 失败均显式呈现" classname="platform-foundation-fail-closed.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+<testcase name="审批驳回、激活失败与回滚均以数据库响应为准" classname="platform-foundation-fail-closed.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="revenue-orders.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="收入与订单复刻页在100%缩放下一屏完整展示" classname="revenue-orders.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="station-operations.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="场站经营复刻页在100%缩放下一屏完整展示" classname="station-operations.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+<testsuite name="v2_p0_0_evidence.spec.ts" timestamp="2026-08-13T06:27:13.678Z" hostname="" tests="1" failures="0" skipped="1" time="0" errors="0">
+<testcase name="capture current Alpha product pages without changing business data" classname="v2_p0_0_evidence.spec.ts" time="0">
+<skipped>
+</skipped>
+</testcase>
+</testsuite>
+</testsuites>

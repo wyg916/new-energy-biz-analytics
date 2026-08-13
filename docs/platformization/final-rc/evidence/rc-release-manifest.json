@@ -1,0 +1,101 @@
+{
+  "schema_version": "1.0",
+  "evidence_type": "final_rc_release_manifest",
+  "generated_at": "2026-08-13T08:23:05.285323+00:00",
+  "status": "PASS",
+  "project_version": "4.1.0-integration-full.1",
+  "branch": "codex/integration-4.1-full",
+  "head": "b6be894a7153f7ce8d31dfc65da7222bd7af1b5f",
+  "commit": "b6be894a7153f7ce8d31dfc65da7222bd7af1b5f",
+  "migration_revision": "integration_41_full_0001",
+  "page_count": 24,
+  "interactive_control_count": 329,
+  "applicable_control_count": 241,
+  "reasoned_not_applicable_control_count": 88,
+  "user_visible_function_count": 22,
+  "backend_tests": {
+    "tests": 529,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "frontend_tests": {
+    "build": "PASS",
+    "vitest": {
+      "tests": 3,
+      "passed": 3,
+      "failed": 0
+    }
+  },
+  "playwright": {
+    "schema_version": "1.0",
+    "evidence_type": "final_rc_playwright",
+    "generated_at": "2026-08-13T08:23:04.832260+00:00",
+    "status": "PASS",
+    "rc_authoritative_specs": [
+      "day1-full-functional.spec.ts",
+      "day1-inventory.spec.ts",
+      "integration41-full-safe-mode.spec.ts"
+    ],
+    "rc_tests": 3,
+    "rc_failures_or_errors": 0,
+    "pages": {
+      "covered": 24,
+      "total": 24,
+      "coverage_percent": 100.0
+    },
+    "controls": {
+      "covered": 329,
+      "total": 329,
+      "coverage_percent": 100.0,
+      "applicable_pass": 241,
+      "reasoned_not_applicable": 88
+    },
+    "user_visible_functions": {
+      "passed": 22,
+      "total": 22,
+      "pass_percent": 100.0
+    },
+    "layout": {
+      "passed": 24,
+      "total": 24
+    },
+    "business_api_responses": 267,
+    "business_api_non_2xx": 0,
+    "console_errors": 0,
+    "page_errors": 0,
+    "request_failures": 0,
+    "blocking_responses": 0,
+    "historical_phase_collection_attempt": {
+      "status": "NOT_APPLICABLE_TO_FINAL_RC_GATE",
+      "tests": 32,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 29,
+      "reason": "The repository-wide collection includes superseded phase-specific local-login and historical-state contracts. The raw interrupted attempt is preserved; no test was skipped, deleted, or weakened to manufacture the RC result."
+    }
+  },
+  "data_version": [
+    "DATA41-ACN-ORNL-26-V1",
+    "DATA41-UCI-ONLINE-RETAIL-352-V1"
+  ],
+  "knowledge_version": "knowledge-baseline-v1",
+  "rag_mode": "hybrid_bm25_vector_rrf_rerank",
+  "memory_version": "4.1-memory-lifecycle-v1",
+  "query_engine_mode": "DETERMINISTIC_ONLY",
+  "sqlbot_status": "REGISTERED_NOT_ELIGIBLE / DISABLED",
+  "model_gateway_providers": [
+    "kimi",
+    "mimo",
+    "deepseek"
+  ],
+  "oidc": "Authorization Code + PKCE / callback / session / auth-me PASS",
+  "vault": "READY; sealed recovery PASS",
+  "one_click": "PASS",
+  "second_start": "PASS",
+  "clean_volume": "PASS",
+  "evidence_manifest_path": "docs/platformization/final-rc/evidence/rc-evidence-manifest.json",
+  "evidence_manifest_sha256": "aa7b94c5fd14dfdc3e50e21a93d752c1d11a350f7c0de6293170525b2fb9f2c8",
+  "rollback_reference": "docs/platformization/final-rc/evidence/rc-rollback.json",
+  "tag_created": false
+}
