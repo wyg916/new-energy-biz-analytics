@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "record_type": "final_rc_release_archive_manifest",
+  "generated_at": "2026-08-15T19:50:09.9521560+08:00",
+  "status": "PASS",
+  "project_version": "4.1.0-integration-full.1",
+  "source": {
+    "ref": "final-rc-v4.1.0-integration-full.1",
+    "ref_type": "annotated_tag",
+    "tag_object_sha": "e5c5ba8be4df599d6a6f2ea3e9b06df283b61b81",
+    "commit_sha": "ce0764be9c92c7433fae54a62e247736708ea7e5"
+  },
+  "archive": {
+    "format": "git_archive_zip",
+    "path": "artifacts/release-archive/final-rc-v4.1.0-integration-full.1/new-energy-biz-analytics-final-rc-v4.1.0-integration-full.1-source.zip",
+    "tracked_in_git": false,
+    "availability_scope": "authorized_local_workspace",
+    "size_bytes": 34338367,
+    "sha256": "ff54a1e99303714e0346b2a25a933bf97671da9f6d3dddf0975e6944e7a44353",
+    "file_entry_count": 1623,
+    "prefix": "new-energy-biz-analytics-final-rc-v4.1.0-integration-full.1/"
+  },
+  "verification": {
+    "archive_readable": true,
+    "forbidden_entry_count": 0,
+    "required_final_rc_entry_count": 4,
+    "required_final_rc_entry_total": 4,
+    "required_entries": [
+      "docs/platformization/final-rc/evidence/final-rc-audit-summary.json",
+      "docs/platformization/final-rc/evidence/rc-evidence-manifest.json",
+      "docs/platformization/final-rc/evidence/rc-release-manifest.json",
+      "docs/platformization/final-rc/evidence/rc-rollback.json"
+    ],
+    "excluded_by_design": [
+      "git_metadata",
+      "untracked_or_ignored_runtime_state",
+      "local_secrets_and_credentials"
+    ]
+  },
+  "reproduction": {
+    "command": "git archive --format=zip --output=<archive-path> --prefix=new-energy-biz-analytics-final-rc-v4.1.0-integration-full.1/ final-rc-v4.1.0-integration-full.1",
+    "checksum_algorithm": "SHA-256"
+  },
+  "github_release_created": false,
+  "deployment_executed": false,
+  "production_traffic_switched": false,
+  "tag_rollback_authorized": false
+}

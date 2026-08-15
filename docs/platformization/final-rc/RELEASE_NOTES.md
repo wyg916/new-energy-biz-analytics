@@ -15,3 +15,13 @@ Validated release boundary:
 - OIDC Authorization Code + PKCE and Vault sealed recovery.
 
 The complete machine-readable result is `evidence/final-rc-audit-summary.json`. No tag is created by this audit.
+
+## Post-audit status
+
+After the audit closed, the project owner separately authorized creation of the
+annotated tag `final-rc-v4.1.0-integration-full.1` and entry into the Release
+approval/artifact-archive stage. The source archive is derived from that exact
+tag and is described by `release-archive-manifest.json`.
+
+This authorization did not create a GitHub Release, perform a deployment,
+switch production traffic, or authorize deletion of the tag.

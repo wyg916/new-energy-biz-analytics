@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "record_type": "final_rc_release_approval",
+  "recorded_at": "2026-08-15T19:50:09.9521560+08:00",
+  "status": "APPROVED_FOR_RELEASE_ARCHIVAL",
+  "project_version": "4.1.0-integration-full.1",
+  "branch": "codex/integration-4.1-full",
+  "frozen_product_baseline": "b6be894a7153f7ce8d31dfc65da7222bd7af1b5f",
+  "final_audit_evidence_commit": "ce0764be9c92c7433fae54a62e247736708ea7e5",
+  "release_tag": {
+    "name": "final-rc-v4.1.0-integration-full.1",
+    "type": "annotated",
+    "tag_object_sha": "e5c5ba8be4df599d6a6f2ea3e9b06df283b61b81",
+    "target_commit_sha": "ce0764be9c92c7433fae54a62e247736708ea7e5",
+    "remote": "origin",
+    "remote_verified": true
+  },
+  "authorization": {
+    "authority": "project_owner",
+    "source": "explicit_current_task_instruction",
+    "approved_actions": [
+      "record_release_approval",
+      "generate_and_verify_release_archive",
+      "commit_and_push_release_archive_metadata"
+    ],
+    "excluded_actions": [
+      "create_github_release",
+      "deploy",
+      "switch_production_traffic",
+      "delete_or_retarget_release_tag"
+    ],
+    "tag_rollback_requires_separate_authorization": true
+  },
+  "quality_gate": {
+    "final_rc_audit": "PASS",
+    "blocker_count": 0,
+    "page_coverage_percent": 100.0,
+    "interactive_control_coverage_percent": 100.0,
+    "user_visible_function_pass_percent": 100.0,
+    "backend_tests_passed": 529,
+    "backend_tests_total": 529,
+    "business_api_non_2xx": 0
+  },
+  "evidence": {
+    "audit_summary": "docs/platformization/final-rc/evidence/final-rc-audit-summary.json",
+    "evidence_manifest": "docs/platformization/final-rc/evidence/rc-evidence-manifest.json",
+    "evidence_manifest_sha256": "aa7b94c5fd14dfdc3e50e21a93d752c1d11a350f7c0de6293170525b2fb9f2c8",
+    "release_manifest": "docs/platformization/final-rc/evidence/rc-release-manifest.json",
+    "rollback_manifest": "docs/platformization/final-rc/evidence/rc-rollback.json",
+    "archive_manifest": "docs/platformization/final-rc/release-archive-manifest.json"
+  },
+  "github_release_created": false,
+  "deployment_executed": false,
+  "production_traffic_switched": false
+}
