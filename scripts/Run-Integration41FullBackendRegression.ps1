@@ -83,8 +83,21 @@ try {
         [char]0x52a8
     )) + '.bat'
     $launcherPath = Join-Path $root $launcherName
+    $credentialLauncherName = (-join @(
+        [char]0x590d,
+        [char]0x5236,
+        [char]0x672c,
+        [char]0x5730,
+        [char]0x767b,
+        [char]0x5f55,
+        [char]0x5bc6,
+        [char]0x7801
+    )) + '.bat'
+    $credentialLauncherPath = Join-Path $root $credentialLauncherName
     docker cp backend "${testContainer}:/app/backend" | Out-Null
     docker cp $launcherPath "${testContainer}:/app/$launcherName" | Out-Null
+    docker cp $credentialLauncherPath "${testContainer}:/app/$credentialLauncherName" | Out-Null
+    docker cp README.md "${testContainer}:/app/README.md" | Out-Null
     docker cp backend/app/. "${testContainer}:/app/app" | Out-Null
     docker cp deploy "${testContainer}:/app/deploy" | Out-Null
     docker cp scripts/. "${testContainer}:/app/scripts" | Out-Null
