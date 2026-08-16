@@ -151,4 +151,4 @@ DELETE_STARTED=NO
 FINAL_GATE=PENDING
 ```
 
-只有 Backend、Frontend、Final RC Playwright、Migration 和两轮一键启动全部 PASS，且 Final branch/tag 已推送验证后，才允许开始批量删除。
+只有 Backend、Frontend、Final RC Playwright、Migration 和两轮一键启动全部 PASS，且 Final branch 已推送验证后，才允许开始本地批量删除；远端旧引用清理和 Git GC 还必须等待 Final Tag 推送验证。
