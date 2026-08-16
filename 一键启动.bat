@@ -17,6 +17,9 @@ powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\re
 if errorlevel 1 goto :failed
 
 echo.
+echo Login username: p4.analyst
+echo Login password: double-click the root password-copy shortcut.
+echo.
 echo Press any key to close this window. Services will keep running.
 pause >nul
 exit /b 0

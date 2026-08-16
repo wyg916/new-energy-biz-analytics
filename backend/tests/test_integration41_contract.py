@@ -116,6 +116,29 @@ def test_single_launcher_converges_full_integration_runtime():
     assert "[int]$TimeoutSeconds = 1800" in startup
 
 
+def test_local_oidc_login_is_discoverable_without_hardcoded_secret():
+    launcher = (ROOT / "一键启动.bat").read_text(encoding="utf-8-sig")
+    credential_launcher = (ROOT / "复制本地登录密码.bat").read_text(
+        encoding="utf-8-sig"
+    )
+    helper = (ROOT / "scripts/release/Copy-LocalOidcPassword.ps1").read_text(
+        encoding="utf-8-sig"
+    )
+    readme = (ROOT / "README.md").read_text(encoding="utf-8-sig")
+
+    assert "Login username: p4.analyst" in launcher
+    assert "Copy-LocalOidcPassword.ps1" in credential_launcher
+    assert 'Username: p4.analyst' in helper
+    assert '${project}_p4_keycloak_runtime' in helper
+    assert '/run/p4-keycloak/keycloak_user_password' in helper
+    assert 'Set-Clipboard -Value $runtimePassword' in helper
+    assert 'Get-Clipboard -Raw' in helper
+    assert 'Write-Host $runtimePassword' not in helper
+    assert 'Write-Output $runtimePassword' not in helper
+    assert '`p4.analyst`' in readme
+    assert '复制本地登录密码.bat' in readme
+
+
 def _preproduction_settings(**overrides):
     values = {
         "app_env": "preproduction",

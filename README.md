@@ -33,6 +33,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass `
 - Web：<https://p5b.localhost:8446>
 - 健康检查：<https://p5b.localhost:8446/api/v1/health/ready>
 - 身份：本地隔离 Keycloak OIDC；运行凭据只保存在项目专用 Docker volume，不写入仓库或启动报告。
+- 本地登录：账号为 `p4.analyst`。启动成功后双击根目录 [`复制本地登录密码.bat`](复制本地登录密码.bat)，密码会直接复制到 Windows 剪贴板；在 Keycloak 登录页按 `Ctrl+V`，登录后请覆盖或清空剪贴板。脚本不会显示、写入仓库或记录密码。
 
 根目录 `docker-compose.yml` 和 `.env.example` 仍用于历史 Alpha 开发环境，不是 P5B RC3 发布编排。生产配置使用示例密钥、空密钥或自动演示账号会 fail-closed。
 
