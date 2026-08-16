@@ -13,7 +13,7 @@ echo   Open NL2SQL: disabled. Formal ChatBI: deterministic only.
 echo ============================================================
 echo.
 
-powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\release\start-project.ps1" -NoBrowser
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\release\start-project.ps1"
 if errorlevel 1 goto :failed
 
 echo.

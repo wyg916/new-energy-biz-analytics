@@ -54,6 +54,8 @@ def test_single_launcher_converges_full_integration_runtime():
     assert "Full Integration 4.1" in launcher
     assert "integration_41_full_0001" in launcher
     assert "Open NL2SQL: disabled" in launcher
+    assert "start-project.ps1" in launcher
+    assert "-NoBrowser" not in launcher
     assert "Run-SQLBot41DOneClick.ps1" not in launcher
     assert "-SQLBotHostPort" not in launcher
     assert '$project = "renewable-integration41-full"' in startup
